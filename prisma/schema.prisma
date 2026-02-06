@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  timestamp   DateTime @default(now())
+  type        String   // "task", "message", "cron", "file", "search", "spawn"
+  action      String   // "completed", "started", "failed", "sent", "created", "edited"
+  title       String
+  description String?
+  metadata    String?  // JSON string for SQLite
+  duration    Int?     // Duration in ms
+  status      String   @default("success") // "success", "error", "pending"
+
+  @@index([timestamp])
+  @@index([type])
+  @@index([status])
+}
+
+model SearchIndex {
+  id        String   @id @default(cuid())
+  path      String   @unique
+  content   String
+  title     String
+  category  String   // "memory", "docs", "project", "activity"
+  updatedAt DateTime @updatedAt
+  
+  @@index([category])
+}
