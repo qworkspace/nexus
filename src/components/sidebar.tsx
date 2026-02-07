@@ -9,8 +9,10 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: "◉" },
   { name: "Activity", href: "/activity", icon: "◎" },
   { name: "Calendar", href: "/calendar", icon: "◫" },
+  { name: "Cron Jobs", href: "/crons", icon: "⏰" },
   { name: "Costs", href: "/costs", icon: "◈" },
   { name: "Performance", href: "/performance", icon: "◇" },
+  { name: "Evolution", href: "/evolution", icon: "🦾" },
   { name: "Search", href: "/search", icon: "⌕" },
 ];
 
