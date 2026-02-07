@@ -18,9 +18,42 @@ model Activity {
   duration    Int?     // Duration in ms
   status      String   @default("success") // "success", "error", "pending"
 
+  // Cost tracking fields
+  tokensIn         Int?     // Input tokens
+  tokensOut        Int?     // Output tokens  
+  tokensCacheRead  Int?     // Cached read tokens
+  tokensCacheWrite Int?     // Cached write tokens
+  cost             Float?   // Total cost in USD
+  model            String?  // Model used (e.g., "claude-opus-4-5")
+
   @@index([timestamp])
   @@index([type])
   @@index([status])
+  @@index([model])
+}
+
+model AgentMetrics {
+  id            String   @id @default(cuid())
+  date          DateTime @default(now())
+  agentId       String   @default("main")
+  
+  // Counts
+  totalRuns     Int      @default(0)
+  successCount  Int      @default(0)
+  errorCount    Int      @default(0)
+  
+  // Timing
+  avgDurationMs Int?
+  maxDurationMs Int?
+  minDurationMs Int?
+  
+  // Costs
+  totalCost      Float   @default(0)
+  totalTokensIn  Int     @default(0)
+  totalTokensOut Int     @default(0)
+  
+  @@unique([date, agentId])
+  @@index([agentId])
 }
 
 model SearchIndex {

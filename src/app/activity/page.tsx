@@ -16,6 +16,11 @@ interface Activity {
   metadata: string | null;
   duration: number | null;
   status: string;
+  // Cost tracking
+  tokensIn: number | null;
+  tokensOut: number | null;
+  cost: number | null;
+  model: string | null;
 }
 
 const activityTypes = [

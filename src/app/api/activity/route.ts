@@ -45,7 +45,22 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { type, action, title, description, metadata, duration, status } = body;
+    const { 
+      type, 
+      action, 
+      title, 
+      description, 
+      metadata, 
+      duration, 
+      status,
+      // Cost tracking fields
+      tokensIn,
+      tokensOut,
+      tokensCacheRead,
+      tokensCacheWrite,
+      cost,
+      model,
+    } = body;
 
     if (!type || !action || !title) {
       return NextResponse.json(
@@ -63,6 +78,13 @@ export async function POST(request: NextRequest) {
         metadata: metadata ? JSON.stringify(metadata) : null,
         duration,
         status: status || "success",
+        // Cost tracking
+        tokensIn,
+        tokensOut,
+        tokensCacheRead,
+        tokensCacheWrite,
+        cost,
+        model,
       },
     });
 

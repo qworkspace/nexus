@@ -15,6 +15,11 @@ interface Activity {
   metadata: string | null;
   duration: number | null;
   status: string;
+  // Cost tracking
+  tokensIn: number | null;
+  tokensOut: number | null;
+  cost: number | null;
+  model: string | null;
 }
 
 const typeColors: Record<string, string> = {
@@ -66,6 +71,14 @@ function formatDuration(ms: number) {
   if (ms < 1000) return `${ms}ms`;
   if (ms < 60000) return `${(ms / 1000).toFixed(1)}s`;
   return `${(ms / 60000).toFixed(1)}m`;
+}
+
+function formatTokens(tokens: number | null): string {
+  if (!tokens) return "0";
+  if (tokens >= 1000) {
+    return `${(tokens / 1000).toFixed(1)}k`;
+  }
+  return tokens.toString();
 }
 
 export function ActivityCard({ activity }: { activity: Activity }) {
@@ -135,11 +148,30 @@ export function ActivityCard({ activity }: { activity: Activity }) {
             )}
           </div>
 
-          {/* Time */}
-          <div className="text-xs text-zinc-400 whitespace-nowrap">
-            {formatRelativeTime(activity.timestamp)}
+          {/* Time and Cost */}
+          <div className="text-right shrink-0">
+            {activity.cost !== null && activity.cost > 0 && (
+              <div className="text-sm font-semibold text-zinc-700 mb-1">
+                ${activity.cost.toFixed(2)}
+              </div>
+            )}
+            <div className="text-xs text-zinc-400 whitespace-nowrap">
+              {formatRelativeTime(activity.timestamp)}
+            </div>
+            {activity.model && (
+              <div className="text-xs text-zinc-400 mt-0.5">
+                {activity.model}
+              </div>
+            )}
           </div>
         </div>
+
+        {/* Token info when expanded */}
+        {expanded && (activity.tokensIn || activity.tokensOut) && (
+          <div className="mt-2 pt-2 border-t border-zinc-100 flex items-center gap-4 text-xs text-zinc-500">
+            <span>Tokens: {formatTokens(activity.tokensIn)} in / {formatTokens(activity.tokensOut)} out</span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

@@ -3,21 +3,36 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 
 async function getStats() {
-  const [totalActivities, todayActivities, errorCount] = await Promise.all([
+  const todayStart = new Date(new Date().setHours(0, 0, 0, 0));
+  const weekStart = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+  
+  const [totalActivities, todayActivities, errorCount, todayCost, weekCost] = await Promise.all([
     db.activity.count(),
     db.activity.count({
       where: {
-        timestamp: {
-          gte: new Date(new Date().setHours(0, 0, 0, 0)),
-        },
+        timestamp: { gte: todayStart },
       },
     }),
     db.activity.count({
       where: { status: "error" },
     }),
+    db.activity.aggregate({
+      where: { timestamp: { gte: todayStart }, cost: { not: null } },
+      _sum: { cost: true },
+    }),
+    db.activity.aggregate({
+      where: { timestamp: { gte: weekStart }, cost: { not: null } },
+      _sum: { cost: true },
+    }),
   ]);
 
-  return { totalActivities, todayActivities, errorCount };
+  return { 
+    totalActivities, 
+    todayActivities, 
+    errorCount,
+    todayCost: todayCost._sum.cost || 0,
+    weekCost: weekCost._sum.cost || 0,
+  };
 }
 
 async function getRecentActivity() {
@@ -39,7 +54,7 @@ export default async function Dashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      <div className="grid grid-cols-4 gap-4 mb-8">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-zinc-500">
@@ -76,6 +91,24 @@ export default async function Dashboard() {
             </div>
           </CardContent>
         </Card>
+        <Link href="/costs">
+          <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-zinc-500 flex items-center justify-between">
+                <span>💰 Token Costs</span>
+                <span className="text-xs">→</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-zinc-900">
+                ${stats.todayCost.toFixed(2)}
+              </div>
+              <p className="text-xs text-zinc-500 mt-1">
+                ${stats.weekCost.toFixed(2)} this week
+              </p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       {/* Recent Activity */}
