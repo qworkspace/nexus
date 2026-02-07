@@ -10,6 +10,7 @@ const navigation = [
   { name: "Activity", href: "/activity", icon: "◎" },
   { name: "Calendar", href: "/calendar", icon: "◫" },
   { name: "Costs", href: "/costs", icon: "◈" },
+  { name: "Performance", href: "/performance", icon: "◇" },
   { name: "Search", href: "/search", icon: "⌕" },
 ];
 
