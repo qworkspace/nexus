@@ -1,0 +1,83 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
+interface StatusBarData {
+  model: string;
+  activeAgents: number;
+  nextCron: string;
+  todayCost: string;
+}
+
+export function StatusBar() {
+  const [data, setData] = useState<StatusBarData>({
+    model: "Opus",
+    activeAgents: 0,
+    nextCron: "--",
+    todayCost: "$0.00",
+  });
+
+  // In a real implementation, this would fetch from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Get today's cost
+        const costRes = await fetch('/api/costs/today');
+        if (costRes.ok) {
+          const costData = await costRes.json();
+          setData((prev) => ({
+            ...prev,
+            todayCost: costData.total || "$0.00",
+          }));
+        }
+
+        // Get active agents
+        const agentsRes = await fetch('/api/agents');
+        if (agentsRes.ok) {
+          const agentsData = await agentsRes.json();
+          const active = agentsData.filter((a: { status: string }) => a.status === 'running').length;
+          setData((prev) => ({
+            ...prev,
+            activeAgents: active,
+          }));
+        }
+      } catch (error) {
+        console.error('Failed to fetch status bar data:', error);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 30000); // Refresh every 30s
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 h-8 bg-zinc-900 text-zinc-300 text-xs flex items-center px-4 gap-6 z-50">
+      <div className="flex items-center gap-1.5">
+        <span>🦾</span>
+        <span className="text-zinc-400">Q:</span>
+        <span className="text-white">{data.model}</span>
+      </div>
+
+      <div className="flex items-center gap-1.5">
+        <span>💻</span>
+        <span className="text-zinc-400">Dev:</span>
+        <span className="text-white">{data.activeAgents} building</span>
+      </div>
+
+      <div className="flex items-center gap-1.5">
+        <span>⏰</span>
+        <span className="text-zinc-400">Next cron:</span>
+        <span className="text-white">{data.nextCron}</span>
+      </div>
+
+      <div className="flex items-center gap-1.5 ml-auto">
+        <span className="text-green-400">{data.todayCost}</span>
+      </div>
+
+      <div className="text-zinc-600">
+        <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded text-[10px]">⌘K</kbd>
+      </div>
+    </div>
+  );
+}
