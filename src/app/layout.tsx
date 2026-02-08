@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar";
 import { CommandPalette } from "@/components/command-palette";
+import { GlobalDialogs } from "@/components/command/GlobalDialogs";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,15 +18,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className={`${inter.className} antialiased`}>
-        <div className="flex h-screen bg-white">
+        <div className="flex h-screen bg-white dark:bg-zinc-950">
           <Sidebar />
           <main className="flex-1 overflow-auto md:ml-0">
             {children}
           </main>
         </div>
         <CommandPalette />
+        <GlobalDialogs />
       </body>
     </html>
   );

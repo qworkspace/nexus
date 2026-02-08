@@ -25,6 +25,28 @@
   --radius: 0.5rem;
 }
 
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+  --primary: 0 0% 98%;
+  --primary-foreground: 240 5.9% 10%;
+  --secondary: 240 3.7% 15.9%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 240 3.7% 15.9%;
+  --accent-foreground: 0 0% 98%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+  --border: 240 3.7% 15.9%;
+  --input: 240 3.7% 15.9%;
+  --ring: 240 4.9% 83.9%;
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -32,4 +54,57 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Dark mode Apple aesthetic */
+.glass-panel {
+  @apply bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-2xl;
+}
+
+.glass-panel-light {
+  @apply bg-white/80 backdrop-blur-xl border border-zinc-200/50 rounded-2xl;
+}
+
+/* Glow effects for status indicators */
+.status-glow-green {
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+}
+
+.status-glow-yellow {
+  box-shadow: 0 0 12px rgba(234, 179, 8, 0.4);
+}
+
+.status-glow-red {
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+}
+
+.status-glow-blue {
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
+}
+
+/* Animated gradient background */
+.gradient-bg {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+}
+
+/* Pulse animation for live indicators */
+@keyframes pulse-soft {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Shimmer effect for loading states */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
