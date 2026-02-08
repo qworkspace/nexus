@@ -14,6 +14,7 @@ const navigation = [
   { name: "Cron Jobs", href: "/crons", icon: "⏰" },
   { name: "Costs", href: "/costs", icon: "◈" },
   { name: "Evolution", href: "/evolution", icon: "📈" },
+  { name: "Memory", href: "/memory", icon: "🧠" },
   { name: "Search", href: "/search", icon: "⌕" },
 ];
 
