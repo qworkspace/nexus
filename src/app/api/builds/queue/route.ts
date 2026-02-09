@@ -1,157 +1,95 @@
 import { NextResponse } from 'next/server';
-import { readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
+import { promises as fs } from 'fs';
+import path from 'path';
+import type { QueuedSpec } from '@/types/builds';
 
-interface SpecItem {
-  id: string;
-  title: string;
-  status: 'ready' | 'building' | 'completed' | 'blocked';
-  priority: 'high' | 'medium' | 'low';
-  effort: 'small' | 'medium' | 'large';
-  created: string;
+const QUEUE_DIR = path.join(process.env.HOME || '', '.openclaw/workspace/specs/queue');
+
+function parsePriority(content: string): 'P0' | 'P1' | 'P2' {
+  const priorityMatch = content.match(/\*\*Priority:\s*(P[0-2])/i);
+  if (priorityMatch) {
+    return priorityMatch[1] as 'P0' | 'P1' | 'P2';
+  }
+  return 'P2'; // Default to P2
 }
 
-interface QueueResponse {
-  source: 'live' | 'error';
-  specs: SpecItem[];
-  error?: string;
+function parseTitle(content: string): string {
+  const titleMatch = content.match(/^#\s+(.+)$/m);
+  if (titleMatch) {
+    return titleMatch[1].trim();
+  }
+  // Use first line as fallback
+  return content.split('\n')[0].trim().substring(0, 100);
 }
 
-function parseSpecMetadata(content: string): Partial<SpecItem> {
-  const metadata: Partial<SpecItem> = {};
-
-  // Extract Spec ID
-  const idMatch = content.match(/\*\*Spec ID:\*\*\s*(\d+)/i);
-  if (idMatch) {
-    metadata.id = idMatch[1];
-  }
-
-  // Extract Status
-  const statusMatch = content.match(/\*\*Status:\*\*\s*(READY TO BUILD|BUILDING|COMPLETED|BLOCKED)/i);
-  if (statusMatch) {
-    const statusMap: Record<string, SpecItem['status']> = {
-      'READY TO BUILD': 'ready',
-      'BUILDING': 'building',
-      'COMPLETED': 'completed',
-      'BLOCKED': 'blocked',
-    };
-    metadata.status = statusMap[statusMatch[1].toUpperCase()] || 'ready';
-  }
-
-  // Extract Created date
-  const createdMatch = content.match(/\*\*Created:\*\*\s*([\d-]+)/);
-  if (createdMatch) {
-    metadata.created = createdMatch[1];
-  }
-
-  // Extract Value for priority
-  const valueMatch = content.match(/\*\*Value:\*\*\s*(HIGH|MEDIUM|LOW)/i);
-  if (valueMatch) {
-    const priorityMap: Record<string, SpecItem['priority']> = {
-      'HIGH': 'high',
-      'MEDIUM': 'medium',
-      'LOW': 'low',
-    };
-    metadata.priority = priorityMap[valueMatch[1].toUpperCase()] || 'medium';
-  }
-
-  // Infer effort from content length
-  const contentLength = content.length;
-  if (contentLength < 3000) {
-    metadata.effort = 'small';
-  } else if (contentLength < 6000) {
-    metadata.effort = 'medium';
-  } else {
-    metadata.effort = 'large';
-  }
-
-  return metadata;
+function parseSpecId(content: string): string {
+  const idMatch = content.match(/\*\*Spec ID:\s*(\d+)/i);
+  return idMatch ? idMatch[1] : 'unknown';
 }
 
-function extractTitle(content: string, filename: string): string {
-  // Try to find title from first heading after spec ID section
-  const lines = content.split('\n');
-  for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
-    if (line.startsWith('#') && !line.includes('Spec ID') && !line.includes('Created') && !line.includes('Status') && !line.includes('Value')) {
-      return line.replace(/^#+\s*/, '').replace(/\*\*/g, '').trim();
-    }
-  }
-  
-  // Fallback: derive from filename
-  return filename
-    .replace(/^\d+-/, '')
-    .replace(/\.md$/, '')
-    .replace(/-/g, ' ')
-    .replace(/\b\w/g, l => l.toUpperCase());
+function parseEpic(content: string): string | undefined {
+  const epicMatch = content.match(/\*\*Epic:\s*(.+?)(?:\n|$)/i);
+  return epicMatch ? epicMatch[1].trim() : undefined;
 }
 
-export async function GET(): Promise<NextResponse<QueueResponse>> {
+function parseEstTime(content: string): string | undefined {
+  const timeMatch = content.match(/\*\*Est\.\s*Time:\s*(.+?)(?:\n|$)/i);
+  return timeMatch ? timeMatch[1].trim() : undefined;
+}
+
+async function parseSpecFile(filePath: string): Promise<QueuedSpec | null> {
   try {
-    const specsDir = join(process.env.HOME || '', '.openclaw/workspace/specs/queue');
-    const files = readdirSync(specsDir)
-      .filter((f) => f.endsWith('.md'))
-      .sort(); // Sort alphabetically (which also sorts by ID since they're prefixed)
+    const content = await fs.readFile(filePath, 'utf-8');
+    const stats = await fs.stat(filePath);
 
-    const specs: SpecItem[] = [];
+    const title = parseTitle(content);
+    const priority = parsePriority(content);
+    const epic = parseEpic(content);
+    const estTime = parseEstTime(content);
+    const specId = parseSpecId(content);
 
-    for (const file of files) {
-      try {
-        const filePath = join(specsDir, file);
-        const content = readFileSync(filePath, 'utf-8');
-        const metadata = parseSpecMetadata(content);
-        const title = extractTitle(content, file);
+    // Extract numeric ID from filename for sorting
+    const filename = path.basename(filePath, '.md');
 
-        specs.push({
-          id: metadata.id || file.replace('.md', ''),
-          title,
-          status: metadata.status || 'ready',
-          priority: metadata.priority || 'medium',
-          effort: metadata.effort || 'medium',
-          created: metadata.created || new Date().toISOString().split('T')[0],
-        });
-      } catch (err) {
-        console.error(`Failed to parse spec file ${file}:`, err);
+    return {
+      id: `${specId}-${filename}`,
+      title,
+      priority,
+      epic,
+      estTime,
+      createdAt: stats.mtime.toISOString(),
+    };
+  } catch (error) {
+    console.error(`Error parsing spec file ${filePath}:`, error);
+    return null;
+  }
+}
+
+export async function GET() {
+  try {
+    const files = await fs.readdir(QUEUE_DIR);
+    const specFiles = files.filter(f => f.endsWith('.md'));
+
+    const specs: QueuedSpec[] = [];
+
+    for (const file of specFiles) {
+      const spec = await parseSpecFile(path.join(QUEUE_DIR, file));
+      if (spec) {
+        specs.push(spec);
       }
     }
 
-    return NextResponse.json({
-      source: 'live',
-      specs,
+    // Sort by priority (P0 first), then by creation date
+    const priorityOrder = { P0: 0, P1: 1, P2: 2 };
+    specs.sort((a, b) => {
+      const priorityDiff = priorityOrder[a.priority] - priorityOrder[b.priority];
+      if (priorityDiff !== 0) return priorityDiff;
+      return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     });
+
+    return NextResponse.json(specs);
   } catch (error) {
-    console.error('Failed to fetch queue:', error);
-    
-    // Return mock data on error
-    return NextResponse.json({
-      source: 'live',
-      specs: [
-        {
-          id: '90',
-          title: 'Mission Control Build Monitor',
-          status: 'ready',
-          priority: 'high',
-          effort: 'medium',
-          created: '2026-02-09',
-        },
-        {
-          id: '91',
-          title: 'CryptoMon Trading Journal',
-          status: 'ready',
-          priority: 'medium',
-          effort: 'medium',
-          created: '2026-02-09',
-        },
-        {
-          id: '92',
-          title: 'Cohera Knowledge Base',
-          status: 'ready',
-          priority: 'low',
-          effort: 'small',
-          created: '2026-02-09',
-        },
-      ],
-      error: error instanceof Error ? error.message : 'Unknown error',
-    });
+    console.error('Error fetching build queue:', error);
+    return NextResponse.json({ error: 'Failed to fetch build queue' }, { status: 500 });
   }
 }

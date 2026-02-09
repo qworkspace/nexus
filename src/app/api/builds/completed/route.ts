@@ -70,17 +70,21 @@ export async function GET() {
 
     for (const file of sessionFiles) {
       const session = await parseSessionFile(path.join(SESSIONS_DIR, file));
-      if (session && session.status === 'active') {
+      if (session && session.status !== 'active') {
         sessions.push(session);
       }
     }
 
-    // Sort by start time (newest first)
-    sessions.sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+    // Sort by end time (newest first) and take last 10
+    sessions.sort((a, b) => {
+      const aTime = new Date(a.endTime || a.startTime).getTime();
+      const bTime = new Date(b.endTime || b.startTime).getTime();
+      return bTime - aTime;
+    });
 
-    return NextResponse.json(sessions);
+    return NextResponse.json(sessions.slice(0, 10));
   } catch (error) {
-    console.error('Error fetching active builds:', error);
-    return NextResponse.json({ error: 'Failed to fetch active builds' }, { status: 500 });
+    console.error('Error fetching completed builds:', error);
+    return NextResponse.json({ error: 'Failed to fetch completed builds' }, { status: 500 });
   }
 }
