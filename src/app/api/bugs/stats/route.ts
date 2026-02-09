@@ -1,24 +1,15 @@
 import { NextResponse } from 'next/server';
-import { getBugStats, seedSampleBugs } from '@/lib/bugs/BugService';
+import { bugService } from '@/lib/bugs';
 
+// GET /api/bugs/stats
 export async function GET() {
   try {
-    // Ensure we have some bugs to show
-    await seedSampleBugs();
-
-    const stats = await getBugStats();
-
-    return NextResponse.json({
-      success: true,
-      data: stats,
-    });
-  } catch (error: unknown) {
-    console.error('Failed to fetch bug stats:', error);
+    const stats = await bugService.getStats();
+    return NextResponse.json(stats);
+  } catch (error) {
+    console.error('Error fetching bug stats:', error);
     return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Failed to fetch bug stats',
-      },
+      { error: 'Failed to fetch bug stats' },
       { status: 500 }
     );
   }

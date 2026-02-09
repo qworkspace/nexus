@@ -17,6 +17,7 @@ import { CostTrend } from "./components/CostTrend";
 import { HealthMonitor } from "./components/HealthMonitor";
 import { BackupMonitor } from "./components/BackupMonitor";
 import { LessonsSummary } from "@/components/dashboard/components/LessonsSummary";
+import { BugTrackerPanel } from "./components/BugTrackerPanel";
 
 export default function MissionControlDashboard() {
   return (
@@ -97,6 +98,11 @@ export default function MissionControlDashboard() {
           </div>
           <div className="col-span-12 lg:col-span-4">
             <CostBreakdown />
+          </div>
+
+          {/* Row 7: Bug Tracker */}
+          <div className="col-span-12">
+            <BugTrackerPanel />
           </div>
         </div>
 

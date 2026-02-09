@@ -1,117 +1,78 @@
-import { NextResponse } from 'next/server';
-import {
-  getBugById,
-  updateBug,
-  deleteBug,
-} from '@/lib/bugs/BugService';
+import { NextRequest, NextResponse } from 'next/server';
+import { bugService } from '@/lib/bugs';
+import type { UpdateBugInput } from '@/lib/bugs/types';
 
+// GET /api/bugs/:id
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const bug = await getBugById(params.id);
-
+    const bug = await bugService.get(params.id);
+    
     if (!bug) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bug not found',
-        },
+        { error: 'Bug not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: bug,
-    });
-  } catch (error: unknown) {
-    console.error('Failed to fetch bug:', error);
+    return NextResponse.json(bug);
+  } catch (error) {
+    console.error('Error fetching bug:', error);
     return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Failed to fetch bug',
-      },
+      { error: 'Failed to fetch bug' },
       { status: 500 }
     );
   }
 }
 
+// PATCH /api/bugs/:id
 export async function PATCH(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const body = await request.json();
-    const { changedBy, ...updates } = body;
-
-    if (!changedBy) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: 'Missing required field: changedBy',
-        },
-        { status: 400 }
-      );
-    }
-
-    const bug = await updateBug(params.id, updates, changedBy);
-
+    const body: UpdateBugInput = await request.json();
+    const bug = await bugService.update(params.id, body);
+    
     if (!bug) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bug not found',
-        },
+        { error: 'Bug not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      data: bug,
-    });
-  } catch (error: unknown) {
-    console.error('Failed to update bug:', error);
+    return NextResponse.json(bug);
+  } catch (error) {
+    console.error('Error updating bug:', error);
     return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Failed to update bug',
-      },
+      { error: 'Failed to update bug' },
       { status: 500 }
     );
   }
 }
 
+// DELETE /api/bugs/:id
 export async function DELETE(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const success = await deleteBug(params.id);
-
+    const success = await bugService.delete(params.id);
+    
     if (!success) {
       return NextResponse.json(
-        {
-          success: false,
-          error: 'Bug not found',
-        },
+        { error: 'Bug not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: 'Bug deleted successfully',
-    });
-  } catch (error: unknown) {
-    console.error('Failed to delete bug:', error);
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Error deleting bug:', error);
     return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : 'Failed to delete bug',
-      },
+      { error: 'Failed to delete bug' },
       { status: 500 }
     );
   }

@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import Link from "next/link";
+// import { BugTrackerPanel } from "@/components/bugs/BugTrackerPanel";
 
 async function getStats() {
   const todayStart = new Date(new Date().setHours(0, 0, 0, 0));
@@ -110,6 +111,11 @@ export default async function Dashboard() {
           </Card>
         </Link>
       </div>
+
+      {/* Bug Tracker Panel */}
+      {/* <div className="mb-8">
+        <BugTrackerPanel />
+      </div> */}
 
       {/* Recent Activity */}
       <Card>
