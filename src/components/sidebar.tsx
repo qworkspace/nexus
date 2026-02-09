@@ -16,6 +16,7 @@ const navigation = [
   { name: "Costs", href: "/costs", icon: "◈", shortcut: "mod+5" },
   { name: "Evolution", href: "/evolution", icon: "📈", shortcut: null },
   { name: "Memory", href: "/memory", icon: "🧠", shortcut: "g then m" },
+  { name: "Logs", href: "/logs", icon: "📜", shortcut: null },
   { name: "Search", href: "/search", icon: "⌕", shortcut: null },
 ];
 

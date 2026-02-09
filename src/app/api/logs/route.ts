@@ -1,94 +1,155 @@
 import { NextResponse } from 'next/server';
-import { execSync } from 'child_process';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
+
+export const dynamic = 'force-dynamic';
+
+interface ParsedLogEntry {
+  id: string;
+  timestamp: string;
+  level: 'info' | 'warn' | 'error' | 'debug';
+  source: string;
+  message: string;
+  raw: string;
+}
+
+// Parse a single log line
+function parseLogLine(line: string, index: number): ParsedLogEntry | null {
+  if (!line.trim()) return null;
+
+  // Try to match standard log format: TIMESTAMP [SOURCE] MESSAGE
+  const standardMatch = line.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\s+\[([^\]]+)\]\s+(.*)$/);
+  if (standardMatch) {
+    const [, timestamp, source, message] = standardMatch;
+    const level = inferLogLevel(source, message);
+    return {
+      id: `${timestamp}-${index}`,
+      timestamp,
+      level,
+      source,
+      message,
+      raw: line,
+    };
+  }
+
+  // Try to match timestamp-only format: TIMESTAMP MESSAGE (without source)
+  const timestampMatch = line.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)\s+(.*)$/);
+  if (timestampMatch) {
+    const [, timestamp, message] = timestampMatch;
+    const level = inferLogLevel('system', message);
+    return {
+      id: `${timestamp}-${index}`,
+      timestamp,
+      level,
+      source: 'system',
+      message,
+      raw: line,
+    };
+  }
+
+  // Fallback: try to extract timestamp from anywhere in the line
+  const anywhereTimestampMatch = line.match(/(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z)/);
+  if (anywhereTimestampMatch) {
+    const timestamp = anywhereTimestampMatch[1];
+    const message = line.replace(timestamp, '').trim();
+    const level = inferLogLevel('system', message || line);
+    return {
+      id: `${timestamp}-${index}`,
+      timestamp,
+      level,
+      source: 'system',
+      message: message || line,
+      raw: line,
+    };
+  }
+
+  // Final fallback: treat entire line as message with current timestamp
+  return {
+    id: `fallback-${index}`,
+    timestamp: new Date().toISOString(),
+    level: inferLogLevel('unknown', line),
+    source: 'unknown',
+    message: line,
+    raw: line,
+  };
+}
+
+// Infer log level based on source and message content
+function inferLogLevel(source: string, message: string): 'info' | 'warn' | 'error' | 'debug' {
+  const lowerMessage = message.toLowerCase();
+  const lowerSource = source.toLowerCase();
+
+  // Check for explicit error indicators
+  if (
+    lowerSource.includes('error') ||
+    lowerMessage.includes('error') ||
+    lowerMessage.includes('failed') ||
+    lowerMessage.includes('exception') ||
+    lowerMessage.includes('✗') ||
+    lowerMessage.includes('code 1') ||
+    lowerMessage.includes('code 127') ||
+    lowerMessage.includes('code 130') ||
+    lowerMessage.includes('timed out') ||
+    lowerMessage.includes('aborterror')
+  ) {
+    return 'error';
+  }
+
+  // Check for warning indicators
+  if (
+    lowerSource.includes('warn') ||
+    lowerMessage.includes('warn') ||
+    lowerMessage.includes('conflict') ||
+    lowerMessage.includes('deprecated') ||
+    lowerMessage.includes('retrying')
+  ) {
+    return 'warn';
+  }
+
+  // Check for debug indicators
+  if (
+    lowerSource.includes('debug') ||
+    lowerMessage.includes('debug') ||
+    lowerMessage.includes('verbose') ||
+    lowerMessage.includes('trace')
+  ) {
+    return 'debug';
+  }
+
+  // Default to info
+  return 'info';
+}
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
-    const limit = searchParams.get('limit') || '200';
-    const follow = searchParams.get('follow') === 'true';
+    const limit = parseInt(searchParams.get('limit') || '500');
 
-    let result: string;
-    try {
-      const command = follow
-        ? `openclaw logs --json --follow --limit ${limit}`
-        : `openclaw logs --json --limit ${limit}`;
-      
-      result = execSync(command, {
-        encoding: 'utf-8',
-        timeout: 5000,
-      });
-    } catch (cliError: unknown) {
-      const error = cliError as { message?: string };
-      console.error('OpenClaw logs CLI error:', error?.message);
+    const logPath = join(process.env.HOME || '', '.openclaw', 'logs', 'gateway.log');
 
-      // Return mock log data for development
-      const mockLogs = [
-        {
-          timestamp: new Date(Date.now() - 300000).toISOString(),
-          level: 'info',
-          source: 'agent',
-          message: 'Session started: agent:main:main',
-          sessionId: 'ee272111-131e-4c5c-9f73-b61b7806515b',
-        },
-        {
-          timestamp: new Date(Date.now() - 240000).toISOString(),
-          level: 'info',
-          source: 'agent',
-          message: 'Building Mission Control dashboard components',
-          sessionId: 'dev-agent-1',
-        },
-        {
-          timestamp: new Date(Date.now() - 180000).toISOString(),
-          level: 'warn',
-          source: 'gateway',
-          message: 'High token usage detected (95% of context)',
-        },
-        {
-          timestamp: new Date(Date.now() - 120000).toISOString(),
-          level: 'info',
-          source: 'cron',
-          message: 'Cron job completed: afternoon-joke',
-          cronId: 'cron-001',
-        },
-        {
-          timestamp: new Date(Date.now() - 60000).toISOString(),
-          level: 'error',
-          source: 'agent',
-          message: 'Failed to parse response: unexpected token',
-          sessionId: 'dev-agent-2',
-        },
-        {
-          timestamp: new Date().toISOString(),
-          level: 'info',
-          source: 'channel',
-          message: 'Message delivered to telegram',
-          channelId: 'telegram',
-        },
-      ];
-
+    // Check if log file exists
+    if (!existsSync(logPath)) {
       return NextResponse.json({
-        source: 'mock',
-        error: error?.message,
-        logs: mockLogs,
-        count: mockLogs.length,
-      });
+        source: 'error',
+        error: 'Log file not found',
+        suggestion: `Ensure the gateway is running and logs are being written to: ${logPath}`,
+        logs: [],
+        count: 0,
+      }, { status: 404 });
     }
 
-    // Parse JSON lines
-    const lines = result.trim().split('\n').filter(line => line);
-    const logs = lines.map(line => {
-      try {
-        return JSON.parse(line);
-      } catch {
-        // If not JSON, wrap as plain text log
-        return {
-          timestamp: new Date().toISOString(),
-          level: 'info',
-          source: 'system',
-          message: line,
-        };
-      }
-    });
+    // Read log file
+    const logContent = readFileSync(logPath, 'utf-8');
+    const lines = logContent.split('\n').filter(line => line.trim());
+
+    // Get the most recent entries
+    const recentLines = lines.slice(-limit);
+
+    // Parse each line
+    const logs = recentLines
+      .map((line, index) => parseLogLine(line, index))
+      .filter((log): log is ParsedLogEntry => log !== null)
+      .reverse(); // Reverse to show newest first
 
     return NextResponse.json({
       source: 'live',
@@ -103,7 +164,8 @@ export async function GET(request: Request) {
       {
         source: 'error',
         error: err?.message || 'Failed to fetch logs',
-        suggestion: 'Ensure OpenClaw gateway is running: openclaw gateway start',
+        logs: [],
+        count: 0,
       },
       { status: 500 }
     );
