@@ -4,18 +4,19 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { KeyHint } from "@/components/KeyHint";
 
 const navigation = [
-  { name: "Command Center", href: "/command-center", icon: "🎛️" },
-  { name: "Dashboard", href: "/", icon: "◉" },
-  { name: "Analytics", href: "/analytics", icon: "📊" },
-  { name: "Builds", href: "/builds", icon: "🔨" },
-  { name: "Agents", href: "/agents", icon: "🦾" },
-  { name: "Cron Jobs", href: "/crons", icon: "⏰" },
-  { name: "Costs", href: "/costs", icon: "◈" },
-  { name: "Evolution", href: "/evolution", icon: "📈" },
-  { name: "Memory", href: "/memory", icon: "🧠" },
-  { name: "Search", href: "/search", icon: "⌕" },
+  { name: "Command Center", href: "/command-center", icon: "🎛️", shortcut: null },
+  { name: "Dashboard", href: "/", icon: "◉", shortcut: "mod+1" },
+  { name: "Analytics", href: "/analytics", icon: "📊", shortcut: null },
+  { name: "Builds", href: "/builds", icon: "🔨", shortcut: "mod+2" },
+  { name: "Agents", href: "/agents", icon: "🦾", shortcut: "mod+4" },
+  { name: "Cron Jobs", href: "/crons", icon: "⏰", shortcut: "mod+3" },
+  { name: "Costs", href: "/costs", icon: "◈", shortcut: "mod+5" },
+  { name: "Evolution", href: "/evolution", icon: "📈", shortcut: null },
+  { name: "Memory", href: "/memory", icon: "🧠", shortcut: "g then m" },
+  { name: "Search", href: "/search", icon: "⌕", shortcut: null },
 ];
 
 export function Sidebar() {
@@ -54,27 +55,36 @@ export function Sidebar() {
               href={item.href}
               onClick={() => setCollapsed(true)}
               className={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                 pathname === item.href
                   ? "bg-zinc-900 text-white"
                   : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
               )}
             >
               <span className="text-base">{item.icon}</span>
-              {item.name}
+              <span className="flex-1">{item.name}</span>
+              {item.shortcut && (
+                <KeyHint keys={item.shortcut} showOnHover className="opacity-0 group-hover:opacity-100" />
+              )}
             </Link>
           ))}
         </nav>
 
         {/* Keyboard shortcut hint */}
-        <div className="p-4 border-t border-zinc-200">
-          <div className="flex items-center justify-between text-xs text-zinc-400 mb-2">
+        <div className="p-4 border-t border-zinc-200 space-y-2">
+          <div className="flex items-center justify-between text-xs text-zinc-400">
             <span>Quick actions</span>
             <kbd className="px-1.5 py-0.5 bg-zinc-200 rounded text-zinc-600">
               ⌘K
             </kbd>
           </div>
-          <p className="text-xs text-zinc-400">Built for PJ by Q</p>
+          <div className="flex items-center justify-between text-xs text-zinc-400">
+            <span>Shortcuts help</span>
+            <kbd className="px-1.5 py-0.5 bg-zinc-200 rounded text-zinc-600">
+              ⌘/
+            </kbd>
+          </div>
+          <p className="text-xs text-zinc-400 mt-2">Built for PJ by Q</p>
         </div>
       </aside>
 

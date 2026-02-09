@@ -6,6 +6,7 @@ interface CommandState {
   spawnOpen: boolean;
   cronOpen: boolean;
   modelOpen: boolean;
+  shortcutsOpen: boolean;
 
   // Actions
   openPalette: () => void;
@@ -16,6 +17,7 @@ interface CommandState {
   closeCron: () => void;
   openModel: () => void;
   closeModel: () => void;
+  toggleShortcuts: () => void;
   closeAll: () => void;
 }
 
@@ -24,6 +26,7 @@ export const useCommandStore = create<CommandState>((set) => ({
   spawnOpen: false,
   cronOpen: false,
   modelOpen: false,
+  shortcutsOpen: false,
 
   openPalette: () => set({ paletteOpen: true }),
   closePalette: () => set({ paletteOpen: false }),
@@ -33,10 +36,12 @@ export const useCommandStore = create<CommandState>((set) => ({
   closeCron: () => set({ cronOpen: false }),
   openModel: () => set({ modelOpen: true, paletteOpen: false }),
   closeModel: () => set({ modelOpen: false }),
+  toggleShortcuts: () => set((state) => ({ shortcutsOpen: !state.shortcutsOpen })),
   closeAll: () => set({
     paletteOpen: false,
     spawnOpen: false,
     cronOpen: false,
     modelOpen: false,
+    shortcutsOpen: false,
   }),
 }));

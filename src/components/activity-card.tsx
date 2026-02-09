@@ -15,7 +15,6 @@ interface Activity {
   metadata: string | null;
   duration: number | null;
   status: string;
-  // Cost tracking
   tokensIn: number | null;
   tokensOut: number | null;
   cost: number | null;
@@ -29,6 +28,8 @@ const typeColors: Record<string, string> = {
   file: "bg-green-100 text-green-800",
   search: "bg-cyan-100 text-cyan-800",
   spawn: "bg-pink-100 text-pink-800",
+  tool: "bg-gray-100 text-gray-800",
+  model: "bg-indigo-100 text-indigo-800",
 };
 
 const typeIcons: Record<string, string> = {
@@ -38,6 +39,8 @@ const typeIcons: Record<string, string> = {
   file: "◫",
   search: "⌕",
   spawn: "◇",
+  tool: "⚙",
+  model: "⚡",
 };
 
 const statusIcons: Record<string, string> = {

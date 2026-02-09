@@ -4,10 +4,19 @@ import { LiveAgentStatusPanel } from "./components/LiveAgentStatusPanel";
 import { ModelIntelligenceDashboard } from "./components/ModelIntelligenceDashboard";
 import { BusinessHealthCards } from "./components/BusinessHealthCards";
 import { CronJobMonitor } from "./components/CronJobMonitor";
+import { CronDashboard } from "./components/CronDashboard";
 import { NotificationCenter } from "./components/NotificationCenter";
 import { SessionInsights } from "./components/SessionInsights";
 import { QuickActionsBar } from "./components/QuickActionsBar";
 import { MemoryPanel } from "./components/MemoryPanel";
+import { MemoryDashboard } from "./components/MemoryDashboard";
+import { BuildMonitor } from "./components/BuildMonitor";
+import { CostTracker } from "./components/CostTracker";
+import { CostBreakdown } from "./components/CostBreakdown";
+import { CostTrend } from "./components/CostTrend";
+import { HealthMonitor } from "./components/HealthMonitor";
+import { BackupMonitor } from "./components/BackupMonitor";
+import { LessonsSummary } from "@/components/dashboard/components/LessonsSummary";
 
 export default function MissionControlDashboard() {
   return (
@@ -33,7 +42,11 @@ export default function MissionControlDashboard() {
       {/* Main Content */}
       <div className="p-6 max-w-[1600px] mx-auto">
         <div className="grid grid-cols-12 gap-6">
-          {/* Row 1: Agent Status & Model Intelligence */}
+          {/* Row 1: Health Monitor & Backup Monitor */}
+          <HealthMonitor />
+          <BackupMonitor />
+
+          {/* Row 2: Agent Status & Model Intelligence */}
           <div className="col-span-12 lg:col-span-5">
             <LiveAgentStatusPanel />
           </div>
@@ -44,7 +57,12 @@ export default function MissionControlDashboard() {
             <BusinessHealthCards />
           </div>
 
-          {/* Row 2: Memory Panel & Business Health (expanded) */}
+          {/* Row 2: Memory Dashboard, Cron Jobs, Session Insights */}
+          <div className="col-span-12">
+            <MemoryDashboard />
+          </div>
+
+          {/* Row 3: Memory Panel, Cron Jobs, Lessons Summary */}
           <div className="col-span-12 lg:col-span-4">
             <MemoryPanel />
           </div>
@@ -52,7 +70,33 @@ export default function MissionControlDashboard() {
             <CronJobMonitor />
           </div>
           <div className="col-span-12 lg:col-span-4">
+            <LessonsSummary />
+          </div>
+
+          {/* Row 4: Session Insights */}
+          <div className="col-span-12 lg:col-span-4">
             <SessionInsights />
+          </div>
+
+          {/* Row 4: Comprehensive Cron Dashboard */}
+          <div className="col-span-12">
+            <CronDashboard />
+          </div>
+
+          {/* Row 5: Build Monitor */}
+          <div className="col-span-12">
+            <BuildMonitor />
+          </div>
+
+          {/* Row 6: Cost Tracking */}
+          <div className="col-span-12 lg:col-span-3">
+            <CostTracker />
+          </div>
+          <div className="col-span-12 lg:col-span-5">
+            <CostTrend />
+          </div>
+          <div className="col-span-12 lg:col-span-4">
+            <CostBreakdown />
           </div>
         </div>
 

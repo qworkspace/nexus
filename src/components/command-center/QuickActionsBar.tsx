@@ -57,6 +57,13 @@ export function QuickActionsBar({ onRefresh }: QuickActionsBarProps) {
       action: openPalette,
     },
     {
+      id: "lessons",
+      label: "Lessons",
+      icon: "📚",
+      shortcut: "L",
+      action: () => router.push("/lessons"),
+    },
+    {
       id: "report",
       label: "Daily Report",
       icon: "📊",
