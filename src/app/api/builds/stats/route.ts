@@ -20,10 +20,6 @@ async function parseSessionFile(filePath: string): Promise<DevSession | null> {
     const durationMs = new Date(endTime).getTime() - new Date(startTime).getTime();
 
     // Check if session is from today
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0);
-    const isToday = new Date(startTime).getTime() >= startOfDay.getTime();
-
     return {
       id: firstLine.id,
       startTime,
@@ -32,7 +28,7 @@ async function parseSessionFile(filePath: string): Promise<DevSession | null> {
       task: '',
       durationMs,
     };
-  } catch (error) {
+  } catch {
     return null;
   }
 }

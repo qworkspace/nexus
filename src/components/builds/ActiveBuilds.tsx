@@ -29,15 +29,6 @@ export function ActiveBuilds() {
     return () => clearInterval(interval);
   }, []);
 
-  const formatDuration = (ms?: number) => {
-    if (!ms) return '0s';
-    const seconds = Math.floor(ms / 1000);
-    if (seconds < 60) return `${seconds}s`;
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}m ${remainingSeconds}s`;
-  };
-
   if (loading) {
     return (
       <Card>

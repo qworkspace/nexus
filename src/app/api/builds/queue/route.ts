@@ -6,7 +6,7 @@ import type { QueuedSpec } from '@/types/builds';
 const QUEUE_DIR = path.join(process.env.HOME || '', '.openclaw/workspace/specs/queue');
 
 function parsePriority(content: string): 'P0' | 'P1' | 'P2' {
-  const priorityMatch = content.match(/\*\*Priority:\s*(P[0-2])/i);
+  const priorityMatch = content.match(/\*\*Priority:\*\*\s*(P[0-2])/i);
   if (priorityMatch) {
     return priorityMatch[1] as 'P0' | 'P1' | 'P2';
   }
@@ -23,18 +23,34 @@ function parseTitle(content: string): string {
 }
 
 function parseSpecId(content: string): string {
-  const idMatch = content.match(/\*\*Spec ID:\s*(\d+)/i);
+  const idMatch = content.match(/\*\*Spec ID:\*\*\s*(\d+)/i);
   return idMatch ? idMatch[1] : 'unknown';
 }
 
 function parseEpic(content: string): string | undefined {
-  const epicMatch = content.match(/\*\*Epic:\s*(.+?)(?:\n|$)/i);
-  return epicMatch ? epicMatch[1].trim() : undefined;
+  const epicMatch = content.match(/\*\*Epic:\s*\*\*(.+?)\*\*/i);
+  if (epicMatch) {
+    return epicMatch[1].trim();
+  }
+  // Fallback: match text after "Epic:" until end of line, excluding trailing asterisks
+  const fallbackMatch = content.match(/\*\*Epic:\s*(.+?)(?:\n|$)/i);
+  if (fallbackMatch) {
+    return fallbackMatch[1].replace(/\*\*/g, '').trim();
+  }
+  return undefined;
 }
 
 function parseEstTime(content: string): string | undefined {
-  const timeMatch = content.match(/\*\*Est\.\s*Time:\s*(.+?)(?:\n|$)/i);
-  return timeMatch ? timeMatch[1].trim() : undefined;
+  const timeMatch = content.match(/\*\*Est\.\s*Time:\s*\*\*(.+?)\*\*/i);
+  if (timeMatch) {
+    return timeMatch[1].trim();
+  }
+  // Fallback: match text after "Est. Time:" until end of line, excluding trailing asterisks
+  const fallbackMatch = content.match(/\*\*Est\.\s*Time:\s*(.+?)(?:\n|$)/i);
+  if (fallbackMatch) {
+    return fallbackMatch[1].replace(/\*\*/g, '').trim();
+  }
+  return undefined;
 }
 
 async function parseSpecFile(filePath: string): Promise<QueuedSpec | null> {

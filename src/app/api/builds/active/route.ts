@@ -23,7 +23,7 @@ async function parseSessionFile(filePath: string): Promise<DevSession | null> {
         if (parsed.type === 'message' && parsed.message?.role === 'user') {
           const userContent = parsed.message.content;
           if (Array.isArray(userContent)) {
-            const textContent = userContent.find((c: any) => c.type === 'text');
+            const textContent = userContent.find((c: { type: string; text?: string }) => c.type === 'text');
             if (textContent?.text) {
               // Extract the first line or a brief summary
               const lines = textContent.text.split('\n');
@@ -33,7 +33,7 @@ async function parseSessionFile(filePath: string): Promise<DevSession | null> {
             }
           }
         }
-      } catch (e) {
+      } catch {
         // Skip unparseable lines
       }
     }
