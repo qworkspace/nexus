@@ -12,6 +12,7 @@ const navigation = [
   { name: "Analytics", href: "/analytics", icon: "📊", shortcut: null },
   { name: "Builds", href: "/builds", icon: "🔨", shortcut: "mod+2" },
   { name: "Agents", href: "/agents", icon: "🦾", shortcut: "mod+4" },
+  { name: "Sessions", href: "/sessions", icon: "💬", shortcut: null },
   { name: "Cron Jobs", href: "/crons", icon: "⏰", shortcut: "mod+3" },
   { name: "Costs", href: "/costs", icon: "◈", shortcut: "mod+5" },
   { name: "Evolution", href: "/evolution", icon: "📈", shortcut: null },
