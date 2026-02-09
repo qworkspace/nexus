@@ -1,0 +1,115 @@
+{
+  "bugs": [
+    {
+      "id": "BUG-1770623508752-wbfupid",
+      "title": "Dashboard performance degradation",
+      "description": "The dashboard is loading slowly when there are many active sessions. Need to optimize the data fetching and rendering logic.",
+      "status": "open",
+      "priority": "high",
+      "category": "performance",
+      "labels": [],
+      "createdAt": "2026-02-09T07:51:48.752Z",
+      "updatedAt": "2026-02-09T07:51:48.752Z",
+      "comments": [],
+      "history": [
+        {
+          "id": "BUG-1770623508752-hyr4vz3",
+          "field": "created",
+          "oldValue": null,
+          "newValue": "Dashboard performance degradation",
+          "changedBy": "System",
+          "timestamp": "2026-02-09T07:51:48.752Z"
+        }
+      ]
+    },
+    {
+      "id": "BUG-1770623508754-1egzw46",
+      "title": "Add dark mode support for bug tracker",
+      "description": "Implement dark mode toggle and styling for the new bug tracker panel.",
+      "status": "open",
+      "priority": "medium",
+      "category": "feature",
+      "labels": [],
+      "createdAt": "2026-02-09T07:51:48.754Z",
+      "updatedAt": "2026-02-09T07:51:48.754Z",
+      "comments": [],
+      "history": [
+        {
+          "id": "BUG-1770623508754-qtaa544",
+          "field": "created",
+          "oldValue": null,
+          "newValue": "Add dark mode support for bug tracker",
+          "changedBy": "System",
+          "timestamp": "2026-02-09T07:51:48.754Z"
+        }
+      ]
+    },
+    {
+      "id": "BUG-1770623508755-nr1g27e",
+      "title": "Fix session history filter bug",
+      "description": "The date filter in the session history component is not correctly filtering sessions before the selected date.",
+      "status": "open",
+      "priority": "critical",
+      "category": "bug",
+      "labels": [],
+      "createdAt": "2026-02-09T07:51:48.755Z",
+      "updatedAt": "2026-02-09T07:51:48.755Z",
+      "comments": [],
+      "history": [
+        {
+          "id": "BUG-1770623508755-x5rxko6",
+          "field": "created",
+          "oldValue": null,
+          "newValue": "Fix session history filter bug",
+          "changedBy": "System",
+          "timestamp": "2026-02-09T07:51:48.755Z"
+        }
+      ]
+    },
+    {
+      "id": "BUG-1770623508760-vqf1ty5",
+      "title": "Add keyboard shortcuts",
+      "description": "Implement keyboard shortcuts for common actions like creating a new bug, searching, and navigating between bugs.",
+      "status": "open",
+      "priority": "low",
+      "category": "improvement",
+      "labels": [],
+      "createdAt": "2026-02-09T07:51:48.759Z",
+      "updatedAt": "2026-02-09T07:51:48.759Z",
+      "comments": [],
+      "history": [
+        {
+          "id": "BUG-1770623508760-myj5hwp",
+          "field": "created",
+          "oldValue": null,
+          "newValue": "Add keyboard shortcuts",
+          "changedBy": "System",
+          "timestamp": "2026-02-09T07:51:48.759Z"
+        }
+      ]
+    },
+    {
+      "id": "BUG-1770623508769-if2iz89",
+      "title": "Secure API endpoints",
+      "description": "Review and implement authentication for all API endpoints that handle sensitive data.",
+      "status": "open",
+      "priority": "high",
+      "category": "security",
+      "labels": [],
+      "createdAt": "2026-02-09T07:51:48.769Z",
+      "updatedAt": "2026-02-09T07:51:48.769Z",
+      "comments": [],
+      "history": [
+        {
+          "id": "BUG-1770623508769-zl1yq59",
+          "field": "created",
+          "oldValue": null,
+          "newValue": "Secure API endpoints",
+          "changedBy": "System",
+          "timestamp": "2026-02-09T07:51:48.769Z"
+        }
+      ]
+    }
+  ],
+  "lastUpdated": "2026-02-09T07:51:48.770Z"
+}
