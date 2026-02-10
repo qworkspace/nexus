@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 
 interface Agent {
@@ -85,23 +85,78 @@ export default function FloorPage() {
   const [meetingMode, setMeetingMode] = useState(false);
   const [meetingLines, setMeetingLines] = useState<MeetingLine[]>([]);
   const [currentLineIdx, setCurrentLineIdx] = useState(0);
-  const [agentStates, setAgentStates] = useState<Record<string, { state: AgentState; activity: string; bobPhase: number }>>({});
+  const [agentStates, setAgentStates] = useState<Record<string, { state: AgentState; activity: string; bobPhase: number; lastActive: string }>>({});
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
   const [tick, setTick] = useState(0);
+  const [selectedAgents, setSelectedAgents] = useState<string[]>([]); // For chat
+  const [chatMessages, setChatMessages] = useState<Array<{ agent: string; name: string; text: string }>>([]);
+  const agentsRef = useRef<Agent[]>([]);
 
-  const randomFrom = useCallback((arr: string[]) => arr[Math.floor(Math.random() * arr.length)], []);
+  // Keep ref in sync with state
+  useEffect(() => {
+    agentsRef.current = agents;
+  }, [agents]);
 
   useEffect(() => {
-    fetch("/api/company/roster").then(r => r.json()).then(d => {
-      const agts: Agent[] = d.agents || [];
-      setAgents(agts);
-      const states: Record<string, { state: AgentState; activity: string; bobPhase: number }> = {};
-      agts.forEach((a, i) => {
-        states[a.id] = { state: "working", activity: randomFrom(ACTIVITIES[a.id] || ["Working..."]), bobPhase: i * 0.5 };
-      });
-      setAgentStates(states);
-    });
-  }, [randomFrom]);
+    // Load roster once
+    const loadRoster = async () => {
+      try {
+        const res = await fetch("/api/company/roster");
+        const data = await res.json();
+        const agts: Agent[] = data.agents || [];
+        setAgents(agts);
+
+        // Set initial states
+        const statusRes = await fetch("/api/company/agent-status");
+        const statusData = await statusRes.json();
+
+        const states: Record<string, { state: AgentState; activity: string; bobPhase: number; lastActive: string }> = {};
+        agts.forEach((a) => {
+          const agentData = statusData.agents?.[a.id];
+          const state: AgentState = agentData?.state === "meeting" ? "meeting" : agentData?.state === "working" ? "working" : "idle";
+          states[a.id] = {
+            state,
+            activity: agentData?.activity || ACTIVITIES[a.id]?.[0] || "Working...",
+            bobPhase: 0,
+            lastActive: agentData?.lastActive || new Date().toISOString(),
+          };
+        });
+        setAgentStates(states);
+      } catch (err) {
+        console.error("Failed to load agent status:", err);
+      }
+    };
+
+    loadRoster();
+
+    // Poll agent status every 10 seconds
+    const pollAgentStatus = async () => {
+      try {
+        const res = await fetch("/api/company/agent-status");
+        const data = await res.json();
+
+        setAgentStates(prev => {
+          const next = { ...prev };
+          agentsRef.current.forEach((a) => {
+            const agentData = data.agents?.[a.id];
+            const state: AgentState = agentData?.state === "meeting" ? "meeting" : agentData?.state === "working" ? "working" : "idle";
+            next[a.id] = {
+              ...prev[a.id],
+              state,
+              activity: agentData?.activity || prev[a.id]?.activity || ACTIVITIES[a.id]?.[0] || "Working...",
+              lastActive: agentData?.lastActive || prev[a.id]?.lastActive || new Date().toISOString(),
+            };
+          });
+          return next;
+        });
+      } catch (err) {
+        console.error("Failed to poll agent status:", err);
+      }
+    };
+
+    const interval = setInterval(pollAgentStatus, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Animation tick
   useEffect(() => {
@@ -110,24 +165,6 @@ export default function FloorPage() {
     }, 600);
     return () => clearInterval(interval);
   }, []);
-
-  // Rotate activities
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!meetingMode) {
-        setAgentStates(prev => {
-          const next = { ...prev };
-          const ids = Object.keys(next);
-          const id = ids[Math.floor(Math.random() * ids.length)];
-          if (id && ACTIVITIES[id]) {
-            next[id] = { ...next[id], activity: randomFrom(ACTIVITIES[id]) };
-          }
-          return next;
-        });
-      }
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [meetingMode, randomFrom]);
 
   // Meeting dialogue playback
   useEffect(() => {
@@ -142,7 +179,7 @@ export default function FloorPage() {
   const startMeeting = async () => {
     setMeetingMode(true);
     setCurrentLineIdx(0);
-    
+
     // Update all agents to walking then meeting
     setAgentStates(prev => {
       const next = { ...prev };
@@ -182,10 +219,76 @@ export default function FloorPage() {
     setAgentStates(prev => {
       const next = { ...prev };
       Object.keys(next).forEach(id => {
-        next[id] = { ...next[id], state: "working", activity: randomFrom(ACTIVITIES[id] || ["Working..."]) };
+        const agentState = prev[id];
+        const activity = agentState?.activity || ACTIVITIES[id]?.[0] || "Working...";
+        next[id] = { ...next[id], state: "working", activity };
       });
       return next;
     });
+  };
+
+  const handleAgentClick = (e: React.MouseEvent, agentId: string) => {
+    if (e.shiftKey) {
+      // Toggle selection for chat
+      setSelectedAgents(prev => {
+        if (prev.includes(agentId)) {
+          return prev.filter(id => id !== agentId);
+        } else if (prev.length < 2) {
+          return [...prev, agentId];
+        }
+        return prev;
+      });
+    } else {
+      // Regular select
+      setSelectedAgent(agentId);
+      setSelectedAgents([]);
+    }
+  };
+
+  const startAgentChat = async () => {
+    if (selectedAgents.length !== 2) return;
+
+    const agent1 = agents.find(a => a.id === selectedAgents[0]);
+    const agent2 = agents.find(a => a.id === selectedAgents[1]);
+    if (!agent1 || !agent2) return;
+
+    setChatMessages([
+      { agent: agent1.id, name: agent1.name, text: `Hey ${agent2.name}, what's on your mind?` },
+      { agent: agent2.id, name: agent2.name, text: `Not much! ${agent1.name}, what are you working on?` },
+    ]);
+
+    try {
+      const res = await fetch("/api/company/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ agent1: agent1.id, agent2: agent2.id }),
+      });
+
+      if (res.ok) {
+        const reader = res.body?.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { done, value } = await reader!.read();
+          if (done) break;
+
+          const chunk = decoder.decode(value);
+          const lines = chunk.split("\n");
+
+          for (const line of lines) {
+            if (line.startsWith("data: ")) {
+              const data = JSON.parse(line.slice(6));
+              if (data.done) break;
+              if (data.message) {
+                setChatMessages(prev => [...prev, data.message]);
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.error("Chat error:", err);
+    }
   };
 
   const visibleLines = meetingLines.slice(0, currentLineIdx);
@@ -282,6 +385,9 @@ export default function FloorPage() {
             const isSpeaking = meetingMode && currentSpeaker === agent.name;
             const bobOffset = Math.sin((tick + (agentStates[agent.id]?.bobPhase || 0)) * 0.8) * 2;
             const isSelected = selectedAgent === agent.id;
+            const isChatSelected = selectedAgents.includes(agent.id);
+            const agentState = agentStates[agent.id];
+            const isWorking = agentState?.state === "working" || agentState?.state === "meeting";
 
             return (
               <div
@@ -291,9 +397,9 @@ export default function FloorPage() {
                   left: pos.x - 16,
                   top: (pos.y + 20) + bobOffset,
                   transition: "left 1.2s cubic-bezier(0.4, 0, 0.2, 1), top 1.2s cubic-bezier(0.4, 0, 0.2, 1)",
-                  zIndex: isSpeaking ? 30 : isSelected ? 25 : 15,
+                  zIndex: isSpeaking ? 30 : isChatSelected ? 28 : isSelected ? 25 : 15,
                 }}
-                onClick={() => setSelectedAgent(isSelected ? null : agent.id)}
+                onClick={(e) => handleAgentClick(e, agent.id)}
               >
                 {/* Speaking indicator */}
                 {isSpeaking && (
@@ -305,8 +411,25 @@ export default function FloorPage() {
                 )}
 
                 {/* Selection glow */}
-                {isSelected && (
+                {(isSelected || isChatSelected) && (
                   <div className="absolute -inset-2 rounded-full animate-pulse" style={{ background: `${colors.body}33` }} />
+                )}
+
+                {/* Active indicator (green dot) */}
+                {!meetingMode && isWorking && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-green-500 border-2 border-zinc-800 animate-pulse" />
+                )}
+
+                {/* Idle indicator (grey dot) */}
+                {!meetingMode && !isWorking && (
+                  <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-zinc-500 border-2 border-zinc-800" />
+                )}
+
+                {/* Chat selection indicator */}
+                {isChatSelected && (
+                  <div className="absolute -top-3 -left-1 text-[12px]">
+                    {selectedAgents.indexOf(agent.id) + 1}
+                  </div>
                 )}
 
                 {/* Pixel character */}
@@ -330,10 +453,10 @@ export default function FloorPage() {
                 </div>
 
                 {/* Activity bubble (when at desk) */}
-                {!meetingMode && isSelected && agentStates[agent.id] && (
+                {!meetingMode && (isSelected || isChatSelected) && agentState && (
                   <div className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap">
                     <div className="bg-zinc-800 border border-zinc-600 rounded px-2 py-1">
-                      <p className="text-[9px] text-zinc-300">{agentStates[agent.id].activity}</p>
+                      <p className="text-[9px] text-zinc-300">{agentState.activity}</p>
                     </div>
                   </div>
                 )}
@@ -351,12 +474,20 @@ export default function FloorPage() {
 
         {/* Chat Panel */}
         <div className="xl:col-span-1 flex flex-col gap-4">
-          {/* Meeting chat */}
-          <div className="bg-zinc-900 rounded-xl border border-zinc-700 flex flex-col" style={{ height: meetingMode ? 420 : 200 }}>
+          {/* Meeting chat / Agent chat */}
+          <div className="bg-zinc-900 rounded-xl border border-zinc-700 flex flex-col" style={{ height: meetingMode ? 420 : 420 }}>
             <div className="px-4 py-3 border-b border-zinc-700 flex items-center justify-between">
               <h3 className="text-sm font-bold text-zinc-100">
-                {meetingMode ? "📋 Standup Chat" : "💬 Office Chat"}
+                {meetingMode ? "📋 Standup Chat" : chatMessages.length > 0 ? "💬 Agent Conversation" : "💬 Office Chat"}
               </h3>
+              {selectedAgents.length === 2 && !meetingMode && (
+                <button
+                  onClick={startAgentChat}
+                  className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded transition-colors"
+                >
+                  💬 Start Chat
+                </button>
+              )}
               {meetingMode && (
                 <span className="text-[10px] text-red-400 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" /> LIVE
@@ -377,10 +508,33 @@ export default function FloorPage() {
                     </div>
                   );
                 })
+              ) : chatMessages.length > 0 && !meetingMode ? (
+                chatMessages.map((msg, i) => {
+                  const colors = AGENT_COLORS[msg.agent] || { label: "#888" };
+                  const agent = agents.find(a => a.id === msg.agent);
+                  return (
+                    <div key={i} className="animate-fade-in">
+                      <span className="text-xs font-bold" style={{ color: colors.label }}>{agent?.name || msg.name}:</span>
+                      <span className="text-xs text-zinc-300 ml-1">{msg.text}</span>
+                    </div>
+                  );
+                })
+              ) : selectedAgents.length === 1 && !meetingMode ? (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-xs text-zinc-600 text-center">
+                    Shift+click another agent to start a chat
+                  </p>
+                </div>
+              ) : selectedAgents.length === 2 && !meetingMode ? (
+                <div className="flex items-center justify-center h-full">
+                  <p className="text-xs text-zinc-600 text-center">
+                    Click &quot;💬 Start Chat&quot; above to begin conversation
+                  </p>
+                </div>
               ) : !meetingMode ? (
                 <div className="flex items-center justify-center h-full">
                   <p className="text-xs text-zinc-600 text-center">
-                    Hit &quot;Start Meeting&quot; to pull everyone<br/>to the table and see real dialogue 📋
+                    Shift+click two agents to start a chat<br/>or &quot;Start Meeting&quot; for standup 📋
                   </p>
                 </div>
               ) : (

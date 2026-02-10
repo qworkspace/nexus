@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 
 interface Agent {
@@ -11,17 +11,48 @@ interface Agent {
   department: string;
   reportsTo: string;
   directReports: string[];
-  personality: string;
   isHuman?: boolean;
   instance?: string;
   model: { primary: string; fallback: string | null };
 }
 
+interface NodePos { x: number; y: number; w: number; h: number; id: string }
+
 export default function OrgChartPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
+  const [collapsed, setCollapsed] = useState<Record<string, boolean>>(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("org-chart-collapsed");
+      return saved ? JSON.parse(saved) : {};
+    }
+    return {};
+  });
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [nodePositions, setNodePositions] = useState<Record<string, NodePos>>({});
+
+  // Persist collapse state to localStorage
+  useEffect(() => {
+    localStorage.setItem("org-chart-collapsed", JSON.stringify(collapsed));
+  }, [collapsed]);
 
   useEffect(() => {
     fetch("/api/company/roster").then(r => r.json()).then(d => setAgents(d.agents || []));
+  }, []);
+
+  const registerNode = useCallback((id: string, el: HTMLDivElement | null) => {
+    if (!el || !containerRef.current) return;
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const rect = el.getBoundingClientRect();
+    setNodePositions(prev => ({
+      ...prev,
+      [id]: {
+        x: rect.left - containerRect.left + rect.width / 2,
+        y: rect.top - containerRect.top + rect.height / 2,
+        w: rect.width,
+        h: rect.height,
+        id,
+      }
+    }));
   }, []);
 
   const agentMap = Object.fromEntries(agents.map(a => [a.id, a]));
@@ -30,8 +61,29 @@ export default function OrgChartPage() {
   const ella = agentMap["ella"];
   const qReports = agents.filter(a => a.reportsTo === "main" && a.id !== "main");
 
+  const toggleCollapse = (id: string) => {
+    setCollapsed(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  // Build SVG lines between connected nodes
+  const lines: { from: string; to: string }[] = [];
+  lines.push({ from: "company", to: "pj" });
+  lines.push({ from: "company", to: "ella-node" });
+  lines.push({ from: "pj", to: "main" });
+  lines.push({ from: "ella-node", to: "arty" });
+  if (!collapsed["main"]) {
+    qReports.filter(a => !["design", "testing"].includes(a.id)).forEach(a => {
+      lines.push({ from: "main", to: a.id });
+      if (!collapsed[a.id]) {
+        agents.filter(sub => sub.reportsTo === a.id).forEach(sub => {
+          lines.push({ from: a.id, to: sub.id });
+        });
+      }
+    });
+  }
+
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Organisational Chart</h1>
@@ -40,107 +92,183 @@ export default function OrgChartPage() {
         <Link href="/company" className="text-sm text-blue-500 hover:underline">← Company HQ</Link>
       </div>
 
-      {agents.length === 0 && <p className="text-zinc-500">Loading...</p>}
       {agents.length > 0 && (
-        <div className="flex flex-col items-center">
-          
-          {/* Level 0: Company */}
-          <div className="mb-2">
-            <div className="px-6 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 border-2 border-amber-300 dark:border-amber-700 text-center">
-              <p className="text-xs font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider">Villanueva Creative Pty Ltd</p>
-            </div>
-          </div>
-          <Connector />
+        <div ref={containerRef} className="relative min-h-[600px]">
+          {/* SVG Layer for connector lines */}
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ zIndex: 0 }}>
+            {lines.map(({ from, to }) => {
+              const f = nodePositions[from];
+              const t = nodePositions[to];
+              if (!f || !t) return null;
+              const fromBottom = f.y + f.h / 2;
+              const toTop = t.y - t.h / 2;
+              const midY = (fromBottom + toTop) / 2;
+              const isDashed = from === "ella-node" || to === "arty";
+              const pathD = `M ${f.x} ${fromBottom} C ${f.x} ${midY}, ${t.x} ${midY}, ${t.x} ${toTop}`;
+              const pathLength = Math.abs(fromBottom - toTop) * 1.5;
 
-          {/* Level 1: Two independent branches */}
-          <div className="flex items-start gap-24 mb-6">
-            {/* PJ's branch */}
-            <div className="flex flex-col items-center">
-              <OrgCard name="PJ" subtitle="Paul Villanueva" role="CEO" color="amber" isHuman />
-              <Connector />
-              {q && <OrgCard name={q.name} emoji={q.emoji} role={q.role} model="Opus 4.5" color="gold" href={`/company/agents/${q.id}`} badge="Local" />}
-              <Connector />
-              {/* Department Heads under Q */}
-              <div className="flex flex-wrap justify-center gap-4">
-                {qReports.filter(a => !["design", "testing"].includes(a.id)).map(agent => {
-                  const subs = agents.filter(a => a.reportsTo === agent.id);
-                  return (
-                    <div key={agent.id} className="flex flex-col items-center">
-                      <OrgCard
-                        name={agent.name}
-                        emoji={agent.emoji}
-                        role={agent.role}
-                        model={agent.model.primary.split("/").pop() || ""}
-                        color={getDeptColor(agent.department)}
-                        href={`/company/agents/${agent.id}`}
-                        small
-                        badge="Local"
-                      />
-                      {subs.length > 0 && (
-                        <>
-                          <Connector short />
-                          <div className="flex gap-2">
-                            {subs.map(sub => (
+              return (
+                <g key={`${from}-${to}`}>
+                  <path
+                    d={pathD}
+                    fill="none"
+                    stroke="currentColor"
+                    className={`text-zinc-300 dark:text-zinc-700 ${isDashed ? "stroke-dashed" : "draw-in"}`}
+                    strokeWidth="2"
+                    strokeDasharray={isDashed ? "4 4" : undefined}
+                    style={{
+                      strokeDashoffset: isDashed ? undefined : pathLength,
+                      animation: `drawLine 0.8s ease-out forwards`,
+                      animationDelay: `${lines.findIndex(l => l.from === from && l.to === to) * 0.05}s`,
+                    }}
+                  />
+                  {/* Arrow */}
+                  <circle cx={t.x} cy={toTop} r="3" className="fill-zinc-300 dark:fill-zinc-700 draw-in-dot" style={{
+                    animation: `fadeIn 0.3s ease-out forwards`,
+                    animationDelay: `${lines.findIndex(l => l.from === from && l.to === to) * 0.05 + 0.6}s`,
+                  }} />
+                </g>
+              );
+            })}
+          </svg>
+
+          {/* Animation styles */}
+          <style jsx>{`
+            @keyframes drawLine {
+              from { stroke-dashoffset: ${lines.length * 200}; }
+              to { stroke-dashoffset: 0; }
+            }
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
+            }
+            .draw-in {
+              stroke-dasharray: 1000;
+            }
+            .draw-in-dot {
+              opacity: 0;
+            }
+            .stroke-dashed {
+              stroke-dasharray: 4 4;
+            }
+          `}</style>
+
+          {/* Nodes */}
+          <div className="relative flex flex-col items-center gap-6" style={{ zIndex: 1 }}>
+            {/* Company */}
+            <div ref={(el) => registerNode("company", el)}>
+              <div className="px-8 py-4 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 border-2 border-amber-300 dark:border-amber-700 text-center shadow-lg">
+                <p className="text-sm font-bold text-amber-700 dark:text-amber-300">Villanueva Creative Pty Ltd</p>
+                <p className="text-[10px] text-amber-500 mt-0.5">Est. Sydney, Australia</p>
+              </div>
+            </div>
+
+            {/* Two branches */}
+            <div className="flex items-start gap-32">
+              {/* PJ Branch */}
+              <div className="flex flex-col items-center gap-5">
+                <div ref={(el) => registerNode("pj", el)}>
+                  <OrgCard name="PJ" subtitle="Paul Villanueva" role="CEO & Founder" color="amber" isHuman size="lg" />
+                </div>
+
+                {q && (
+                  <div ref={(el) => registerNode("main", el)} onClick={() => toggleCollapse("main")} className="cursor-pointer">
+                    <OrgCard name={q.name} emoji={q.emoji} role="COO" model="claude-opus-4-5" color="gold" href={`/company/agents/${q.id}`} size="lg" badge="Mac Mini" expandable collapsed={collapsed["main"]} reportCount={qReports.length} />
+                  </div>
+                )}
+
+                {/* Department heads */}
+                {!collapsed["main"] && (
+                  <div className="flex flex-wrap justify-center gap-5 max-w-[700px]">
+                    {qReports.filter(a => !["design", "testing"].includes(a.id)).map(agent => {
+                      const subs = agents.filter(a => a.reportsTo === agent.id);
+                      const hasCollapsible = subs.length > 0;
+                      return (
+                        <div key={agent.id} className="flex flex-col items-center gap-3">
+                          <div
+                            ref={(el) => registerNode(agent.id, el)}
+                            onClick={hasCollapsible ? () => toggleCollapse(agent.id) : undefined}
+                            className={hasCollapsible ? "cursor-pointer" : ""}
+                          >
+                            <OrgCard
+                              name={agent.name}
+                              emoji={agent.emoji}
+                              role={agent.role}
+                              model={agent.model.primary.split("/").pop() || ""}
+                              color={getDeptColor(agent.department)}
+                              href={`/company/agents/${agent.id}`}
+                              badge="Local"
+                              expandable={hasCollapsible}
+                              collapsed={collapsed[agent.id]}
+                              reportCount={subs.length}
+                            />
+                          </div>
+                          {!collapsed[agent.id] && subs.map(sub => (
+                            <div key={sub.id} ref={(el) => registerNode(sub.id, el)}>
                               <OrgCard
-                                key={sub.id}
                                 name={sub.name}
                                 emoji={sub.emoji}
                                 role={sub.role}
                                 model={sub.model.primary.split("/").pop() || ""}
                                 color={getDeptColor(sub.department)}
                                 href={`/company/agents/${sub.id}`}
-                                small
+                                size="sm"
                                 badge="Local"
                               />
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                  );
-                })}
+                            </div>
+                          ))}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
-            </div>
 
-            {/* Ella's branch — self-contained */}
-            <div className="flex flex-col items-center">
-              <OrgCard name={ella?.name || "Ella"} emoji={ella?.emoji || "👩‍🎨"} role="CEO" color="pink" isHuman href={ella ? `/company/agents/ella` : undefined} />
-              <Connector />
-              <OrgCard name={arty?.name || "Arty"} emoji={arty?.emoji || "🏹"} role={arty?.role || "COO"} model="External" color="mint" href={arty ? `/company/agents/arty` : undefined} badge="VPS" />
-              <div className="mt-3 px-3 py-1.5 rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700">
-                <p className="text-[10px] text-zinc-400 text-center">Separate OpenClaw instance</p>
+              {/* Ella Branch */}
+              <div className="flex flex-col items-center gap-5">
+                <div ref={(el) => registerNode("ella-node", el)}>
+                  <OrgCard name={ella?.name || "Ella"} emoji={ella?.emoji || "👩‍🎨"} role="CEO & Co-Founder" color="pink" isHuman size="lg" href={ella ? `/company/agents/ella` : undefined} />
+                </div>
+                <div ref={(el) => registerNode("arty", el)}>
+                  <OrgCard name={arty?.name || "Arty"} emoji={arty?.emoji || "🏹"} role="COO / Chief of Staff" model="External" color="mint" href={arty ? `/company/agents/arty` : undefined} badge="VPS" />
+                </div>
+                <div className="px-4 py-2 rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50">
+                  <p className="text-[10px] text-zinc-400 text-center">Separate OpenClaw instance</p>
+                  <p className="text-[9px] text-zinc-500 text-center mt-0.5">Artemis • VPS</p>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Department Heads section removed from here — now inline above */}
-
           {/* Department Legend */}
-          <div className="mt-12 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 w-full max-w-3xl">
+          <div className="mt-16 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Departments</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <DeptBadge name="Executive" color="amber" members={["PJ", "Ella", "Q 🦾", "Arty 🏹"]} />
-              <DeptBadge name="Creative" color="pink" members={["Muse 🎨", "Pixel ✏️"]} />
-              <DeptBadge name="Engineering" color="emerald" members={["Forge 💻", "Probe 🧪"]} />
-              <DeptBadge name="Growth" color="cyan" members={["Vector 📈"]} />
-              <DeptBadge name="Research" color="blue" members={["Atlas 🔬"]} />
-              <DeptBadge name="Events" color="orange" members={["Volt 🎪"]} />
-              <DeptBadge name="Support" color="sky" members={["Echo 💬"]} />
-              <DeptBadge name="Community" color="zinc" members={["Luna 🌙"]} />
+              <DeptBadge name="Executive" color="amber" members={["PJ (CEO)", "Ella (CEO)", "Q 🦾 (COO)", "Arty 🏹 (COO)"]} />
+              <DeptBadge name="Creative" color="pink" members={["Muse 🎨 (Director)", "Pixel ✏️ (Design)"]} />
+              <DeptBadge name="Engineering" color="emerald" members={["Forge 💻 (Lead)", "Probe 🧪 (QA)"]} />
+              <DeptBadge name="Growth" color="cyan" members={["Vector 📈 (Head)"]} />
+              <DeptBadge name="Research" color="blue" members={["Atlas 🔬 (Head)"]} />
+              <DeptBadge name="Events" color="orange" members={["Volt 🎪 (Manager)"]} />
+              <DeptBadge name="Support" color="sky" members={["Echo 💬 (Lead)"]} />
+              <DeptBadge name="Community" color="zinc" members={["Luna 🌙 (Discord)"]} />
             </div>
-
-            <div className="mt-6 flex items-center gap-6 text-xs text-zinc-500">
+            <div className="mt-6 flex flex-wrap items-center gap-6 text-xs text-zinc-500">
               <div className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-medium">Local</span>
-                <span>Running on Mac Mini</span>
+                <span className="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 text-[10px] font-medium">Mac Mini</span>
+                <span>M4 32GB — Primary</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="px-1.5 py-0.5 rounded bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 text-[10px] font-medium">VPS</span>
-                <span>Running on VPS (Ella&apos;s instance)</span>
+                <span>Ella&apos;s instance</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-400" />
+                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 border-2 border-white dark:border-zinc-900" />
                 <span>Human</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-zinc-400">- - -</span>
+                <span>Cross-instance link</span>
               </div>
             </div>
           </div>
@@ -151,53 +279,56 @@ export default function OrgChartPage() {
 }
 
 function OrgCard({
-  name, emoji, subtitle, role, model, color, href, small, isHuman, badge,
+  name, emoji, subtitle, role, model, color, href, size, isHuman, badge, expandable, collapsed, reportCount,
 }: {
   name: string; emoji?: string; subtitle?: string; role: string; model?: string;
-  color: string; href?: string; small?: boolean; isHuman?: boolean; badge?: string;
+  color: string; href?: string; size?: "sm" | "lg"; isHuman?: boolean; badge?: string;
+  expandable?: boolean; collapsed?: boolean; reportCount?: number;
 }) {
+  const sizeClass = size === "lg" ? "px-6 py-4 min-w-[160px]" : size === "sm" ? "px-3 py-2 min-w-[90px]" : "px-4 py-3 min-w-[120px]";
+  const textSize = size === "lg" ? "text-sm" : size === "sm" ? "text-xs" : "text-xs";
+  const emojiSize = size === "lg" ? "text-3xl" : size === "sm" ? "text-lg" : "text-2xl";
+
   const colorClasses: Record<string, string> = {
-    amber: "border-amber-300 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/10",
-    gold: "border-amber-400 dark:border-amber-600 bg-amber-50 dark:bg-amber-900/10",
-    pink: "border-pink-300 dark:border-pink-700 bg-pink-50 dark:bg-pink-900/10",
-    mint: "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/10",
-    emerald: "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/10",
-    cyan: "border-cyan-300 dark:border-cyan-700 bg-cyan-50 dark:bg-cyan-900/10",
-    blue: "border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-900/10",
-    orange: "border-orange-300 dark:border-orange-700 bg-orange-50 dark:bg-orange-900/10",
-    sky: "border-sky-300 dark:border-sky-700 bg-sky-50 dark:bg-sky-900/10",
-    zinc: "border-zinc-300 dark:border-zinc-600 bg-zinc-50 dark:bg-zinc-800/50",
-    violet: "border-violet-300 dark:border-violet-700 bg-violet-50 dark:bg-violet-900/10",
+    amber: "border-amber-300 dark:border-amber-600 bg-white dark:bg-zinc-900",
+    gold: "border-yellow-400 dark:border-yellow-600 bg-white dark:bg-zinc-900",
+    pink: "border-pink-300 dark:border-pink-600 bg-white dark:bg-zinc-900",
+    mint: "border-emerald-300 dark:border-emerald-600 bg-white dark:bg-zinc-900",
+    emerald: "border-emerald-300 dark:border-emerald-600 bg-white dark:bg-zinc-900",
+    cyan: "border-cyan-300 dark:border-cyan-600 bg-white dark:bg-zinc-900",
+    blue: "border-blue-300 dark:border-blue-600 bg-white dark:bg-zinc-900",
+    orange: "border-orange-300 dark:border-orange-600 bg-white dark:bg-zinc-900",
+    sky: "border-sky-300 dark:border-sky-600 bg-white dark:bg-zinc-900",
+    zinc: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-900",
   };
 
-  const content = (
-    <div className={`relative rounded-xl border-2 ${colorClasses[color] || colorClasses.zinc} ${href ? "hover:shadow-lg transition-shadow cursor-pointer" : ""} ${small ? "px-3 py-2 min-w-[90px]" : "px-5 py-3 min-w-[140px]"} text-center`}>
-      {/* Human indicator */}
+  const inner = (
+    <div className={`relative rounded-xl border-2 shadow-md hover:shadow-lg transition-all ${colorClasses[color] || colorClasses.zinc} ${sizeClass} text-center`}>
       {isHuman && (
-        <div className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-amber-400 border-2 border-white dark:border-zinc-900" title="Human" />
+        <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-amber-400 border-2 border-white dark:border-zinc-900" title="Human" />
       )}
-      {/* Instance badge */}
       {badge && (
-        <div className="absolute -top-2 left-1/2 -translate-x-1/2">
-          <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold ${badge === "VPS" ? "bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400" : "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400"}`}>
+        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
+          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold shadow-sm ${badge === "VPS" ? "bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400 border border-violet-200 dark:border-violet-800" : "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800"}`}>
             {badge}
           </span>
         </div>
       )}
-      {emoji && <span className={small ? "text-xl" : "text-2xl"}>{emoji}</span>}
-      <p className={`font-bold text-zinc-900 dark:text-zinc-100 ${small ? "text-xs" : "text-sm"}`}>{name}</p>
-      {subtitle && <p className="text-[10px] text-zinc-500">{subtitle}</p>}
-      <p className={`text-zinc-500 ${small ? "text-[9px]" : "text-[11px]"}`}>{role}</p>
-      {model && <p className={`text-zinc-400 ${small ? "text-[8px]" : "text-[10px]"} mt-0.5 font-mono`}>{model}</p>}
+      {emoji && <p className={emojiSize}>{emoji}</p>}
+      <p className={`font-bold text-zinc-900 dark:text-zinc-100 ${textSize}`}>{name}</p>
+      {subtitle && <p className="text-[10px] text-zinc-400">{subtitle}</p>}
+      <p className="text-[11px] text-zinc-500">{role}</p>
+      {model && <p className="text-[9px] text-zinc-400 font-mono mt-0.5">{model}</p>}
+      {expandable && (
+        <div className="mt-1 text-[9px] text-zinc-400">
+          {collapsed ? `▶ ${reportCount} reports` : `▼ ${reportCount} reports`}
+        </div>
+      )}
     </div>
   );
 
-  if (href) return <Link href={href}>{content}</Link>;
-  return content;
-}
-
-function Connector({ short }: { short?: boolean }) {
-  return <div className={`w-px ${short ? "h-3" : "h-5"} bg-zinc-300 dark:bg-zinc-700`} />;
+  if (href) return <Link href={href} onClick={e => e.stopPropagation()}>{inner}</Link>;
+  return inner;
 }
 
 function DeptBadge({ name, color, members }: { name: string; color: string; members: string[] }) {

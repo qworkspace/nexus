@@ -12,6 +12,7 @@ interface Meeting {
   title: string;
   size: number;
   modified: string;
+  topics?: string[];
 }
 
 export default function MeetingsPage() {
@@ -19,7 +20,11 @@ export default function MeetingsPage() {
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(searchParams.get("selected"));
   const [content, setContent] = useState<string>("");
+  const [summary, setSummary] = useState<string | null>(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
   const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [topicFilter, setTopicFilter] = useState<string>("all");
+  const [meetingTopics, setMeetingTopics] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
     fetch("/api/company/meetings").then(r => r.json()).then(d => {
@@ -32,13 +37,33 @@ export default function MeetingsPage() {
 
   useEffect(() => {
     if (selectedId) {
+      // Load content
       fetch(`/api/company/meetings/${selectedId}`).then(r => r.json()).then(d => {
         setContent(d.content || "Meeting not found");
       });
+
+      // Load summary
+      setSummaryLoading(true);
+      fetch(`/api/company/meetings/${selectedId}/summary`, { method: "POST" })
+        .then(r => r.json())
+        .then(d => {
+          setSummary(d.summary);
+          setMeetingTopics(prev => ({ ...prev, [selectedId]: d.topics || [] }));
+        })
+        .catch(() => setSummary(null))
+        .finally(() => setSummaryLoading(false));
     }
   }, [selectedId]);
 
-  const filtered = typeFilter === "all" ? meetings : meetings.filter(m => m.type === typeFilter);
+  const filtered = typeFilter === "all"
+    ? meetings
+    : meetings.filter(m => m.type === typeFilter);
+
+  const topicFiltered = topicFilter === "all"
+    ? filtered
+    : filtered.filter(m => meetingTopics[m.id]?.includes(topicFilter));
+
+  const allTopics = [...new Set(Object.values(meetingTopics).flat())];
   const types = [...new Set(meetings.map(m => m.type))];
 
   const typeIcons: Record<string, string> = {
@@ -73,30 +98,66 @@ export default function MeetingsPage() {
             </button>
           ))}
         </div>
+        {allTopics.length > 0 && (
+          <div className="flex gap-1 flex-wrap">
+            <button
+              onClick={() => setTopicFilter("all")}
+              className={`px-2 py-1 rounded-full text-[10px] font-medium transition-colors ${topicFilter === "all" ? "bg-blue-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}
+            >
+              All topics
+            </button>
+            {allTopics.map(t => (
+              <button
+                key={t}
+                onClick={() => setTopicFilter(t)}
+                className={`px-2 py-1 rounded-full text-[10px] font-medium transition-colors ${topicFilter === t ? "bg-blue-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Meeting List */}
         <div className="lg:col-span-1 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 max-h-[80vh] overflow-y-auto">
           <div className="space-y-2">
-            {filtered.map(m => (
-              <button
-                key={m.id}
-                onClick={() => setSelectedId(m.id)}
-                className={`w-full text-left p-3 rounded-lg transition-colors ${selectedId === m.id ? "bg-zinc-900 text-white" : "hover:bg-zinc-50 dark:hover:bg-zinc-800"}`}
-              >
-                <div className="flex items-center gap-2">
-                  <span>{typeIcons[m.type] || "📋"}</span>
-                  <span className={`text-sm font-medium ${selectedId === m.id ? "text-white" : "text-zinc-700 dark:text-zinc-300"}`}>
-                    {m.title}
-                  </span>
-                </div>
-                <p className={`text-xs mt-1 ${selectedId === m.id ? "text-zinc-300" : "text-zinc-400"}`}>
-                  {m.date}
-                </p>
-              </button>
-            ))}
-            {filtered.length === 0 && (
+            {topicFiltered.map(m => {
+              const topics = meetingTopics[m.id] || [];
+              return (
+                <button
+                  key={m.id}
+                  onClick={() => setSelectedId(m.id)}
+                  className={`w-full text-left p-3 rounded-lg transition-colors ${selectedId === m.id ? "bg-zinc-900 text-white" : "hover:bg-zinc-50 dark:hover:bg-zinc-800"}`}
+                >
+                  <div className="flex items-center gap-2">
+                    <span>{typeIcons[m.type] || "📋"}</span>
+                    <span className={`text-sm font-medium ${selectedId === m.id ? "text-white" : "text-zinc-700 dark:text-zinc-300"}`}>
+                      {m.title}
+                    </span>
+                  </div>
+                  <p className={`text-xs mt-1 ${selectedId === m.id ? "text-zinc-300" : "text-zinc-400"}`}>
+                    {m.date}
+                  </p>
+                  {topics.length > 0 && (
+                    <div className="flex gap-1 flex-wrap mt-2">
+                      {topics.slice(0, 3).map(t => (
+                        <span key={t} className={`px-1.5 py-0.5 rounded text-[8px] font-medium ${selectedId === m.id ? "bg-zinc-700 text-zinc-200" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-500"}`}>
+                          {t}
+                        </span>
+                      ))}
+                      {topics.length > 3 && (
+                        <span className={`text-[8px] ${selectedId === m.id ? "text-zinc-300" : "text-zinc-400"}`}>
+                          +{topics.length - 3}
+                        </span>
+                      )}
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+            {topicFiltered.length === 0 && (
               <p className="text-zinc-500 text-sm text-center py-4">No meetings found</p>
             )}
           </div>
@@ -105,8 +166,40 @@ export default function MeetingsPage() {
         {/* Transcript */}
         <div className="lg:col-span-3 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 max-h-[80vh] overflow-y-auto">
           {content ? (
-            <div className="prose prose-zinc dark:prose-invert prose-sm max-w-none">
-              <MeetingContent content={content} />
+            <div>
+              {/* Summary */}
+              {summaryLoading && (
+                <div className="mb-4 p-4 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
+                  <p className="text-xs text-zinc-500 animate-pulse">Generating AI summary...</p>
+                </div>
+              )}
+              {summary && (
+                <div className="mb-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
+                  <h3 className="text-sm font-bold text-amber-900 dark:text-amber-400 mb-2">📝 TL;DR</h3>
+                  <div className="text-sm text-amber-800 dark:text-amber-200 whitespace-pre-line">
+                    {summary}
+                  </div>
+                </div>
+              )}
+
+              {/* Topics */}
+              {meetingTopics[selectedId!]?.length > 0 && (
+                <div className="mb-4">
+                  <h4 className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-2">Topics</h4>
+                  <div className="flex gap-1 flex-wrap">
+                    {meetingTopics[selectedId!].map(t => (
+                      <span key={t} className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-xs">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Content */}
+              <div className="prose prose-zinc dark:prose-invert prose-sm max-w-none">
+                <MeetingContent content={content} />
+              </div>
             </div>
           ) : (
             <p className="text-zinc-500 text-center py-8">Select a meeting to view its transcript</p>
