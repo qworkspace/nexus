@@ -62,7 +62,7 @@ export function MemoryContextPanel() {
           <div className="flex items-center justify-between text-sm">
             <span className="text-zinc-500">Context Usage</span>
             <span className="font-mono text-zinc-600 dark:text-zinc-400">
-              {isLoading ? "..." : `${data?.currentContext.percentage}%`}
+              {isLoading ? "..." : `${data?.currentContext?.percentage}%`}
             </span>
           </div>
           <div className="h-3 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -72,9 +72,9 @@ export function MemoryContextPanel() {
               <div
                 className={cn(
                   "h-full rounded-full transition-all duration-500",
-                  getContextColor(data?.currentContext.percentage || 0)
+                  getContextColor(data?.currentContext?.percentage || 0)
                 )}
-                style={{ width: `${data?.currentContext.percentage || 0}%` }}
+                style={{ width: `${data?.currentContext?.percentage || 0}%` }}
               />
             )}
           </div>

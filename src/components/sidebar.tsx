@@ -7,17 +7,20 @@ import { useState } from "react";
 import { KeyHint } from "@/components/KeyHint";
 
 const navigation = [
-  { name: "Command Center", href: "/command-center", icon: "🎛️", shortcut: null },
-  { name: "Dashboard", href: "/", icon: "◉", shortcut: "mod+1" },
-  { name: "Analytics", href: "/analytics", icon: "📊", shortcut: null },
-  { name: "Builds", href: "/builds", icon: "🔨", shortcut: "mod+2" },
-  { name: "Agents", href: "/agents", icon: "🦾", shortcut: "mod+4" },
-  { name: "Bugs", href: "/bugs", icon: "🐛", shortcut: null },
+  { name: "Company HQ", href: "/company", icon: "🏢", shortcut: "mod+1" },
+  { name: "The Floor", href: "/company/floor", icon: "🎮", shortcut: null },
+  { name: "Org Chart", href: "/company/org", icon: "🗂️", shortcut: null },
+  { name: "Meetings", href: "/company/meetings", icon: "📋", shortcut: null },
+  { name: "Relationships", href: "/company/relationships", icon: "🤝", shortcut: null },
+  { name: "Action Items", href: "/company/actions", icon: "📥", shortcut: null },
+  { name: "divider", href: "", icon: "", shortcut: null },
+  { name: "Command Center", href: "/command-center", icon: "🎛️", shortcut: "mod+2" },
+  { name: "Builds", href: "/builds", icon: "🔨", shortcut: "mod+3" },
   { name: "Sessions", href: "/sessions", icon: "💬", shortcut: null },
-  { name: "Cron Jobs", href: "/crons", icon: "⏰", shortcut: "mod+3" },
+  { name: "Crons", href: "/crons", icon: "⏰", shortcut: "mod+4" },
+  { name: "divider2", href: "", icon: "", shortcut: null },
+  { name: "Memory", href: "/memory", icon: "🧠", shortcut: null },
   { name: "Costs", href: "/costs", icon: "◈", shortcut: "mod+5" },
-  { name: "Evolution", href: "/evolution", icon: "📈", shortcut: null },
-  { name: "Memory", href: "/memory", icon: "🧠", shortcut: "g then m" },
   { name: "Logs", href: "/logs", icon: "📜", shortcut: null },
   { name: "Search", href: "/search", icon: "⌕", shortcut: null },
 ];
@@ -51,26 +54,32 @@ export function Sidebar() {
           <p className="text-xs text-zinc-500">Q&apos;s Activity Dashboard</p>
         </div>
 
-        <nav className="flex-1 p-2">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              onClick={() => setCollapsed(true)}
-              className={cn(
-                "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                pathname === item.href
-                  ? "bg-zinc-900 text-white"
-                  : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
-              )}
-            >
-              <span className="text-base">{item.icon}</span>
-              <span className="flex-1">{item.name}</span>
-              {item.shortcut && (
-                <KeyHint keys={item.shortcut} showOnHover className="opacity-0 group-hover:opacity-100" />
-              )}
-            </Link>
-          ))}
+        <nav className="flex-1 p-2 overflow-y-auto">
+          {navigation.map((item) => {
+            if (item.name.startsWith("divider")) {
+              return <div key={item.name} className="my-2 border-t border-zinc-200" />;
+            }
+            const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
+            return (
+              <Link
+                key={item.name}
+                href={item.href}
+                onClick={() => setCollapsed(true)}
+                className={cn(
+                  "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                  isActive
+                    ? "bg-zinc-900 text-white"
+                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+                )}
+              >
+                <span className="text-base">{item.icon}</span>
+                <span className="flex-1">{item.name}</span>
+                {item.shortcut && (
+                  <KeyHint keys={item.shortcut} showOnHover className="opacity-0 group-hover:opacity-100" />
+                )}
+              </Link>
+            );
+          })}
         </nav>
 
         {/* Keyboard shortcut hint */}
