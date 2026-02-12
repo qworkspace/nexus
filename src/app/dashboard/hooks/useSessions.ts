@@ -38,7 +38,7 @@ const MOCK_SESSIONS: LiveSession[] = [
     status: "active",
     tokenUsage: 45200,
     duration: 9240,
-    lastMessage: "Got it. Mission Control + CryptoMon dashboard build started...",
+    lastMessage: "Got it. Nexus + CryptoMon dashboard build started...",
     startedAt: new Date(Date.now() - 9240000),
     updatedAt: new Date(Date.now() - 120000),
     totalTokens: 45200,

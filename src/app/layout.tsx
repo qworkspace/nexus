@@ -10,7 +10,7 @@ import { KeyboardShortcutsProvider } from "@/components/KeyboardShortcutsProvide
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Mission Control",
+  title: "Nexus",
   description: "Q's Activity Dashboard for PJ",
 };
 

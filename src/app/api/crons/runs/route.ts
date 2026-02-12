@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { execSync } from 'child_process';
 
+export const dynamic = 'force-dynamic';
+
 interface RunEntry {
   id: string;
   cronJobId: string;

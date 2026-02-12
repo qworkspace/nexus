@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AlertTriangle, CheckCircle } from "lucide-react";
 
 interface ErrorPattern {
   message: string;
@@ -27,13 +28,13 @@ export function ErrorPatterns({ errors }: { errors: ErrorPattern[] }) {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
-            <span>⚠️</span>
+            <AlertTriangle size={16} />
             Error Patterns
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center py-8 text-green-600">
-            <span className="text-2xl mr-2">✓</span>
+            <CheckCircle size={24} className="mr-2" />
             <span className="text-sm font-medium">No errors in the last 30 days!</span>
           </div>
         </CardContent>
@@ -45,7 +46,7 @@ export function ErrorPatterns({ errors }: { errors: ErrorPattern[] }) {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
-          <span>⚠️</span>
+          <AlertTriangle size={16} />
           Error Patterns
         </CardTitle>
       </CardHeader>

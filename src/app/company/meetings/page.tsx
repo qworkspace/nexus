@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { Calendar, FileText, Square, CheckSquare } from "lucide-react";
+import { MeetingIcon } from "@/lib/ui-icons";
 
 interface Meeting {
   id: string;
@@ -66,19 +68,15 @@ export default function MeetingsPage() {
   const allTopics = [...new Set(Object.values(meetingTopics).flat())];
   const types = [...new Set(meetings.map(m => m.type))];
 
-  const typeIcons: Record<string, string> = {
-    standup: "🗣️",
-    "sync-content": "🎨",
-    "sync-engineering": "💻",
-    allhands: "🏢",
-  };
-
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
           <Link href="/company" className="text-sm text-blue-500 hover:underline mb-2 inline-block">← Company HQ</Link>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">📋 Meeting Viewer</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+            <Calendar size={24} />
+            Meeting Viewer
+          </h1>
           <p className="text-zinc-500 text-sm">{meetings.length} meetings logged</p>
         </div>
         <div className="flex gap-2">
@@ -92,9 +90,10 @@ export default function MeetingsPage() {
             <button
               key={t}
               onClick={() => setTypeFilter(t)}
-              className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors ${typeFilter === t ? "bg-zinc-900 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}
+              className={`px-3 py-1 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5 ${typeFilter === t ? "bg-zinc-900 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}
             >
-              {typeIcons[t] || "📋"} {t}
+              <MeetingIcon type={t} size={14} />
+              {t}
             </button>
           ))}
         </div>
@@ -132,7 +131,7 @@ export default function MeetingsPage() {
                   className={`w-full text-left p-3 rounded-lg transition-colors ${selectedId === m.id ? "bg-zinc-900 text-white" : "hover:bg-zinc-50 dark:hover:bg-zinc-800"}`}
                 >
                   <div className="flex items-center gap-2">
-                    <span>{typeIcons[m.type] || "📋"}</span>
+                    <MeetingIcon type={m.type} size={16} />
                     <span className={`text-sm font-medium ${selectedId === m.id ? "text-white" : "text-zinc-700 dark:text-zinc-300"}`}>
                       {m.title}
                     </span>
@@ -175,7 +174,10 @@ export default function MeetingsPage() {
               )}
               {summary && (
                 <div className="mb-4 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                  <h3 className="text-sm font-bold text-amber-900 dark:text-amber-400 mb-2">📝 TL;DR</h3>
+                  <h3 className="text-sm font-bold text-amber-900 dark:text-amber-400 mb-2 flex items-center gap-1.5">
+                    <FileText size={14} />
+                    TL;DR
+                  </h3>
                   <div className="text-sm text-amber-800 dark:text-amber-200 whitespace-pre-line">
                     {summary}
                   </div>
@@ -229,8 +231,8 @@ function MeetingContent({ content }: { content: string }) {
             </div>
           );
         }
-        if (line.startsWith("- [ ] ")) return <div key={i} className="flex items-center gap-2 text-sm"><span>☐</span><span className="text-zinc-700 dark:text-zinc-300">{line.slice(6)}</span></div>;
-        if (line.startsWith("- [x] ")) return <div key={i} className="flex items-center gap-2 text-sm"><span>✅</span><span className="text-zinc-500 line-through">{line.slice(6)}</span></div>;
+        if (line.startsWith("- [ ] ")) return <div key={i} className="flex items-center gap-2 text-sm"><Square size={14} className="text-zinc-400" /><span className="text-zinc-700 dark:text-zinc-300">{line.slice(6)}</span></div>;
+        if (line.startsWith("- [x] ")) return <div key={i} className="flex items-center gap-2 text-sm"><CheckSquare size={14} className="text-green-600" /><span className="text-zinc-500 line-through">{line.slice(6)}</span></div>;
         if (line.startsWith("- ")) return <div key={i} className="text-sm text-zinc-700 dark:text-zinc-300 pl-4">• {line.slice(2)}</div>;
         if (line.startsWith("---")) return <hr key={i} className="border-zinc-200 dark:border-zinc-800 my-4" />;
         if (line.trim() === "") return <div key={i} className="h-2" />;

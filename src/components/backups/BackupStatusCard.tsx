@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BackupStatus } from "@/lib/backup-checker";
-import { Clock, Database, GitCommit, AlertTriangle, CheckCircle, XCircle, Info } from "lucide-react";
+import { AlertTriangle, Check, CheckCircle, Clock, Database, GitCommit, Info, X, XCircle} from "lucide-react";
 
 interface BackupStatusCardProps {
   backup: BackupStatus;
@@ -28,11 +28,11 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
   const getStatusBadge = () => {
     switch (backup.status) {
       case 'success':
-        return <Badge className="bg-green-500 hover:bg-green-600">✓ Healthy</Badge>;
+        return <Badge className="bg-green-500 hover:bg-green-600"><Check size={16} className="inline mr-1" /> Healthy</Badge>;
       case 'warning':
-        return <Badge className="bg-yellow-500 hover:bg-yellow-600">⚠ Warning</Badge>;
+        return <Badge className="bg-yellow-500 hover:bg-yellow-600"><AlertTriangle size={16} className="inline mr-1" /> Warning</Badge>;
       case 'error':
-        return <Badge className="bg-red-500 hover:bg-red-600">✗ Error</Badge>;
+        return <Badge className="bg-red-500 hover:bg-red-600"><X size={16} className="inline mr-1" /> Error</Badge>;
       default:
         return <Badge variant="secondary">Unknown</Badge>;
     }
@@ -183,7 +183,7 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
                     </div>
                   )}
                   {backup.remoteStatus.isAhead === 0 && backup.remoteStatus.isBehind === 0 && (
-                    <div className="text-green-600">✓ Up to date with remote</div>
+                    <div className="text-green-600"><Check size={16} className="inline mr-1" /> Up to date with remote</div>
                   )}
                 </div>
               ) : (

@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Inbox, Hammer, CheckCircle, XCircle, HelpCircle, Check } from "lucide-react";
+import { AgentIcon } from "@/lib/agent-icons";
 
 interface ActionItem {
   id: string;
@@ -24,10 +26,10 @@ interface Agent {
 }
 
 const COLUMNS = [
-  { key: "new", label: "New", icon: "📥" },
-  { key: "in-progress", label: "In Progress", icon: "🔨" },
-  { key: "done", label: "Done", icon: "✅" },
-  { key: "blocked", label: "Blocked", icon: "❌" },
+  { key: "new", label: "New", icon: Inbox },
+  { key: "in-progress", label: "In Progress", icon: Hammer },
+  { key: "done", label: "Done", icon: CheckCircle },
+  { key: "blocked", label: "Blocked", icon: XCircle },
 ];
 
 const PRIORITY_COLORS: Record<string, string> = {
@@ -70,7 +72,10 @@ export default function ActionsPage() {
       <Link href="/company" className="text-sm text-blue-500 hover:underline mb-2 inline-block">← Company HQ</Link>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">📥 Action Items Board</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+            <Inbox size={24} />
+            Action Items Board
+          </h1>
           <p className="text-zinc-500 text-sm">{items.length} total items</p>
         </div>
         <div className="flex gap-2">
@@ -93,8 +98,9 @@ export default function ActionsPage() {
           return (
             <div key={col.key} className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
-                  {col.icon} {col.label}
+                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                  <col.icon size={16} />
+                  {col.label}
                 </h3>
                 <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500">
                   {colItems.length}
@@ -107,7 +113,11 @@ export default function ActionsPage() {
                   return (
                     <div key={item.id} className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-sm">{agent?.emoji || "❓"}</span>
+                        {agent?.emoji ? (
+                          <AgentIcon emoji={agent.emoji} size={14} />
+                        ) : (
+                          <HelpCircle size={14} className="text-zinc-400" />
+                        )}
                         <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
                           @{agent?.name || item.assignee}
                         </span>
@@ -129,9 +139,10 @@ export default function ActionsPage() {
                         {col.key === "in-progress" && (
                           <button
                             onClick={() => updateStatus(item.id, "done")}
-                            className="text-xs text-emerald-500 hover:underline"
+                            className="text-xs text-emerald-500 hover:underline flex items-center gap-1"
                           >
-                            Done ✓
+                            Done
+                            <Check size={12} />
                           </button>
                         )}
                         {col.key === "blocked" && (
@@ -144,10 +155,16 @@ export default function ActionsPage() {
                         )}
                       </div>
                       {item.outcome && (
-                        <p className="text-xs text-emerald-500 mt-1">✅ {item.outcome}</p>
+                        <p className="text-xs text-emerald-500 mt-1 flex items-center gap-1">
+                          <CheckCircle size={12} />
+                          {item.outcome}
+                        </p>
                       )}
                       {item.blockedBy && (
-                        <p className="text-xs text-red-500 mt-1">❌ {item.blockedBy}</p>
+                        <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                          <XCircle size={12} />
+                          {item.blockedBy}
+                        </p>
                       )}
                     </div>
                   );

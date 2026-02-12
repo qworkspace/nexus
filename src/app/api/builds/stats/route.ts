@@ -1,86 +1,106 @@
 import { NextResponse } from 'next/server';
-import { promises as fs } from 'fs';
-import path from 'path';
-import type { DevSession, BuildStats } from '@/types/builds';
+import { getRecentBuilds, aggregateUsageFromTranscripts } from '@/lib/data-utils';
 
-const SESSIONS_DIR = path.join(process.env.HOME || '', '.openclaw/agents/dev/sessions');
-
-async function parseSessionFile(filePath: string): Promise<DevSession | null> {
-  try {
-    const content = await fs.readFile(filePath, 'utf-8');
-    const lines = content.split('\n').filter(line => line.trim());
-
-    if (lines.length === 0) return null;
-
-    const firstLine = JSON.parse(lines[0]);
-    const lastLine = JSON.parse(lines[lines.length - 1]);
-
-    const startTime = firstLine.timestamp;
-    const endTime = lastLine.timestamp;
-    const durationMs = new Date(endTime).getTime() - new Date(startTime).getTime();
-
-    // Check if session is from today
-    return {
-      id: firstLine.id,
-      startTime,
-      endTime,
-      status: 'completed', // For stats, all completed sessions count
-      task: '',
-      durationMs,
-    };
-  } catch {
-    return null;
-  }
+interface BuildStats {
+  source: 'live' | 'mock' | 'error';
+  totalToday: number;
+  successRate: number;
+  avgDuration: number;
+  totalCost: number;
+  byModel?: { model: string; count: number; successRate: number }[];
+  error?: string;
 }
 
-export async function GET() {
+export async function GET(): Promise<NextResponse<BuildStats>> {
   try {
-    const files = await fs.readdir(SESSIONS_DIR);
-    const sessionFiles = files.filter(f => f.endsWith('.jsonl') && !f.includes('.deleted'));
+    // Get all recent builds (last 100) for stats
+    const allBuilds = await getRecentBuilds('dev', 100);
 
-    const todaySessions: DevSession[] = [];
-    const allSessions: DevSession[] = [];
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
 
-    for (const file of sessionFiles) {
-      const session = await parseSessionFile(path.join(SESSIONS_DIR, file));
-      if (session) {
-        // Check if it's from today
-        const startOfDay = new Date();
-        startOfDay.setHours(0, 0, 0, 0);
-        const isToday = new Date(session.startTime).getTime() >= startOfDay.getTime();
+    // Filter today's builds
+    const todayBuilds = allBuilds.filter((b) => {
+      const completedAt = new Date(b.completedAt as string);
+      return completedAt >= todayStart;
+    });
 
-        if (isToday) {
-          todaySessions.push(session);
-        }
-        allSessions.push(session);
-      }
-    }
+    const totalToday = todayBuilds.length;
 
-    const totalToday = todaySessions.length;
+    // Calculate success rate
+    const successCount = allBuilds.filter((b) => b.status === 'success').length;
+    const successRate = allBuilds.length > 0
+      ? Math.round((successCount / allBuilds.length) * 100)
+      : 100;
 
-    // Calculate average duration for today's sessions
-    const sessionsWithDuration = todaySessions.filter(s => s.durationMs && s.durationMs > 0);
-    const avgDuration = sessionsWithDuration.length > 0
-      ? sessionsWithDuration.reduce((sum, s) => sum + (s.durationMs || 0), 0) / sessionsWithDuration.length
+    // Calculate average duration
+    const durations = allBuilds
+      .map((b) => b.duration as number)
+      .filter((d) => d > 0);
+    const avgDuration = durations.length > 0
+      ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length)
       : 0;
 
-    // Success rate - assume all completed sessions are successful for now
-    // In a real implementation, you'd check for error states in the session
-    const successRate = todaySessions.length > 0 ? 100 : 0;
+    // Get cost from transcripts for today
+    let totalCost = 0;
+    try {
+      const todayUsage = await aggregateUsageFromTranscripts(todayStart, new Date());
+      // Filter for dev agent
+      const devUsage = todayUsage.filter((u) => u.agent === 'dev');
+      totalCost = devUsage.reduce((sum, u) => sum + u.cost, 0);
+    } catch {
+      totalCost = 0;
+    }
 
-    // Total cost (mock - would need to parse from session usage data)
-    const totalCost = 0;
+    // Group by model
+    const modelMap = new Map<string, { count: number; success: number }>();
+    for (const build of allBuilds) {
+      const model = build.model as string;
+      const existing = modelMap.get(model) || { count: 0, success: 0 };
+      modelMap.set(model, {
+        count: existing.count + 1,
+        success: existing.success + (build.status === 'success' ? 1 : 0),
+      });
+    }
 
-    const stats: BuildStats = {
-      totalToday,
-      successRate,
-      avgDuration,
-      totalCost,
-    };
+    const byModel = Array.from(modelMap.entries()).map(([model, stats]) => ({
+      model,
+      count: stats.count,
+      successRate: Math.round((stats.success / stats.count) * 100),
+    }));
 
-    return NextResponse.json(stats);
+    if (allBuilds.length > 0) {
+      return NextResponse.json({
+        source: 'live',
+        totalToday,
+        successRate,
+        avgDuration,
+        totalCost: parseFloat(totalCost.toFixed(2)),
+        byModel,
+      });
+    }
+
+    // Return mock data if no builds found
+    return NextResponse.json({
+      source: 'mock',
+      totalToday: 5,
+      successRate: 95,
+      avgDuration: 780,
+      totalCost: 3.45,
+      byModel: [
+        { model: 'glm-4.7', count: 3, successRate: 100 },
+        { model: 'claude-opus-4-5', count: 2, successRate: 90 },
+      ],
+    });
   } catch (error) {
     console.error('Error fetching build stats:', error);
-    return NextResponse.json({ error: 'Failed to fetch build stats' }, { status: 500 });
+    return NextResponse.json({
+      source: 'error',
+      totalToday: 0,
+      successRate: 0,
+      avgDuration: 0,
+      totalCost: 0,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    });
   }
 }

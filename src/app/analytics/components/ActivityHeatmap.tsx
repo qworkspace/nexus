@@ -1,6 +1,8 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Flame } from 'lucide-react';
+
 
 interface HeatmapData {
   day: string;
@@ -30,7 +32,7 @@ export function ActivityHeatmap({ data }: ActivityHeatmapProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span>🔥</span>
+          <Flame size={16} />
           Activity Heatmap (Messages)
         </CardTitle>
       </CardHeader>

@@ -70,11 +70,11 @@ export function MemoryTimeline() {
           <div className="flex items-center gap-4">
             <span className="text-zinc-500 dark:text-zinc-400">
               <Calendar className="inline h-4 w-4 mr-1" />
-              {data.stats.totalEvents} events
+              {data?.stats?.totalEvents || 0} events
             </span>
             <span className="text-zinc-500 dark:text-zinc-400">
               <Clock className="inline h-4 w-4 mr-1" />
-              {formatDate(data.stats.dateRange.start)} - {formatDate(data.stats.dateRange.end)}
+              {formatDate(data?.stats?.dateRange?.start || '')} - {formatDate(data?.stats?.dateRange?.end || '')}
             </span>
           </div>
         </div>
@@ -94,10 +94,10 @@ export function MemoryTimeline() {
           </div>
         )}
 
-        {data?.events.map((event, index) => (
+        {(data?.events || []).map((event, index) => (
           <div key={`${event.date}-${index}`} className="relative">
             {/* Timeline Line */}
-            {index !== data.events.length - 1 && (
+            {index !== (data?.events?.length || 0) - 1 && (
               <div className="absolute left-4 top-8 w-0.5 h-full bg-zinc-200 dark:bg-zinc-800" />
             )}
 

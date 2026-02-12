@@ -1,6 +1,8 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AgentIcon } from "@/lib/agent-icons";
+import { Circle } from "lucide-react";
 
 interface Agent {
   id: string;
@@ -22,18 +24,18 @@ const AGENTS: Agent[] = [
   { id: "Testing", name: "Testing", emoji: "🧪", status: "idle" },
 ];
 
-const getStatusDot = (status: string): string => {
+const getStatusDotColor = (status: string): string => {
   switch (status) {
     case "online":
-      return "bg-green-500";
+      return "fill-green-500 text-green-500";
     case "busy":
-      return "bg-yellow-500";
+      return "fill-yellow-500 text-yellow-500";
     case "idle":
-      return "bg-zinc-400";
+      return "fill-zinc-400 text-zinc-400";
     case "error":
-      return "bg-red-500";
+      return "fill-red-500 text-red-500";
     default:
-      return "bg-zinc-400";
+      return "fill-zinc-400 text-zinc-400";
   }
 };
 
@@ -70,11 +72,11 @@ export function AgentFleet() {
               key={agent.id}
               className="flex items-center gap-3 p-3 border border-zinc-200 rounded-lg hover:border-zinc-300 transition-colors"
             >
-              <span className="text-2xl">{agent.emoji}</span>
+              <AgentIcon emoji={agent.emoji} size={24} className="text-zinc-600 dark:text-zinc-300" />
               <div className="flex-1">
                 <p className="text-sm font-medium text-zinc-900">{agent.name}</p>
                 <div className="flex items-center gap-1.5 mt-0.5">
-                  <span className={`w-2 h-2 rounded-full ${getStatusDot(agent.status)}`} />
+                  <Circle size={8} className={getStatusDotColor(agent.status)} />
                   <p className="text-xs text-zinc-500">{getStatusText(agent)}</p>
                 </div>
               </div>
@@ -87,15 +89,15 @@ export function AgentFleet() {
             <span>Fleet Stats:</span>
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-green-500" />
+                <Circle size={8} className="fill-green-500 text-green-500" />
                 {activeCount} active
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-zinc-400" />
+                <Circle size={8} className="fill-zinc-400 text-zinc-400" />
                 {idleCount} idle
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2 h-2 rounded-full bg-red-500" />
+                <Circle size={8} className="fill-red-500 text-red-500" />
                 {errorCount} errors
               </span>
               <span>{tasksToday} tasks today</span>

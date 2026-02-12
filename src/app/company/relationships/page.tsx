@@ -2,6 +2,9 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import { Link as LinkIcon, X } from "lucide-react";
+import { AgentIcon } from "@/lib/agent-icons";
+import { TrendIcon } from "@/lib/ui-icons";
 
 interface RelEntry {
   trust: number;
@@ -76,6 +79,7 @@ export default function RelationshipsPage() {
       vy: 0,
     }));
 
+    // Run force simulation for a few iterations
     const edges: GraphEdge[] = [];
     const seen = new Set<string>();
     relData.forEach(agent => {
@@ -89,6 +93,63 @@ export default function RelationshipsPage() {
         }
       });
     });
+
+    // Simple force simulation
+    for (let iter = 0; iter < 100; iter++) {
+      const nodes = nodesRef.current;
+
+      // Repulsion between all nodes
+      for (let i = 0; i < nodes.length; i++) {
+        for (let j = i + 1; j < nodes.length; j++) {
+          const dx = nodes[i].x - nodes[j].x;
+          const dy = nodes[i].y - nodes[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+          const force = 5000 / (dist * dist);
+          const fx = (dx / dist) * force;
+          const fy = (dy / dist) * force;
+
+          nodes[i].vx += fx;
+          nodes[i].vy += fy;
+          nodes[j].vx -= fx;
+          nodes[j].vy -= fy;
+        }
+      }
+
+      // Attraction along edges (more interactions = stronger attraction)
+      edges.forEach(edge => {
+        const from = nodes.find(n => n.id === edge.from);
+        const to = nodes.find(n => n.id === edge.to);
+        if (!from || !to) return;
+
+        const dx = to.x - from.x;
+        const dy = to.y - from.y;
+        const strength = 0.01 * Math.log(edge.interactions + 1); // More interactions = stronger pull
+        const fx = dx * strength;
+        const fy = dy * strength;
+
+        from.vx += fx;
+        from.vy += fy;
+        to.vx -= fx;
+        to.vy -= fy;
+      });
+
+      // Center gravity
+      nodes.forEach(node => {
+        const dx = cx - node.x;
+        const dy = cy - node.y;
+        node.vx += dx * 0.005;
+        node.vy += dy * 0.005;
+      });
+
+      // Apply velocity
+      nodes.forEach(node => {
+        node.x += node.vx * 0.1;
+        node.y += node.vy * 0.1;
+        node.vx *= 0.9; // Damping
+        node.vy *= 0.9;
+      });
+    }
+
     edgesRef.current = edges;
   }, [relData]);
 
@@ -201,7 +262,10 @@ export default function RelationshipsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">🤝 Relationships</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+            <LinkIcon size={24} />
+            Relationships
+          </h1>
           <p className="text-zinc-500 text-sm">Trust scores and interaction patterns</p>
         </div>
         <div className="flex items-center gap-2">
@@ -241,8 +305,9 @@ export default function RelationshipsPage() {
             </div>
             {hoveredNode && (
               <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
-                  {AGENT_EMOJIS[hoveredNode]} {relData.find(a => a.agentId === hoveredNode)?.agentName}
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2 flex items-center gap-1.5">
+                  <AgentIcon emoji={AGENT_EMOJIS[hoveredNode]} size={14} />
+                  {relData.find(a => a.agentId === hoveredNode)?.agentName}
                 </h3>
                 <div className="space-y-1.5">
                   {Object.entries(relData.find(a => a.agentId === hoveredNode)?.relationships || {})
@@ -250,7 +315,10 @@ export default function RelationshipsPage() {
                     .sort(([,a], [,b]) => b.trust - a.trust)
                     .map(([id, rel]) => (
                     <div key={id} className="flex items-center justify-between text-xs">
-                      <span className="text-zinc-500">{AGENT_EMOJIS[id]} {relData.find(a => a.agentId === id)?.agentName || id}</span>
+                      <span className="text-zinc-500 flex items-center gap-1.5">
+                        <AgentIcon emoji={AGENT_EMOJIS[id]} size={12} />
+                        {relData.find(a => a.agentId === id)?.agentName || id}
+                      </span>
                       <TrustBadge trust={rel.trust} />
                     </div>
                   ))}
@@ -268,7 +336,10 @@ export default function RelationshipsPage() {
                 <th className="p-2 text-left text-zinc-500 font-medium">Agent</th>
                 {localAgents.map(a => (
                   <th key={a.agentId} className="p-2 text-center text-zinc-500 font-medium">
-                    {AGENT_EMOJIS[a.agentId]}<br/>{a.agentName}
+                    <div className="flex flex-col items-center gap-1">
+                      <AgentIcon emoji={AGENT_EMOJIS[a.agentId]} size={14} />
+                      <span className="text-[10px]">{a.agentName}</span>
+                    </div>
                   </th>
                 ))}
               </tr>
@@ -276,8 +347,9 @@ export default function RelationshipsPage() {
             <tbody>
               {localAgents.map(agent => (
                 <tr key={agent.agentId} className="border-t border-zinc-100 dark:border-zinc-800">
-                  <td className="p-2 font-medium text-zinc-700 dark:text-zinc-300">
-                    {AGENT_EMOJIS[agent.agentId]} {agent.agentName}
+                  <td className="p-2 font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
+                    <AgentIcon emoji={AGENT_EMOJIS[agent.agentId]} size={14} />
+                    {agent.agentName}
                   </td>
                   {agentIds.map(otherId => {
                     if (agent.agentId === otherId) {
@@ -308,10 +380,15 @@ export default function RelationshipsPage() {
             return (
               <div className="mt-4 p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                    {AGENT_EMOJIS[selectedPair.from]} {fromName} → {AGENT_EMOJIS[selectedPair.to]} {toName}
+                  <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                    <AgentIcon emoji={AGENT_EMOJIS[selectedPair.from]} size={14} />
+                    {fromName} →
+                    <AgentIcon emoji={AGENT_EMOJIS[selectedPair.to]} size={14} />
+                    {toName}
                   </h4>
-                  <button onClick={() => setSelectedPair(null)} className="text-xs text-zinc-400 hover:text-zinc-600">✕</button>
+                  <button onClick={() => setSelectedPair(null)} className="text-xs text-zinc-400 hover:text-zinc-600">
+                    <X size={16} />
+                  </button>
                 </div>
                 <div className="grid grid-cols-3 gap-4 text-xs">
                   <div>
@@ -324,7 +401,13 @@ export default function RelationshipsPage() {
                   </div>
                   <div>
                     <p className="text-zinc-500">Trend</p>
-                    <p className="font-bold text-lg">{rel.trend === "up" ? "📈" : rel.trend === "down" ? "📉" : "➡️"} {rel.trend}</p>
+                    <p className="font-bold text-lg flex items-center gap-1.5">
+                      <TrendIcon 
+                        trend={rel.trend === "up" ? "improving" : rel.trend === "down" ? "declining" : "stable"} 
+                        size={18} 
+                      />
+                      {rel.trend}
+                    </p>
                   </div>
                 </div>
                 <p className="text-xs text-zinc-500 mt-2 italic">&quot;{rel.opinion}&quot;</p>

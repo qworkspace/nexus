@@ -4,6 +4,7 @@ import { PerformanceStats } from "@/components/performance/performance-stats";
 import { SuccessRateChart } from "@/components/performance/success-rate-chart";
 import { ErrorPatterns } from "@/components/performance/error-patterns";
 import { SlowTasks } from "@/components/performance/slow-tasks";
+import { TrendingUp } from "lucide-react";
 
 async function getPerformanceData() {
   const todayStart = new Date(new Date().setHours(0, 0, 0, 0));
@@ -165,7 +166,7 @@ export default async function PerformancePage() {
       <Card className="mb-8">
         <CardHeader>
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <span>📈</span>
+            <TrendingUp size={18} />
             Success Rate Over Time
           </CardTitle>
         </CardHeader>

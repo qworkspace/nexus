@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Clock } from "lucide-react";
 
 interface SlowTask {
   title: string;
@@ -46,7 +47,7 @@ export function SlowTasks({ tasks }: { tasks: SlowTask[] }) {
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
-            <span>🐢</span>
+            <Clock size={16} />
             Slowest Tasks
           </CardTitle>
         </CardHeader>
@@ -63,7 +64,7 @@ export function SlowTasks({ tasks }: { tasks: SlowTask[] }) {
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
-          <span>🐢</span>
+          <Clock size={16} />
           Slowest Tasks
         </CardTitle>
       </CardHeader>

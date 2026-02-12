@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCosts } from "../hooks/useCosts";
+import { Check, AlertTriangle } from "lucide-react";
 
 export function CostTicker() {
   const { costs, formatCurrency, getProgressColor } = useCosts();
@@ -35,7 +36,7 @@ export function CostTicker() {
                 {costs.budgetPercent}% of {formatCurrency(costs.budget)} budget
               </span>
               <span className={costs.withinBudget ? "text-green-600" : "text-red-600"}>
-                {costs.withinBudget ? "✓" : "⚠"}
+                {costs.withinBudget ? <Check size={14} /> : <AlertTriangle size={14} />}
               </span>
             </div>
           </div>
@@ -98,8 +99,9 @@ export function CostTicker() {
                 {formatCurrency(costs.projection)}
               </span>
             </div>
-            <p className={`text-xs mt-1 ${costs.withinBudget ? "text-green-600" : "text-red-600"}`}>
-              {costs.withinBudget ? "✓ within budget" : "⚠ exceeds budget"}
+            <p className={`text-xs mt-1 flex items-center gap-1 ${costs.withinBudget ? "text-green-600" : "text-red-600"}`}>
+              {costs.withinBudget ? <Check size={12} /> : <AlertTriangle size={12} />}
+              {costs.withinBudget ? "within budget" : "exceeds budget"}
             </p>
           </div>
         </div>

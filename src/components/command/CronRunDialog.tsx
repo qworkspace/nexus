@@ -5,6 +5,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCommandStore } from "@/stores/commandStore";
+import { Check, Play } from 'lucide-react';
+
 
 interface Cron {
   id: string;
@@ -55,7 +57,7 @@ export function CronRunDialog() {
         <div className="space-y-4 py-4">
           <div>
             <Input
-              placeholder="🔍 Search crons..."
+              placeholder="Search crons..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
@@ -85,7 +87,7 @@ export function CronRunDialog() {
                       <div className="text-xs text-zinc-500">Next: {cron.nextRun}</div>
                     </div>
                     {selectedCron?.id === cron.id && (
-                      <span className="text-green-600 text-sm">✓</span>
+                      <Check size={16} />
                     )}
                   </button>
                 ))
@@ -105,7 +107,7 @@ export function CronRunDialog() {
             Cancel
           </Button>
           <Button onClick={handleRun} disabled={!selectedCron}>
-            ▶️ Run Now
+            <Play size={14} /> Run Now
           </Button>
         </div>
       </DialogContent>

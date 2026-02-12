@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Circle } from "lucide-react";
 
 interface Metric {
   label: string;
@@ -74,16 +75,16 @@ const getStatusColor = (status: string): string => {
   }
 };
 
-const getStatusDot = (status: string): string => {
+const getStatusDot = (status: string): JSX.Element => {
   switch (status) {
     case "healthy":
-      return "🟢";
+      return <Circle size={8} className="fill-green-500 text-green-500" />;
     case "attention":
-      return "🟡";
+      return <Circle size={8} className="fill-yellow-500 text-yellow-500" />;
     case "critical":
-      return "🔴";
+      return <Circle size={8} className="fill-red-500 text-red-500" />;
     default:
-      return "⚪";
+      return <Circle size={8} className="fill-zinc-400 text-zinc-400" />;
   }
 };
 

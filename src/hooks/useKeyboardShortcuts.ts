@@ -7,7 +7,7 @@ import { navigationPaths } from '@/lib/shortcuts';
 /**
  * Global Keyboard Shortcuts Hook
  *
- * Manages all keyboard shortcuts across Mission Control.
+ * Manages all keyboard shortcuts across Nexus.
  * This is the central hook that should be called in the root layout.
  */
 export function useGlobalShortcuts() {

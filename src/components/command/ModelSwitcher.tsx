@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useCommandStore } from "@/stores/commandStore";
+import { AlertTriangle, RefreshCw } from 'lucide-react';
+
 
 interface Model {
   id: string;
@@ -56,7 +58,7 @@ export function ModelSwitcher() {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            🔄 SWITCH MODEL
+            <RefreshCw size={16} /> SWITCH MODEL
             <span className="ml-auto text-xs text-zinc-400 font-normal">ESC</span>
           </DialogTitle>
         </DialogHeader>
@@ -101,7 +103,7 @@ export function ModelSwitcher() {
           </div>
 
           <div className="flex items-start gap-2 text-xs text-amber-600 bg-amber-50 p-3 rounded-md">
-            <span>⚠️</span>
+            <AlertTriangle size={16} />
             <span>Model change affects main session only</span>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Check } from "lucide-react";
 
 interface Agent {
   id: string;
@@ -57,17 +58,17 @@ export function AgentDetails({ agent }: AgentDetailsProps) {
         <h4 className="text-sm font-medium text-zinc-700 mb-2">Recent Activity</h4>
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-zinc-600">
-            <span className="text-green-500">✓</span>
+            <Check size={14} className="text-green-500" />
             <span>Completed code review task</span>
             <span className="text-xs text-zinc-400 ml-auto">2m ago</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-600">
-            <span className="text-green-500">✓</span>
+            <Check size={14} className="text-green-500" />
             <span>Updated documentation</span>
             <span className="text-xs text-zinc-400 ml-auto">15m ago</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-600">
-            <span className="text-green-500">✓</span>
+            <Check size={14} className="text-green-500" />
             <span>Fixed bug in auth module</span>
             <span className="text-xs text-zinc-400 ml-auto">1h ago</span>
           </div>

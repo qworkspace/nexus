@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import useSWR from "swr";
 import { useState } from "react";
+import { Brain, Search } from "lucide-react";
 
 interface MemoryEntry {
   date: string;
@@ -52,7 +53,7 @@ export function MemoryContextPanel() {
     <Card className="dark:glass-panel">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span className="text-xl">🧠</span>
+          <Brain size={20} />
           Memory & Context
         </CardTitle>
       </CardHeader>
@@ -80,10 +81,10 @@ export function MemoryContextPanel() {
           </div>
           <div className="flex justify-between text-xs text-zinc-400">
             <span>
-              {isLoading ? "..." : `${(data?.currentContext.used || 0).toLocaleString()} tokens`}
+              {isLoading ? "..." : `${(data?.currentContext?.used || 0).toLocaleString()} tokens`}
             </span>
             <span>
-              {isLoading ? "..." : `${(data?.currentContext.max || 0).toLocaleString()} max`}
+              {isLoading ? "..." : `${(data?.currentContext?.max || 0).toLocaleString()} max`}
             </span>
           </div>
         </div>
@@ -96,22 +97,20 @@ export function MemoryContextPanel() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-8 text-sm dark:bg-zinc-900/50 dark:border-zinc-700"
           />
-          <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400">
-            ⌕
-          </span>
+          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400" />
           <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded">
             /
           </kbd>
         </div>
 
         {/* Topic Cloud */}
-        {data?.topicCloud && data.topicCloud.length > 0 && (
+        {data?.topicCloud && data?.topicCloud?.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
               Topics
             </h4>
             <div className="flex flex-wrap gap-1.5">
-              {data.topicCloud.map(({ topic, count }) => (
+              {(data?.topicCloud || []).map(({ topic, count }) => (
                 <button
                   key={topic}
                   onClick={() => setSearchQuery(topic)}
@@ -121,7 +120,7 @@ export function MemoryContextPanel() {
                     "text-zinc-600 dark:text-zinc-400"
                   )}
                   style={{
-                    opacity: 0.6 + (count / (data.topicCloud[0]?.count || 1)) * 0.4,
+                    opacity: 0.6 + (count / (data?.topicCloud?.[0]?.count || 1)) * 0.4,
                   }}
                 >
                   #{topic}
@@ -147,7 +146,7 @@ export function MemoryContextPanel() {
             </div>
           ) : (
             <div className="space-y-2">
-              {data?.recentEntries.map(entry => (
+              {(data?.recentEntries || []).map(entry => (
                 <div
                   key={entry.date}
                   className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors"

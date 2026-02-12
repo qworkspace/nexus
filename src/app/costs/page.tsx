@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { CostChart } from "@/components/costs/cost-chart";
 import { CostBreakdown } from "@/components/costs/cost-breakdown";
 import { ExpensiveActivities } from "@/components/costs/expensive-activities";
+import { BarChart3 } from "lucide-react";
 
 async function getCostData() {
   const now = new Date();
@@ -169,7 +170,7 @@ export default async function CostsPage() {
       <Card className="mb-8">
         <CardHeader>
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <span>📊</span>
+            <BarChart3 size={18} />
             Daily Costs (Last 14 Days)
           </CardTitle>
         </CardHeader>

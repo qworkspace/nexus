@@ -2,6 +2,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Calendar, BookOpen, DollarSign, CheckCircle } from "lucide-react";
 
 interface StatsBarProps {
   stats: {
@@ -17,8 +18,9 @@ export function StatsBar({ stats }: StatsBarProps) {
     <div className="grid grid-cols-4 gap-4 mb-8">
       <Card>
         <CardContent className="p-6">
-          <div className="text-sm font-medium text-zinc-500 mb-1">
-            📅 Days Active
+          <div className="text-sm font-medium text-zinc-500 mb-1 flex items-center gap-1.5">
+            <Calendar size={14} />
+            Days Active
           </div>
           <div className="text-3xl font-bold text-zinc-900">
             {stats.daysActive}
@@ -29,8 +31,9 @@ export function StatsBar({ stats }: StatsBarProps) {
 
       <Card>
         <CardContent className="p-6">
-          <div className="text-sm font-medium text-zinc-500 mb-1">
-            📚 Lessons Learned
+          <div className="text-sm font-medium text-zinc-500 mb-1 flex items-center gap-1.5">
+            <BookOpen size={14} />
+            Lessons Learned
           </div>
           <div className="text-3xl font-bold text-zinc-900">
             {stats.lessonsLearned}
@@ -41,8 +44,9 @@ export function StatsBar({ stats }: StatsBarProps) {
 
       <Card>
         <CardContent className="p-6">
-          <div className="text-sm font-medium text-zinc-500 mb-1">
-            💰 Total Spent
+          <div className="text-sm font-medium text-zinc-500 mb-1 flex items-center gap-1.5">
+            <DollarSign size={14} />
+            Total Spent
           </div>
           <div className="text-3xl font-bold text-zinc-900">
             ${stats.totalCost.toFixed(2)}
@@ -53,8 +57,9 @@ export function StatsBar({ stats }: StatsBarProps) {
 
       <Card>
         <CardContent className="p-6">
-          <div className="text-sm font-medium text-zinc-500 mb-1">
-            ✅ Success Rate
+          <div className="text-sm font-medium text-zinc-500 mb-1 flex items-center gap-1.5">
+            <CheckCircle size={14} />
+            Success Rate
           </div>
           <div
             className={cn(

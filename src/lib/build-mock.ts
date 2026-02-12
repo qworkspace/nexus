@@ -48,7 +48,7 @@ export const mockActiveBuilds: BuildSession[] = [
   {
     id: 'd9f82a44',
     label: 'mission-control-live-dashboard',
-    task: 'Build the Mission Control Live Operations Dashboard with real-time agent monitoring, live metrics streaming, and instant status updates.',
+    task: 'Build the Nexus Live Operations Dashboard with real-time agent monitoring, live metrics streaming, and instant status updates.',
     status: 'building',
     startedAt: new Date('2026-02-07T16:45:00'),
     estimatedDuration: 5400, // 1.5 hours

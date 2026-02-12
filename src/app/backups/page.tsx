@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { BackupStatusCard, BackupHistory, BackupAlerts, BackupStats } from '@/components/backups';
 import { BackupStatus } from '@/lib/backup-checker';
 import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
 
 interface BackupsResponse {
   backups: BackupStatus[];
@@ -114,7 +115,7 @@ export default function BackupsPage() {
             )}
             <Button onClick={handleRefresh} disabled={loading} className="gap-2">
               {loading ? 'Refreshing...' : 'Refresh'}
-              <span>🔄</span>
+              <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             </Button>
           </div>
         </div>

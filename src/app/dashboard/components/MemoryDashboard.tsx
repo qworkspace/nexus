@@ -178,8 +178,8 @@ export function MemoryDashboard() {
               </h3>
               <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4 max-h-64 overflow-y-auto">
                 <pre className="text-xs text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap font-mono">
-                  {data.memoryMd.slice(0, 2000)}
-                  {data.memoryMd.length > 2000 && "\n\n... (truncated)"}
+                  {data?.memoryMd?.slice(0, 2000) || ''}
+                  {data?.memoryMd?.length && data.memoryMd.length > 2000 && "\n\n... (truncated)"}
                 </pre>
               </div>
             </div>
@@ -190,7 +190,7 @@ export function MemoryDashboard() {
                 Recent Daily Memories
               </h3>
               <div className="space-y-2">
-                {data.dailyFiles.slice(0, 10).map((file) => (
+                {(data?.dailyFiles || []).slice(0, 10).map((file) => (
                   <div
                     key={file.name}
                     className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-900 rounded-lg p-3"

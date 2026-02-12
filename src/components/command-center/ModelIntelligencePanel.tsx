@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import useSWR from "swr";
 import { useCommandStore } from "@/stores/commandStore";
+import { Zap, Brain, Sparkles, Eye, Bot } from "lucide-react";
 
 interface ModelUsage {
   model: string;
@@ -25,14 +26,14 @@ interface ModelsUsageData {
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
-const modelEmojis: Record<string, string> = {
-  'claude-opus-4-5': '🧠',
-  'claude-sonnet-4': '✨',
-  'claude-3-5-sonnet': '✨',
-  'claude-3-5-haiku': '⚡',
-  'glm-4-flash': '🔮',
-  'gpt-4o': '🤖',
-  'gpt-4o-mini': '⚡',
+const modelIcons: Record<string, JSX.Element> = {
+  'claude-opus-4-5': <Brain size={20} />,
+  'claude-sonnet-4': <Sparkles size={20} />,
+  'claude-3-5-sonnet': <Sparkles size={20} />,
+  'claude-3-5-haiku': <Zap size={20} />,
+  'glm-4-flash': <Eye size={20} />,
+  'gpt-4o': <Bot size={20} />,
+  'gpt-4o-mini': <Zap size={20} />,
 };
 
 const modelColors: Record<string, string> = {
@@ -74,7 +75,7 @@ export function ModelIntelligencePanel() {
     <Card className="dark:glass-panel">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span className="text-xl">⚡</span>
+          <Zap size={18} />
           Model Intelligence
         </CardTitle>
         <Button
@@ -89,8 +90,8 @@ export function ModelIntelligencePanel() {
       <CardContent className="space-y-4">
         {/* Current Model */}
         <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border dark:border-zinc-800">
-          <span className="text-2xl">
-            {modelEmojis[data?.currentModel || ''] || '🤖'}
+          <span className="text-zinc-600 dark:text-zinc-400">
+            {modelIcons[data?.currentModel || ''] || <Bot size={20} />}
           </span>
           <div className="flex-1">
             <div className="flex items-center gap-2">
@@ -133,7 +134,7 @@ export function ModelIntelligencePanel() {
                   <div key={model.model} className="space-y-1">
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2">
-                        <span>{modelEmojis[model.model] || '🤖'}</span>
+                        <span className="text-zinc-500">{modelIcons[model.model] || <Bot size={16} />}</span>
                         <span className="text-zinc-700 dark:text-zinc-300">
                           {formatModelName(model.model)}
                         </span>
@@ -164,17 +165,17 @@ export function ModelIntelligencePanel() {
         </div>
 
         {/* Recommendations */}
-        {data?.recommendations && data.recommendations.length > 0 && (
+        {data?.recommendations && data?.recommendations?.length > 0 && (
           <div className="space-y-2 pt-2 border-t dark:border-zinc-800">
             <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
               Recommendations
             </h4>
-            {data.recommendations.slice(0, 2).map((rec, i) => (
+            {(data?.recommendations || []).slice(0, 2).map((rec, i) => (
               <div
                 key={i}
                 className={cn(
                   "p-2 rounded-lg text-sm",
-                  rec.model 
+                  rec.model
                     ? "bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/30"
                     : "bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30"
                 )}

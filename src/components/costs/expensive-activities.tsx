@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DollarSign } from "lucide-react";
 
 interface ExpensiveActivity {
   id: string;
@@ -23,7 +24,7 @@ export function ExpensiveActivities({
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
-            <span>💸</span>
+            <DollarSign size={16} />
             Top Expensive Activities
           </CardTitle>
         </CardHeader>
@@ -38,7 +39,7 @@ export function ExpensiveActivities({
     <Card>
       <CardHeader className="pb-2">
         <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
-          <span>💸</span>
+          <DollarSign size={16} />
           Top Expensive Activities
         </CardTitle>
       </CardHeader>

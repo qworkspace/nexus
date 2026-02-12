@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import useSWR from "swr";
+import { BarChart3 } from "lucide-react";
 
 interface SessionSummary {
   id: string;
@@ -68,7 +69,7 @@ export function SessionInsightsPanel() {
     <Card className="dark:glass-panel">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span className="text-xl">📊</span>
+          <BarChart3 size={18} />
           Session Insights
         </CardTitle>
       </CardHeader>
@@ -145,13 +146,13 @@ export function SessionInsightsPanel() {
         </div>
 
         {/* Session Timeline */}
-        {data?.today.summaries && data.today.summaries.length > 0 && (
+        {data?.today?.summaries && data?.today?.summaries?.length > 0 && (
           <div className="space-y-2 pt-2 border-t dark:border-zinc-800">
             <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
               Today&apos;s Sessions
             </h4>
             <div className="space-y-1">
-              {data.today.summaries.map(session => (
+              {(data?.today?.summaries || []).map(session => (
                 <div
                   key={session.id}
                   className="flex items-center gap-3 py-1.5 text-sm"
@@ -163,7 +164,7 @@ export function SessionInsightsPanel() {
                     <div
                       className="h-full bg-blue-500 rounded-full"
                       style={{
-                        width: `${Math.min((session.tokensUsed / (data.today.totalTokens || 1)) * 100, 100)}%`,
+                        width: `${Math.min((session.tokensUsed / (data?.today?.totalTokens || 1)) * 100, 100)}%`,
                       }}
                     />
                   </div>

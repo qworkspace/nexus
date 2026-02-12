@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BuildSession } from "@/lib/build-mock";
 import { formatDuration } from "@/lib/build-mock";
+import { CheckCircle, Check } from "lucide-react";
 
 interface RecentBuildsProps {
   builds: BuildSession[];
@@ -16,7 +17,8 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span className="flex items-center gap-2">
-            ✅ Recent Completions (Today)
+            <CheckCircle size={18} className="text-green-600" />
+            Recent Completions (Today)
           </span>
           <Badge variant="secondary" className="text-xs">{builds.length}</Badge>
         </CardTitle>
@@ -53,8 +55,9 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
 
                 {/* Status and Duration */}
                 <div className="flex items-center gap-4 shrink-0">
-                  <Badge className="bg-green-100 text-green-800 text-xs">
-                    ✓ SUCCESS
+                  <Badge className="bg-green-100 text-green-800 text-xs flex items-center gap-1">
+                    <Check size={12} />
+                    SUCCESS
                   </Badge>
                   <div className="text-sm text-zinc-600 w-20 text-right">
                     {build.duration && formatDuration(build.duration)}

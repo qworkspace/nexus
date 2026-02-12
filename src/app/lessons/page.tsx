@@ -2,7 +2,7 @@ import { LessonsDashboard } from "@/components/LessonsDashboard";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Lessons | Mission Control",
+  title: "Lessons | Nexus",
   description: "Q Lessons Tracker - Mistake prevention dashboard",
 };
 

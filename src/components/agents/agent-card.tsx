@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { AgentDetails } from "./agent-details";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { AgentIcon } from "@/lib/agent-icons";
+import { Circle, ChevronRight, ChevronDown } from "lucide-react";
 
 interface Agent {
   id: string;
@@ -28,10 +30,10 @@ const statusColors = {
   busy: "bg-yellow-100 text-yellow-800",
 };
 
-const statusDots = {
-  online: "●",
-  offline: "○",
-  busy: "◐",
+const statusDotColors = {
+  online: "fill-green-500 text-green-500",
+  offline: "fill-zinc-300 text-zinc-300",
+  busy: "fill-yellow-500 text-yellow-500",
 };
 
 export function AgentCard({ agent }: AgentCardProps) {
@@ -48,8 +50,10 @@ export function AgentCard({ agent }: AgentCardProps) {
       <CardContent className="p-4">
         {/* Header */}
         <div className="flex items-center gap-3 mb-3">
-          {/* Emoji */}
-          <div className="text-3xl">{agent.emoji}</div>
+          {/* Icon */}
+          <div className="flex items-center justify-center">
+            <AgentIcon emoji={agent.emoji} size={32} className="text-zinc-600 dark:text-zinc-300" />
+          </div>
 
           {/* Name and Model */}
           <div className="flex-1 min-w-0">
@@ -57,9 +61,9 @@ export function AgentCard({ agent }: AgentCardProps) {
               <h3 className="font-semibold text-zinc-900">{agent.name}</h3>
               <Badge
                 variant="secondary"
-                className={cn("text-xs", statusColors[agent.status])}
+                className={cn("text-xs flex items-center gap-1", statusColors[agent.status])}
               >
-                <span className="mr-1">{statusDots[agent.status]}</span>
+                <Circle size={8} className={statusDotColors[agent.status]} />
                 {agent.status}
               </Badge>
             </div>
@@ -68,7 +72,7 @@ export function AgentCard({ agent }: AgentCardProps) {
 
           {/* Expand indicator */}
           <div className="text-zinc-400 transition-transform duration-200">
-            {expanded ? "▼" : "▶"}
+            {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </div>
         </div>
 

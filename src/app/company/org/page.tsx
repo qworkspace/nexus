@@ -2,6 +2,9 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
+import { AgentIcon } from "@/lib/agent-icons";
+import { ChevronRight, ChevronDown } from 'lucide-react';
+
 
 interface Agent {
   id: string;
@@ -29,6 +32,7 @@ export default function OrgChartPage() {
   });
   const containerRef = useRef<HTMLDivElement>(null);
   const [nodePositions, setNodePositions] = useState<Record<string, NodePos>>({});
+  const previousPositionsRef = useRef<Record<string, NodePos>>({});
 
   // Persist collapse state to localStorage
   useEffect(() => {
@@ -43,16 +47,29 @@ export default function OrgChartPage() {
     if (!el || !containerRef.current) return;
     const containerRect = containerRef.current.getBoundingClientRect();
     const rect = el.getBoundingClientRect();
-    setNodePositions(prev => ({
-      ...prev,
-      [id]: {
-        x: rect.left - containerRect.left + rect.width / 2,
-        y: rect.top - containerRect.top + rect.height / 2,
-        w: rect.width,
-        h: rect.height,
-        id,
-      }
-    }));
+
+    const newPosition: NodePos = {
+      x: rect.left - containerRect.left + rect.width / 2,
+      y: rect.top - containerRect.top + rect.height / 2,
+      w: rect.width,
+      h: rect.height,
+      id,
+    };
+
+    const previousPosition = previousPositionsRef.current[id];
+
+    // Only update state if position has actually changed
+    if (!previousPosition ||
+        Math.abs(previousPosition.x - newPosition.x) > 0.5 ||
+        Math.abs(previousPosition.y - newPosition.y) > 0.5 ||
+        Math.abs(previousPosition.w - newPosition.w) > 0.5 ||
+        Math.abs(previousPosition.h - newPosition.h) > 0.5) {
+      setNodePositions(prev => ({
+        ...prev,
+        [id]: newPosition,
+      }));
+      previousPositionsRef.current[id] = newPosition;
+    }
   }, []);
 
   const agentMap = Object.fromEntries(agents.map(a => [a.id, a]));
@@ -71,6 +88,8 @@ export default function OrgChartPage() {
   lines.push({ from: "company", to: "ella-node" });
   lines.push({ from: "pj", to: "main" });
   lines.push({ from: "ella-node", to: "arty" });
+  lines.push({ from: "ella-node", to: "larina" });
+  lines.push({ from: "larina", to: "pj" });
   if (!collapsed["main"]) {
     qReports.filter(a => !["design", "testing"].includes(a.id)).forEach(a => {
       lines.push({ from: "main", to: a.id });
@@ -103,7 +122,7 @@ export default function OrgChartPage() {
               const fromBottom = f.y + f.h / 2;
               const toTop = t.y - t.h / 2;
               const midY = (fromBottom + toTop) / 2;
-              const isDashed = from === "ella-node" || to === "arty";
+              const isDashed = (from === "ella-node" && to === "arty") || (from === "larina" && to === "pj");
               const pathD = `M ${f.x} ${fromBottom} C ${f.x} ${midY}, ${t.x} ${midY}, ${t.x} ${toTop}`;
               const pathLength = Math.abs(fromBottom - toTop) * 1.5;
 
@@ -168,7 +187,7 @@ export default function OrgChartPage() {
               {/* PJ Branch */}
               <div className="flex flex-col items-center gap-5">
                 <div ref={(el) => registerNode("pj", el)}>
-                  <OrgCard name="PJ" subtitle="Paul Villanueva" role="CEO & Founder" color="amber" isHuman size="lg" />
+                  <OrgCard name="PJ" subtitle="Paul Villanueva" emoji="👑" role="CEO & Founder" color="amber" isHuman size="lg" />
                 </div>
 
                 {q && (
@@ -229,9 +248,17 @@ export default function OrgChartPage() {
                 <div ref={(el) => registerNode("ella-node", el)}>
                   <OrgCard name={ella?.name || "Ella"} emoji={ella?.emoji || "👩‍🎨"} role="CEO & Co-Founder" color="pink" isHuman size="lg" href={ella ? `/company/agents/ella` : undefined} />
                 </div>
-                <div ref={(el) => registerNode("arty", el)}>
-                  <OrgCard name={arty?.name || "Arty"} emoji={arty?.emoji || "🏹"} role="COO / Chief of Staff" model="External" color="mint" href={arty ? `/company/agents/arty` : undefined} badge="VPS" />
+                
+                {/* Ella's reports side by side */}
+                <div className="flex items-start gap-5">
+                  <div ref={(el) => registerNode("arty", el)}>
+                    <OrgCard name={arty?.name || "Arty"} emoji={arty?.emoji || "🏹"} role="COO / Chief of Staff" model="External" color="mint" href={arty ? `/company/agents/arty` : undefined} badge="VPS" />
+                  </div>
+                  <div ref={(el) => registerNode("larina", el)}>
+                    <OrgCard name="Larina" emoji="✨" role="Lead Designer & AI Manager" color="pink" isHuman />
+                  </div>
                 </div>
+                
                 <div className="px-4 py-2 rounded-lg border border-dashed border-zinc-300 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900/50">
                   <p className="text-[10px] text-zinc-400 text-center">Separate OpenClaw instance</p>
                   <p className="text-[9px] text-zinc-500 text-center mt-0.5">Artemis • VPS</p>
@@ -244,14 +271,14 @@ export default function OrgChartPage() {
           <div className="mt-16 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Departments</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <DeptBadge name="Executive" color="amber" members={["PJ (CEO)", "Ella (CEO)", "Q 🦾 (COO)", "Arty 🏹 (COO)"]} />
-              <DeptBadge name="Creative" color="pink" members={["Muse 🎨 (Director)", "Pixel ✏️ (Design)"]} />
-              <DeptBadge name="Engineering" color="emerald" members={["Forge 💻 (Lead)", "Probe 🧪 (QA)"]} />
-              <DeptBadge name="Growth" color="cyan" members={["Vector 📈 (Head)"]} />
-              <DeptBadge name="Research" color="blue" members={["Atlas 🔬 (Head)"]} />
-              <DeptBadge name="Events" color="orange" members={["Volt 🎪 (Manager)"]} />
-              <DeptBadge name="Support" color="sky" members={["Echo 💬 (Lead)"]} />
-              <DeptBadge name="Community" color="zinc" members={["Luna 🌙 (Discord)"]} />
+              <DeptBadge name="Executive" color="amber" members={["PJ (CEO)", "Ella (CEO)", "Q (COO)", "Arty (COO)", "Larina (dotted)"]} />
+              <DeptBadge name="Creative" color="pink" members={["Aura (Director)", "Prism (Design)", "Larina (Lead Designer)"]} />
+              <DeptBadge name="Engineering" color="emerald" members={["Spark (Lead)", "Flux (QA)"]} />
+              <DeptBadge name="Growth" color="cyan" members={["Surge (Head)"]} />
+              <DeptBadge name="Research" color="blue" members={["Cipher (Head)"]} />
+              <DeptBadge name="Events" color="orange" members={["Volt (Manager)"]} />
+              <DeptBadge name="Support" color="sky" members={["Echo (Lead)"]} />
+              <DeptBadge name="Community" color="zinc" members={["Luna (Discord)"]} />
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-6 text-xs text-zinc-500">
               <div className="flex items-center gap-2">
@@ -287,7 +314,6 @@ function OrgCard({
 }) {
   const sizeClass = size === "lg" ? "px-6 py-4 min-w-[160px]" : size === "sm" ? "px-3 py-2 min-w-[90px]" : "px-4 py-3 min-w-[120px]";
   const textSize = size === "lg" ? "text-sm" : size === "sm" ? "text-xs" : "text-xs";
-  const emojiSize = size === "lg" ? "text-3xl" : size === "sm" ? "text-lg" : "text-2xl";
 
   const colorClasses: Record<string, string> = {
     amber: "border-amber-300 dark:border-amber-600 bg-white dark:bg-zinc-900",
@@ -314,14 +340,15 @@ function OrgCard({
           </span>
         </div>
       )}
-      {emoji && <p className={emojiSize}>{emoji}</p>}
+      {emoji && <AgentIcon emoji={emoji} size={size === "lg" ? 32 : size === "sm" ? 18 : 24} className="mx-auto text-zinc-600 dark:text-zinc-300" />}
       <p className={`font-bold text-zinc-900 dark:text-zinc-100 ${textSize}`}>{name}</p>
       {subtitle && <p className="text-[10px] text-zinc-400">{subtitle}</p>}
       <p className="text-[11px] text-zinc-500">{role}</p>
       {model && <p className="text-[9px] text-zinc-400 font-mono mt-0.5">{model}</p>}
       {expandable && (
-        <div className="mt-1 text-[9px] text-zinc-400">
-          {collapsed ? `▶ ${reportCount} reports` : `▼ ${reportCount} reports`}
+        <div className="mt-1 text-[9px] text-zinc-400 flex items-center justify-center gap-1">
+          {collapsed ? <ChevronRight size={10} /> : <ChevronDown size={10} />}
+          <span>{reportCount} reports</span>
         </div>
       )}
     </div>

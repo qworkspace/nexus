@@ -2,6 +2,13 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { AgentIcon } from "@/lib/agent-icons";
+import {
+  Building2, LayoutGrid, GitBranch, Calendar, Inbox,
+  Activity, LinkIcon, TrendingUp, TrendingDown, AlertTriangle,
+  Repeat, BookOpen, Zap
+} from "lucide-react";
+import ScorecardPanel from "@/components/ScorecardPanel";
 
 interface Agent {
   id: string;
@@ -53,6 +60,20 @@ interface CompanyStatus {
   recentActivity: ActivityEntry[];
 }
 
+interface LoopStatus {
+  scorecard: Record<string, number> | null;
+  regressions: Array<{ severity: string; pattern: string; count: number }>;
+  skills: {
+    total: number;
+    proficiency_avg: number;
+    by_category: Record<string, number>;
+    recent: Array<{ name: string; acquired: string; proficiency: number }>;
+  };
+  buildStats: { success: number; failed: number; total: number; rate: number };
+  lessonsThisWeek: number;
+  updated_at: string;
+}
+
 export default function CompanyPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [actions, setActions] = useState<ActionItem[]>([]);
@@ -61,6 +82,7 @@ export default function CompanyPage() {
   const [activity, setActivity] = useState<ActivityEntry[]>([]);
   const [newActivityCount, setNewActivityCount] = useState(0);
   const [isActivityScrolled, setIsActivityScrolled] = useState(false);
+  const [loopStatus, setLoopStatus] = useState<LoopStatus | null>(null);
   const activityContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,6 +93,7 @@ export default function CompanyPage() {
       fetch("/api/company/meetings").then(r => r.json()).then(d => setMeetings(d.meetings || [])),
       fetch("/api/company/status").then(r => r.json()).then(d => setStatus(d)),
       fetch("/api/company/activity").then(r => r.json()).then(d => setActivity(d.feed || [])),
+      fetch("/api/loops/status").then(r => r.json()).then(d => setLoopStatus(d)).catch(() => {}),
     ]);
 
     // Poll activity feed every 15s
@@ -107,9 +130,23 @@ export default function CompanyPage() {
 
     const statusInterval = setInterval(pollStatus, 30000);
 
+    // Poll loop status every 5 minutes
+    const pollLoopStatus = async () => {
+      try {
+        const res = await fetch("/api/loops/status");
+        const data = await res.json();
+        setLoopStatus(data);
+      } catch (err) {
+        console.error("Failed to poll loop status:", err);
+      }
+    };
+
+    const loopInterval = setInterval(pollLoopStatus, 5 * 60 * 1000);
+
     return () => {
       clearInterval(activityInterval);
       clearInterval(statusInterval);
+      clearInterval(loopInterval);
     };
   }, [activity, isActivityScrolled]);
 
@@ -154,12 +191,21 @@ export default function CompanyPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">🏢 Company HQ</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+            <Building2 size={24} />
+            Company HQ
+          </h1>
           <p className="text-zinc-500 text-sm">Villanueva Creative — {agents.length} team members</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/company/floor" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-xs hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">🎮 The Floor</Link>
-          <Link href="/company/org" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-xs hover:bg-zinc-200 dark:hover:bg-zinc-700 transition">🗂️ Org Chart</Link>
+          <Link href="/company/floor" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-xs hover:bg-zinc-200 dark:hover:bg-zinc-700 transition flex items-center gap-1.5">
+            <LayoutGrid size={14} />
+            The Floor
+          </Link>
+          <Link href="/company/org" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-xs hover:bg-zinc-200 dark:hover:bg-zinc-700 transition flex items-center gap-1.5">
+            <GitBranch size={14} />
+            Org Chart
+          </Link>
         </div>
       </div>
 
@@ -198,7 +244,9 @@ export default function CompanyPage() {
                 const trendingUp = sparkline.length >= 2 && sparkline[sparkline.length - 1] > sparkline[sparkline.length - 2];
                 return (
                   <Link key={agent.id} href={`/company/agents/${agent.id}`} className="p-3 rounded-lg border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition text-center group">
-                    <span className="text-2xl">{agent.emoji}</span>
+                    <div className="flex items-center justify-center mb-1">
+                      <AgentIcon emoji={agent.emoji} size={28} className="text-zinc-600 dark:text-zinc-300" />
+                    </div>
                     <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100 mt-1">{agent.name}</p>
                     <p className="text-[10px] text-zinc-500 truncate">{agent.role}</p>
                     <p className="text-[9px] text-zinc-400 font-mono mt-0.5">{agent.model.primary.split("/").pop()}</p>
@@ -206,9 +254,11 @@ export default function CompanyPage() {
                     {sparkline.length > 0 && (
                       <div className="mt-2 flex items-center justify-center gap-1">
                         <Sparkline data={sparkline} color={trendingUp ? "emerald" : "red"} />
-                        <span className={`text-[9px] font-bold ${trendingUp ? "text-emerald-500" : "text-red-500"}`}>
-                          {trendingUp ? "↑" : "↓"}
-                        </span>
+                        {trendingUp ? (
+                          <TrendingUp size={10} className="text-emerald-500" />
+                        ) : (
+                          <TrendingDown size={10} className="text-red-500" />
+                        )}
                       </div>
                     )}
                   </Link>
@@ -222,7 +272,10 @@ export default function CompanyPage() {
             {/* Recent Meetings */}
             <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">📋 Recent Meetings</h3>
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                  <Calendar size={14} />
+                  Recent Meetings
+                </h3>
                 <Link href="/company/meetings" className="text-[10px] text-blue-500 hover:underline">View all →</Link>
               </div>
               <div className="space-y-2">
@@ -239,7 +292,10 @@ export default function CompanyPage() {
             {/* Action Items */}
             <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">📥 Action Items</h3>
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                  <Inbox size={14} />
+                  Action Items
+                </h3>
                 <Link href="/company/actions" className="text-[10px] text-blue-500 hover:underline">View board →</Link>
               </div>
               <div className="space-y-2">
@@ -250,7 +306,7 @@ export default function CompanyPage() {
                     <span className="text-[10px] text-zinc-400">{a.assignee}</span>
                   </div>
                 ))}
-                {openActions.length === 0 && <p className="text-zinc-500 text-xs py-4 text-center">No open action items 🎉</p>}
+                {openActions.length === 0 && <p className="text-zinc-500 text-xs py-4 text-center">No open action items</p>}
               </div>
               <div className="mt-2 text-[10px] text-zinc-400 text-center">
                 {doneActions.length} completed • {openActions.length} open
@@ -263,7 +319,10 @@ export default function CompanyPage() {
         <div className="space-y-6">
           <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">⚡ Activity Feed</h3>
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <Activity size={14} />
+                Activity Feed
+              </h3>
               {newActivityCount > 0 && (
                 <button
                   onClick={resetActivityScroll}
@@ -280,7 +339,7 @@ export default function CompanyPage() {
             >
               {(status?.recentActivity || activity).slice(0, 20).map((entry, i) => (
                 <div key={entry.id || i} className="flex gap-2 text-xs">
-                  <span>{entry.emoji}</span>
+                  <AgentIcon emoji={entry.emoji} size={16} className="text-zinc-600 dark:text-zinc-300 shrink-0 mt-0.5" />
                   <div>
                     <span className="font-medium text-zinc-700 dark:text-zinc-300">{entry.agentName}</span>
                     <span className="text-zinc-500 ml-1">{entry.message}</span>
@@ -299,11 +358,152 @@ export default function CompanyPage() {
           {/* Quick Links */}
           <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 space-y-2">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Quick Links</h3>
-            <Link href="/company/floor" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">🎮 The Floor — Watch agents work</Link>
-            <Link href="/company/org" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">🗂️ Org Chart — Company structure</Link>
-            <Link href="/company/relationships" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">🤝 Relationships — Trust matrix</Link>
-            <Link href="/company/meetings" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">📋 Meetings — Transcripts & history</Link>
-            <Link href="/company/actions" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">📥 Actions — Task board</Link>
+            <Link href="/company/floor" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+              <LayoutGrid size={14} className="shrink-0" />
+              The Floor — Watch agents work
+            </Link>
+            <Link href="/company/org" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+              <GitBranch size={14} className="shrink-0" />
+              Org Chart — Company structure
+            </Link>
+            <Link href="/company/relationships" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+              <LinkIcon size={14} className="shrink-0" />
+              Relationships — Trust matrix
+            </Link>
+            <Link href="/company/meetings" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+              <Calendar size={14} className="shrink-0" />
+              Meetings — Transcripts & history
+            </Link>
+            <Link href="/company/actions" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+              <Inbox size={14} className="shrink-0" />
+              Actions — Task board
+            </Link>
+          </div>
+
+          {/* Loop 0 Scorecard Panel */}
+          <ScorecardPanel />
+
+          {/* Loop Status Panel */}
+          <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3 flex items-center gap-1.5">
+              <Repeat size={14} />
+              Loop Status
+            </h3>
+
+            {loopStatus ? (
+              <div className="space-y-4">
+                {/* Growth Metrics */}
+                <div className="space-y-2">
+                  <LoopMetricBar
+                    icon={<BookOpen size={12} />}
+                    label="Learning"
+                    value={loopStatus.lessonsThisWeek}
+                    max={10}
+                    unit="lessons/wk"
+                    color="blue"
+                  />
+                  <LoopMetricBar
+                    icon={<Zap size={12} />}
+                    label="Build Rate"
+                    value={loopStatus.buildStats.rate}
+                    max={100}
+                    unit="%"
+                    color={loopStatus.buildStats.rate >= 70 ? "emerald" : loopStatus.buildStats.rate >= 40 ? "amber" : "red"}
+                  />
+                  <LoopMetricBar
+                    icon={<Activity size={12} />}
+                    label="Skills"
+                    value={loopStatus.skills.total}
+                    max={50}
+                    unit="/50 target"
+                    color="purple"
+                  />
+                </div>
+
+                {/* Skill Proficiency */}
+                {loopStatus.skills.total > 0 && (
+                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                    <div className="flex items-center justify-between text-[10px] mb-1">
+                      <span className="text-zinc-500">Avg Proficiency</span>
+                      <span className="text-zinc-400">{loopStatus.skills.proficiency_avg.toFixed(1)}/5</span>
+                    </div>
+                    <div className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5].map(level => (
+                        <div
+                          key={level}
+                          className={`h-1.5 flex-1 rounded-full ${
+                            level <= Math.round(loopStatus.skills.proficiency_avg)
+                              ? "bg-purple-500"
+                              : "bg-zinc-200 dark:bg-zinc-700"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Skill Categories */}
+                {Object.keys(loopStatus.skills.by_category).length > 0 && (
+                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                    <p className="text-[10px] text-zinc-500 mb-2">Skills by Category</p>
+                    <div className="grid grid-cols-2 gap-1">
+                      {Object.entries(loopStatus.skills.by_category).map(([cat, count]) => (
+                        <div key={cat} className="flex items-center justify-between text-[10px] px-1.5 py-1 rounded bg-zinc-50 dark:bg-zinc-800">
+                          <span className="text-zinc-500 capitalize">{cat}</span>
+                          <span className="font-mono text-zinc-700 dark:text-zinc-300">{count}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Regression Alerts */}
+                {loopStatus.regressions && loopStatus.regressions.length > 0 && (
+                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                    <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-lg p-2">
+                      <p className="text-[10px] font-bold text-red-600 dark:text-red-400 mb-1 flex items-center gap-1">
+                        <AlertTriangle size={10} />
+                        Regressions Detected
+                      </p>
+                      <div className="space-y-1">
+                        {loopStatus.regressions.slice(0, 3).map((reg, i) => (
+                          <div key={i} className="text-[10px] flex items-start gap-1">
+                            <span className={reg.severity === "high" ? "text-red-500" : "text-amber-500"}>
+                              {reg.severity === "high" ? "🔴" : "🟡"}
+                            </span>
+                            <span className="text-zinc-600 dark:text-zinc-400 truncate flex-1">
+                              {reg.pattern.slice(0, 40)}...
+                            </span>
+                            <span className="text-zinc-400 shrink-0">×{reg.count}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Core Scorecard (if available) */}
+                {loopStatus.scorecard && Object.keys(loopStatus.scorecard).length > 0 && (
+                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                    <p className="text-[10px] text-zinc-500 mb-2">Weekly Scorecard</p>
+                    <div className="grid grid-cols-5 gap-1">
+                      {["autonomy", "quality", "speed", "alignment", "energy"].map(metric => (
+                        <div key={metric} className="text-center">
+                          <div className="text-sm font-bold text-blue-500">
+                            {loopStatus.scorecard?.[metric] || 0}
+                          </div>
+                          <div className="text-[8px] text-zinc-400 uppercase">
+                            {metric.slice(0, 3)}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <p className="text-xs text-zinc-500 text-center py-4">Loading loop status...</p>
+            )}
           </div>
         </div>
       </div>
@@ -414,4 +614,56 @@ function formatRelativeTime(timestamp: string): string {
   if (diffMins < 60) return `${diffMins}m ago`;
   if (diffHours < 24) return `${diffHours}h ago`;
   return `${diffDays}d ago`;
+}
+
+function LoopMetricBar({ 
+  icon, 
+  label, 
+  value, 
+  max, 
+  unit, 
+  color 
+}: { 
+  icon: React.ReactNode;
+  label: string; 
+  value: number; 
+  max: number; 
+  unit: string;
+  color: "emerald" | "amber" | "red" | "blue" | "purple";
+}) {
+  const percentage = Math.min((value / max) * 100, 100);
+  const colorClasses: Record<string, string> = {
+    emerald: "bg-emerald-500",
+    amber: "bg-amber-500",
+    red: "bg-red-500",
+    blue: "bg-blue-500",
+    purple: "bg-purple-500",
+  };
+  const textColors: Record<string, string> = {
+    emerald: "text-emerald-600 dark:text-emerald-400",
+    amber: "text-amber-600 dark:text-amber-400",
+    red: "text-red-600 dark:text-red-400",
+    blue: "text-blue-600 dark:text-blue-400",
+    purple: "text-purple-600 dark:text-purple-400",
+  };
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <span className="text-[10px] text-zinc-500 flex items-center gap-1">
+          <span className={textColors[color]}>{icon}</span>
+          {label}
+        </span>
+        <span className={`text-[10px] font-mono ${textColors[color]}`}>
+          {typeof value === "number" && value % 1 !== 0 ? value.toFixed(1) : value} {unit}
+        </span>
+      </div>
+      <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+        <div
+          className={`h-full rounded-full ${colorClasses[color]} transition-all duration-500`}
+          style={{ width: `${percentage}%` }}
+        />
+      </div>
+    </div>
+  );
 }

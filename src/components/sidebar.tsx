@@ -5,24 +5,32 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { KeyHint } from "@/components/KeyHint";
+import {
+  Building2, LayoutGrid, GitBranch, Calendar, Link as LinkIcon,
+  Inbox, Gauge, Hammer, RefreshCw, MessageSquare, Brain, DollarSign,
+  ScrollText, Clock, Search, Menu, X, Scale, Save
+} from "lucide-react";
 
 const navigation = [
-  { name: "Company HQ", href: "/company", icon: "🏢", shortcut: "mod+1" },
-  { name: "The Floor", href: "/company/floor", icon: "🎮", shortcut: null },
-  { name: "Org Chart", href: "/company/org", icon: "🗂️", shortcut: null },
-  { name: "Meetings", href: "/company/meetings", icon: "📋", shortcut: null },
-  { name: "Relationships", href: "/company/relationships", icon: "🤝", shortcut: null },
-  { name: "Action Items", href: "/company/actions", icon: "📥", shortcut: null },
-  { name: "divider", href: "", icon: "", shortcut: null },
-  { name: "Command Center", href: "/command-center", icon: "🎛️", shortcut: "mod+2" },
-  { name: "Builds", href: "/builds", icon: "🔨", shortcut: "mod+3" },
-  { name: "Sessions", href: "/sessions", icon: "💬", shortcut: null },
-  { name: "Crons", href: "/crons", icon: "⏰", shortcut: "mod+4" },
-  { name: "divider2", href: "", icon: "", shortcut: null },
-  { name: "Memory", href: "/memory", icon: "🧠", shortcut: null },
-  { name: "Costs", href: "/costs", icon: "◈", shortcut: "mod+5" },
-  { name: "Logs", href: "/logs", icon: "📜", shortcut: null },
-  { name: "Search", href: "/search", icon: "⌕", shortcut: null },
+  { name: "Company HQ", href: "/company", icon: Building2, shortcut: "mod+1" },
+  { name: "The Floor", href: "/company/floor", icon: LayoutGrid, shortcut: null },
+  { name: "Org Chart", href: "/company/org", icon: GitBranch, shortcut: null },
+  { name: "Meetings", href: "/company/meetings", icon: Calendar, shortcut: null },
+  { name: "Relationships", href: "/company/relationships", icon: LinkIcon, shortcut: null },
+  { name: "Action Items", href: "/company/actions", icon: Inbox, shortcut: null },
+  { name: "divider", href: "", icon: null, shortcut: null },
+  { name: "Command Center", href: "/command-center", icon: Gauge, shortcut: "mod+2" },
+  { name: "Builds", href: "/builds", icon: Hammer, shortcut: "mod+3" },
+  { name: "CI Pipeline", href: "/ci-pipeline", icon: RefreshCw, shortcut: null },
+  { name: "Checkpoints", href: "/checkpoints", icon: Save, shortcut: null },
+  { name: "Sessions", href: "/sessions", icon: MessageSquare, shortcut: null },
+  { name: "Crons", href: "/crons", icon: Clock, shortcut: "mod+4" },
+  { name: "divider2", href: "", icon: null, shortcut: null },
+  { name: "Memory", href: "/memory", icon: Brain, shortcut: null },
+  { name: "Decisions", href: "/decisions", icon: Scale, shortcut: null },
+  { name: "Costs", href: "/costs", icon: DollarSign, shortcut: "mod+5" },
+  { name: "Logs", href: "/logs", icon: ScrollText, shortcut: null },
+  { name: "Search", href: "/search", icon: Search, shortcut: null },
 ];
 
 export function Sidebar() {
@@ -36,7 +44,7 @@ export function Sidebar() {
         className="md:hidden fixed top-4 left-4 z-50 p-2 bg-zinc-900 text-white rounded-lg"
         onClick={() => setCollapsed(!collapsed)}
       >
-        {collapsed ? "☰" : "✕"}
+        {collapsed ? <Menu size={20} /> : <X size={20} />}
       </button>
 
       {/* Sidebar */}
@@ -49,7 +57,7 @@ export function Sidebar() {
       >
         <div className="p-4 border-b border-zinc-200">
           <h1 className="text-lg font-semibold text-zinc-900">
-            Mission Control
+            Nexus
           </h1>
           <p className="text-xs text-zinc-500">Q&apos;s Activity Dashboard</p>
         </div>
@@ -72,7 +80,7 @@ export function Sidebar() {
                     : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
                 )}
               >
-                <span className="text-base">{item.icon}</span>
+                {item.icon && <item.icon size={18} className="shrink-0" />}
                 <span className="flex-1">{item.name}</span>
                 {item.shortcut && (
                   <KeyHint keys={item.shortcut} showOnHover className="opacity-0 group-hover:opacity-100" />

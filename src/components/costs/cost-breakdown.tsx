@@ -15,7 +15,7 @@ export function CostBreakdown({
 }: {
   title: string;
   items: BreakdownItem[];
-  icon: string;
+  icon: React.ReactNode;
 }) {
   const total = items.reduce((sum, item) => sum + item.cost, 0);
 

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
+import { AgentIcon } from "@/lib/agent-icons";
+import { TrendIcon } from "@/lib/ui-icons";
 
 interface Agent {
   id: string;
@@ -17,6 +19,7 @@ interface Agent {
   expertise: string[];
   kpis: string[];
   model: { primary: string; fallback: string | null };
+  nameReason?: string;
 }
 
 interface Relationship {
@@ -64,11 +67,18 @@ export default function AgentProfilePage() {
       {/* Header */}
       <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 mb-6">
         <div className="flex items-center gap-4">
-          <span className="text-5xl">{agent.emoji}</span>
+          <div className="flex items-center justify-center w-16 h-16">
+            <AgentIcon emoji={agent.emoji} size={48} className="text-zinc-600 dark:text-zinc-300" />
+          </div>
           <div>
             <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{agent.name}</h1>
             <p className="text-zinc-500">{agent.role}</p>
-            <div className="flex items-center gap-2 mt-1">
+            {agent.nameReason && (
+              <p className="text-sm text-zinc-400 italic mt-1">
+                &ldquo;Why {agent.name}?&rdquo; — {agent.nameReason}
+              </p>
+            )}
+            <div className="flex items-center gap-2 mt-2">
               <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
                 {agent.department}
               </span>
@@ -116,19 +126,26 @@ export default function AgentProfilePage() {
             </div>
             <div>
               <p className="text-xs font-medium text-zinc-500 uppercase mb-1">Reports To</p>
-              <p className="text-sm text-zinc-700 dark:text-zinc-300">
-                {agentMap[agent.reportsTo] ? `${agentMap[agent.reportsTo].emoji} ${agentMap[agent.reportsTo].name}` : agent.reportsTo}
-              </p>
+              <div className="flex items-center gap-2">
+                {agentMap[agent.reportsTo] && (
+                  <>
+                    <AgentIcon emoji={agentMap[agent.reportsTo].emoji} size={20} className="text-zinc-600 dark:text-zinc-300" />
+                    <span className="text-sm text-zinc-700 dark:text-zinc-300">{agentMap[agent.reportsTo].name}</span>
+                  </>
+                )}
+                {!agentMap[agent.reportsTo] && <span className="text-sm text-zinc-700 dark:text-zinc-300">{agent.reportsTo}</span>}
+              </div>
             </div>
             {agent.directReports.length > 0 && (
               <div>
                 <p className="text-xs font-medium text-zinc-500 uppercase mb-1">Direct Reports</p>
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   {agent.directReports.map(rid => {
                     const r = agentMap[rid];
                     return r ? (
-                      <Link key={rid} href={`/company/agents/${rid}`} className="text-sm text-blue-500 hover:underline">
-                        {r.emoji} {r.name}
+                      <Link key={rid} href={`/company/agents/${rid}`} className="flex items-center gap-1.5 text-sm text-blue-500 hover:underline">
+                        <AgentIcon emoji={r.emoji} size={16} className="text-blue-500" />
+                        {r.name}
                       </Link>
                     ) : null;
                   })}
@@ -150,17 +167,20 @@ export default function AgentProfilePage() {
                 if (!other) return null;
 
                 const trustColor = rel.trust >= 60 ? "bg-emerald-500" : rel.trust >= 40 ? "bg-zinc-400" : rel.trust >= 20 ? "bg-amber-500" : "bg-red-500";
-                const trendIcon = rel.trend === "improving" ? "📈" : rel.trend === "declining" ? "📉" : "➡️";
 
                 return (
                   <div key={otherId} className="space-y-1">
                     <div className="flex items-center justify-between">
                       <Link href={`/company/agents/${otherId}`} className="flex items-center gap-2 hover:underline">
-                        <span>{other.emoji}</span>
+                        <AgentIcon emoji={other.emoji} size={20} className="text-zinc-600 dark:text-zinc-300" />
                         <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">{other.name}</span>
                       </Link>
                       <div className="flex items-center gap-2">
-                        <span className="text-xs text-zinc-500">{trendIcon}</span>
+                        <TrendIcon 
+                          trend={rel.trend === "improving" ? "improving" : rel.trend === "declining" ? "declining" : "stable"}
+                          size={14}
+                          className="text-zinc-500"
+                        />
                         <span className="text-sm font-mono text-zinc-600 dark:text-zinc-400">{rel.trust}</span>
                       </div>
                     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Bot, Monitor} from "lucide-react";
 
 interface StatusBarData {
   model: string;
@@ -54,13 +55,13 @@ export function StatusBar() {
   return (
     <div className="fixed bottom-0 left-0 right-0 h-8 bg-zinc-900 text-zinc-300 text-xs flex items-center px-4 gap-6 z-50">
       <div className="flex items-center gap-1.5">
-        <span>🦾</span>
+        <Bot size={16} />
         <span className="text-zinc-400">Q:</span>
         <span className="text-white">{data.model}</span>
       </div>
 
       <div className="flex items-center gap-1.5">
-        <span>💻</span>
+        <Monitor size={12} />
         <span className="text-zinc-400">Dev:</span>
         <span className="text-white">{data.activeAgents} building</span>
       </div>

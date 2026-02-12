@@ -1,7 +1,7 @@
 /**
  * Keyboard Shortcuts System
  *
- * Central definitions for all keyboard shortcuts in Mission Control.
+ * Central definitions for all keyboard shortcuts in Nexus.
  */
 
 export type ShortcutCategory = 'global' | 'navigation' | 'panel' | 'action';
@@ -176,7 +176,7 @@ export const categoryLabels: Record<ShortcutCategory, string> = {
  * Category descriptions
  */
 export const categoryDescriptions: Record<ShortcutCategory, string> = {
-  global: 'Available everywhere in Mission Control',
+  global: 'Available everywhere in Nexus',
   navigation: 'Quick navigation between pages',
   panel: 'Focus specific panels on the dashboard',
   action: 'Context-aware actions in panels',

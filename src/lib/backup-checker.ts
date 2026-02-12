@@ -48,9 +48,9 @@ export const DEFAULT_REPOS: BackupRepo[] = [
     description: 'Primary workspace backup',
   },
   {
-    name: 'Mission Control',
+    name: 'Nexus',
     path: '/Users/paulvillanueva/dev/projects/mission-control',
-    description: 'Mission Control project',
+    description: 'Nexus project',
   },
 ];
 

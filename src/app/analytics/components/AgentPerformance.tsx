@@ -1,6 +1,8 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AgentIcon } from "@/lib/agent-icons";
+import { Bot } from "lucide-react";
 
 interface AgentData {
   name: string;
@@ -20,7 +22,7 @@ export function AgentPerformance({ data }: AgentPerformanceProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span>🦾</span>
+          <Bot size={18} />
           Agent Performance
         </CardTitle>
       </CardHeader>
@@ -40,7 +42,7 @@ export function AgentPerformance({ data }: AgentPerformanceProps) {
               <tr key={agent.name} className="border-b border-zinc-100 hover:bg-zinc-50">
                 <td className="py-3">
                   <div className="flex items-center gap-2">
-                    <span>{agent.icon}</span>
+                    <AgentIcon emoji={agent.icon} size={16} className="text-zinc-600" />
                     <span className="font-medium text-zinc-900">{agent.name}</span>
                   </div>
                 </td>

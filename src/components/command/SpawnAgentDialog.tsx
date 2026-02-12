@@ -14,12 +14,13 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCommandStore } from "@/stores/commandStore";
 import { cn } from "@/lib/utils";
+import { Brain, Sparkles, Zap, Eye, Bot, Rocket } from "lucide-react";
 
 const MODELS = [
-  { id: "claude-opus-4-5", name: "Opus 4.5", emoji: "🧠", desc: "Most capable" },
-  { id: "claude-sonnet-4", name: "Sonnet 4", emoji: "✨", desc: "Balanced" },
-  { id: "claude-3-5-haiku", name: "Haiku 3.5", emoji: "⚡", desc: "Fast & cheap" },
-  { id: "glm-4-flash", name: "GLM Flash", emoji: "🔮", desc: "Free local" },
+  { id: "claude-opus-4-5", name: "Opus 4.5", icon: Brain, desc: "Most capable" },
+  { id: "claude-sonnet-4", name: "Sonnet 4", icon: Sparkles, desc: "Balanced" },
+  { id: "claude-3-5-haiku", name: "Haiku 3.5", icon: Zap, desc: "Fast & cheap" },
+  { id: "glm-4-flash", name: "GLM Flash", icon: Eye, desc: "Free local" },
 ];
 
 export function SpawnAgentDialog() {
@@ -78,7 +79,7 @@ export function SpawnAgentDialog() {
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <span className="text-xl">🤖</span>
+            <Bot size={20} />
             Spawn New Agent
           </DialogTitle>
         </DialogHeader>
@@ -100,24 +101,27 @@ export function SpawnAgentDialog() {
           <div className="space-y-2">
             <Label>Model</Label>
             <div className="grid grid-cols-2 gap-2">
-              {MODELS.map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => setModel(m.id)}
-                  className={cn(
-                    "p-3 rounded-lg border text-left transition-all",
-                    model === m.id
-                      ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
-                      : "border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600"
-                  )}
-                >
-                  <div className="flex items-center gap-2">
-                    <span>{m.emoji}</span>
-                    <span className="font-medium text-sm">{m.name}</span>
-                  </div>
-                  <p className="text-xs text-zinc-500 mt-1">{m.desc}</p>
-                </button>
-              ))}
+              {MODELS.map((m) => {
+                const Icon = m.icon;
+                return (
+                  <button
+                    key={m.id}
+                    onClick={() => setModel(m.id)}
+                    className={cn(
+                      "p-3 rounded-lg border text-left transition-all",
+                      model === m.id
+                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                        : "border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600"
+                    )}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Icon size={16} className="text-zinc-600 dark:text-zinc-400" />
+                      <span className="font-medium text-sm">{m.name}</span>
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-1">{m.desc}</p>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
@@ -145,8 +149,13 @@ export function SpawnAgentDialog() {
           <Button variant="outline" onClick={handleClose} disabled={isSpawning}>
             Cancel
           </Button>
-          <Button onClick={handleSpawn} disabled={isSpawning}>
-            {isSpawning ? "Spawning..." : "🚀 Spawn Agent"}
+          <Button onClick={handleSpawn} disabled={isSpawning} className="flex items-center gap-2">
+            {isSpawning ? "Spawning..." : (
+              <>
+                <Rocket size={16} />
+                Spawn Agent
+              </>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

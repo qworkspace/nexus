@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { CheckCircle, Circle } from "lucide-react";
 
 interface PillarItem {
   name: string;
@@ -37,10 +38,10 @@ const itemStatusColors: Record<PillarItem["status"], string> = {
   "not-started": "text-red-600",
 };
 
-const itemStatusIcons: Record<PillarItem["status"], string> = {
-  done: "✅",
-  "in-progress": "🟡",
-  "not-started": "🔴",
+const itemStatusIcons: Record<PillarItem["status"], JSX.Element> = {
+  done: <CheckCircle size={14} className="text-green-600" />,
+  "in-progress": <Circle size={14} className="fill-yellow-500 text-yellow-500" />,
+  "not-started": <Circle size={14} className="fill-red-500 text-red-500" />,
 };
 
 export function PillarCard({ pillar }: PillarCardProps) {

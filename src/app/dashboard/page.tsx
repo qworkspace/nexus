@@ -18,6 +18,8 @@ import { HealthMonitor } from "./components/HealthMonitor";
 import { BackupMonitor } from "./components/BackupMonitor";
 import { LessonsSummary } from "@/components/dashboard/components/LessonsSummary";
 import { BugTrackerPanel } from "./components/BugTrackerPanel";
+import { CIDashboard } from "./components/CIDashboard";
+import { AgentActivity } from "./components/AgentActivity";
 
 export default function MissionControlDashboard() {
   return (
@@ -103,6 +105,16 @@ export default function MissionControlDashboard() {
           {/* Row 7: Bug Tracker */}
           <div className="col-span-12">
             <BugTrackerPanel />
+          </div>
+
+          {/* Row 8: CI Pipeline Dashboard */}
+          <div className="col-span-12">
+            <CIDashboard />
+          </div>
+
+          {/* Row 9: Agent Activity Panel */}
+          <div className="col-span-12">
+            <AgentActivity />
           </div>
         </div>
 

@@ -5,8 +5,8 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useCommandStore } from "@/stores/commandStore";
 
 /**
- * GlobalShortcuts - Handles all keyboard shortcuts for Mission Control
- * 
+ * GlobalShortcuts - Handles all keyboard shortcuts for Nexus
+ *
  * Shortcuts:
  * - ⌘K: Open command palette
  * - ⌘⇧D: Spawn dev agent

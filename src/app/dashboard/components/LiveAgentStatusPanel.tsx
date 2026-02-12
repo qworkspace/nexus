@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { RefreshCw, Play, X, FileText, Plus } from "lucide-react";
+import { RefreshCw, Play, X, FileText, Plus, Circle } from "lucide-react";
 import useSWR from "swr";
 
 interface AgentSession {
@@ -75,18 +75,18 @@ export function LiveAgentStatusPanel() {
     }
   };
 
-  const getStatusDot = (status: string): string => {
+  const getStatusDot = (status: string): JSX.Element => {
     switch (status) {
       case 'active':
-        return '🟢';
+        return <Circle size={8} className="fill-green-500 text-green-500" />;
       case 'idle':
-        return '⚪';
+        return <Circle size={8} className="fill-zinc-400 text-zinc-400" />;
       case 'completed':
-        return '🔵';
+        return <Circle size={8} className="fill-blue-500 text-blue-500" />;
       case 'error':
-        return '🔴';
+        return <Circle size={8} className="fill-red-500 text-red-500" />;
       default:
-        return '⚪';
+        return <Circle size={8} className="fill-zinc-400 text-zinc-400" />;
     }
   };
 

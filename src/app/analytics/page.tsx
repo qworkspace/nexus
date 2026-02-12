@@ -7,6 +7,7 @@ import { ModelBreakdown } from "./components/ModelBreakdown";
 import { AgentPerformance } from "./components/AgentPerformance";
 import { ActivityHeatmap } from "./components/ActivityHeatmap";
 import { TimePeriodSelector } from "./components/TimePeriodSelector";
+import { Bot, TrendingUp } from "lucide-react";
 
 export default function AnalyticsPage() {
   // Mock data
@@ -37,11 +38,11 @@ export default function AnalyticsPage() {
   ];
 
   const agentPerformance = [
-    { name: "Q", icon: "🦾", tasks: 89, avgTime: "4.2m", successRate: 94, costPerTask: 0.48 },
-    { name: "Dev", icon: "💻", tasks: 34, avgTime: "8.7m", successRate: 91, costPerTask: 0.00 },
-    { name: "Creative", icon: "🎨", tasks: 5, avgTime: "12.3m", successRate: 100, costPerTask: 0.34 },
-    { name: "Research", icon: "🔍", tasks: 8, avgTime: "6.1m", successRate: 88, costPerTask: 0.29 },
-    { name: "Testing", icon: "🧪", tasks: 2, avgTime: "15.0m", successRate: 100, costPerTask: 0.00 },
+    { name: "Q", icon: "Bot", tasks: 89, avgTime: "4.2m", successRate: 94, costPerTask: 0.48 },
+    { name: "Dev", icon: "Monitor", tasks: 34, avgTime: "8.7m", successRate: 91, costPerTask: 0.00 },
+    { name: "Creative", icon: "Palette", tasks: 5, avgTime: "12.3m", successRate: 100, costPerTask: 0.34 },
+    { name: "Research", icon: "Search", tasks: 8, avgTime: "6.1m", successRate: 88, costPerTask: 0.29 },
+    { name: "Testing", icon: "FlaskConical", tasks: 2, avgTime: "15.0m", successRate: 100, costPerTask: 0.00 },
   ];
 
   const heatmapData = [
@@ -79,7 +80,7 @@ export default function AnalyticsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                <span>📈</span>
+                <TrendingUp size={18} />
                 Usage Over Time
               </CardTitle>
             </CardHeader>
@@ -94,7 +95,7 @@ export default function AnalyticsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="text-lg font-semibold flex items-center gap-2">
-                <span>🤖</span>
+                <Bot size={18} />
                 Model Distribution
               </CardTitle>
             </CardHeader>

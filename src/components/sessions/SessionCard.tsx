@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { TranscriptMeta } from '@/types/transcripts';
-import { MessageSquare, Hash, Clock, User, ArrowRight } from 'lucide-react';
+import { MessageSquare, Hash, Clock, User, ArrowRight, Smartphone, Monitor } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import type { LucideIcon } from 'lucide-react';
 
 interface SessionCardProps {
   session: TranscriptMeta;
@@ -41,14 +42,14 @@ function formatDate(date: Date): string {
   });
 }
 
-function getKindIcon(kind: TranscriptMeta['kind']): string {
+function getKindIcon(kind: TranscriptMeta['kind']): LucideIcon {
   switch (kind) {
     case 'main':
-      return '📱';
+      return Smartphone;
     case 'cron':
-      return '⏰';
+      return Clock;
     case 'spawn':
-      return '💻';
+      return Monitor;
   }
 }
 
@@ -70,7 +71,10 @@ export function SessionCard({ session }: SessionCardProps) {
         {/* Header */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <span className="text-lg flex-shrink-0">{getKindIcon(session.kind)}</span>
+            {(() => {
+              const Icon = getKindIcon(session.kind);
+              return <Icon className="w-5 h-5 flex-shrink-0 text-zinc-600" />;
+            })()}
             <h3 className="font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors truncate">
               {session.label || 'Untitled Session'}
             </h3>

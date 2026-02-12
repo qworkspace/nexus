@@ -3,6 +3,7 @@ import { PillarCard } from "@/components/evolution/pillar-card";
 import { LessonsCard } from "@/components/evolution/lessons-card";
 import { EvolutionLog } from "@/components/evolution/evolution-log";
 import { GoalsCard } from "@/components/evolution/goals-card";
+import { Bot } from "lucide-react";
 
 async function getEvolutionData() {
   try {
@@ -47,7 +48,8 @@ export default async function EvolutionPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-zinc-900 flex items-center gap-2">
-          🦾 Q Evolution
+          <Bot size={24} />
+          Q Evolution
         </h1>
         <p className="text-zinc-500 text-sm">
           Continuous improvement tracking — Is Q getting better?

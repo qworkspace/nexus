@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { Check, X, Circle, Search, Settings, Zap } from "lucide-react";
 
 interface Activity {
   id: string;
@@ -37,15 +38,15 @@ const typeIcons: Record<string, string> = {
   message: "◈",
   cron: "◎",
   file: "◫",
-  search: "⌕",
+  search: "search",
   spawn: "◇",
-  tool: "⚙",
-  model: "⚡",
+  tool: "tool",
+  model: "model",
 };
 
 const statusIcons: Record<string, string> = {
-  success: "✓",
-  error: "✗",
+  success: "success",
+  error: "error",
   pending: "◌",
 };
 
@@ -101,11 +102,19 @@ export function ActivityCard({ activity }: { activity: Activity }) {
           {/* Status indicator */}
           <div
             className={cn(
-              "text-lg font-bold mt-0.5",
+              "mt-0.5",
               statusColors[activity.status]
             )}
           >
-            {statusIcons[activity.status] || "○"}
+            {statusIcons[activity.status] === "success" ? (
+              <Check size={18} />
+            ) : statusIcons[activity.status] === "error" ? (
+              <X size={18} />
+            ) : statusIcons[activity.status] === "◌" ? (
+              <span className="text-lg font-bold">◌</span>
+            ) : (
+              <Circle size={18} />
+            )}
           </div>
 
           {/* Main content */}
@@ -113,9 +122,17 @@ export function ActivityCard({ activity }: { activity: Activity }) {
             <div className="flex items-center gap-2 mb-1">
               <Badge
                 variant="secondary"
-                className={cn("text-xs", typeColors[activity.type])}
+                className={cn("text-xs flex items-center gap-1", typeColors[activity.type])}
               >
-                <span className="mr-1">{typeIcons[activity.type] || "○"}</span>
+                {typeIcons[activity.type] === "search" ? (
+                  <Search size={12} />
+                ) : typeIcons[activity.type] === "tool" ? (
+                  <Settings size={12} />
+                ) : typeIcons[activity.type] === "model" ? (
+                  <Zap size={12} />
+                ) : (
+                  <span>{typeIcons[activity.type] || "○"}</span>
+                )}
                 {activity.type}
               </Badge>
               <span className="text-xs text-zinc-400">{activity.action}</span>

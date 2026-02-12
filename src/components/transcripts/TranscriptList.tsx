@@ -41,11 +41,11 @@ function formatDate(date: Date): string {
 function getKindIcon(kind: TranscriptMeta['kind']): string {
   switch (kind) {
     case 'main':
-      return '📱';
+      return 'smartphone';
     case 'cron':
       return '⏰';
     case 'spawn':
-      return '💻';
+      return 'monitor';
   }
 }
 

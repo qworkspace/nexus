@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { db } from "@/lib/db";
 import Link from "next/link";
+import { DollarSign } from "lucide-react";
 // import { BugTrackerPanel } from "@/components/bugs/BugTrackerPanel";
 
 async function getStats() {
@@ -96,7 +97,10 @@ export default async function Dashboard() {
           <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-medium text-zinc-500 flex items-center justify-between">
-                <span>💰 Token Costs</span>
+                <span className="flex items-center gap-1.5">
+                  <DollarSign size={14} />
+                  Token Costs
+                </span>
                 <span className="text-xs">→</span>
               </CardTitle>
             </CardHeader>

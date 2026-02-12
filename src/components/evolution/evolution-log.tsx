@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { TrendingUp } from "lucide-react";
 
 interface EvolutionLogEntry {
   date: string;
@@ -23,7 +24,7 @@ export function EvolutionLog({ entries }: EvolutionLogProps) {
     <Card className="h-full">
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span>📈</span>
+          <TrendingUp size={18} />
           Evolution Log
         </CardTitle>
       </CardHeader>

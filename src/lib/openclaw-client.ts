@@ -74,7 +74,7 @@ export interface OpenClawStatusResponse {
   suggestion?: string;
 }
 
-// Transform functions to convert OpenClaw data to Mission Control format
+// Transform functions to convert OpenClaw data to Nexus format
 export function transformSession(session: OpenClawSession): {
   key: string;
   displayName: string;

@@ -2,6 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { Target, CheckSquare, Square } from "lucide-react";
 
 interface Goal {
   text: string;
@@ -29,7 +30,7 @@ export function GoalsCard({ goals }: GoalsCardProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span>🎯</span>
+          <Target size={18} />
           {goals.quarter} Goals
         </CardTitle>
       </CardHeader>
@@ -70,8 +71,8 @@ export function GoalsCard({ goals }: GoalsCardProps) {
                         goal.done ? "text-zinc-400 line-through" : "text-zinc-700"
                       )}
                     >
-                      <span className="mt-0.5 text-xs">
-                        {goal.done ? "☑" : "☐"}
+                      <span className="mt-0.5">
+                        {goal.done ? <CheckSquare size={14} className="text-green-600" /> : <Square size={14} className="text-zinc-400" />}
                       </span>
                       <span>{goal.text}</span>
                     </div>

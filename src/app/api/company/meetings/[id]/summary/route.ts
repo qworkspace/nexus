@@ -57,7 +57,7 @@ function parseTopics(content: string): string[] {
 
   // Common project keywords
   const keywords = [
-    "CryptoMon", "Mission Control", "Cohera", "In House Volumes", "Paul Villanueva",
+    "CryptoMon", "Nexus", "Cohera", "In House Volumes", "Paul Villanueva",
     "IHV", "website", "app", "design", "content", "marketing", "engineering",
     "standup", "sync", "release", "launch", "feature", "bug", "deadline",
   ];

@@ -1,6 +1,7 @@
 import { AgentCard } from "@/components/agents/agent-card";
 import { AgentStats } from "@/components/agents/agent-stats";
 
+
 interface Agent {
   id: string;
   name: string;
@@ -18,7 +19,7 @@ const agents: Agent[] = [
   {
     id: 'main',
     name: 'Q',
-    emoji: '🦾',
+    emoji: "🦾",
     model: 'claude-3-5-sonnet',
     description: 'Primary assistant - coordinates all agents and handles high-level decision making.',
     workspace: '~/dev/',
@@ -29,7 +30,7 @@ const agents: Agent[] = [
   {
     id: 'dev',
     name: 'Dev',
-    emoji: '💻',
+    emoji: "💻",
     model: 'glm-4.7',
     description: 'Code builder - handles technical tasks, writes code, and manages infrastructure.',
     workspace: '~/dev/',
@@ -40,7 +41,7 @@ const agents: Agent[] = [
   {
     id: 'creative',
     name: 'Creative',
-    emoji: '🎨',
+    emoji: "🎨",
     model: 'claude-3-5-sonnet',
     description: 'Brand & content - creates marketing materials, writes copy, and designs visual assets.',
     workspace: '~/dev/',
@@ -51,7 +52,7 @@ const agents: Agent[] = [
   {
     id: 'growth',
     name: 'Growth',
-    emoji: '📈',
+    emoji: "📈",
     model: 'gpt-4o',
     description: 'Marketing and growth strategies - analyzes metrics and plans campaigns.',
     workspace: '~/dev/',
@@ -62,7 +63,7 @@ const agents: Agent[] = [
   {
     id: 'research',
     name: 'Research',
-    emoji: '🔬',
+    emoji: "🔍",
     model: 'claude-3-5-sonnet',
     description: 'Information gathering - conducts research and compiles findings.',
     workspace: '~/dev/',
@@ -73,7 +74,7 @@ const agents: Agent[] = [
   {
     id: 'events',
     name: 'Events',
-    emoji: '📅',
+    emoji: "📅",
     model: 'gpt-4o',
     description: 'Event management - coordinates schedules and manages calendar.',
     workspace: '~/dev/',
@@ -84,7 +85,7 @@ const agents: Agent[] = [
   {
     id: 'support',
     name: 'Support',
-    emoji: '🎧',
+    emoji: '🎵',
     model: 'gpt-4o-mini',
     description: 'Customer support - handles inquiries and resolves issues.',
     workspace: '~/dev/',
@@ -95,7 +96,7 @@ const agents: Agent[] = [
   {
     id: 'design',
     name: 'Design',
-    emoji: '✨',
+    emoji: "✨",
     model: 'claude-3-5-sonnet',
     description: 'UI/UX design - creates interfaces and improves user experience.',
     workspace: '~/dev/',
@@ -106,7 +107,7 @@ const agents: Agent[] = [
   {
     id: 'testing',
     name: 'Testing',
-    emoji: '🧪',
+    emoji: "🧪",
     model: 'glm-4.7',
     description: 'Quality assurance - runs tests and identifies bugs.',
     workspace: '~/dev/',

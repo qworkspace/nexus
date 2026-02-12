@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { BuildSession } from "@/lib/build-mock";
+import { XCircle, X } from "lucide-react";
 
 interface FailedBuildsProps {
   builds: BuildSession[];
@@ -18,7 +19,8 @@ export function FailedBuilds({ builds }: FailedBuildsProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          ❌ Failed Builds
+          <XCircle size={18} className="text-red-600" />
+          Failed Builds
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -34,8 +36,9 @@ export function FailedBuilds({ builds }: FailedBuildsProps) {
                   <h3 className="font-semibold text-zinc-900">
                     {build.label}
                   </h3>
-                  <Badge className="bg-red-500 hover:bg-red-600 text-xs">
-                    ✗ FAILED
+                  <Badge className="bg-red-500 hover:bg-red-600 text-xs flex items-center gap-1">
+                    <X size={12} />
+                    FAILED
                   </Badge>
                 </div>
                 <p className="text-sm text-zinc-500 line-clamp-2">

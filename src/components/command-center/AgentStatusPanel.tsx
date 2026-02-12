@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import useSWR from "swr";
 import { useCommandStore } from "@/stores/commandStore";
+import { Bot, Check} from "lucide-react";
 
 interface AgentSession {
   id: string;
@@ -62,7 +63,7 @@ export function AgentStatusPanel() {
     <Card className="dark:glass-panel">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span className="text-xl">🤖</span>
+          <Bot size={20} className="text-zinc-600 dark:text-zinc-300" />
           Live Agents
         </CardTitle>
         <Button 
@@ -138,13 +139,13 @@ export function AgentStatusPanel() {
         )}
 
         {/* Pending Queue */}
-        {data?.queue && data.queue.length > 0 && (
+        {data?.queue && data?.queue?.length > 0 && (
           <div className="pt-3 border-t dark:border-zinc-800">
             <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-2">
-              Queue ({data.queue.length})
+              Queue ({data?.queue?.length || 0})
             </h4>
             <div className="space-y-1">
-              {data.queue.slice(0, 3).map((item, i) => (
+              {(data?.queue || []).slice(0, 3).map((item, i) => (
                 <div key={item.id} className="flex items-center gap-2 text-sm">
                   <span className="text-zinc-400">{i + 1}.</span>
                   <span className="text-zinc-600 dark:text-zinc-400 truncate">
@@ -157,15 +158,15 @@ export function AgentStatusPanel() {
         )}
 
         {/* Recent Completions */}
-        {data?.recentCompletions && data.recentCompletions.length > 0 && (
+        {data?.recentCompletions && data?.recentCompletions?.length > 0 && (
           <div className="pt-3 border-t dark:border-zinc-800">
             <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-2">
               Recent Completions
             </h4>
             <div className="space-y-1">
-              {data.recentCompletions.slice(0, 3).map(completion => (
+              {(data?.recentCompletions || []).slice(0, 3).map(completion => (
                 <div key={completion.id} className="flex items-center gap-2 text-sm">
-                  <span className="text-green-500">✓</span>
+                  <Check size={16} />
                   <span className="text-zinc-600 dark:text-zinc-400 truncate flex-1">
                     {completion.label}
                   </span>

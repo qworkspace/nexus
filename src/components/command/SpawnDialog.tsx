@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCommandStore } from "@/stores/commandStore";
+import { Rocket } from "lucide-react";
 
 const TEMPLATES = [
   { name: "CryptoMon Feature", task: "Build the feature for CryptoMon..." },
-  { name: "Mission Control", task: "Improve Mission Control interface..." },
+  { name: "Nexus", task: "Improve Nexus interface..." },
   { name: "Bug Fix", task: "Fix the issue reported..." },
   { name: "Research", task: "Research and document..." },
 ];
@@ -45,7 +46,7 @@ export function SpawnDialog() {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            🚀 SPAWN AGENT
+            <Rocket size={16} /> SPAWN AGENT
             <span className="ml-auto text-xs text-zinc-400 font-normal">ESC</span>
           </DialogTitle>
         </DialogHeader>
@@ -127,7 +128,7 @@ export function SpawnDialog() {
             Cancel
           </Button>
           <Button onClick={handleSpawn}>
-            🚀 Spawn
+            <Rocket size={14} /> Spawn
           </Button>
         </div>
       </DialogContent>

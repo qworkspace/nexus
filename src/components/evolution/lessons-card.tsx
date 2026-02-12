@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { BookOpen } from "lucide-react";
 
 interface Lesson {
   title: string;
@@ -26,7 +27,7 @@ export function LessonsCard({ lessons }: LessonsCardProps) {
     <Card className="h-full">
       <CardHeader>
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span>📚</span>
+          <BookOpen size={18} />
           Recent Lessons
         </CardTitle>
       </CardHeader>

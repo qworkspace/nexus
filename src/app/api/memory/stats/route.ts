@@ -1,8 +1,20 @@
 import { NextResponse } from 'next/server';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import { readdir, stat } from 'fs/promises';
+import path from 'path';
+import { homedir } from 'os';
+import { formatBytes } from '@/lib/data-utils';
 
 const execAsync = promisify(exec);
+
+interface FileSystemStats {
+  totalFiles: number;
+  totalSizeBytes: number;
+  totalSizeFormatted: string;
+  lastModified: string | null;
+  dailyFiles: { date: string; size: number; path: string }[];
+}
 
 interface MemoryStats {
   source: 'live' | 'mock' | 'error';
@@ -12,6 +24,7 @@ interface MemoryStats {
   indexPath: string;
   sources: Record<string, number>;
   totalFiles: number;
+  fileSystem?: FileSystemStats;
   error?: string;
 }
 
@@ -98,7 +111,61 @@ function getMockStats(): MemoryStats {
   };
 }
 
+async function getMemoryFileStats(): Promise<FileSystemStats | null> {
+  const memoryDir = path.join(homedir(), '.openclaw', 'workspace', 'memory');
+
+  try {
+    const files = await readdir(memoryDir);
+    let totalSize = 0;
+    let fileCount = 0;
+    let lastModified: Date | null = null;
+
+    const dailyFiles: { date: string; size: number; path: string }[] = [];
+
+    for (const file of files) {
+      const filePath = path.join(memoryDir, file);
+      const stats = await stat(filePath);
+
+      if (stats.isFile()) {
+        fileCount++;
+        totalSize += stats.size;
+
+        if (!lastModified || stats.mtime > lastModified) {
+          lastModified = stats.mtime;
+        }
+
+        // Track daily memory files
+        if (file.match(/\d{4}-\d{2}-\d{2}\.md/)) {
+          dailyFiles.push({
+            date: file.replace('.md', ''),
+            size: stats.size,
+            path: filePath,
+          });
+        }
+      }
+    }
+
+    return {
+      totalFiles: fileCount,
+      totalSizeBytes: totalSize,
+      totalSizeFormatted: formatBytes(totalSize),
+      lastModified: lastModified?.toISOString() || null,
+      dailyFiles: dailyFiles.sort((a, b) => b.date.localeCompare(a.date)),
+    };
+  } catch (error) {
+    console.error('Failed to get memory file stats:', error);
+    return null;
+  }
+}
+
 export async function GET(): Promise<NextResponse<MemoryStats>> {
   const stats = await getMemoryStats();
+
+  // Add filesystem stats
+  const fileSystemStats = await getMemoryFileStats();
+  if (fileSystemStats) {
+    stats.fileSystem = fileSystemStats;
+  }
+
   return NextResponse.json(stats);
 }

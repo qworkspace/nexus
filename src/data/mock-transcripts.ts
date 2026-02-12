@@ -12,7 +12,7 @@ export const mockSessions = [
     tokenCount: 82534,
     duration: 9900, // 2h 45m
     startedAt: new Date('2026-02-07T14:00:00'),
-    lastMessage: "Let's focus on Mission Control...",
+    lastMessage: "Let's focus on Nexus...",
     label: 'Main Session (PJ ↔ Q)',
   },
   {
@@ -126,14 +126,14 @@ export const mockTranscript: Transcript = {
         },
         {
           type: 'text',
-          text: "LET'S GO! 🔥\n\nI'll spawn the Dev Agent to build the Mission Control Live Dashboard immediately.",
+          text: "LET'S GO! 🔥\n\nI'll spawn the Dev Agent to build the Nexus Live Dashboard immediately.",
         },
         {
           type: 'toolCall',
           name: 'sessions_spawn',
           input: {
             agentId: 'dev',
-            task: 'Build the Mission Control Live Dashboard - real-time activity feed, session monitoring, and quick actions panel',
+            task: 'Build the Nexus Live Dashboard - real-time activity feed, session monitoring, and quick actions panel',
             label: 'mission-control-live-dashboard',
           },
         },

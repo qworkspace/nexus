@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Check, AlertTriangle, X, Circle } from "lucide-react";
 import { useCrons } from "../hooks/useCrons";
 
 export function CronHealth() {
@@ -32,18 +32,18 @@ export function CronHealth() {
     return mins > 0 ? `${hours}h ${mins}m ago` : `${hours}h ago`;
   };
 
-  const getStatusIcon = (status: string): string => {
+  const getStatusIcon = (status: string): JSX.Element => {
     switch (status) {
       case "success":
-        return "✓";
+        return <Check size={14} />;
       case "slow":
-        return "⚠";
+        return <AlertTriangle size={14} />;
       case "error":
-        return "✗";
+        return <X size={14} />;
       case "pending":
-        return "•";
+        return <Circle size={8} className="fill-zinc-400" />;
       default:
-        return "?";
+        return <Circle size={8} />;
     }
   };
 

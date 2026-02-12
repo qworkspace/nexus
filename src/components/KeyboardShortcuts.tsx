@@ -19,7 +19,7 @@ import {
   searchShortcuts,
   type ShortcutCategory,
 } from '@/lib/shortcuts';
-import { Search } from 'lucide-react';
+import { Keyboard, Search} from 'lucide-react';
 
 /**
  * Keyboard Shortcuts Help Overlay
@@ -69,7 +69,7 @@ export function KeyboardShortcuts() {
       <DialogContent className="sm:max-w-2xl max-h-[85vh] flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <span className="text-2xl">⌨️</span>
+            <Keyboard size={16} />
             Keyboard Shortcuts
           </DialogTitle>
           <DialogDescription>
