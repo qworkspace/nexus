@@ -1,47 +1,67 @@
 import { NextResponse } from "next/server";
-import { readFileSync, readdirSync } from "fs";
+import { readFileSync, readdirSync, existsSync } from "fs";
 import { join } from "path";
 
 export const dynamic = "force-dynamic";
 
-const DAILY_DIR = "/Users/paulvillanueva/shared/research/ai-intel/daily";
+const DEEP_FOCUS_DIR = "/Users/paulvillanueva/shared/research/ai-intel/deep-focus";
+const WHATS_NEW_DIR = "/Users/paulvillanueva/shared/research/ai-intel/whats-new";
+const SPEC_BRIEFS_DIR = "/Users/paulvillanueva/shared/research/ai-intel/spec-briefs";
+const SPECS_DIR = "/Users/paulvillanueva/shared/research/ai-intel/specs";
+
+type ResearchType = "deep-focus" | "whats-new" | "spec-briefs" | "specs";
 
 interface ResearchItem {
-  date: string;
+  id: string;
+  type: ResearchType;
   title: string;
-  scans: string[];
-  critical: string[];
-  notable: string[];
-  highlights: string[];
-  actions: string[];
+  date: string;
+  path: string;
+  snippet: string;
+  frontmatter?: Record<string, string | string[]>;
+}
+
+interface ResearchResponse {
+  research: ResearchItem[];
+  total: number;
+  filtered: number;
+  lastUpdated: string;
 }
 
 export async function GET(request: Request) {
   try {
     const searchParams = new URL(request.url).searchParams;
-    const limit = parseInt(searchParams.get("limit") || "5");
+    const type = searchParams.get("type") as ResearchType | null;
+    const search = searchParams.get("search") || "";
+    const limit = parseInt(searchParams.get("limit") || "50");
+    const offset = parseInt(searchParams.get("offset") || "0");
 
-    let files: string[];
-    try {
-      files = readdirSync(DAILY_DIR)
-        .filter((f) => f.endsWith(".md"))
-        .sort()
-        .reverse()
-        .slice(0, limit);
-    } catch {
-      files = [];
+    const allItems = await getAllResearch();
+
+    // Filter by type
+    let filtered = type
+      ? allItems.filter((item) => item.type === type)
+      : allItems;
+
+    // Filter by search
+    if (search) {
+      const searchLower = search.toLowerCase();
+      filtered = filtered.filter(
+        (item) =>
+          item.title.toLowerCase().includes(searchLower) ||
+          item.snippet.toLowerCase().includes(searchLower)
+      );
     }
 
-    const research: ResearchItem[] = files.map((filename) => {
-      const content = readFileSync(join(DAILY_DIR, filename), "utf-8");
-      return parseResearchFile(filename, content);
-    });
+    const total = allItems.length;
+    const paginated = filtered.slice(offset, offset + limit);
 
     return NextResponse.json({
-      research,
-      total: research.length,
+      research: paginated,
+      total,
+      filtered: filtered.length,
       lastUpdated: new Date().toISOString(),
-    });
+    } as ResearchResponse);
   } catch (error) {
     console.error("Error fetching research:", error);
     return NextResponse.json(
@@ -51,84 +71,118 @@ export async function GET(request: Request) {
   }
 }
 
-function parseResearchFile(filename: string, content: string): ResearchItem {
-  const dateMatch = content.match(
-    /^# AI Research Intel — (\d{4}-\d{2}-\d{2})$/m
-  );
-  const date = dateMatch ? dateMatch[1] : filename.replace(".md", "");
+async function getAllResearch(): Promise<ResearchItem[]> {
+  const items: ResearchItem[] = [];
 
-  const lines = content.split("\n");
-  const scans: string[] = [];
-  const critical: string[] = [];
-  const notable: string[] = [];
-  const highlights: string[] = [];
-  const actions: string[] = [];
+  // Deep Focus files
+  if (existsSync(DEEP_FOCUS_DIR)) {
+    const files = readdirSync(DEEP_FOCUS_DIR)
+      .filter((f) => f.endsWith(".md") && !f.endsWith(".processed"))
+      .sort()
+      .reverse();
 
-  let section = "";
-
-  for (const line of lines) {
-    if (line.startsWith("## Scan")) {
-      const scanMatch = line.match(/Scan (\d{2}:\d{2})/);
-      if (scanMatch) scans.push(scanMatch[1]);
-      section = "scan";
-      continue;
+    for (const filename of files) {
+      const filepath = join(DEEP_FOCUS_DIR, filename);
+      const content = readFileSync(filepath, "utf-8");
+      items.push(parseResearchFile(filename, content, "deep-focus", filepath));
     }
+  }
 
-    if (line.includes("🚨 Critical")) {
-      section = "critical";
-      continue;
+  // What's New files
+  if (existsSync(WHATS_NEW_DIR)) {
+    const files = readdirSync(WHATS_NEW_DIR)
+      .filter((f) => f.endsWith(".md"))
+      .sort()
+      .reverse();
+
+    for (const filename of files) {
+      const filepath = join(WHATS_NEW_DIR, filename);
+      const content = readFileSync(filepath, "utf-8");
+      items.push(parseResearchFile(filename, content, "whats-new", filepath));
     }
-    if (line.includes("📡 Notable")) {
-      section = "notable";
-      continue;
+  }
+
+  // Spec Briefs files
+  if (existsSync(SPEC_BRIEFS_DIR)) {
+    const files = readdirSync(SPEC_BRIEFS_DIR)
+      .filter((f) => f.endsWith(".md") && !f.endsWith(".processed"))
+      .sort()
+      .reverse();
+
+    for (const filename of files) {
+      const filepath = join(SPEC_BRIEFS_DIR, filename);
+      const content = readFileSync(filepath, "utf-8");
+      items.push(parseResearchFile(filename, content, "spec-briefs", filepath));
     }
-    if (line.includes("✅ Actions")) {
-      section = "actions";
-      continue;
+  }
+
+  // Specs files
+  if (existsSync(SPECS_DIR)) {
+    const files = readdirSync(SPECS_DIR)
+      .filter((f) => f.endsWith(".md"))
+      .sort()
+      .reverse();
+
+    for (const filename of files) {
+      const filepath = join(SPECS_DIR, filename);
+      const content = readFileSync(filepath, "utf-8");
+      items.push(parseResearchFile(filename, content, "specs", filepath));
     }
-    if (line.startsWith("### ") || line.startsWith("## ")) {
-      section = "highlights";
-      continue;
+  }
+
+  // Sort by date
+  return items.sort((a, b) => b.date.localeCompare(a.date));
+}
+
+function parseResearchFile(
+  filename: string,
+  content: string,
+  type: ResearchType,
+  path: string
+): ResearchItem {
+  // Extract ID from filename (remove .md)
+  const id = filename.replace(".md", "");
+
+  // Extract title from first # heading or filename
+  const titleMatch = content.match(/^#\s+(.+)$/m);
+  const title = titleMatch ? titleMatch[1].trim() : id;
+
+  // Extract date from filename (YYYY-MM-DD-HHMM format)
+  const dateMatch = filename.match(/(\d{4}-\d{2}-\d{2})/);
+  const date = dateMatch ? `${dateMatch[1]}T00:00:00Z` : new Date().toISOString();
+
+  // Extract snippet (first paragraph or first line after title)
+  const lines = content.split("\n").filter((l) => l.trim());
+  let snippet = "";
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line.startsWith("#") && line.length > 10) {
+      snippet = line.slice(0, 150) + (line.length > 150 ? "..." : "");
+      break;
     }
+  }
 
-    const trimmed = line.trim();
-    if (!trimmed) continue;
-
-    // Extract numbered items (1. **text**) or bullet items
-    const bulletMatch = trimmed.match(/^[-•]\s+(.+)/) ||
-      trimmed.match(/^\d+\.\s+(.+)/);
-    if (bulletMatch) {
-      const item = bulletMatch[1]
-        .replace(/\*\*/g, "")
-        .replace(/\[.*?\]\(.*?\)/g, "")
-        .trim();
-
-      if (!item) continue;
-
-      switch (section) {
-        case "critical":
-          critical.push(item);
-          break;
-        case "notable":
-          notable.push(item);
-          break;
-        case "actions":
-          actions.push(item);
-          break;
-        default:
-          highlights.push(item);
-          break;
+  // Extract frontmatter (simple YAML-like parsing)
+  const frontmatter: Record<string, string | string[]> = {};
+  const frontmatterMatch = content.match(/^---\n([\s\S]+?)\n---/);
+  if (frontmatterMatch) {
+    const lines = frontmatterMatch[1].split("\n");
+    for (const line of lines) {
+      const [key, ...valueParts] = line.split(":");
+      if (key && valueParts.length) {
+        const value = valueParts.join(":").trim().replace(/^["']|["']$/g, "");
+        frontmatter[key.trim()] = value;
       }
     }
   }
 
   return {
+    id,
+    type,
+    title,
     date,
-    title: `Research Intel — ${date}`,
-    scans,
-    critical,
-    notable,
-    highlights: highlights.slice(0, 5),
-    actions,
+    path,
+    snippet,
+    frontmatter,
   };
 }
