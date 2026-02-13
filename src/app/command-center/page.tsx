@@ -87,78 +87,28 @@ export default function CommandCenterPage() {
         {/* Quick Actions */}
         <QuickActionsBar onRefresh={handleRefresh} />
 
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Left Column - Agents & Crons */}
-          <div className="space-y-6">
-            <AgentStatusPanel />
-            <CronMonitorPanel />
-          </div>
-
-          {/* Middle Column - Memory & Models */}
-          <div className="space-y-6">
-            <MemoryContextPanel />
-            <ModelIntelligencePanel />
-          </div>
-
-          {/* Right Column - Session Insights */}
-          <div className="space-y-6">
-            <SessionInsightsPanel />
-            
-            {/* Additional Status Card */}
-            <div className="p-4 rounded-xl bg-white/80 dark:bg-zinc-900/80 backdrop-blur-sm border border-zinc-200/50 dark:border-zinc-800/50">
-              <h3 className="text-sm font-medium text-zinc-500 mb-3">System Status</h3>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-zinc-600 dark:text-zinc-400">Gateway</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-green-600 dark:text-green-400">Online</span>
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-zinc-600 dark:text-zinc-400">Database</span>
-                  <span className="flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-green-500" />
-                    <span className="text-green-600 dark:text-green-400">Connected</span>
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-zinc-600 dark:text-zinc-400">API Rate</span>
-                  <span className="text-zinc-600 dark:text-zinc-400">42 req/min</span>
-                </div>
-              </div>
+        {/* Main Grid - 2 Row Layout */}
+        <div className="space-y-4">
+          {/* Top Row: 3 Columns - Live Agents | Crons | Session Insights */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="max-h-[340px] overflow-hidden">
+              <AgentStatusPanel />
             </div>
+            <div className="max-h-[340px] overflow-hidden">
+              <CronMonitorPanel />
+            </div>
+            <div className="max-h-[340px] overflow-hidden">
+              <SessionInsightsPanel />
+            </div>
+          </div>
 
-            {/* Keyboard Shortcuts Help */}
-            <div className="p-4 rounded-xl bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200/50 dark:border-zinc-800/50">
-              <h3 className="text-sm font-medium text-zinc-500 mb-3">Keyboard Shortcuts</h3>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-500">Refresh</span>
-                  <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-800 rounded">R</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-500">Spawn</span>
-                  <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-800 rounded">A</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-500">New Spec</span>
-                  <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-800 rounded">S</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-500">Search</span>
-                  <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-800 rounded">/</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-500">Report</span>
-                  <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-800 rounded">D</kbd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-500">Palette</span>
-                  <kbd className="px-1.5 py-0.5 bg-zinc-200 dark:bg-zinc-800 rounded">⌘K</kbd>
-                </div>
-              </div>
+          {/* Bottom Row: 2 Columns - Memory | Model Intelligence */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="max-h-[340px] overflow-hidden">
+              <MemoryContextPanel />
+            </div>
+            <div className="max-h-[340px] overflow-hidden">
+              <ModelIntelligencePanel />
             </div>
           </div>
         </div>

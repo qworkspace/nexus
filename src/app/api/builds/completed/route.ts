@@ -42,16 +42,37 @@ async function parseSessionFile(filePath: string): Promise<DevSession | null> {
     const endTime = lastLine.timestamp;
     const durationMs = new Date(endTime).getTime() - new Date(startTime).getTime();
 
+    // Determine status from session end state
+    let status: 'active' | 'completed' | 'failed' = 'completed';
+
+    // Check for failure indicators in last few lines
+    for (let i = Math.max(0, lines.length - 5); i < lines.length; i++) {
+      try {
+        const parsed = JSON.parse(lines[i]);
+        if (parsed.type === 'session') {
+          // Check if session was aborted
+          if (parsed.abortedLastRun || parsed.cancelled) {
+            status = 'failed';
+            break;
+          }
+        }
+      } catch {
+        // Skip unparseable lines
+      }
+    }
+
     // Check if session is "active" - sessions that were updated recently (last 30 minutes)
     const lastUpdate = new Date(endTime).getTime();
     const thirtyMinutesAgo = Date.now() - 30 * 60 * 1000;
-    const isRecent = lastUpdate > thirtyMinutesAgo;
+    if (lastUpdate > thirtyMinutesAgo) {
+      status = 'active';
+    }
 
     return {
       id: firstLine.id,
       startTime,
       endTime,
-      status: isRecent ? 'active' : 'completed',
+      status,
       task,
       durationMs,
     };
@@ -64,7 +85,7 @@ async function parseSessionFile(filePath: string): Promise<DevSession | null> {
 export async function GET() {
   try {
     const files = await fs.readdir(SESSIONS_DIR);
-    const sessionFiles = files.filter(f => f.endsWith('.jsonl') && !f.includes('.deleted'));
+    const sessionFiles = files.filter(f => f.endsWith('.jsonl'));
 
     const sessions: DevSession[] = [];
 

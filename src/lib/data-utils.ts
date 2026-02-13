@@ -284,7 +284,7 @@ export async function getRecentBuilds(agentId = 'dev', limit = 10): Promise<Reco
     const sessionFiles = await readdir(devSessionsDir);
 
     for (const file of sessionFiles) {
-      if (!file.endsWith('.jsonl') || file.includes('.deleted.')) continue;
+      if (!file.endsWith('.jsonl')) continue;
 
       const filePath = path.join(devSessionsDir, file);
       const content = await readFile(filePath, 'utf-8');

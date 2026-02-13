@@ -33,12 +33,12 @@ export async function GET(): Promise<NextResponse<BuildStats>> {
       ? Math.round((successCount / allBuilds.length) * 100)
       : 100;
 
-    // Calculate average duration
+    // Calculate average duration (convert seconds to milliseconds for UI)
     const durations = allBuilds
       .map((b) => b.duration as number)
       .filter((d) => d > 0);
     const avgDuration = durations.length > 0
-      ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length)
+      ? Math.round(durations.reduce((a, b) => a + b, 0) / durations.length) * 1000
       : 0;
 
     // Get cost from transcripts for today
@@ -85,7 +85,7 @@ export async function GET(): Promise<NextResponse<BuildStats>> {
       source: 'mock',
       totalToday: 5,
       successRate: 95,
-      avgDuration: 780,
+      avgDuration: 780000,
       totalCost: 3.45,
       byModel: [
         { model: 'glm-4.7', count: 3, successRate: 100 },
