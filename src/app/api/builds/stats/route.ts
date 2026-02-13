@@ -7,6 +7,8 @@ interface BuildStats {
   successRate: number;
   avgDuration: number;
   totalCost: number;
+  totalLinesChanged: number;
+  period: '24h' | '7d' | '30d';
   byModel?: { model: string; count: number; successRate: number }[];
   error?: string;
 }
@@ -69,6 +71,12 @@ export async function GET(): Promise<NextResponse<BuildStats>> {
       successRate: Math.round((stats.success / stats.count) * 100),
     }));
 
+    // Calculate total lines changed
+    const totalLinesChanged = allBuilds.reduce((sum: number, b) => {
+      const linesChanged = Number(b.linesChanged || 0);
+      return sum + linesChanged;
+    }, 0 as number);
+
     if (allBuilds.length > 0) {
       return NextResponse.json({
         source: 'live',
@@ -76,6 +84,8 @@ export async function GET(): Promise<NextResponse<BuildStats>> {
         successRate,
         avgDuration,
         totalCost: parseFloat(totalCost.toFixed(2)),
+        totalLinesChanged,
+        period: '24h',
         byModel,
       });
     }
@@ -87,6 +97,8 @@ export async function GET(): Promise<NextResponse<BuildStats>> {
       successRate: 95,
       avgDuration: 780000,
       totalCost: 3.45,
+      totalLinesChanged: 1247,
+      period: '24h',
       byModel: [
         { model: 'glm-4.7', count: 3, successRate: 100 },
         { model: 'claude-opus-4-5', count: 2, successRate: 90 },
@@ -100,6 +112,8 @@ export async function GET(): Promise<NextResponse<BuildStats>> {
       successRate: 0,
       avgDuration: 0,
       totalCost: 0,
+      totalLinesChanged: 0,
+      period: '24h',
       error: error instanceof Error ? error.message : 'Unknown error',
     });
   }

@@ -11,6 +11,8 @@ export function BuildStats() {
     successRate: 0,
     avgDuration: 0,
     totalCost: 0,
+    totalLinesChanged: 0,
+    period: '24h',
   });
   const [loading, setLoading] = useState(true);
 

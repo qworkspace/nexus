@@ -9,6 +9,8 @@ export interface DevSession {
   durationMs?: number;
   tokenCount?: number;
   cost?: number;
+  model?: string;
+  buildStatus?: 'building' | 'verifying' | 'pushing';
 }
 
 export interface QueuedSpec {
@@ -25,4 +27,42 @@ export interface BuildStats {
   successRate: number;
   avgDuration: number;
   totalCost: number;
+  totalLinesChanged: number;
+  period: '24h' | '7d' | '30d';
+}
+
+export interface CompletedBuild {
+  hash: string;
+  message: string;
+  author: string;
+  timestamp: string;
+  filesChanged: number;
+  linesAdded: number;
+  linesRemoved: number;
+  specName?: string;
+  specPath?: string;
+  rating?: number;
+  durationMs?: number;
+}
+
+export interface PipelineStage {
+  name: string;
+  agent: 'cipher' | 'spark' | 'flux';
+  items: PipelineItem[];
+}
+
+export interface PipelineItem {
+  id: string;
+  name: string;
+  status: 'queued' | 'speccing' | 'building' | 'qa' | 'shipped' | 'failed';
+  priority: 'P0' | 'P1' | 'P2';
+  createdAt: string;
+  estimatedDuration?: string;
+}
+
+export interface BuildSpeedMetrics {
+  specToShipTime: { date: string; minutes: number }[];
+  buildDurationTrend: { date: string; minutes: number }[];
+  buildsPerDay: { date: string; count: number }[];
+  reworkRate: number; // percentage
 }
