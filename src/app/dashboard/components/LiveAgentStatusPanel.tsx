@@ -107,20 +107,44 @@ export function LiveAgentStatusPanel() {
     return `${Math.floor(diffMs / 1000)}s`;
   };
 
-  const handleSpawnAgent = () => {
-    // Would open spawn agent modal
-    console.log("Spawn agent");
+  const handleSpawnAgent = async () => {
+    try {
+      const result = await fetch('/api/agents/spawn', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ label: 'Manual Spawn', model: 'claude-opus-4-5' }),
+      });
+
+      if (result.ok) {
+        mutate();
+      } else {
+        const error = await result.json();
+        console.error('Failed to spawn agent:', error.error);
+      }
+    } catch (error) {
+      console.error('Failed to spawn agent:', error);
+    }
   };
 
-  const handleKillAgent = (id: string) => {
-    // Would call API to kill agent
-    console.log("Kill agent:", id);
-    mutate();
+  const handleKillAgent = async (id: string) => {
+    try {
+      const result = await fetch(`/api/agents/${id}/kill`, {
+        method: 'POST',
+      });
+
+      if (result.ok) {
+        mutate();
+      } else {
+        const error = await result.json();
+        console.error('Failed to kill agent:', error.error);
+      }
+    } catch (error) {
+      console.error('Failed to kill agent:', error);
+    }
   };
 
   const handleViewLogs = (id: string) => {
-    // Would open logs viewer
-    console.log("View logs:", id);
+    window.open(`/logs/${id}`, '_blank');
   };
 
   const activeAgents = agents.filter(a => a.status === 'active' || a.status === 'idle');

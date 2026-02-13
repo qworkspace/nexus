@@ -74,17 +74,15 @@ export function CronDashboard() {
 
   const handleRunNow = async (id: string) => {
     try {
-      const command = id;
-      const result = await fetch('/api/openclaw/command', {
+      const result = await fetch(`/api/crons/${id}/run`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          command: `openclaw cron run ${command}`,
-        }),
       });
 
       if (result.ok) {
         mutate();
+      } else {
+        const error = await result.json();
+        console.error('Failed to run job:', error.error);
       }
     } catch (error) {
       console.error('Failed to run job:', error);
