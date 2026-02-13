@@ -4,11 +4,12 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { AgentIcon } from "@/lib/agent-icons";
 import {
-  Building2, LayoutGrid, GitBranch, Calendar, Inbox,
+  LayoutGrid, GitBranch, Calendar, Inbox,
   Activity, LinkIcon, TrendingUp, TrendingDown, AlertTriangle,
-  Repeat, BookOpen, Zap
+  Repeat, BookOpen, Zap, HeartPulse
 } from "lucide-react";
 import ScorecardPanel from "@/components/ScorecardPanel";
+import { MetricTooltipWithIcon } from "@/components/ui/tooltip";
 
 interface Agent {
   id: string;
@@ -83,6 +84,7 @@ export default function CompanyPage() {
   const [newActivityCount, setNewActivityCount] = useState(0);
   const [isActivityScrolled, setIsActivityScrolled] = useState(false);
   const [loopStatus, setLoopStatus] = useState<LoopStatus | null>(null);
+  const [qModelDisplay, setQModelDisplay] = useState<string>("Claude Opus 4.6");
   const activityContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -94,6 +96,7 @@ export default function CompanyPage() {
       fetch("/api/company/status").then(r => r.json()).then(d => setStatus(d)),
       fetch("/api/company/activity").then(r => r.json()).then(d => setActivity(d.feed || [])),
       fetch("/api/loops/status").then(r => r.json()).then(d => setLoopStatus(d)).catch(() => {}),
+      fetch("/api/company/q-model").then(r => r.json()).then(d => setQModelDisplay(d.modelDisplay || "Claude Opus 4.6")).catch(() => {}),
     ]);
 
     // Poll activity feed every 15s
@@ -154,6 +157,20 @@ export default function CompanyPage() {
   const doneActions = actions.filter(a => a.status === "done");
   const localAgents = agents.filter(a => !a.isHuman && a.id !== "ella" && a.id !== "arty");
 
+  // Agent colour mapping for visual distinction
+  const agentColours: Record<string, { border: string; glow: string }> = {
+    q: { border: "border-l-amber-500", glow: "shadow-[0_0_20px_-5px_rgba(245,158,11,0.15)]" },
+    aura: { border: "border-l-pink-400", glow: "shadow-[0_0_20px_-5px_rgba(244,114,182,0.15)]" },
+    surge: { border: "border-l-green-500", glow: "shadow-[0_0_20px_-5px_rgba(34,197,94,0.15)]" },
+    spark: { border: "border-l-blue-500", glow: "shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)]" },
+    cipher: { border: "border-l-purple-500", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.15)]" },
+    volt: { border: "border-l-red-500", glow: "shadow-[0_0_20px_-5px_rgba(239,68,68,0.15)]" },
+    echo: { border: "border-l-teal-500", glow: "shadow-[0_0_20px_-5px_rgba(20,184,166,0.15)]" },
+    flux: { border: "border-l-orange-500", glow: "shadow-[0_0_20px_-5px_rgba(249,115,22,0.15)]" },
+    prism: { border: "border-l-transparent bg-gradient-to-b from-red-500 via-green-500 to-blue-500", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.2)]" },
+    luna: { border: "border-l-slate-400", glow: "shadow-[0_0_20px_-5px_rgba(148,163,184,0.15)]" },
+  };
+
   // Calculate sparkline data for each agent (last 7 days of task completions)
   const agentSparklines: Record<string, number[]> = {};
 
@@ -192,8 +209,8 @@ export default function CompanyPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <Building2 size={24} />
-            Company HQ
+            <HeartPulse size={24} className="text-amber-500" />
+            The Core
           </h1>
           <p className="text-zinc-500 text-sm">Villanueva Creative — {agents.length} team members</p>
         </div>
@@ -220,17 +237,31 @@ export default function CompanyPage() {
                 <HealthBadge score={status.health.score} />
               </div>
               <div className="grid grid-cols-4 gap-4">
-                <StatCard label="Health Score" value={`${status.health.score}`} suffix="/100" color={status.health.score >= 70 ? "emerald" : status.health.score >= 40 ? "amber" : "red"} />
-                <StatCard label="Open Actions" value={`${status.actions.open}`} sub={status.actions.overdue > 0 ? `${status.actions.overdue} overdue` : "none overdue"} color={status.actions.overdue > 0 ? "red" : "emerald"} />
-                <StatCard label="Meetings" value={`${status.meetings.total}`} sub={status.meetings.last ? `Last: ${status.meetings.last}` : "None yet"} color="blue" />
-                <StatCard label="Avg Trust" value={`${status.trust.average}`} suffix="/100" color={status.trust.average >= 60 ? "emerald" : "amber"} />
+                <MetricTooltipWithIcon content="Overall system health — combines agent uptime, build success rate, error rate, and resource utilization. Calculated from OpenClaw gateway metrics.">
+                  <StatCard label="Health Score" value={`${status.health.score}`} suffix="/100" color={status.health.score >= 70 ? "emerald" : status.health.score >= 40 ? "amber" : "red"} />
+                </MetricTooltipWithIcon>
+                <MetricTooltipWithIcon content="Actions assigned to agents that haven't been completed yet. Overdue means action age > 24 hours.">
+                  <StatCard label="Open Actions" value={`${status.actions.open}`} sub={status.actions.overdue > 0 ? `${status.actions.overdue} overdue` : "none overdue"} color={status.actions.overdue > 0 ? "red" : "emerald"} />
+                </MetricTooltipWithIcon>
+                <MetricTooltipWithIcon content="Upcoming agent standups and meetings. Tracks scheduled time slots from cron jobs.">
+                  <StatCard label="Meetings" value={`${status.meetings.total}`} sub={status.meetings.last ? `Last: ${status.meetings.last}` : "None yet"} color="blue" />
+                </MetricTooltipWithIcon>
+                <MetricTooltipWithIcon content="Average trust score between agents. Trust increases when agents successfully hand off work and deliver quality. Decreases on failures and escalations.">
+                  <StatCard label="Avg Trust" value={`${status.trust.average}`} suffix="/100" color={status.trust.average >= 60 ? "emerald" : "amber"} />
+                </MetricTooltipWithIcon>
               </div>
 
               {/* Health breakdown bar */}
               <div className="mt-4 space-y-2">
-                <HealthBar label="Action Items" value={status.health.breakdown.actions} />
-                <HealthBar label="Meeting Cadence" value={status.health.breakdown.meetings} />
-                <HealthBar label="Team Trust" value={status.health.breakdown.trust} />
+                <MetricTooltipWithIcon content="Ratio of completed vs. pending action items. 100 = all items done, 0 = nothing started.">
+                  <HealthBar label="Action Items" value={status.health.breakdown.actions} />
+                </MetricTooltipWithIcon>
+                <MetricTooltipWithIcon content="How frequently agents meet for standups. Higher scores indicate better meeting cadence (daily/weekly).">
+                  <HealthBar label="Meeting Cadence" value={status.health.breakdown.meetings} />
+                </MetricTooltipWithIcon>
+                <MetricTooltipWithIcon content="Aggregate trust score across all agent pairs. Differs from Avg Trust (card) which includes self-trust metrics.">
+                  <HealthBar label="Team Trust" value={status.health.breakdown.trust} />
+                </MetricTooltipWithIcon>
               </div>
             </div>
           )}
@@ -242,14 +273,21 @@ export default function CompanyPage() {
               {localAgents.map(agent => {
                 const sparkline = agentSparklines[agent.id] || [];
                 const trendingUp = sparkline.length >= 2 && sparkline[sparkline.length - 1] > sparkline[sparkline.length - 2];
+                const colours = agentColours[agent.id.toLowerCase()] || { border: "border-l-zinc-300", glow: "" };
+                // Use qModelDisplay for Q agent, otherwise use roster data
+                const modelDisplay = agent.name === "Q" ? qModelDisplay : agent.model.primary.split("/").pop();
                 return (
-                  <Link key={agent.id} href={`/company/agents/${agent.id}`} className="p-3 rounded-lg border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition text-center group">
+                  <Link
+                    key={agent.id}
+                    href={`/company/agents/${agent.id}`}
+                    className={`p-3 rounded-lg border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition text-center group border-l-4 ${colours.border} ${colours.glow}`}
+                  >
                     <div className="flex items-center justify-center mb-1">
                       <AgentIcon emoji={agent.emoji} size={28} className="text-zinc-600 dark:text-zinc-300" />
                     </div>
                     <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100 mt-1">{agent.name}</p>
                     <p className="text-[10px] text-zinc-500 truncate">{agent.role}</p>
-                    <p className="text-[9px] text-zinc-400 font-mono mt-0.5">{agent.model.primary.split("/").pop()}</p>
+                    <p className="text-[9px] text-zinc-400 font-mono mt-0.5">{modelDisplay}</p>
                     {/* Sparkline */}
                     {sparkline.length > 0 && (
                       <div className="mt-2 flex items-center justify-center gap-1">
@@ -394,30 +432,36 @@ export default function CompanyPage() {
               <div className="space-y-4">
                 {/* Growth Metrics */}
                 <div className="space-y-2">
-                  <LoopMetricBar
-                    icon={<BookOpen size={12} />}
-                    label="Learning"
-                    value={loopStatus.lessonsThisWeek}
-                    max={10}
-                    unit="lessons/wk"
-                    color="blue"
-                  />
-                  <LoopMetricBar
-                    icon={<Zap size={12} />}
-                    label="Build Rate"
-                    value={loopStatus.buildStats.rate}
-                    max={100}
-                    unit="%"
-                    color={loopStatus.buildStats.rate >= 70 ? "emerald" : loopStatus.buildStats.rate >= 40 ? "amber" : "red"}
-                  />
-                  <LoopMetricBar
-                    icon={<Activity size={12} />}
-                    label="Skills"
-                    value={loopStatus.skills.total}
-                    max={50}
-                    unit="/50 target"
-                    color="purple"
-                  />
+                  <MetricTooltipWithIcon content="Number of lessons learned and documented this week. Tracks Q's self-improvement loop effectiveness.">
+                    <LoopMetricBar
+                      icon={<BookOpen size={12} />}
+                      label="Learning"
+                      value={loopStatus.lessonsThisWeek}
+                      max={10}
+                      unit="lessons/wk"
+                      color="blue"
+                    />
+                  </MetricTooltipWithIcon>
+                  <MetricTooltipWithIcon content="Percentage of successful builds. Higher is better. Tracks build reliability and code quality.">
+                    <LoopMetricBar
+                      icon={<Zap size={12} />}
+                      label="Build Rate"
+                      value={loopStatus.buildStats.rate}
+                      max={100}
+                      unit="%"
+                      color={loopStatus.buildStats.rate >= 70 ? "emerald" : loopStatus.buildStats.rate >= 40 ? "amber" : "red"}
+                    />
+                  </MetricTooltipWithIcon>
+                  <MetricTooltipWithIcon content="Total number of skills acquired. Goal is 50 skills. Tracks Q's capability expansion.">
+                    <LoopMetricBar
+                      icon={<Activity size={12} />}
+                      label="Skills"
+                      value={loopStatus.skills.total}
+                      max={50}
+                      unit="/50 target"
+                      color="purple"
+                    />
+                  </MetricTooltipWithIcon>
                 </div>
 
                 {/* Skill Proficiency */}

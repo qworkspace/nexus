@@ -62,7 +62,7 @@ export default function AgentProfilePage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <Link href="/company" className="text-sm text-blue-500 hover:underline mb-4 inline-block">← Back to Company HQ</Link>
+      <Link href="/company" className="text-sm text-blue-500 hover:underline mb-4 inline-block">← Back to The Core</Link>
 
       {/* Header */}
       <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 mb-6">

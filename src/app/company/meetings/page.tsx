@@ -72,7 +72,7 @@ export default function MeetingsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <Link href="/company" className="text-sm text-blue-500 hover:underline mb-2 inline-block">← Company HQ</Link>
+          <Link href="/company" className="text-sm text-blue-500 hover:underline mb-2 inline-block">← The Core</Link>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
             <Calendar size={24} />
             Meeting Viewer

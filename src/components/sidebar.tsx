@@ -6,13 +6,13 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { KeyHint } from "@/components/KeyHint";
 import {
-  Building2, LayoutGrid, GitBranch, Calendar, Link as LinkIcon,
+  LayoutGrid, GitBranch, Calendar, Link as LinkIcon,
   Inbox, Gauge, Hammer, RefreshCw, MessageSquare, Brain, DollarSign,
-  ScrollText, Clock, Search, Menu, X, Scale, Save
+  ScrollText, Clock, Search, Menu, X, Scale, Save, HeartPulse
 } from "lucide-react";
 
 const navigation = [
-  { name: "Company HQ", href: "/company", icon: Building2, shortcut: "mod+1" },
+  { name: "The Core", href: "/company", icon: HeartPulse, shortcut: "mod+1" },
   { name: "The Floor", href: "/company/floor", icon: LayoutGrid, shortcut: null },
   { name: "Org Chart", href: "/company/org", icon: GitBranch, shortcut: null },
   { name: "Meetings", href: "/company/meetings", icon: Calendar, shortcut: null },

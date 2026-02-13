@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TrendingUp, TrendingDown, Minus, FileText } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import { MetricTooltipWithIcon } from "@/components/ui/tooltip";
 
 interface ScorecardMetric {
   name: string;
@@ -125,24 +126,29 @@ export default function ScorecardPanel() {
 
         {/* Metrics */}
         <div className="space-y-3">
-          {current.metrics.map((metric) => (
-            <div key={metric.name} className="space-y-1">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                  {metric.name}
-                </span>
-                <div className="flex items-center gap-1">
-                  {metric.delta !== undefined && (
-                    <DeltaIndicator delta={metric.delta} />
-                  )}
-                  <span className="text-xs font-mono font-bold text-zinc-900 dark:text-zinc-100">
-                    {metric.score}/10
-                  </span>
+          {current.metrics.map((metric) => {
+            const tooltipContent = getMetricTooltip(metric.name.toLowerCase());
+            return (
+              <MetricTooltipWithIcon key={metric.name} content={tooltipContent}>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                      {metric.name}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      {metric.delta !== undefined && (
+                        <DeltaIndicator delta={metric.delta} />
+                      )}
+                      <span className="text-xs font-mono font-bold text-zinc-900 dark:text-zinc-100">
+                        {metric.score}/10
+                      </span>
+                    </div>
+                  </div>
+                  <ProgressBar value={metric.score} max={10} />
                 </div>
-              </div>
-              <ProgressBar value={metric.score} max={10} />
-            </div>
-          ))}
+              </MetricTooltipWithIcon>
+            );
+          })}
         </div>
       </CardContent>
       {previous && (
@@ -197,4 +203,15 @@ function formatDate(dateStr: string): string {
     month: "short",
     day: "numeric",
   });
+}
+
+function getMetricTooltip(metricName: string): string {
+  const tooltips: Record<string, string> = {
+    autonomy: "Can Q work independently without PJ hand-holding? Measures autonomous task completion rate.",
+    quality: "Are outputs correct, verified, and useful? Measured by task acceptance rate and regression frequency.",
+    speed: "How fast from task to delivered result? Average completion time across all tasks.",
+    alignment: "Does Q build what PJ actually wants? Measured by PJ ratings and rework frequency.",
+    energy: "Tone, vibe, proactive vs reactive. Subjective score from PJ feedback.",
+  };
+  return tooltips[metricName] || "Metric score tracking Q's performance.";
 }

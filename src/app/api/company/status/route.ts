@@ -4,7 +4,7 @@ import { join } from "path";
 
 const SHARED = process.env.HOME ? join(process.env.HOME, "shared") : "/Users/paulvillanueva/shared";
 const MEETINGS_DIR = join(SHARED, "meetings");
-const ACTIONS_FILE = join(SHARED, "action-items.json");
+const ACTIONS_FILE = join(SHARED, "action-items/index.json");
 const RELATIONSHIPS_DIR = join(SHARED, "relationships");
 const ACTIVITY_FILE = join(SHARED, "activity-feed.json");
 
@@ -14,7 +14,9 @@ function safeRead(path: string, fallback: string = "[]") {
 
 export async function GET() {
   // Aggregate company health metrics
-  const actions = JSON.parse(safeRead(ACTIONS_FILE, "[]"));
+  const actionsData = JSON.parse(safeRead(ACTIONS_FILE, '{"items":[]}'));
+  const actions = actionsData.items || [];
+
   const openActions = actions.filter((a: { status: string }) => a.status !== "done");
   const doneActions = actions.filter((a: { status: string }) => a.status === "done");
   const overdueActions = actions.filter((a: { status: string; deadline?: string }) => {
