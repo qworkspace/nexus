@@ -58,6 +58,7 @@ export default function RelationshipsPage() {
   const nodesRef = useRef<GraphNode[]>([]);
   const edgesRef = useRef<GraphEdge[]>([]);
   const [hoveredNode, setHoveredNode] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   useEffect(() => {
     fetch("/api/company/relationships").then(r => r.json()).then(d => setRelData(d.agents || []));
