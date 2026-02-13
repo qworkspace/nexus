@@ -34,6 +34,172 @@ interface SessionListProps {
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
 
+// Agent ID to display name mapping
+const AGENT_NAMES: Record<string, { name: string; model?: string }> = {
+  'agent:main:main':        { name: 'Q', model: 'claude-opus-4.6' },
+  'agent:dev:main':         { name: 'Dev', model: 'claude-opus-4.6' },
+  'agent:research:main':   { name: 'Research', model: 'glm-4.7' },
+  'agent:creative:main':    { name: 'Creative', model: 'claude-opus-4.6' },
+  'agent:luna:main':        { name: 'Luna', model: 'claude-opus-4.6' },
+};
+
+// Wildcard patterns for subagent resolution
+const AGENT_WILDCARDS: Record<string, { name: string; model?: string }> = {
+  'agent:dev:subagent':   { name: 'Dev Subagent', model: 'claude-sonnet-4.2' },
+  'agent:research:subagent': { name: 'Research Subagent', model: 'glm-4.7' },
+  'agent:creative:subagent': { name: 'Creative Subagent', model: 'claude-opus-4.6' },
+};
+
+/**
+ * Resolve agent display name from session ID
+ * Handles exact matches and wildcard patterns for subagents
+ */
+export function resolveAgentName(sessionId: string): { name: string; model: string } {
+  // Check exact match first
+  if (AGENT_NAMES[sessionId]) {
+    return {
+      name: AGENT_NAMES[sessionId].name,
+      model: AGENT_NAMES[sessionId].model || 'unknown',
+    };
+  }
+
+  // Check wildcard match (e.g., "agent:dev:subagent:*")
+  for (const [pattern, info] of Object.entries(AGENT_WILDCARDS)) {
+    if (sessionId.startsWith(pattern + ':')) {
+      return {
+        name: info.name,
+        model: info.model || 'unknown',
+      };
+    }
+  }
+
+  // Fallback: extract type from session ID
+  const parts = sessionId.split(':');
+  const agentType = parts[1] || 'Unknown';
+  const capitalizedName = agentType.charAt(0).toUpperCase() + agentType.slice(1);
+  return {
+    name: capitalizedName,
+    model: 'unknown',
+  };
+}
+
+/**
+ * Determine session type based on agent and metadata
+ * Returns type label and emoji icon
+ */
+export function getSessionType(session: TranscriptMeta): { type: string; icon: string } {
+  const agent = resolveAgentName(session.agent);
+  const label = (session.label || '').toLowerCase();
+
+  // Dev agent = BUILD
+  if (agent.name === 'Dev' || label.includes('build') || label.includes('code')) {
+    return { type: 'BUILD', icon: '🛠️' };
+  }
+
+  // Research agent = RESEARCH
+  if (agent.name === 'Research' || label.includes('research') || label.includes('analyz')) {
+    return { type: 'RESEARCH', icon: '📊' };
+  }
+
+  // Q agent = CHAT
+  if (agent.name === 'Q' || label.includes('chat') || label.includes('briefing')) {
+    return { type: 'CHAT', icon: '💬' };
+  }
+
+  // Cron sessions = MAINTENANCE
+  if (session.kind === 'cron') {
+    return { type: 'MAINTENANCE', icon: '⚙️' };
+  }
+
+  // Creative agent = CREATIVE
+  if (agent.name === 'Creative') {
+    return { type: 'CREATIVE', icon: '🎨' };
+  }
+
+  // Luna agent = SUPPORT
+  if (agent.name === 'Luna') {
+    return { type: 'SUPPORT', icon: '💬' };
+  }
+
+  // Default
+  return { type: 'OTHER', icon: '📝' };
+}
+
+/**
+ * Extract meaningful title from session metadata
+ * Priority: label > spec name > session ID fallback
+ */
+export function getSessionTitle(session: TranscriptMeta): string {
+  // From label
+  if (session.label && session.label.length > 0) {
+    return session.label;
+  }
+
+  // Extract spec name from session key if present
+  if (session.sessionKey.includes('/specs/')) {
+    const match = session.sessionKey.match(/\/specs\/([^/]+)\.md/);
+    if (match) {
+      return match[1].replace(/-/g, ' ');
+    }
+  }
+
+  // Fallback to generic title
+  const agent = resolveAgentName(session.agent);
+  return `${agent.name} Session`;
+}
+
+/**
+ * Get one-line summary of session activity
+ */
+export function getSessionSummary(session: TranscriptMeta): string {
+  // Use lastMessage as summary (it's already a preview)
+  if (session.lastMessage && session.lastMessage.length > 0) {
+    return session.lastMessage.length > 80
+      ? session.lastMessage.substring(0, 80) + '...'
+      : session.lastMessage;
+  }
+
+  return 'No activity recorded';
+}
+
+/**
+ * Format relative time (Today, Yesterday, X days ago)
+ */
+export function formatRelativeTime(date: Date): string {
+  const d = new Date(date);
+  const now = new Date();
+  const diffDays = Math.floor((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) {
+    return 'Today ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
+  if (diffDays === 1) {
+    return 'Yesterday ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  }
+  if (diffDays < 7) {
+    return `${diffDays} days ago`;
+  }
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+/**
+ * Format duration in human-readable format
+ */
+export function formatDurationFriendly(seconds: number): string {
+  if (seconds < 60) {
+    return '< 1 min';
+  }
+
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) {
+    return `${minutes} min`;
+  }
+
+  const hours = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  return `${hours}h ${mins}m`;
+}
+
 export function SessionList({ showTitle = true }: SessionListProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<FilterType>('all');
