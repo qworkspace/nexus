@@ -41,6 +41,37 @@ interface LiveAgentState {
   lastMessage?: string;
 }
 
+interface AgentPosition {
+  currentX: number;
+  currentY: number;
+  targetX: number;
+  targetY: number;
+  zone: string;
+}
+
+interface Collaboration {
+  from: string;
+  to: string;
+  task: string;
+  intensity: number;
+}
+
+interface Particle {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  opacity: number;
+}
+
+interface WaterParticle {
+  x: number;
+  y: number;
+  speed: number;
+  size: number;
+}
+
 // Pixel art colours per agent
 const AGENT_COLORS: Record<string, { body: string; accent: string; label: string }> = {
   main:     { body: "#FFD700", accent: "#FFA500", label: "#FFD700" },   // Gold
@@ -57,32 +88,24 @@ const AGENT_COLORS: Record<string, { body: string; accent: string; label: string
   arty:     { body: "#98FB98", accent: "#3CB371", label: "#98FB98" },
 };
 
-// Desk positions (pixel grid coords, will be scaled)
-const DESK_POSITIONS: Record<string, { x: number; y: number; row: number }> = {
-  main:     { x: 420, y: 80, row: 0 },
-  creative: { x: 120, y: 220, row: 1 },
-  growth:   { x: 320, y: 220, row: 1 },
-  research: { x: 520, y: 220, row: 1 },
-  dev:      { x: 720, y: 220, row: 1 },
-  design:   { x: 120, y: 360, row: 2 },
-  events:   { x: 320, y: 360, row: 2 },
-  support:  { x: 520, y: 360, row: 2 },
-  testing:  { x: 720, y: 360, row: 2 },
-  luna:     { x: 420, y: 500, row: 3 },
+// Zone centers (targets for agents to drift toward)
+const ZONE_CENTERS: Record<string, { x: number; y: number }> = {
+  forge:   { x: 200, y: 250 },  // Building zone (left)
+  stream:  { x: 620, y: 250 },  // Research zone (right)
+  pulse:   { x: 410, y: 500 },  // Comms zone (bottom)
+  void:    { x: 410, y: 100 },  // Idle zone (top)
 };
 
-// Meeting table gather positions
-const MEETING_GATHER: Record<string, { x: number; y: number }> = {
-  main:     { x: 420, y: 420 },
-  creative: { x: 280, y: 440 },
-  growth:   { x: 560, y: 440 },
-  design:   { x: 260, y: 500 },
-  research: { x: 580, y: 500 },
-  dev:      { x: 540, y: 540 },
-  testing:  { x: 460, y: 560 },
-  events:   { x: 320, y: 540 },
-  support:  { x: 380, y: 560 },
-  luna:     { x: 420, y: 580 },
+// War Room convergence (meeting mode)
+const WAR_ROOM_CENTER = { x: 410, y: 320 };
+
+// Zone colors for background glow
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ZONE_COLORS = {
+  forge:   { bg: 'rgba(251, 146, 60, 0.08)', glow: 'rgba(251, 146, 60, 0.3)' },
+  stream:  { bg: 'rgba(59, 130, 246, 0.08)', glow: 'rgba(59, 130, 246, 0.3)' },
+  pulse:   { bg: 'rgba(34, 197, 94, 0.08)', glow: 'rgba(34, 197, 94, 0.3)' },
+  void:    { bg: 'rgba(39, 39, 42, 0.3)',  glow: 'rgba(113, 113, 122, 0.2)' },
 };
 
 const ACTIVITIES: Record<string, string[]> = {
@@ -100,6 +123,58 @@ const ACTIVITIES: Record<string, string[]> = {
   arty: ["Ella's schedule", "Brand consistency", "Creative ops"],
 };
 
+function assignAgentToZone(agentId: string, activity: string, status: string): string {
+  // Dead/idle agents go to The Void
+  if (status === 'dead' || status === 'idle') {
+    return 'void';
+  }
+
+  // Check activity keywords for zone assignment
+  const lowerActivity = activity.toLowerCase();
+
+  // The Forge: building, coding, shipping
+  if (
+    lowerActivity.includes('build') ||
+    lowerActivity.includes('code') ||
+    lowerActivity.includes('ship') ||
+    lowerActivity.includes('deploy') ||
+    lowerActivity.includes('feature') ||
+    lowerActivity.includes('fix') ||
+    lowerActivity.includes('implement')
+  ) {
+    return 'forge';
+  }
+
+  // The Stream: research, analysis, intel, trends
+  if (
+    lowerActivity.includes('research') ||
+    lowerActivity.includes('analy') ||
+    lowerActivity.includes('intel') ||
+    lowerActivity.includes('trend') ||
+    lowerActivity.includes('investigate') ||
+    lowerActivity.includes('explore') ||
+    lowerActivity.includes('market')
+  ) {
+    return 'stream';
+  }
+
+  // The Pulse: communication, chat, message, handoff
+  if (
+    lowerActivity.includes('chat') ||
+    lowerActivity.includes('message') ||
+    lowerActivity.includes('handoff') ||
+    lowerActivity.includes('communicat') ||
+    lowerActivity.includes('discuss') ||
+    lowerActivity.includes('standup') ||
+    lowerActivity.includes('meeting')
+  ) {
+    return 'pulse';
+  }
+
+  // Default to void if uncertain
+  return 'void';
+}
+
 export default function FloorPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [meetingMode, setMeetingMode] = useState(false);
@@ -113,12 +188,39 @@ export default function FloorPage() {
   const [timelineMode, setTimelineMode] = useState(false);
   const [timelinePosition, setTimelinePosition] = useState(Date.now());
   const [timelineSnapshots, setTimelineSnapshots] = useState<FloorSnapshot[]>([]);
+  const [agentPositions, setAgentPositions] = useState<Record<string, AgentPosition>>({});
+  const [collaborations, setCollaborations] = useState<Collaboration[]>([]);
+  const [particles, setParticles] = useState<Particle[]>([]);
+  const [waterfallParticles, setWaterfallParticles] = useState<WaterParticle[]>([]);
+  const [particleCount, setParticleCount] = useState(50);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [handoffMessages, setHandoffMessages] = useState<Array<{ from: string; to: string; task: string; time: string }>>([]);
+  const arcCanvasRef = useRef<HTMLCanvasElement>(null);
   const agentsRef = useRef<Agent[]>([]);
 
   // Keep ref in sync with state
   useEffect(() => {
     agentsRef.current = agents;
   }, [agents]);
+
+  // Load handoff messages from API
+  useEffect(() => {
+    const loadHandoffs = async () => {
+      try {
+        const res = await fetch('/api/company/handoffs');
+        const data = await res.json();
+        setHandoffMessages(data.handoffs || []);
+      } catch (err) {
+        console.error('Failed to load handoffs:', err);
+      }
+    };
+
+    loadHandoffs();
+
+    // Refresh every 30 seconds
+    const interval = setInterval(loadHandoffs, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Load roster once
   useEffect(() => {
@@ -145,6 +247,56 @@ export default function FloorPage() {
           };
         });
         setAgentStates(states);
+
+        // Initialize agent positions
+        const positions: Record<string, AgentPosition> = {};
+        agts.forEach((agent) => {
+          const zone = assignAgentToZone(
+            agent.id,
+            ACTIVITIES[agent.id]?.[0] || 'Idle',
+            'idle'
+          );
+          const center = ZONE_CENTERS[zone];
+
+          // Start with random offset from zone center
+          const offsetX = (Math.random() - 0.5) * 150;
+          const offsetY = (Math.random() - 0.5) * 100;
+
+          positions[agent.id] = {
+            currentX: center.x + offsetX,
+            currentY: center.y + offsetY,
+            targetX: center.x + offsetX,
+            targetY: center.y + offsetY,
+            zone,
+          };
+        });
+        setAgentPositions(positions);
+
+        // Initialize ambient particles
+        const ps: Particle[] = [];
+        for (let i = 0; i < 100; i++) {
+          ps.push({
+            x: Math.random() * 840,
+            y: Math.random() * 640,
+            vx: (Math.random() - 0.5) * 0.3,
+            vy: (Math.random() - 0.5) * 0.3,
+            size: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.5 + 0.2,
+          });
+        }
+        setParticles(ps);
+
+        // Initialize waterfall particles
+        const waterParticles: WaterParticle[] = [];
+        for (let i = 0; i < 30; i++) {
+          waterParticles.push({
+            x: 20 + Math.random() * 30,
+            y: Math.random() * 400 + 100,
+            speed: Math.random() * 1.5 + 0.5,
+            size: Math.random() * 2 + 1,
+          });
+        }
+        setWaterfallParticles(waterParticles);
       } catch (err) {
         console.error("Failed to load roster:", err);
       }
@@ -219,6 +371,97 @@ export default function FloorPage() {
     };
   }, [timelineMode]);
 
+  // Update agent positions with smooth drift animation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAgentPositions((prev) => {
+        const next: Record<string, AgentPosition> = { ...prev };
+
+        agentsRef.current.forEach((agent) => {
+          const agentState = agentStates[agent.id];
+          const zone = assignAgentToZone(
+            agent.id,
+            agentState?.activity || 'Idle',
+            agentState?.status || 'idle'
+          );
+
+          const pos = prev[agent.id];
+          if (!pos) return;
+
+          // Meeting mode: all agents converge to War Room
+          if (meetingMode) {
+            next[agent.id] = {
+              ...pos,
+              targetX: WAR_ROOM_CENTER.x,
+              targetY: WAR_ROOM_CENTER.y,
+              zone: 'warroom',
+            };
+          }
+
+          // Zone changed? Update target
+          else if (pos.zone !== zone) {
+            const center = ZONE_CENTERS[zone];
+            const offsetX = (Math.random() - 0.5) * 150;
+            const offsetY = (Math.random() - 0.5) * 100;
+
+            next[agent.id] = {
+              ...pos,
+              targetX: center.x + offsetX,
+              targetY: center.y + offsetY,
+              zone,
+            };
+            return next;
+          }
+
+          // Meeting mode: converge to center
+          if (meetingMode) {
+            const dx = pos.targetX - pos.currentX;
+            const dy = pos.targetY - pos.currentY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > 1) {
+              const speed = 0.05;
+              next[agent.id] = {
+                ...pos,
+                currentX: pos.currentX + dx * speed,
+                currentY: pos.currentY + dy * speed,
+              };
+            }
+            return next;
+          }
+
+          // Idle agents in Void: subtle random drift
+          if (zone === 'void' && agentState?.status === 'idle') {
+            next[agent.id] = {
+              ...pos,
+              currentX: pos.currentX + Math.sin(Date.now() / 2000) * 0.3,
+              currentY: pos.currentY + Math.cos(Date.now() / 2500) * 0.2,
+            };
+            return next;
+          }
+
+          // Interpolate toward target (smooth drift)
+          const dx = pos.targetX - pos.currentX;
+          const dy = pos.targetY - pos.currentY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance > 1) {
+            const speed = 0.05;
+            next[agent.id] = {
+              ...pos,
+              currentX: pos.currentX + dx * speed,
+              currentY: pos.currentY + dy * speed,
+            };
+          }
+        });
+
+        return next;
+      });
+    }, 50); // 20fps updates for position drift
+
+    return () => clearInterval(interval);
+  }, [agentStates, agents, meetingMode]);
+
   // Clear build celebrations after 5 seconds
   useEffect(() => {
     Object.entries(agentStates).forEach(([id, state]) => {
@@ -255,6 +498,59 @@ export default function FloorPage() {
     });
   }, [agentStates, walkingAgents]);
 
+  // Detect collaborations between agents
+  useEffect(() => {
+    const collabs: Collaboration[] = [];
+
+    Object.entries(agentStates).forEach(([id, state]) => {
+      // Handoff = direct collaboration
+      if (state.handoff && state.handoff.from === id) {
+        collabs.push({
+          from: id,
+          to: state.handoff.to,
+          task: state.handoff.task,
+          intensity: 0.8,
+        });
+      }
+
+      // Same activity = possible collaboration
+      const sameActivity = Object.entries(agentStates)
+        .filter(([otherId, otherState]) =>
+          otherId !== id &&
+          otherState.activity === state.activity &&
+          state.status === 'working' &&
+          otherState.status === 'working'
+        )
+        .map(([otherId]) => otherId);
+
+      sameActivity.forEach((otherId) => {
+        collabs.push({
+          from: id,
+          to: otherId,
+          task: state.activity,
+          intensity: 0.5,
+        });
+      });
+    });
+
+    // Deduplicate (A-B same as B-A)
+    const uniqueCollabs = collabs.filter((c, i, arr) =>
+      !arr.slice(0, i).some(
+        cc => (cc.from === c.from && cc.to === c.to) ||
+             (cc.from === c.to && cc.to === c.from)
+      )
+    );
+
+    setCollaborations(uniqueCollabs);
+  }, [agentStates]);
+
+  // Adjust particle count based on activity
+  useEffect(() => {
+    const activeAgents = Object.values(agentStates).filter(s => s.status === 'working').length;
+    const targetCount = 30 + activeAgents * 5;
+    setParticleCount(Math.min(targetCount, 100));
+  }, [agentStates]);
+
   // Save snapshots every 10 minutes
   useEffect(() => {
     const saveSnapshot = async () => {
@@ -262,14 +558,17 @@ export default function FloorPage() {
       
       const snapshot = {
         agents: Object.fromEntries(
-          Object.entries(agentStates).map(([id, state]) => [
-            id,
-            {
-              status: state.status || 'idle',
-              activity: state.activity,
-              position: DESK_POSITIONS[id],
-            },
-          ])
+          Object.entries(agentStates).map(([id, state]) => {
+            const pos = agentPositions[id];
+            return [
+              id,
+              {
+                status: state.status || 'idle',
+                activity: state.activity,
+                position: pos ? { x: pos.currentX, y: pos.currentY } : ZONE_CENTERS.void,
+              },
+            ];
+          })
         ),
       };
 
@@ -288,6 +587,143 @@ export default function FloorPage() {
     const interval = setInterval(saveSnapshot, 10 * 60 * 1000);
     return () => clearInterval(interval);
   }, [agentStates]);
+
+  // Canvas rendering for energy arcs and particles
+  useEffect(() => {
+    const canvas = arcCanvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Render ambient particles
+      setParticles(prev => {
+        const next = [...prev];
+        next.slice(0, particleCount).forEach((p, i) => {
+          if (i >= particleCount) return;
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Wrap around edges
+          if (p.x < 0) p.x = canvas.width;
+          if (p.x > canvas.width) p.x = 0;
+          if (p.y < 0) p.y = canvas.height;
+          if (p.y > canvas.height) p.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+          ctx.fill();
+        });
+        return next;
+      });
+
+      // Render waterfall particles
+      setWaterfallParticles(prev => {
+        const next = [...prev];
+        next.forEach(p => {
+          p.y += p.speed;
+
+          // Reset to top when off screen
+          if (p.y > 500) {
+            p.y = 100 + Math.random() * 100;
+            p.speed = Math.random() * 1.5 + 0.5;
+          }
+
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(59, 130, 246, 0.4)';
+          ctx.fill();
+        });
+        return next;
+      });
+
+      // Render collaboration arcs
+      collaborations.forEach((collab) => {
+        const fromPos = agentPositions[collab.from];
+        const toPos = agentPositions[collab.to];
+
+        if (!fromPos || !toPos) return;
+
+        const fromColor = AGENT_COLORS[collab.from]?.body || '#888';
+        const toColor = AGENT_COLORS[collab.to]?.body || '#888';
+
+        // Draw arc (quadratic curve with control point)
+        const midX = (fromPos.currentX + toPos.currentX) / 2;
+        const midY = (fromPos.currentY + toPos.currentY) / 2 - 40;
+
+        // Create gradient
+        const gradient = ctx.createLinearGradient(
+          fromPos.currentX, fromPos.currentY,
+          toPos.currentX, toPos.currentY
+        );
+        gradient.addColorStop(0, fromColor);
+        gradient.addColorStop(1, toColor);
+
+        // Draw line
+        ctx.beginPath();
+        ctx.moveTo(fromPos.currentX, fromPos.currentY);
+        ctx.quadraticCurveTo(midX, midY, toPos.currentX, toPos.currentY);
+
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2 + collab.intensity * 2;
+        ctx.lineCap = 'round';
+        ctx.globalAlpha = 0.3 + collab.intensity * 0.4;
+        ctx.stroke();
+
+        // Particle flow along arc
+        const particleCount = 5;
+        const time = Date.now() / 1000;
+
+        for (let j = 0; j < particleCount; j++) {
+          const t = ((time * 0.5 + j / particleCount) % 1);
+          const x = quadraticBezierPoint(
+            fromPos.currentX, fromPos.currentY,
+            midX, midY,
+            toPos.currentX, toPos.currentY,
+            t
+          );
+          const y = quadraticBezierPoint(
+            fromPos.currentY, fromPos.currentY,
+            midY, midY,
+            toPos.currentY, toPos.currentY,
+            t
+          );
+
+          ctx.beginPath();
+          ctx.arc(x, y, 2 + collab.intensity * 2, 0, Math.PI * 2);
+          ctx.fillStyle = fromColor;
+          ctx.globalAlpha = 0.8;
+          ctx.fill();
+        }
+
+        ctx.globalAlpha = 1;
+      });
+
+      requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      // Cleanup not needed for requestAnimationFrame
+    };
+  }, [collaborations, agentPositions, particles, waterfallParticles, particleCount]);
+
+  // Helper function for quadratic bezier interpolation
+  function quadraticBezierPoint(
+    x0: number, y0: number,
+    cx: number, cy: number,
+    x1: number, y1: number,
+    t: number
+  ): number {
+    const mt = 1 - t;
+    return mt * mt * (y0 === y0 ? x0 : y0) + 2 * mt * t * (y0 === y0 ? cx : cy) + t * t * (y0 === y0 ? x1 : y1);
+  }
 
   // Meeting dialogue playback
   useEffect(() => {
@@ -459,30 +895,6 @@ export default function FloorPage() {
   const visibleLines = meetingLines.slice(0, currentLineIdx);
   const currentSpeaker = currentLineIdx < meetingLines.length ? meetingLines[currentLineIdx]?.speaker : null;
 
-  // Get agent positions for SVG overlays
-  const getAgentPositions = () => {
-    const positions: Record<string, { x: number; y: number }> = {};
-    agents.forEach(agent => {
-      const deskPos = DESK_POSITIONS[agent.id];
-      const meetPos = MEETING_GATHER[agent.id];
-      if (!deskPos) return;
-
-      const walkingTo = walkingAgents[agent.id];
-      const targetPos = walkingTo ? DESK_POSITIONS[walkingTo.targetId] : null;
-      
-      const pos = meetingMode 
-        ? (meetPos || deskPos) 
-        : walkingTo && targetPos 
-          ? { x: (deskPos.x + targetPos.x) / 2, y: (deskPos.y + targetPos.y) / 2 }
-          : deskPos;
-      
-      positions[agent.id] = pos;
-    });
-    return positions;
-  };
-
-  const agentPositions = getAgentPositions();
-
   return (
     <>
       <style jsx global>{`
@@ -616,8 +1028,8 @@ export default function FloorPage() {
                   if (!pos2) return null;
 
                   // Calculate distance
-                  const dx = pos1.x - pos2.x;
-                  const dy = pos1.y - pos2.y;
+                  const dx = pos1.currentX - pos2.currentX;
+                  const dy = pos1.currentY - pos2.currentY;
                   const distance = Math.sqrt(dx * dx + dy * dy);
 
                   // Only connect if within 150px
@@ -626,10 +1038,10 @@ export default function FloorPage() {
                   return (
                     <line
                       key={`line-${agent1.id}-${agent2.id}`}
-                      x1={pos1.x}
-                      y1={pos1.y}
-                      x2={pos2.x}
-                      y2={pos2.y}
+                      x1={pos1.currentX}
+                      y1={pos1.currentY}
+                      x2={pos2.currentX}
+                      y2={pos2.currentY}
                       stroke={`url(#grad-${agent1.id})`}
                       strokeWidth="2"
                       strokeLinecap="round"
@@ -657,8 +1069,8 @@ export default function FloorPage() {
                 const toColor = AGENT_COLORS[handoff.to]?.body || "#888";
 
                 // Calculate control point for arc
-                const midX = (fromPos.x + toPos.x) / 2;
-                const midY = (fromPos.y + toPos.y) / 2 - 30;
+                const midX = (fromPos.currentX + toPos.currentX) / 2;
+                const midY = (fromPos.currentY + toPos.currentY) / 2 - 30;
 
                 return (
                   <g key={`handoff-${agent.id}`}>
@@ -670,7 +1082,7 @@ export default function FloorPage() {
                     </defs>
                     {/* Arc path */}
                     <path
-                      d={`M ${fromPos.x} ${fromPos.y} Q ${midX} ${midY} ${toPos.x} ${toPos.y}`}
+                      d={`M ${fromPos.currentX} ${fromPos.currentY} Q ${midX} ${midY} ${toPos.currentX} ${toPos.currentY}`}
                       stroke={`url(#handoff-grad-${agent.id})`}
                       strokeWidth="3"
                       fill="none"
@@ -686,7 +1098,7 @@ export default function FloorPage() {
                       fill={fromColor}
                       style={{
                         animation: "handoff-travel 1.5s ease-in-out infinite",
-                        offsetPath: `path('M ${fromPos.x} ${fromPos.y} Q ${midX} ${midY} ${toPos.x} ${toPos.y}')`,
+                        offsetPath: `path('M ${fromPos.currentX} ${fromPos.currentY} Q ${midX} ${midY} ${toPos.currentX} ${toPos.currentY}')`,
                         mixBlendMode: "screen",
                       }}
                     />
@@ -697,17 +1109,14 @@ export default function FloorPage() {
 
             {/* Agents */}
             {agents.map((agent) => {
-              const deskPos = DESK_POSITIONS[agent.id];
-              const meetPos = MEETING_GATHER[agent.id];
-              if (!deskPos) return null;
+              const agentPos = agentPositions[agent.id];
+              if (!agentPos) return null;
 
               const walkingTo = walkingAgents[agent.id];
-              const targetPos = walkingTo ? DESK_POSITIONS[walkingTo.targetId] : null;
-              const pos = meetingMode 
-                ? (meetPos || deskPos) 
-                : walkingTo && targetPos 
-                  ? { x: (deskPos.x + targetPos.x) / 2, y: (deskPos.y + targetPos.y) / 2 }
-                  : deskPos;
+              const targetPos = walkingTo ? agentPositions[walkingTo.targetId] : null;
+              const pos = walkingTo && targetPos
+                ? { x: (agentPos.currentX + targetPos.currentX) / 2, y: (agentPos.currentY + targetPos.currentY) / 2 }
+                : { x: agentPos.currentX, y: agentPos.currentY };
 
               const colors = AGENT_COLORS[agent.id] || { body: "#888", accent: "#666", label: "#888" };
               const isSpeaking = meetingMode && currentSpeaker === agent.name;
