@@ -718,6 +718,8 @@ export default function FloorPage() {
               const isErrored = agentState?.status === 'errored';
               const isDead = agentState?.status === 'dead';
 
+              if (!agentState) return null;
+
               return (
                 <div
                   key={agent.id}

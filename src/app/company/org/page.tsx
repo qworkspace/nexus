@@ -40,12 +40,22 @@ export default function OrgChartPage() {
   }, [collapsed]);
 
   useEffect(() => {
-    fetch("/api/company/roster").then(r => r.json()).then(d => setAgents(d.agents || []));
+    fetch("/api/company/roster")
+      .then(r => {
+        if (!r.ok) throw new Error(`Failed to fetch roster: ${r.status}`);
+        return r.json();
+      })
+      .then(d => setAgents(d.agents || []))
+      .catch(err => {
+        console.error("Failed to load roster:", err);
+        setAgents([]);
+      });
   }, []);
 
   const registerNode = useCallback((id: string, el: HTMLDivElement | null) => {
     if (!el || !containerRef.current) return;
-    const containerRect = containerRef.current.getBoundingClientRect();
+    const containerRect = containerRef.current?.getBoundingClientRect();
+    if (!containerRect) return;
     const rect = el.getBoundingClientRect();
 
     const newPosition: NodePos = {
@@ -121,9 +131,9 @@ export default function OrgChartPage() {
             {lines.map(({ from, to }) => {
               const f = nodePositions[from];
               const t = nodePositions[to];
-              if (!f || !t) return null;
-              const fromBottom = f.y + f.h / 2;
-              const toTop = t.y - t.h / 2;
+              if (!f || !t || !f.x || !f.y || !t.x || !t.y) return null;
+              const fromBottom = f.y + (f.h || 0) / 2;
+              const toTop = t.y - (t.h || 0) / 2;
               const midY = (fromBottom + toTop) / 2;
               const isDashed = (from === "ella-node" && to === "arty") || (from === "larina" && to === "pj") ||
                                (from === "pj" && to === "luna") || (from === "ella-node" && to === "luna");
