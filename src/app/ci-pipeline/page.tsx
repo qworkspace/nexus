@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { RefreshCw, Clock, Cpu, TrendingUp, AlertTriangle, FolderOpen } from 'lucide-react';
+import { RefreshCw, Clock, TrendingUp, FileText, Hammer } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { SpecQueueItem } from '@/app/api/ci/specs/route';
 import type { BuildEntry, BuildSummary } from '@/app/api/ci/builds/route';
@@ -96,16 +96,16 @@ export default function CIPipelinePage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <FolderOpen className="h-5 w-5" />
-                    Spec Queue ({specs.length})
+                    <FileText className="h-5 w-5" />
+                    Next Up ({specs.length} spec{specs.length !== 1 ? 's' : ''} waiting)
                   </CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 {specs.length === 0 ? (
                   <div className="text-center py-8 text-zinc-500">
-                    <FolderOpen className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                    <p className="text-sm">No specs queued for build</p>
+                    <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                    <p className="text-sm">No specs queued. All caught up!</p>
                   </div>
                 ) : (
                   <div className="space-y-2 max-h-80 overflow-y-auto">
@@ -122,16 +122,16 @@ export default function CIPipelinePage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-lg flex items-center gap-2">
-                    <Cpu className="h-5 w-5" />
-                    Active Builds ({activeBuilds.length})
+                    <Hammer className="h-5 w-5" />
+                    What&apos;s Building Now
                   </CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
                 {activeBuilds.length === 0 ? (
                   <div className="text-center py-8 text-zinc-500">
-                    <Cpu className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                    <p className="text-sm">No active builds</p>
+                    <Hammer className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                    <p className="text-sm">Nothing building right now.</p>
                   </div>
                 ) : (
                   <div className="space-y-2 max-h-80 overflow-y-auto">
@@ -190,14 +190,14 @@ export default function CIPipelinePage() {
               <div className="flex items-center justify-between">
                 <CardTitle className="text-lg flex items-center gap-2">
                   <Clock className="h-5 w-5" />
-                  Recent Builds (Last {recentBuilds.length})
+                  Recently Completed
                 </CardTitle>
               </div>
             </CardHeader>
             <CardContent>
               {recentBuilds.length === 0 ? (
                 <div className="text-center py-8 text-zinc-500">
-                  <p className="text-sm">No recent builds</p>
+                  <p className="text-sm">No builds yet.</p>
                 </div>
               ) : (
                 <div className="space-y-2">
@@ -219,52 +219,58 @@ export default function CIPipelinePage() {
   );
 }
 
-const PRIORITY_COLORS = {
-  HIGH: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-900',
-  MEDIUM: 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-400 dark:border-yellow-900',
-  LOW: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-green-900',
-} as const;
-
 function SpecItem({ spec }: { spec: SpecQueueItem }) {
   return (
-    <div className="flex items-center gap-3 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
-      <span className={cn('px-2 py-1 text-xs font-medium rounded border', PRIORITY_COLORS[spec.priority])}>
-        {spec.priority}
-      </span>
+    <div className="flex items-start gap-3 p-3 bg-zinc-900 rounded-lg border border-zinc-700">
+      <span className="text-xl">📋</span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+        <p className="text-sm font-bold text-white truncate">
           {spec.title}
         </p>
-        <p className="text-xs text-zinc-500">
+        <p className="text-xs text-zinc-400 mt-1">
           Created: {spec.createdAt}
         </p>
       </div>
+      {spec.priority === 'HIGH' && (
+        <span className="text-xs bg-red-900/50 text-red-400 px-2 py-1 rounded whitespace-nowrap">
+          Critical
+        </span>
+      )}
     </div>
   );
 }
 
 function ActiveBuildItem({ build }: { build: ActiveSession }) {
+  const minutesAgo = Math.floor(build.ageMs / 60000);
+  const progressPercent = Math.min(60, minutesAgo * 2);
+
   return (
-    <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
-      <div className="flex-shrink-0 mt-0.5">
-        <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-      </div>
+    <div className="flex items-start gap-3 p-4 bg-zinc-800 rounded-lg border border-zinc-700">
+      <span className="text-2xl">🛠️</span>
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded">
-            RUNNING
+        <div className="flex items-center justify-between mb-2">
+          <h4 className="font-bold text-white text-lg truncate">
+            Building: {build.key.replace(/^(spec-|ci-|dev-)/, '').replace(/-/g, ' ')}
+          </h4>
+          <span className="text-xs bg-yellow-900/50 text-yellow-400 px-3 py-1 rounded-full whitespace-nowrap">
+            Building...
           </span>
-          <span className="text-xs text-zinc-500">{build.model}</span>
         </div>
-        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
-          {build.key}
+        <p className="text-sm text-zinc-400 mb-3">
+          Started {formatRelativeTime(build.startedAt)}
         </p>
-        <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
-          <Clock className="h-3 w-3" />
-          <span>Started {new Date(build.startedAt).toLocaleTimeString()}</span>
-          <span>•</span>
-          <span>{Math.floor(build.ageMs / 60000)}m ago</span>
+        <div className="mb-3">
+          <div className="flex justify-between text-xs text-zinc-500 mb-1">
+            <span>Progress</span>
+            <span>Estimated {progressPercent}%</span>
+          </div>
+          <div className="bg-zinc-700 rounded-full h-2 overflow-hidden">
+            <div className="bg-blue-500 h-full transition-all" style={{ width: `${progressPercent}%` }}></div>
+          </div>
         </div>
+        <button className="w-full bg-zinc-700 hover:bg-zinc-600 text-white text-sm py-2 px-4 rounded-lg">
+          View Details
+        </button>
       </div>
     </div>
   );
@@ -274,47 +280,57 @@ function BuildRow({ build }: { build: BuildEntry }) {
   const isSuccess = build.status === 'SUCCESS';
   const isFailed = build.status === 'FAILED';
 
-  const statusColors = {
-    SUCCESS: 'bg-green-100 text-green-700 dark:bg-green-950 dark:text-green-400',
-    FAILED: 'bg-red-100 text-red-700 dark:bg-red-950 dark:text-red-400',
-    SKIPPED: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400',
-    STALLED: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-400',
-    OTHER: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400',
-  };
+  const icon = isSuccess ? '✅' : isFailed ? '❌' : '⚠️';
+  const statusText = isSuccess ? 'SUCCESS' : isFailed ? 'FAILED' : 'STALLED';
+  const statusColor = isSuccess ? 'text-green-400' : isFailed ? 'text-red-400' : 'text-yellow-400';
 
   return (
-    <div className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
-      <div className="flex-shrink-0 mt-0.5">
-        {isSuccess ? (
-          <span className="text-green-500">✓</span>
-        ) : isFailed ? (
-          <span className="text-red-500">✗</span>
-        ) : (
-          <AlertTriangle className="h-4 w-4 text-yellow-500" />
-        )}
-      </div>
+    <div className="flex items-start gap-3 p-4 bg-zinc-800 rounded-lg border border-zinc-700">
+      <span className="text-2xl">{icon}</span>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
-          <span className={cn('px-2 py-0.5 text-xs font-medium rounded', statusColors[build.status])}>
-            {build.status}
+          <h4 className="font-bold text-white truncate">
+            {build.spec.replace(/^(CI:\s*)?/, '').replace(/-/g, ' ')}
+          </h4>
+          <span className={`text-xs font-bold ${statusColor}`}>
+            {statusText}
           </span>
-          <span className="text-xs text-zinc-500">{build.timestamp}</span>
         </div>
-        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
-          {build.spec}
+        <p className="text-sm text-zinc-400 mb-3">
+          Completed {formatRelativeTime(build.timestamp)}
         </p>
         {build.testStatus && (
-          <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
-            <span>TEST: {build.testStatus}</span>
-            {build.testDetails && (
-              <>
-                <span>•</span>
-                <span className="truncate max-w-[300px]">{build.testDetails}</span>
-              </>
-            )}
-          </div>
+          <p className="text-sm text-zinc-400 mb-3">
+            {isSuccess ? '✓' : '✗'} {build.testDetails || build.testStatus}
+          </p>
+        )}
+        <button className="w-full bg-zinc-700 hover:bg-zinc-600 text-white text-sm py-2 px-4 rounded-lg">
+          View Details
+        </button>
+        {!isSuccess && (
+          <button className="w-full mt-2 bg-red-900/50 hover:bg-red-900/70 text-white text-sm py-2 px-4 rounded-lg">
+            Retry Build
+          </button>
         )}
       </div>
     </div>
   );
+}
+
+function formatRelativeTime(isoString: string): string {
+  const date = new Date(isoString);
+  const now = new Date();
+
+  if (isNaN(date.getTime())) {
+    return isoString;
+  }
+
+  const diffMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
+
+  if (diffMinutes < 1) return 'just now';
+  if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+  const diffHours = Math.floor(diffMinutes / 60);
+  if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
 }
