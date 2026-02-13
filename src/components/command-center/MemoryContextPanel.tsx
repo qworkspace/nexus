@@ -52,21 +52,37 @@ export function MemoryContextPanel() {
   return (
     <Card className="dark:glass-panel">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <Brain size={20} />
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <Brain size={16} />
           Memory & Context
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-3">
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
+            <p className="text-[10px] text-zinc-500 uppercase">Files</p>
+            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+              {data?.totalFiles || 0}
+            </p>
+          </div>
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
+            <p className="text-[10px] text-zinc-500 uppercase">Total Size</p>
+            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+              {formatSize(data?.totalSize || 0)}
+            </p>
+          </div>
+        </div>
+
         {/* Context Meter */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between text-sm">
-            <span className="text-zinc-500">Context Usage</span>
+        <div className="space-y-1">
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-zinc-500">Context</span>
             <span className="font-mono text-zinc-600 dark:text-zinc-400">
               {isLoading ? "..." : `${data?.currentContext?.percentage}%`}
             </span>
           </div>
-          <div className="h-3 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+          <div className="h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
             {isLoading ? (
               <div className="h-full w-1/4 shimmer" />
             ) : (
@@ -79,14 +95,6 @@ export function MemoryContextPanel() {
               />
             )}
           </div>
-          <div className="flex justify-between text-xs text-zinc-400">
-            <span>
-              {isLoading ? "..." : `${(data?.currentContext?.used || 0).toLocaleString()} tokens`}
-            </span>
-            <span>
-              {isLoading ? "..." : `${(data?.currentContext?.max || 0).toLocaleString()} max`}
-            </span>
-          </div>
         </div>
 
         {/* Quick Search */}
@@ -95,84 +103,28 @@ export function MemoryContextPanel() {
             placeholder="Search memory..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 text-sm dark:bg-zinc-900/50 dark:border-zinc-700"
+            className="pl-8 text-sm h-8 dark:bg-zinc-900/50 dark:border-zinc-700"
           />
           <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400" />
-          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded">
+          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 px-1 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded">
             /
           </kbd>
         </div>
 
-        {/* Topic Cloud */}
+        {/* Topic Cloud - Compact */}
         {data?.topicCloud && data?.topicCloud?.length > 0 && (
-          <div className="space-y-2">
-            <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
-              Topics
-            </h4>
-            <div className="flex flex-wrap gap-1.5">
-              {(data?.topicCloud || []).map(({ topic, count }) => (
-                <button
-                  key={topic}
-                  onClick={() => setSearchQuery(topic)}
-                  className={cn(
-                    "px-2 py-1 rounded-full text-xs transition-colors",
-                    "bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700",
-                    "text-zinc-600 dark:text-zinc-400"
-                  )}
-                  style={{
-                    opacity: 0.6 + (count / (data?.topicCloud?.[0]?.count || 1)) * 0.4,
-                  }}
-                >
-                  #{topic}
-                  <span className="ml-1 text-zinc-400 dark:text-zinc-500">
-                    {count}
-                  </span>
-                </button>
-              ))}
-            </div>
+          <div className="flex flex-wrap gap-1">
+            {(data?.topicCloud || []).slice(0, 5).map(({ topic }) => (
+              <button
+                key={topic}
+                onClick={() => setSearchQuery(topic)}
+                className="px-2 py-0.5 rounded-full text-[10px] bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 transition-colors"
+              >
+                #{topic}
+              </button>
+            ))}
           </div>
         )}
-
-        {/* Recent Memory Entries */}
-        <div className="space-y-2 pt-2 border-t dark:border-zinc-800">
-          <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
-            Recent Entries
-          </h4>
-          {isLoading ? (
-            <div className="space-y-2">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="h-12 rounded-lg bg-zinc-100 dark:bg-zinc-800 shimmer" />
-              ))}
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {(data?.recentEntries || []).map(entry => (
-                <div
-                  key={entry.date}
-                  className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 cursor-pointer transition-colors"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="font-medium text-sm text-zinc-900 dark:text-zinc-100 truncate">
-                      {entry.title}
-                    </span>
-                    <span className="text-xs text-zinc-400">
-                      {entry.date}
-                    </span>
-                  </div>
-                  <p className="text-xs text-zinc-500 truncate">
-                    {entry.preview}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Stats Footer */}
-        <div className="flex justify-between text-xs text-zinc-400 pt-2 border-t dark:border-zinc-800">
-          <span>{data?.totalFiles || 0} memory files</span>
-          <span>{formatSize(data?.totalSize || 0)} total</span>
-        </div>
       </CardContent>
     </Card>
   );

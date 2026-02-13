@@ -74,17 +74,17 @@ export function ModelIntelligencePanel() {
   return (
     <Card className="dark:glass-panel">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <Zap size={18} />
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <Zap size={16} />
           Model Intelligence
         </CardTitle>
         <Button
           variant="outline"
           size="sm"
           onClick={openModel}
-          className="text-xs"
+          className="text-[10px] h-7 px-2"
         >
-          Switch Model
+          Switch
         </Button>
       </CardHeader>
       <CardContent className="space-y-4">

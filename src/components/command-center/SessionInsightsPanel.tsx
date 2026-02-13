@@ -59,7 +59,7 @@ function formatTime(isoString: string): string {
 }
 
 export function SessionInsightsPanel() {
-  const { data, isLoading } = useSWR<SessionInsightsData>(
+  const { data } = useSWR<SessionInsightsData>(
     "/api/session/insights",
     fetcher,
     { refreshInterval: 5000 }
@@ -68,96 +68,53 @@ export function SessionInsightsPanel() {
   return (
     <Card className="dark:glass-panel">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <BarChart3 size={18} />
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <BarChart3 size={16} />
           Session Insights
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Current Session */}
-        <div className="p-3 rounded-lg bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-900/80 dark:to-zinc-800/50 border dark:border-zinc-700">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
-              Current Session
-            </span>
-            <div className="flex items-center gap-1">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse-soft" />
-              <span className="text-xs text-green-600 dark:text-green-400">Live</span>
-            </div>
+      <CardContent className="space-y-3">
+        {/* Stats Grid - Compact */}
+        <div className="grid grid-cols-4 gap-2">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 text-center">
+            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+              {data?.today.sessions || 0}
+            </p>
+            <p className="text-[10px] text-zinc-500 uppercase">Sessions</p>
           </div>
-          
-          {isLoading ? (
-            <div className="h-16 shimmer rounded-lg" />
-          ) : (
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                  {formatDuration(data?.current.durationMs || 0)}
-                </div>
-                <div className="text-xs text-zinc-500">Duration</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                  {formatTokens(data?.current.tokensUsed || 0)}
-                </div>
-                <div className="text-xs text-zinc-500">Tokens</div>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                  ${data?.current.cost.toFixed(2) || '0.00'}
-                </div>
-                <div className="text-xs text-zinc-500">Cost</div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Today's Summary */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
-              Today&apos;s Summary
-            </h4>
-            <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 text-center">
+            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+              {formatTokens(data?.today.totalTokens || 0)}
+            </p>
+            <p className="text-[10px] text-zinc-500 uppercase">Tokens</p>
+          </div>
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 text-center">
+            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
               ${data?.today.totalCost.toFixed(2) || '0.00'}
-            </span>
+            </p>
+            <p className="text-[10px] text-zinc-500 uppercase">Cost</p>
           </div>
-          
-          <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
-              <div className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                {data?.today.sessions || 0}
-              </div>
-              <div className="text-xs text-zinc-500">Sessions</div>
-            </div>
-            <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
-              <div className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                {formatTokens(data?.today.totalTokens || 0)}
-              </div>
-              <div className="text-xs text-zinc-500">Tokens</div>
-            </div>
-            <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
-              <div className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                {data?.today.summaries.reduce((sum, s) => sum + s.tasksCompleted, 0) || 0}
-              </div>
-              <div className="text-xs text-zinc-500">Tasks</div>
-            </div>
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 text-center">
+            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+              {formatDuration(data?.current.durationMs || 0)}
+            </p>
+            <p className="text-[10px] text-zinc-500 uppercase">Duration</p>
           </div>
         </div>
 
-        {/* Session Timeline */}
+        {/* Session Timeline - Compact */}
         {data?.today?.summaries && data?.today?.summaries?.length > 0 && (
-          <div className="space-y-2 pt-2 border-t dark:border-zinc-800">
-            <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+          <div className="space-y-1">
+            <h4 className="text-[10px] font-medium text-zinc-500 uppercase tracking-wide">
               Today&apos;s Sessions
             </h4>
-            <div className="space-y-1">
-              {(data?.today?.summaries || []).map(session => (
+            <div className="space-y-1 max-h-[160px] overflow-y-auto">
+              {(data?.today?.summaries || []).slice(0, 6).map(session => (
                 <div
                   key={session.id}
-                  className="flex items-center gap-3 py-1.5 text-sm"
+                  className="flex items-center gap-2 py-1 text-xs"
                 >
-                  <span className="text-xs text-zinc-400 w-16">
+                  <span className="text-zinc-400 w-12 text-right font-mono">
                     {formatTime(session.startedAt)}
                   </span>
                   <div className="flex-1 h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
@@ -168,11 +125,8 @@ export function SessionInsightsPanel() {
                       }}
                     />
                   </div>
-                  <span className="text-xs text-zinc-500 w-12 text-right">
+                  <span className="text-zinc-500 w-10 text-right">
                     {formatTokens(session.tokensUsed)}
-                  </span>
-                  <span className="text-xs text-zinc-400 w-12 text-right">
-                    ${session.cost.toFixed(2)}
                   </span>
                 </div>
               ))}

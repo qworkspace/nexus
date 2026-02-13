@@ -103,21 +103,21 @@ export function CronMonitorPanel() {
   return (
     <Card className="dark:glass-panel">
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <span className="text-xl">⏰</span>
+        <CardTitle className="text-base font-semibold flex items-center gap-2">
+          <span className="text-lg">⏰</span>
           Cron Jobs
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2">
         {isLoading ? (
           <div className="space-y-2">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-16 rounded-lg bg-zinc-100 dark:bg-zinc-800 shimmer" />
+              <div key={i} className="h-12 rounded-lg bg-zinc-100 dark:bg-zinc-800 shimmer" />
             ))}
           </div>
         ) : (
-          <div className="space-y-2">
-            {sortedJobs.map(job => {
+          <div className="space-y-1 max-h-[260px] overflow-y-auto">
+            {sortedJobs.slice(0, 5).map(job => {
               const status = job.state.lastStatus ? statusConfig[job.state.lastStatus] : null;
               const isRunning = runningJob === job.id;
               
@@ -125,21 +125,21 @@ export function CronMonitorPanel() {
                 <div
                   key={job.id}
                   className={cn(
-                    "p-3 rounded-lg border bg-white dark:bg-zinc-900/50 dark:border-zinc-800",
+                    "p-2 rounded-lg border bg-white dark:bg-zinc-900/50 dark:border-zinc-800",
                     !job.enabled && "opacity-50"
                   )}
                 >
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="flex items-center gap-2 flex-1 min-w-0">
                       <span className={cn(
-                        "w-2 h-2 rounded-full",
+                        "w-1.5 h-1.5 rounded-full shrink-0",
                         job.enabled ? (status?.color || "bg-zinc-400") : "bg-zinc-300"
                       )} />
-                      <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                      <span className="font-medium text-sm text-zinc-900 dark:text-zinc-100 truncate">
                         {job.name}
                       </span>
                       {status && (
-                        <Badge variant="secondary" className={cn("text-xs", status.badge)}>
+                        <Badge variant="secondary" className={cn("text-[10px] px-1", status.badge)}>
                           {job.state.lastStatus}
                         </Badge>
                       )}
@@ -147,43 +147,49 @@ export function CronMonitorPanel() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 px-2 text-xs"
+                      className="h-5 px-1.5 text-[10px] shrink-0"
                       onClick={() => handleRunNow(job.id)}
                       disabled={isRunning || !job.enabled}
                     >
-                      {isRunning ? "..." : "▶ Run"}
+                      {isRunning ? "..." : "▶"}
                     </Button>
                   </div>
                   
-                  <div className="flex items-center gap-4 text-xs text-zinc-500">
-                    <span className="font-mono bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
+                  <div className="flex items-center gap-2 text-[10px] text-zinc-500">
+                    <span className="font-mono bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">
                       {job.schedule.expr}
                     </span>
-                    <span className="text-green-600 dark:text-green-400">
+                    <span className="text-green-600 dark:text-green-400 shrink-0">
                       {formatNextRun(job.state.nextRunAtMs)}
                     </span>
-                    <span>
+                    <span className="text-zinc-400 shrink-0">
                       last: {formatLastRun(job.state.lastRunAtMs)}
                     </span>
-                    <span>
+                    <span className="text-zinc-400 shrink-0">
                       {formatDuration(job.state.lastDurationMs)}
                     </span>
                   </div>
                   
                   {job.state.lastError && (
-                    <p className="text-xs text-red-500 mt-1 truncate">
+                    <p className="text-[10px] text-red-500 mt-1 truncate">
                       {job.state.lastError}
                     </p>
                   )}
                 </div>
               );
             })}
+            
+            {sortedJobs.length > 5 && (
+              <div className="text-center text-xs text-zinc-400 pt-1">
+                +{sortedJobs.length - 5} more jobs
+              </div>
+            )}
           </div>
         )}
 
-        {/* Quick Stats */}
-        <div className="flex justify-between text-xs text-zinc-400 pt-2 border-t dark:border-zinc-800">
-          <span>{sortedJobs.filter(j => j.enabled).length} active jobs</span>
+        {/* Quick Stats - Compact */}
+        <div className="flex justify-between text-[10px] text-zinc-400 pt-1 border-t dark:border-zinc-800">
+          <span>{sortedJobs.filter(j => j.enabled).length} active</span>
           <span>
             {sortedJobs.filter(j => j.state.lastStatus === 'error').length} errors
           </span>

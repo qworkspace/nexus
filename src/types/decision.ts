@@ -22,6 +22,35 @@ export interface DecisionOutcome {
   recorded_at: number;
 }
 
+// Extended outcome with metrics for validation
+export interface ExtendedOutcome {
+  id: string;
+  metric: string;
+  value: number;
+  target: number;
+  unit: string;
+  status: 'pending' | 'passed' | 'failed';
+  measuredAt: string;
+}
+
+// Implementation tracking
+export interface DecisionImplementation {
+  spec?: string;
+  buildId?: string;
+  deployedAt?: string;
+}
+
+// Expanded context
+export interface ExtendedContext {
+  description: string;
+  alternatives: string[];
+  reasoning: string;
+}
+
+// Status and impact
+export type DecisionStatus = 'pending' | 'in-progress' | 'validated' | 'failed';
+export type ImpactLevel = 'low' | 'medium' | 'high' | 'critical';
+
 export interface Decision {
   decision_id: string;
   timestamp: number;
@@ -32,6 +61,17 @@ export interface Decision {
   decision: DecisionChoice;
   outcome?: DecisionOutcome;
   tags: string[];
+
+  // New fields for enhanced tracking
+  title?: string;
+  description?: string;
+  extendedContext?: ExtendedContext;
+  implementation?: DecisionImplementation;
+  extendedOutcomes?: ExtendedOutcome[];
+  status?: DecisionStatus;
+  impactLevel?: ImpactLevel;
+  successScore?: number;
+  validatedAt?: string;
 }
 
 export interface DecisionStats {
@@ -44,6 +84,13 @@ export interface DecisionStats {
   commonActions: { action: string; count: number }[];
   agents: string[];
   actionTypes: string[];
+
+  // New stats fields
+  inProgressCount?: number;
+  validatedCount?: number;
+  failedCount?: number;
+  avgSuccessScore?: number;
+  highImpactCount?: number;
 }
 
 export type OutcomeFilter = "all" | "success" | "failed" | "pending";
