@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { TrendingUp, TrendingDown, Minus, FileText } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
-import { MetricTooltipWithIcon } from "@/components/ui/tooltip";
+import { MetricTooltip } from "@/components/ui/tooltip";
 
 interface ScorecardMetric {
   name: string;
@@ -129,8 +129,8 @@ export default function ScorecardPanel() {
           {current.metrics.map((metric) => {
             const tooltipContent = getMetricTooltip(metric.name.toLowerCase());
             return (
-              <MetricTooltipWithIcon key={metric.name} content={tooltipContent}>
-                <div className="space-y-1">
+              <MetricTooltip key={metric.name} content={tooltipContent}>
+                <div className="space-y-1 cursor-help">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
                       {metric.name}
@@ -146,7 +146,7 @@ export default function ScorecardPanel() {
                   </div>
                   <ProgressBar value={metric.score} max={10} />
                 </div>
-              </MetricTooltipWithIcon>
+              </MetricTooltip>
             );
           })}
         </div>

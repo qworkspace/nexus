@@ -9,7 +9,7 @@ import {
   Repeat, BookOpen, Zap, HeartPulse
 } from "lucide-react";
 import ScorecardPanel from "@/components/ScorecardPanel";
-import { MetricTooltipWithIcon } from "@/components/ui/tooltip";
+import { MetricTooltip } from "@/components/ui/tooltip";
 
 interface Agent {
   id: string;
@@ -237,31 +237,31 @@ export default function CompanyPage() {
                 <HealthBadge score={status.health.score} />
               </div>
               <div className="grid grid-cols-4 gap-4">
-                <MetricTooltipWithIcon content="Overall system health — combines agent uptime, build success rate, error rate, and resource utilization. Calculated from OpenClaw gateway metrics.">
-                  <StatCard label="Health Score" value={`${status.health.score}`} suffix="/100" color={status.health.score >= 70 ? "emerald" : status.health.score >= 40 ? "amber" : "red"} />
-                </MetricTooltipWithIcon>
-                <MetricTooltipWithIcon content="Actions assigned to agents that haven't been completed yet. Overdue means action age > 24 hours.">
-                  <StatCard label="Open Actions" value={`${status.actions.open}`} sub={status.actions.overdue > 0 ? `${status.actions.overdue} overdue` : "none overdue"} color={status.actions.overdue > 0 ? "red" : "emerald"} />
-                </MetricTooltipWithIcon>
-                <MetricTooltipWithIcon content="Upcoming agent standups and meetings. Tracks scheduled time slots from cron jobs.">
-                  <StatCard label="Meetings" value={`${status.meetings.total}`} sub={status.meetings.last ? `Last: ${status.meetings.last}` : "None yet"} color="blue" />
-                </MetricTooltipWithIcon>
-                <MetricTooltipWithIcon content="Average trust score between agents. Trust increases when agents successfully hand off work and deliver quality. Decreases on failures and escalations.">
-                  <StatCard label="Avg Trust" value={`${status.trust.average}`} suffix="/100" color={status.trust.average >= 60 ? "emerald" : "amber"} />
-                </MetricTooltipWithIcon>
+                <MetricTooltip content="Overall system health — combines agent uptime, build success rate, error rate, and resource utilization. Calculated from OpenClaw gateway metrics.">
+                  <TooltipStatCard label="Health Score" value={`${status.health.score}`} suffix="/100" color={status.health.score >= 70 ? "emerald" : status.health.score >= 40 ? "amber" : "red"} />
+                </MetricTooltip>
+                <MetricTooltip content="Actions assigned to agents that haven't been completed yet. Overdue means action age > 24 hours.">
+                  <TooltipStatCard label="Open Actions" value={`${status.actions.open}`} sub={status.actions.overdue > 0 ? `${status.actions.overdue} overdue` : "none overdue"} color={status.actions.overdue > 0 ? "red" : "emerald"} />
+                </MetricTooltip>
+                <MetricTooltip content="Upcoming agent standups and meetings. Tracks scheduled time slots from cron jobs.">
+                  <TooltipStatCard label="Meetings" value={`${status.meetings.total}`} sub={status.meetings.last ? `Last: ${status.meetings.last}` : "None yet"} color="blue" />
+                </MetricTooltip>
+                <MetricTooltip content="Average trust score between agents. Trust increases when agents successfully hand off work and deliver quality. Decreases on failures and escalations.">
+                  <TooltipStatCard label="Avg Trust" value={`${status.trust.average}`} suffix="/100" color={status.trust.average >= 60 ? "emerald" : "amber"} />
+                </MetricTooltip>
               </div>
 
               {/* Health breakdown bar */}
               <div className="mt-4 space-y-2">
-                <MetricTooltipWithIcon content="Ratio of completed vs. pending action items. 100 = all items done, 0 = nothing started.">
-                  <HealthBar label="Action Items" value={status.health.breakdown.actions} />
-                </MetricTooltipWithIcon>
-                <MetricTooltipWithIcon content="How frequently agents meet for standups. Higher scores indicate better meeting cadence (daily/weekly).">
-                  <HealthBar label="Meeting Cadence" value={status.health.breakdown.meetings} />
-                </MetricTooltipWithIcon>
-                <MetricTooltipWithIcon content="Aggregate trust score across all agent pairs. Differs from Avg Trust (card) which includes self-trust metrics.">
-                  <HealthBar label="Team Trust" value={status.health.breakdown.trust} />
-                </MetricTooltipWithIcon>
+                <MetricTooltip content="Ratio of completed vs. pending action items. 100 = all items done, 0 = nothing started.">
+                  <TooltipHealthBar label="Action Items" value={status.health.breakdown.actions} />
+                </MetricTooltip>
+                <MetricTooltip content="How frequently agents meet for standups. Higher scores indicate better meeting cadence (daily/weekly).">
+                  <TooltipHealthBar label="Meeting Cadence" value={status.health.breakdown.meetings} />
+                </MetricTooltip>
+                <MetricTooltip content="Aggregate trust score across all agent pairs. Differs from Avg Trust (card) which includes self-trust metrics.">
+                  <TooltipHealthBar label="Team Trust" value={status.health.breakdown.trust} />
+                </MetricTooltip>
               </div>
             </div>
           )}
@@ -432,8 +432,8 @@ export default function CompanyPage() {
               <div className="space-y-4">
                 {/* Growth Metrics */}
                 <div className="space-y-2">
-                  <MetricTooltipWithIcon content="Number of lessons learned and documented this week. Tracks Q's self-improvement loop effectiveness.">
-                    <LoopMetricBar
+                  <MetricTooltip content="Number of lessons learned and documented this week. Tracks Q's self-improvement loop effectiveness.">
+                    <TooltipLoopMetricBar
                       icon={<BookOpen size={12} />}
                       label="Learning"
                       value={loopStatus.lessonsThisWeek}
@@ -441,9 +441,9 @@ export default function CompanyPage() {
                       unit="lessons/wk"
                       color="blue"
                     />
-                  </MetricTooltipWithIcon>
-                  <MetricTooltipWithIcon content="Percentage of successful builds. Higher is better. Tracks build reliability and code quality.">
-                    <LoopMetricBar
+                  </MetricTooltip>
+                  <MetricTooltip content="Percentage of successful builds. Higher is better. Tracks build reliability and code quality.">
+                    <TooltipLoopMetricBar
                       icon={<Zap size={12} />}
                       label="Build Rate"
                       value={loopStatus.buildStats.rate}
@@ -451,9 +451,9 @@ export default function CompanyPage() {
                       unit="%"
                       color={loopStatus.buildStats.rate >= 70 ? "emerald" : loopStatus.buildStats.rate >= 40 ? "amber" : "red"}
                     />
-                  </MetricTooltipWithIcon>
-                  <MetricTooltipWithIcon content="Total number of skills acquired. Goal is 50 skills. Tracks Q's capability expansion.">
-                    <LoopMetricBar
+                  </MetricTooltip>
+                  <MetricTooltip content="Total number of skills acquired. Goal is 50 skills. Tracks Q's capability expansion.">
+                    <TooltipLoopMetricBar
                       icon={<Activity size={12} />}
                       label="Skills"
                       value={loopStatus.skills.total}
@@ -461,7 +461,7 @@ export default function CompanyPage() {
                       unit="/50 target"
                       color="purple"
                     />
-                  </MetricTooltipWithIcon>
+                  </MetricTooltip>
                 </div>
 
                 {/* Skill Proficiency */}
@@ -570,7 +570,7 @@ function HealthBadge({ score }: { score: number }) {
   );
 }
 
-function StatCard({ label, value, suffix, sub, color }: { label: string; value: string; suffix?: string; sub?: string; color: string }) {
+function TooltipStatCard({ label, value, suffix, sub, color }: { label: string; value: string; suffix?: string; sub?: string; color: string }) {
   const textColors: Record<string, string> = {
     emerald: "text-emerald-600 dark:text-emerald-400",
     amber: "text-amber-600 dark:text-amber-400",
@@ -578,7 +578,7 @@ function StatCard({ label, value, suffix, sub, color }: { label: string; value: 
     blue: "text-blue-600 dark:text-blue-400",
   };
   return (
-    <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800 text-center">
+    <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800 text-center cursor-help">
       <p className={`text-2xl font-bold ${textColors[color] || "text-zinc-900 dark:text-zinc-100"}`}>
         {value}<span className="text-sm font-normal text-zinc-400">{suffix}</span>
       </p>
@@ -588,10 +588,10 @@ function StatCard({ label, value, suffix, sub, color }: { label: string; value: 
   );
 }
 
-function HealthBar({ label, value }: { label: string; value: number }) {
+function TooltipHealthBar({ label, value }: { label: string; value: number }) {
   const color = value >= 70 ? "bg-emerald-500" : value >= 40 ? "bg-amber-500" : "bg-red-500";
   return (
-    <div className="flex items-center gap-3 text-xs">
+    <div className="flex items-center gap-3 text-xs cursor-help">
       <span className="text-zinc-500 w-28 text-right shrink-0">{label}</span>
       <div className="flex-1 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
         <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${value}%` }} />
@@ -660,7 +660,7 @@ function formatRelativeTime(timestamp: string): string {
   return `${diffDays}d ago`;
 }
 
-function LoopMetricBar({ 
+function TooltipLoopMetricBar({ 
   icon, 
   label, 
   value, 
@@ -692,7 +692,7 @@ function LoopMetricBar({
   };
 
   return (
-    <div>
+    <div className="cursor-help">
       <div className="flex items-center justify-between mb-1">
         <span className="text-[10px] text-zinc-500 flex items-center gap-1">
           <span className={textColors[color]}>{icon}</span>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Info } from "lucide-react";
+// No lucide-react imports needed - using pure CSS
 
 interface MetricTooltipProps {
   content: string;
@@ -27,16 +27,5 @@ export function MetricTooltip({ content, children, className = "" }: MetricToolt
   );
 }
 
-/**
- * Wrapper that adds an Info icon to the wrapped content.
- */
-export function MetricTooltipWithIcon({ content, children, className = "" }: MetricTooltipProps) {
-  return (
-    <MetricTooltip content={content} className={className}>
-      <span className="inline-flex items-center gap-1 cursor-help">
-        {children}
-        <Info className="w-3.5 h-3.5 text-zinc-400 hover:text-zinc-500 transition-colors shrink-0" />
-      </span>
-    </MetricTooltip>
-  );
-}
+// MetricTooltipWithIcon removed - no longer needed
+// Use MetricTooltip directly for pure CSS hover tooltips
