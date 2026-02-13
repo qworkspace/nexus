@@ -14,6 +14,8 @@ export function BuildStats() {
     totalLinesChanged: 0,
     period: '24h',
   });
+
+  const [period, setPeriod] = useState<'24h' | '7d' | '30d'>('24h');
   const [loading, setLoading] = useState(true);
 
   const fetchStats = async () => {
@@ -81,48 +83,77 @@ export function BuildStats() {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="mb-4">
+          <div className="flex items-center gap-1">
+            {(['24h', '7d', '30d'] as const).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                className={`px-2 py-1 text-xs rounded ${
+                  period === p
+                    ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
+                    : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
+                }`}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {/* Total Builds */}
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm text-zinc-500">
-              <BarChart3 className="h-3.5 w-3.5" />
-              <span>Total Builds</span>
+            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+              <BarChart3 className="h-3 w-3" />
+              <span>Builds</span>
             </div>
-            <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
               {stats.totalToday}
             </div>
           </div>
 
           {/* Success Rate */}
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm text-zinc-500">
-              <TrendingUp className="h-3.5 w-3.5" />
-              <span>Success Rate</span>
+            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+              <TrendingUp className="h-3 w-3" />
+              <span>Success</span>
             </div>
-            <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
               {stats.successRate.toFixed(0)}%
             </div>
           </div>
 
           {/* Avg Duration */}
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm text-zinc-500">
-              <Clock className="h-3.5 w-3.5" />
-              <span>Avg Duration</span>
+            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+              <Clock className="h-3 w-3" />
+              <span>Avg Time</span>
             </div>
-            <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
               {formatDuration(stats.avgDuration)}
             </div>
           </div>
 
           {/* Total Cost */}
           <div className="space-y-1">
-            <div className="flex items-center gap-2 text-sm text-zinc-500">
-              <DollarSign className="h-3.5 w-3.5" />
-              <span>Total Cost</span>
+            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+              <DollarSign className="h-3 w-3" />
+              <span>Cost</span>
             </div>
-            <div className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
               ${formatCost(stats.totalCost)}
+            </div>
+          </div>
+
+          {/* Lines Changed */}
+          <div className="space-y-1 md:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+              <BarChart3 className="h-3 w-3" />
+              <span>Lines</span>
+            </div>
+            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+              {stats.totalLinesChanged.toLocaleString()}
             </div>
           </div>
         </div>
