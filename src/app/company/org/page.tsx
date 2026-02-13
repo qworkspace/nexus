@@ -90,6 +90,9 @@ export default function OrgChartPage() {
   lines.push({ from: "ella-node", to: "arty" });
   lines.push({ from: "ella-node", to: "larina" });
   lines.push({ from: "larina", to: "pj" });
+  lines.push({ from: "larina", to: "luna" });  // NEW: Larina → Luna solid line (direct report)
+  lines.push({ from: "pj", to: "luna" });
+  lines.push({ from: "ella-node", to: "luna" });
   if (!collapsed["main"]) {
     qReports.filter(a => !["design", "testing"].includes(a.id)).forEach(a => {
       lines.push({ from: "main", to: a.id });
@@ -122,7 +125,8 @@ export default function OrgChartPage() {
               const fromBottom = f.y + f.h / 2;
               const toTop = t.y - t.h / 2;
               const midY = (fromBottom + toTop) / 2;
-              const isDashed = (from === "ella-node" && to === "arty") || (from === "larina" && to === "pj");
+              const isDashed = (from === "ella-node" && to === "arty") || (from === "larina" && to === "pj") ||
+                               (from === "pj" && to === "luna") || (from === "ella-node" && to === "luna");
               const pathD = `M ${f.x} ${fromBottom} C ${f.x} ${midY}, ${t.x} ${midY}, ${t.x} ${toTop}`;
               const pathLength = Math.abs(fromBottom - toTop) * 1.5;
 
@@ -251,11 +255,11 @@ export default function OrgChartPage() {
                 
                 {/* Ella's reports side by side */}
                 <div className="flex items-start gap-5">
+                  <div ref={(el) => registerNode("larina", el)}>
+                    <OrgCard name="Larina" emoji="✨" role="Lead Developer & AI Manager" color="pink" isHuman />
+                  </div>
                   <div ref={(el) => registerNode("arty", el)}>
                     <OrgCard name={arty?.name || "Arty"} emoji={arty?.emoji || "🏹"} role="COO / Chief of Staff" model="External" color="mint" href={arty ? `/company/agents/arty` : undefined} badge="VPS" />
-                  </div>
-                  <div ref={(el) => registerNode("larina", el)}>
-                    <OrgCard name="Larina" emoji="✨" role="Lead Designer & AI Manager" color="pink" isHuman />
                   </div>
                 </div>
                 
@@ -271,8 +275,8 @@ export default function OrgChartPage() {
           <div className="mt-16 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6">
             <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Departments</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <DeptBadge name="Executive" color="amber" members={["PJ (CEO)", "Ella (CEO)", "Q (COO)", "Arty (COO)", "Larina (dotted)"]} />
-              <DeptBadge name="Creative" color="pink" members={["Aura (Director)", "Prism (Design)", "Larina (Lead Designer)"]} />
+              <DeptBadge name="Core" color="amber" members={["PJ (CEO)", "Ella (CEO)", "Q (COO)", "Arty (COO)", "Larina (dotted)"]} />
+              <DeptBadge name="Creative" color="pink" members={["Aura (Director)", "Prism (Design)", "Larina (Lead Developer)"]} />
               <DeptBadge name="Engineering" color="emerald" members={["Spark (Lead)", "Flux (QA)"]} />
               <DeptBadge name="Growth" color="cyan" members={["Surge (Head)"]} />
               <DeptBadge name="Research" color="blue" members={["Cipher (Head)"]} />
@@ -379,7 +383,7 @@ function DeptBadge({ name, color, members }: { name: string; color: string; memb
 
 function getDeptColor(dept: string): string {
   const map: Record<string, string> = {
-    executive: "amber", creative: "pink", engineering: "emerald",
+    core: "amber", creative: "pink", engineering: "emerald",
     growth: "cyan", research: "blue", events: "orange",
     support: "sky", operations: "zinc", community: "zinc",
   };
