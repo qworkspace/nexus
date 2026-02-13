@@ -5,11 +5,13 @@ import { Decision, DecisionStats as Stats, DateRangeFilter, OutcomeFilter } from
 import { DecisionStats } from "@/components/decisions/DecisionStats";
 import { DecisionFilters } from "@/components/decisions/DecisionFilters";
 import { DecisionTimeline } from "@/components/decisions/DecisionTimeline";
+import { AddDecisionModal } from "@/components/decisions/AddDecisionModal";
 
 export default function DecisionsPage() {
   const [decisions, setDecisions] = useState<Decision[]>([]);
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   // Filters
   const [dateRange, setDateRange] = useState<DateRangeFilter>("all");
@@ -47,11 +49,19 @@ export default function DecisionsPage() {
   return (
     <div className="p-6 max-w-6xl">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-zinc-900">Decision Audit Trail</h1>
-        <p className="text-zinc-500 text-sm">
-          Q&apos;s autonomous decisions with reasoning chains and outcomes
-        </p>
+      <div className="mb-6 flex items-start justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold text-zinc-900">Decision Audit Trail</h1>
+          <p className="text-zinc-500 text-sm">
+            Q&apos;s autonomous decisions with reasoning chains and outcomes
+          </p>
+        </div>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+        >
+          + Add Decision
+        </button>
       </div>
 
       {/* Stats Cards */}
@@ -90,6 +100,17 @@ export default function DecisionsPage() {
             ))}
           </div>
         </div>
+      )}
+
+      {/* Add Decision Modal */}
+      {showAddModal && (
+        <AddDecisionModal
+          onClose={() => setShowAddModal(false)}
+          onSuccess={() => {
+            setShowAddModal(false);
+            fetchDecisions();
+          }}
+        />
       )}
     </div>
   );
