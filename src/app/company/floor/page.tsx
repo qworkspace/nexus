@@ -586,7 +586,7 @@ export default function FloorPage() {
     // Save snapshot every 10 minutes
     const interval = setInterval(saveSnapshot, 10 * 60 * 1000);
     return () => clearInterval(interval);
-  }, [agentStates]);
+  }, [agentStates, agentPositions]);
 
   // Canvas rendering for energy arcs and particles
   useEffect(() => {
@@ -735,6 +735,7 @@ export default function FloorPage() {
     }
   }, [meetingMode, meetingLines, currentLineIdx]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadTimeline = useCallback(async () => {
     const startOfDay = new Date().setHours(0, 0, 0, 0);
     try {
@@ -997,11 +998,30 @@ export default function FloorPage() {
               </div>
             </div>
 
-            {/* Energy Plants - subtle glowing orbs */}
-            <EnergyPlant x={30} y={530} />
-            <EnergyPlant x={800} y={530} />
-            <EnergyPlant x={30} y={130} />
-            <EnergyPlant x={800} y={130} />
+            {/* Zone background glows */}
+            {Object.entries(ZONE_CENTERS).map(([zoneName, center]) => (
+              <div
+                key={zoneName}
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  left: center.x - 120,
+                  top: center.y - 80,
+                  width: 240,
+                  height: 160,
+                  background: `radial-gradient(circle, ${ZONE_COLORS[zoneName as keyof typeof ZONE_COLORS].glow} 0%, transparent 70%)`,
+                  opacity: 0.4,
+                  filter: 'blur(40px)',
+                  mixBlendMode: 'screen',
+                }}
+              />
+            ))}
+
+            {/* Organic Plants */}
+            <OrganicPlant x={30} y={530} type="coral" />
+            <OrganicPlant x={800} y={530} type="orb" />
+            <OrganicPlant x={30} y={130} type="vine" />
+            <OrganicPlant x={800} y={130} type="coral" />
+            <OrganicPlant x={780} y={200} type="vine" />
 
             {/* SVG Overlay for connection lines and handoff arcs */}
             <svg className="absolute inset-0 pointer-events-none" style={{ zIndex: 20 }}>
@@ -1055,57 +1075,16 @@ export default function FloorPage() {
                 });
               })}
 
-              {/* Handoff arcs */}
-              {agents.map(agent => {
-                const state = agentStates[agent.id];
-                const handoff = state?.handoff;
-                if (!handoff || handoff.from !== agent.id) return null;
-
-                const fromPos = agentPositions[agent.id];
-                const toPos = agentPositions[handoff.to];
-                if (!fromPos || !toPos) return null;
-
-                const fromColor = AGENT_COLORS[agent.id]?.body || "#888";
-                const toColor = AGENT_COLORS[handoff.to]?.body || "#888";
-
-                // Calculate control point for arc
-                const midX = (fromPos.currentX + toPos.currentX) / 2;
-                const midY = (fromPos.currentY + toPos.currentY) / 2 - 30;
-
-                return (
-                  <g key={`handoff-${agent.id}`}>
-                    <defs>
-                      <linearGradient id={`handoff-grad-${agent.id}`} x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" stopColor={fromColor} />
-                        <stop offset="100%" stopColor={toColor} />
-                      </linearGradient>
-                    </defs>
-                    {/* Arc path */}
-                    <path
-                      d={`M ${fromPos.currentX} ${fromPos.currentY} Q ${midX} ${midY} ${toPos.currentX} ${toPos.currentY}`}
-                      stroke={`url(#handoff-grad-${agent.id})`}
-                      strokeWidth="3"
-                      fill="none"
-                      strokeLinecap="round"
-                      style={{
-                        opacity: 0.7,
-                        mixBlendMode: "screen",
-                      }}
-                    />
-                    {/* Traveling dot */}
-                    <circle
-                      r="4"
-                      fill={fromColor}
-                      style={{
-                        animation: "handoff-travel 1.5s ease-in-out infinite",
-                        offsetPath: `path('M ${fromPos.currentX} ${fromPos.currentY} Q ${midX} ${midY} ${toPos.currentX} ${toPos.currentY}')`,
-                        mixBlendMode: "screen",
-                      }}
-                    />
-                  </g>
-                );
-              })}
             </svg>
+
+            {/* Canvas overlay for energy arcs and particles */}
+            <canvas
+              ref={arcCanvasRef}
+              width={840}
+              height={640}
+              className="absolute inset-0 pointer-events-none"
+              style={{ zIndex: 25 }}
+            />
 
             {/* Agents */}
             {agents.map((agent) => {
@@ -1256,7 +1235,8 @@ export default function FloorPage() {
               </div>
             )}
 
-            {/* Timeline button (when not in timeline mode) */}
+            {/* Timeline button (TODO: not functional, disabled) */}
+            {/*
             {!timelineMode && !meetingMode && (
               <button
                 onClick={loadTimeline}
@@ -1265,6 +1245,7 @@ export default function FloorPage() {
                 📊 Timeline
               </button>
             )}
+            */}
 
             {/* Room label */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
@@ -1328,6 +1309,29 @@ export default function FloorPage() {
                       </div>
                     );
                   })
+                ) : !meetingMode && handoffMessages.length > 0 ? (
+                  handoffMessages.slice(0, 10).map((msg, i) => {
+                    const fromColors = AGENT_COLORS[msg.from] || { label: '#888' };
+                    const toColors = AGENT_COLORS[msg.to] || { label: '#888' };
+
+                    const fromAgent = agents.find(a => a.id === msg.from);
+                    const toAgent = agents.find(a => a.id === msg.to);
+
+                    return (
+                      <div key={i} className="animate-fade-in p-2 bg-zinc-800/50 rounded-lg">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="text-xs font-bold" style={{ color: fromColors.label }}>
+                            {fromAgent?.name || msg.from}
+                          </span>
+                          <span className="text-[10px] text-zinc-600">→</span>
+                          <span className="text-xs font-bold" style={{ color: toColors.label }}>
+                            {toAgent?.name || msg.to}
+                          </span>
+                        </div>
+                        <p className="text-[10px] text-zinc-400 truncate">{msg.task}</p>
+                      </div>
+                    );
+                  })
                 ) : selectedAgents.length === 1 && !meetingMode ? (
                   <div className="flex items-center justify-center h-full">
                     <p className="text-xs text-zinc-600 text-center">
@@ -1387,23 +1391,27 @@ export default function FloorPage() {
 
             {/* Status Legend */}
             <div className="bg-zinc-900 rounded-xl border border-zinc-700 p-3">
-              <h4 className="text-xs font-bold text-zinc-300 mb-2">Status Legend</h4>
+              <h4 className="text-xs font-bold text-zinc-300 mb-2">Ecosystem Status</h4>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                  <span className="text-[10px] text-zinc-400">Active</span>
+                  <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                  <span className="text-[10px] text-zinc-400">The Forge (Building)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-                  <span className="text-[10px] text-zinc-400">Idle (&gt;10min)</span>
+                  <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                  <span className="text-[10px] text-zinc-400">The Stream (Research)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-[10px] text-zinc-400">The Pulse (Comms)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                  <span className="text-[10px] text-zinc-400">The Void (Idle)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                   <span className="text-[10px] text-zinc-400">Error</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-zinc-500" />
-                  <span className="text-[10px] text-zinc-400">Offline</span>
                 </div>
               </div>
             </div>
@@ -1580,26 +1588,88 @@ function EnergyBlob({
   );
 }
 
-// Energy Plant - subtle glowing orb
-function EnergyPlant({ x, y }: { x: number; y: number }) {
+// Organic Plant - enhanced floating elements
+function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'orb' | 'coral' }) {
+  if (type === 'orb') {
+    return (
+      <div className="absolute pointer-events-none" style={{ left: x, top: y }}>
+        <div
+          className="w-6 h-6 rounded-full relative"
+          style={{
+            background: 'radial-gradient(circle at 30% 30%, #4ade80, #22c55e66)',
+            boxShadow: '0 0 20px rgba(74, 222, 128, 0.4)',
+            animation: 'breathe 4s ease-in-out infinite',
+            mixBlendMode: 'screen',
+          }}
+        >
+          {/* Inner glow */}
+          <div
+            className="absolute inset-0 rounded-full"
+            style={{
+              background: 'radial-gradient(circle, transparent 40%, rgba(74, 222, 128, 0.3) 100%)',
+            }}
+          />
+          {/* Subtle orbiting speck */}
+          <div
+            className="absolute w-1 h-1 bg-green-300 rounded-full opacity-60"
+            style={{
+              left: '50%',
+              top: '50%',
+              animation: 'orbit 4s linear infinite',
+              mixBlendMode: 'screen',
+            }}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (type === 'vine') {
+    return (
+      <div className="absolute pointer-events-none" style={{ left: x, top: y }}>
+        <div
+          className="w-4 h-16 relative"
+          style={{
+            background: 'linear-gradient(180deg, rgba(34, 197, 94, 0.6) 0%, transparent 100%)',
+            filter: 'blur(1px)',
+            mixBlendMode: 'screen',
+          }}
+        >
+          {/* Leaves */}
+          <div className="absolute -left-2 top-4 w-3 h-2 bg-green-400 rounded-full opacity-40" />
+          <div className="absolute right-0 top-8 w-3 h-2 bg-green-400 rounded-full opacity-40" />
+          <div className="absolute -left-3 top-12 w-2 h-2 bg-green-500 rounded-full opacity-50" />
+        </div>
+      </div>
+    );
+  }
+
+  // Coral / organic structure
   return (
     <div className="absolute pointer-events-none" style={{ left: x, top: y }}>
       <div
-        className="w-6 h-6 rounded-full relative"
-        style={{
-          background: 'radial-gradient(circle at 30% 30%, #4ade80, #22c55e66)',
-          boxShadow: '0 0 20px rgba(74, 222, 128, 0.4)',
-          animation: 'breathe 4s ease-in-out infinite',
-          mixBlendMode: 'screen',
-        }}
+        className="relative w-8 h-8"
+        style={{ mixBlendMode: 'screen' }}
       >
-        {/* Subtle inner glow */}
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background: 'radial-gradient(circle, transparent 40%, rgba(74, 222, 128, 0.3) 100%)',
-          }}
-        />
+        {[...Array(5)].map((_, i) => {
+          const angle = (i * 72) * Math.PI / 180;
+          const length = 10 + Math.sin(Date.now() / 1000 + i) * 2;
+          return (
+            <div
+              key={i}
+              className="absolute origin-bottom"
+              style={{
+                left: '50%',
+                bottom: '50%',
+                width: '2px',
+                height: `${length}px`,
+                background: 'linear-gradient(180deg, rgba(251, 146, 60, 0.6), transparent)',
+                transform: `rotate(${angle}rad)`,
+                transformOrigin: 'bottom center',
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );
