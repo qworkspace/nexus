@@ -14,7 +14,7 @@ interface MetricTooltipProps {
  */
 export function MetricTooltip({ content, children, className = "" }: MetricTooltipProps) {
   return (
-    <div className={`group relative inline-block ${className}`}>
+    <div className={`group relative ${className}`}>
       {children}
       <div className="absolute left-full ml-2 top-0 w-64 p-3 bg-gray-900 text-white text-xs rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
         <div className="relative">
