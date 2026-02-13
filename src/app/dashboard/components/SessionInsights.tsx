@@ -1,31 +1,36 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Clock, DollarSign, Zap, TrendingUp } from "lucide-react";
+import { Clock, DollarSign, Zap } from "lucide-react";
 import useSWR from "swr";
-
-interface SessionInsight {
-  currentSession: {
-    duration: number; // seconds
-    tokensUsed: number;
-    cost: number;
-  };
-  todaySessions: {
-    count: number;
-    totalDuration: number;
-    totalTokens: number;
-    totalCost: number;
-  };
-  patterns: {
-    peakHours: string[];
-    avgSessionLength: string;
-    totalCostToday: number;
-  };
-}
 
 interface SessionInsightsResponse {
   source: 'live' | 'mock' | 'error';
-  insights?: SessionInsight;
+  current?: {
+    startedAt: string;
+    durationMs: number;
+    tokensUsed: number;
+    cost: number;
+    model: string;
+    agent?: string;
+  };
+  today?: {
+    sessions: number;
+    totalTokens: number;
+    totalCost: number;
+    summaries: Array<{
+      id: string;
+      startedAt: string;
+      durationMs: number;
+      tokensUsed: number;
+      cost: number;
+      tasksCompleted: number;
+      channel: string;
+      agent?: string;
+    }>;
+  };
+  byAgent?: Array<{ agent: string; sessionCount: number; totalTokens: number; totalCost: number }>;
+  byModel?: Array<{ model: string; sessionCount: number; totalTokens: number; totalCost: number }>;
   error?: string;
 }
 
@@ -47,9 +52,9 @@ export function SessionInsights() {
     }
   );
 
-  const insights = data?.insights;
-  const current = insights?.currentSession;
-  const today = insights?.todaySessions;
+  const current = data?.current;
+  const today = data?.today;
+  const byAgent = data?.byAgent;
 
   const formatDuration = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600);
@@ -88,7 +93,7 @@ export function SessionInsights() {
           <div className="text-center py-4 text-sm text-zinc-500">
             Loading...
           </div>
-        ) : error || !insights ? (
+        ) : error || !data ? (
           <div className="text-center py-4 text-sm text-zinc-500">
             Error loading session data
           </div>
@@ -104,7 +109,7 @@ export function SessionInsights() {
                   <div className="text-center">
                     <Clock className="h-4 w-4 mx-auto mb-1 text-zinc-400" />
                     <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-                      {formatDuration(current.duration)}
+                      {formatDuration(Math.floor(current.durationMs / 1000))}
                     </p>
                   </div>
                   <div className="text-center">
@@ -133,13 +138,7 @@ export function SessionInsights() {
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-zinc-600 dark:text-zinc-400">Sessions</span>
                     <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                      {today.count}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-zinc-600 dark:text-zinc-400">Total Time</span>
-                    <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-                      {formatDuration(today.totalDuration)}
+                      {today.sessions}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-sm">
@@ -158,28 +157,26 @@ export function SessionInsights() {
               </div>
             )}
 
-            {/* Patterns */}
-            {insights.patterns && (
+            {/* By Agent */}
+            {byAgent && byAgent.length > 0 && (
               <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
-                <div className="flex items-center gap-1 mb-2">
-                  <TrendingUp className="h-3 w-3 text-zinc-400" />
-                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                    Patterns
-                  </p>
-                </div>
+                <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-2">
+                  By Agent
+                </p>
                 <div className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-zinc-600 dark:text-zinc-400">Avg Session</span>
-                    <span className="text-zinc-900 dark:text-zinc-100">
-                      {insights.patterns.avgSessionLength}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-zinc-600 dark:text-zinc-400">Peak Hours</span>
-                    <span className="text-zinc-900 dark:text-zinc-100">
-                      {insights.patterns.peakHours.join(', ') || 'N/A'}
-                    </span>
-                  </div>
+                  {byAgent.slice(0, 3).map((item) => (
+                    <div key={item.agent} className="flex items-center justify-between text-xs">
+                      <span className="text-zinc-600 dark:text-zinc-400">{item.agent}</span>
+                      <div className="text-right">
+                        <span className="text-zinc-900 dark:text-zinc-100 font-medium">
+                          {formatTokens(item.totalTokens)}
+                        </span>
+                        <span className="text-zinc-500 ml-1">
+                          ({item.sessionCount})
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

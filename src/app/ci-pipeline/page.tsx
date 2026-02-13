@@ -219,16 +219,16 @@ export default function CIPipelinePage() {
   );
 }
 
-function SpecItem({ spec }: { spec: SpecQueueItem }) {
-  const priorityColors = {
-    HIGH: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-900',
-    MEDIUM: 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-400 dark:border-yellow-900',
-    LOW: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-green-900',
-  };
+const PRIORITY_COLORS = {
+  HIGH: 'bg-red-100 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-900',
+  MEDIUM: 'bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-950 dark:text-yellow-400 dark:border-yellow-900',
+  LOW: 'bg-green-100 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-green-900',
+} as const;
 
+function SpecItem({ spec }: { spec: SpecQueueItem }) {
   return (
     <div className="flex items-center gap-3 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
-      <span className={cn('px-2 py-1 text-xs font-medium rounded border', priorityColors[spec.priority])}>
+      <span className={cn('px-2 py-1 text-xs font-medium rounded border', PRIORITY_COLORS[spec.priority])}>
         {spec.priority}
       </span>
       <div className="flex-1 min-w-0">
