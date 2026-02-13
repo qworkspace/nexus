@@ -8,7 +8,7 @@ import { KeyHint } from "@/components/KeyHint";
 import {
   LayoutGrid, GitBranch, Calendar, Link as LinkIcon,
   Inbox, Gauge, Hammer, RefreshCw, MessageSquare, Brain, DollarSign,
-  ScrollText, Clock, Search, Menu, X, Scale, Save, HeartPulse
+  ScrollText, Clock, Search, Menu, X, Scale, Save, HeartPulse, Database
 } from "lucide-react";
 
 const navigation = [
@@ -29,6 +29,7 @@ const navigation = [
   { name: "Memory", href: "/memory", icon: Brain, shortcut: null },
   { name: "Decisions", href: "/decisions", icon: Scale, shortcut: null },
   { name: "Costs", href: "/costs", icon: DollarSign, shortcut: "mod+5" },
+  { name: "Caching", href: "/caching", icon: Database, shortcut: null },
   { name: "Logs", href: "/logs", icon: ScrollText, shortcut: null },
   { name: "Search", href: "/search", icon: Search, shortcut: null },
 ];
