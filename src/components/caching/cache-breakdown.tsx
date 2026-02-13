@@ -17,6 +17,12 @@ type CacheBreakdownProps = {
   };
 };
 
+// type BreakdownItem = {
+//   label: string;
+//   value: number;
+//   color: string;
+// };
+
 export function CacheBreakdown({ tokens, costs }: CacheBreakdownProps) {
   const formatTokens = (value: number) => {
     if (value >= 1000000) return `${(value / 1000000).toFixed(2)}M`;
@@ -38,7 +44,7 @@ export function CacheBreakdown({ tokens, costs }: CacheBreakdownProps) {
     { label: "Fresh Output", value: costs.output, color: "bg-zinc-500" },
   ];
 
-  const BreakdownSection = ({ title, items, total, isCost }: { title: string; items: any[]; total: number; isCost: boolean }) => {
+  const BreakdownSection = ({ title, items, total, isCost }: { title: string; items: { label: string; value: number; color: string }[]; total: number; isCost: boolean }) => {
     return (
       <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
         <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">{title}</h3>

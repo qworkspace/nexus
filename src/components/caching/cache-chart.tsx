@@ -47,7 +47,7 @@ export function CacheChart({ data }: CacheChartProps) {
             axisLine={false}
           />
           <Tooltip
-            formatter={(value: number) => [formatTokens(value), "Tokens"]}
+            formatter={(value) => [formatTokens(Number(value || 0)), "Tokens"]}
             labelFormatter={(value) => new Date(value).toLocaleDateString()}
             contentStyle={{
               backgroundColor: "white",

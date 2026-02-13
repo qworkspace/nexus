@@ -49,7 +49,7 @@ export function CacheTrend({ data }: CacheTrendProps) {
             domain={[0, 100]}
           />
           <Tooltip
-            formatter={(value: number) => [`${value.toFixed(1)}%`, "Hit Rate"]}
+            formatter={(value) => [`${Number(value || 0).toFixed(1)}%`, "Hit Rate"]}
             labelFormatter={(value) => new Date(value).toLocaleDateString()}
             contentStyle={{
               backgroundColor: "white",

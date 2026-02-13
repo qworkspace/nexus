@@ -10,7 +10,8 @@ type CacheEfficiencyCardProps = {
 
 export function CacheEfficiencyCard({
   hitRate,
-  cacheReadCost,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  cacheReadCost: _cacheReadCost,
   cacheReadTokens,
   totalTokens,
   period,

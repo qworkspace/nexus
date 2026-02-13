@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import { Database, AlertTriangle } from "lucide-react";
 import { CacheEfficiencyCard } from "@/components/caching/cache-efficiency-card";
 import { CacheChart } from "@/components/caching/cache-chart";
