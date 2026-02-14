@@ -35,13 +35,19 @@ export async function GET(request: Request) {
     const search = searchParams.get("search") || "";
     const limit = parseInt(searchParams.get("limit") || "50");
     const offset = parseInt(searchParams.get("offset") || "0");
+    const intelligenceOnly = searchParams.get("intelligenceOnly") === "true";
 
     const allItems = await getAllResearch();
 
-    // Filter by type
-    let filtered = type
-      ? allItems.filter((item) => item.type === type)
+    // Filter by intelligence-only (Deep Focus + What's New only)
+    let filtered = intelligenceOnly
+      ? allItems.filter((item) => item.type === "deep-focus" || item.type === "whats-new")
       : allItems;
+
+    // Filter by type
+    if (type) {
+      filtered = filtered.filter((item) => item.type === type);
+    }
 
     // Filter by search
     if (search) {
@@ -166,8 +172,8 @@ function parseResearchFile(
   const frontmatter: Record<string, string | string[]> = {};
   const frontmatterMatch = content.match(/^---\n([\s\S]+?)\n---/);
   if (frontmatterMatch) {
-    const lines = frontmatterMatch[1].split("\n");
-    for (const line of lines) {
+    const frontmatterLines = frontmatterMatch[1].split("\n");
+    for (const line of frontmatterLines) {
       const [key, ...valueParts] = line.split(":");
       if (key && valueParts.length) {
         const value = valueParts.join(":").trim().replace(/^["']|["']$/g, "");

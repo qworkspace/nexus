@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 const STATUS_FILE = "/Users/paulvillanueva/shared/research/ai-intel/idea-status.json";
 
-type IdeaStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped";
+type IdeaStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
 
 interface IdeaStatsResponse {
   total: number;
@@ -16,8 +16,11 @@ interface IdeaStatsResponse {
   specced: number;
   building: number;
   shipped: number;
+  review: number;
   approvalRate: number;
   avgTimeToShip: string;
+  successRate: number;
+  completionRate: number;
 }
 
 export async function GET() {
@@ -63,6 +66,9 @@ interface IdeaStatusEntry {
   buildStatus?: IdeaStatus;
   buildId?: string;
   shippedAt?: string;
+  reviewOutcome?: "success" | "partial" | "failed";
+  reviewNote?: string;
+  reviewedAt?: string;
 }
 
 function calculateStats(statusMap: Map<string, IdeaStatusEntry>): IdeaStatsResponse {
@@ -75,11 +81,16 @@ function calculateStats(statusMap: Map<string, IdeaStatusEntry>): IdeaStatsRespo
     specced: 0,
     building: 0,
     shipped: 0,
+    review: 0,
     approvalRate: 0,
     avgTimeToShip: "0h",
+    successRate: 0,
+    completionRate: 0,
   };
 
   const shippedTimes: number[] = [];
+  let successCount = 0;
+  let totalReviewed = 0;
 
   for (const entry of statusMap.values()) {
     const status = entry.status as IdeaStatus;
@@ -105,6 +116,9 @@ function calculateStats(statusMap: Map<string, IdeaStatusEntry>): IdeaStatsRespo
       case "shipped":
         stats.shipped++;
         break;
+      case "review":
+        stats.review++;
+        break;
     }
 
     // Calculate time to ship
@@ -113,6 +127,14 @@ function calculateStats(statusMap: Map<string, IdeaStatusEntry>): IdeaStatsRespo
       const shippedTime = new Date(entry.shippedAt).getTime();
       const hours = (shippedTime - approvedTime) / (1000 * 60 * 60);
       shippedTimes.push(hours);
+    }
+
+    // Track review outcomes
+    if (entry.reviewOutcome) {
+      totalReviewed++;
+      if (entry.reviewOutcome === "success") {
+        successCount++;
+      }
     }
   }
 
@@ -126,6 +148,17 @@ function calculateStats(statusMap: Map<string, IdeaStatusEntry>): IdeaStatsRespo
   if (shippedTimes.length > 0) {
     const avgHours = shippedTimes.reduce((a, b) => a + b, 0) / shippedTimes.length;
     stats.avgTimeToShip = `${Math.round(avgHours)}h`;
+  }
+
+  // Calculate success rate (successes / total reviewed)
+  if (totalReviewed > 0) {
+    stats.successRate = successCount / totalReviewed;
+  }
+
+  // Calculate completion rate (shipped + reviewed / total approved)
+  const totalApproved = stats.approved + stats.specced + stats.building + stats.shipped + stats.review;
+  if (totalApproved > 0) {
+    stats.completionRate = (stats.shipped + stats.review) / totalApproved;
   }
 
   return stats;

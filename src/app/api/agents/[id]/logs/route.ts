@@ -5,9 +5,10 @@ import { homedir } from 'os';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
+    const params = await context.params;
     const sessionId = params.id;
     const transcriptsDir = path.join(homedir(), '.openclaw', 'transcripts');
 

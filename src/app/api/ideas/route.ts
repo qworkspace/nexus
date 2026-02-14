@@ -7,7 +7,20 @@ export const dynamic = "force-dynamic";
 const SPEC_BRIEFS_DIR = "/Users/paulvillanueva/shared/research/ai-intel/spec-briefs";
 const STATUS_FILE = "/Users/paulvillanueva/shared/research/ai-intel/idea-status.json";
 
-type IdeaStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped";
+type IdeaStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
+
+interface IdeaSummary {
+  idea?: string;
+  title?: string;
+  summary?: string;
+  benefits?: string[];
+  successMetrics?: string[];
+  notes?: string;
+  keyFindings?: string[];
+  tags?: string[];
+  priority?: string;
+  generatedAt?: string;
+}
 
 interface IdeaStatusEntry {
   status: IdeaStatus;
@@ -16,6 +29,9 @@ interface IdeaStatusEntry {
   buildStatus?: IdeaStatus;
   buildId?: string;
   shippedAt?: string;
+  reviewOutcome?: "success" | "partial" | "failed";
+  reviewNote?: string;
+  reviewedAt?: string;
 }
 
 interface IdeaItem {
@@ -29,6 +45,10 @@ interface IdeaItem {
   status: IdeaStatus;
   createdAt: string;
   path: string;
+  summary?: IdeaSummary;
+  reviewOutcome?: "success" | "partial" | "failed";
+  reviewNote?: string;
+  reviewedAt?: string;
 }
 
 interface IdeasResponse {
@@ -88,7 +108,28 @@ async function getIdeas(): Promise<IdeaItem[]> {
     const content = readFileSync(filepath, "utf-8");
     const status = statusMap.get(filename)?.status || "new";
 
-    const parsed = parseSpecBrief(filename, content, filepath, status);
+    // Load summary.json if it exists
+    const summaryPath = filepath.replace(".md", ".summary.json");
+    let summary: IdeaSummary | undefined = undefined;
+    if (existsSync(summaryPath)) {
+      try {
+        const summaryContent = readFileSync(summaryPath, "utf-8");
+        summary = JSON.parse(summaryContent) as IdeaSummary;
+      } catch (error) {
+        console.error(`Error loading summary for ${filename}:`, error);
+      }
+    }
+
+    const parsed = parseSpecBrief(filename, content, filepath, status, summary);
+
+    // Add review fields from status entry
+    const statusEntry = statusMap.get(filename);
+    if (statusEntry) {
+      parsed.reviewOutcome = statusEntry.reviewOutcome;
+      parsed.reviewNote = statusEntry.reviewNote;
+      parsed.reviewedAt = statusEntry.reviewedAt;
+    }
+
     ideas.push(parsed);
   }
 
@@ -99,7 +140,8 @@ function parseSpecBrief(
   filename: string,
   content: string,
   path: string,
-  status: IdeaStatus
+  status: IdeaStatus,
+  summary?: IdeaSummary
 ): IdeaItem {
   const id = filename.replace(".md", "");
 
@@ -145,6 +187,7 @@ function parseSpecBrief(
     status,
     createdAt,
     path,
+    summary,
   };
 }
 

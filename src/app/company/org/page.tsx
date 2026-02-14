@@ -3,7 +3,8 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
 import { AgentIcon } from "@/lib/agent-icons";
-import { ChevronRight, ChevronDown } from 'lucide-react';
+import { ChevronRight, ChevronDown, Link as LinkIcon } from 'lucide-react';
+import { TrendIcon } from "@/lib/ui-icons";
 
 
 interface Agent {
@@ -21,6 +22,20 @@ interface Agent {
 
 interface NodePos { x: number; y: number; w: number; h: number; id: string }
 
+interface RelEntry {
+  trust: number;
+  opinion: string;
+  interactionCount: number;
+  trend: string;
+  lastInteraction: string | null;
+}
+
+interface AgentRels {
+  agentId: string;
+  agentName: string;
+  relationships: Record<string, RelEntry>;
+}
+
 export default function OrgChartPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>(() => {
@@ -33,6 +48,8 @@ export default function OrgChartPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [nodePositions, setNodePositions] = useState<Record<string, NodePos>>({});
   const previousPositionsRef = useRef<Record<string, NodePos>>({});
+  const [relData, setRelData] = useState<AgentRels[]>([]);
+  const [selectedPair, setSelectedPair] = useState<{ from: string; to: string } | null>(null);
 
   // Persist collapse state to localStorage
   useEffect(() => {
@@ -50,36 +67,48 @@ export default function OrgChartPage() {
         console.error("Failed to load roster:", err);
         setAgents([]);
       });
+    fetch("/api/company/relationships")
+      .then(r => r.json())
+      .then(d => {
+        const rels = d.relationships || {};
+        setRelData(Object.values(rels) as AgentRels[]);
+      })
+      .catch(() => setRelData([]));
   }, []);
 
   const registerNode = useCallback((id: string, el: HTMLDivElement | null) => {
     if (!el || !containerRef.current) return;
-    const containerRect = containerRef.current?.getBoundingClientRect();
-    if (!containerRect) return;
-    const rect = el.getBoundingClientRect();
+    
+    // Use requestAnimationFrame to batch position updates and prevent infinite loops
+    requestAnimationFrame(() => {
+      if (!el || !containerRef.current) return;
+      const containerRect = containerRef.current.getBoundingClientRect();
+      if (!containerRect) return;
+      const rect = el.getBoundingClientRect();
 
-    const newPosition: NodePos = {
-      x: rect.left - containerRect.left + rect.width / 2,
-      y: rect.top - containerRect.top + rect.height / 2,
-      w: rect.width,
-      h: rect.height,
-      id,
-    };
+      const newPosition: NodePos = {
+        x: rect.left - containerRect.left + rect.width / 2,
+        y: rect.top - containerRect.top + rect.height / 2,
+        w: rect.width,
+        h: rect.height,
+        id,
+      };
 
-    const previousPosition = previousPositionsRef.current[id];
+      const previousPosition = previousPositionsRef.current[id];
 
-    // Only update state if position has actually changed
-    if (!previousPosition ||
-        Math.abs(previousPosition.x - newPosition.x) > 0.5 ||
-        Math.abs(previousPosition.y - newPosition.y) > 0.5 ||
-        Math.abs(previousPosition.w - newPosition.w) > 0.5 ||
-        Math.abs(previousPosition.h - newPosition.h) > 0.5) {
-      setNodePositions(prev => ({
-        ...prev,
-        [id]: newPosition,
-      }));
-      previousPositionsRef.current[id] = newPosition;
-    }
+      // Increase tolerance to 2px to prevent micro-fluctuations
+      if (!previousPosition ||
+          Math.abs(previousPosition.x - newPosition.x) > 2 ||
+          Math.abs(previousPosition.y - newPosition.y) > 2 ||
+          Math.abs(previousPosition.w - newPosition.w) > 2 ||
+          Math.abs(previousPosition.h - newPosition.h) > 2) {
+        setNodePositions(prev => ({
+          ...prev,
+          [id]: newPosition,
+        }));
+        previousPositionsRef.current[id] = newPosition;
+      }
+    });
   }, []);
 
   const agentMap = Object.fromEntries(agents.map(a => [a.id, a]));
@@ -99,12 +128,17 @@ export default function OrgChartPage() {
   lines.push({ from: "pj", to: "main" });
   lines.push({ from: "ella-node", to: "arty" });
   lines.push({ from: "ella-node", to: "larina" });
-  lines.push({ from: "larina", to: "pj" });
-  lines.push({ from: "larina", to: "luna" });  // NEW: Larina → Luna solid line (direct report)
-  lines.push({ from: "pj", to: "luna" });
-  lines.push({ from: "ella-node", to: "luna" });
+  lines.push({ from: "larina", to: "luna" });  // Larina → Luna solid line (direct report)
+  lines.push({ from: "pj", to: "luna" });       // PJ has Luna access (dotted)
+  lines.push({ from: "ella-node", to: "luna" }); // Ella has Luna access (dotted)
+  // Luna has cross-team access to all department heads (dotted)
   if (!collapsed["main"]) {
-    qReports.filter(a => !["design", "testing"].includes(a.id)).forEach(a => {
+    qReports.filter(a => !["design", "testing", "luna"].includes(a.id)).forEach(a => {
+      lines.push({ from: "luna", to: a.id });
+    });
+  }
+  if (!collapsed["main"]) {
+    qReports.filter(a => !["design", "testing", "luna"].includes(a.id)).forEach(a => {
       lines.push({ from: "main", to: a.id });
       if (!collapsed[a.id]) {
         agents.filter(sub => sub.reportsTo === a.id).forEach(sub => {
@@ -135,8 +169,7 @@ export default function OrgChartPage() {
               const fromBottom = f.y + (f.h || 0) / 2;
               const toTop = t.y - (t.h || 0) / 2;
               const midY = (fromBottom + toTop) / 2;
-              const isDashed = (from === "ella-node" && to === "arty") || (from === "larina" && to === "pj") ||
-                               (from === "pj" && to === "luna") || (from === "ella-node" && to === "luna");
+              const isDashed = (from === "ella-node" && to === "arty") || (from === "pj" && to === "luna") || (from === "ella-node" && to === "luna") || from === "luna";
               const pathD = `M ${f.x} ${fromBottom} C ${f.x} ${midY}, ${t.x} ${midY}, ${t.x} ${toTop}`;
               const pathLength = Math.abs(fromBottom - toTop) * 1.5;
 
@@ -201,7 +234,7 @@ export default function OrgChartPage() {
               {/* PJ Branch */}
               <div className="flex flex-col items-center gap-5">
                 <div ref={(el) => registerNode("pj", el)}>
-                  <OrgCard name="PJ" subtitle="Paul Villanueva" emoji="👑" role="CEO & Founder" color="amber" isHuman size="lg" />
+                  <OrgCard name="PJ" subtitle="Paul Villanueva" emoji="👩‍🎨" role="CEO & Co-Founder" color="amber" isHuman size="lg" />
                 </div>
 
                 {q && (
@@ -213,7 +246,16 @@ export default function OrgChartPage() {
                 {/* Department heads */}
                 {!collapsed["main"] && (
                   <div className="flex flex-wrap justify-center gap-5 max-w-[700px]">
-                    {qReports.filter(a => !["design", "testing"].includes(a.id)).map(agent => {
+                    {qReports
+                      .filter(a => !["design", "testing", "luna"].includes(a.id))
+                      .sort((a, b) => {
+                        // Ensure Echo and Volt are adjacent
+                        const order = ["creative", "dev", "research", "growth", "events", "support"];
+                        const aIdx = order.indexOf(a.id);
+                        const bIdx = order.indexOf(b.id);
+                        return (aIdx === -1 ? 999 : aIdx) - (bIdx === -1 ? 999 : bIdx);
+                      })
+                      .map(agent => {
                       const subs = agents.filter(a => a.reportsTo === agent.id);
                       const hasCollapsible = subs.length > 0;
                       return (
@@ -265,8 +307,14 @@ export default function OrgChartPage() {
                 
                 {/* Ella's reports side by side */}
                 <div className="flex items-start gap-5">
-                  <div ref={(el) => registerNode("larina", el)}>
-                    <OrgCard name="Larina" emoji="✨" role="Lead Developer & AI Manager" color="pink" isHuman />
+                  <div className="flex flex-col items-center gap-3">
+                    <div ref={(el) => registerNode("larina", el)}>
+                      <OrgCard name="Larina" emoji="✨" role="Lead Designer & AI Manager" color="pink" isHuman />
+                    </div>
+                    {/* Luna under Larina */}
+                    <div ref={(el) => registerNode("luna", el)}>
+                      <OrgCard name="Luna" emoji="🌙" role="Team Assistant / Discord Bot" subtitle="Cross-team access" model="sonnet-4-5" color="zinc" href="/company/agents/luna" badge="Mac Mini" />
+                    </div>
                   </div>
                   <div ref={(el) => registerNode("arty", el)}>
                     <OrgCard name={arty?.name || "Arty"} emoji={arty?.emoji || "🏹"} role="COO / Chief of Staff" model="External" color="mint" href={arty ? `/company/agents/arty` : undefined} badge="VPS" />
@@ -313,6 +361,94 @@ export default function OrgChartPage() {
               </div>
             </div>
           </div>
+
+          {/* Relationships Matrix */}
+          {relData.length > 0 && (
+            <div className="mt-6 bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
+              <h3 className="text-xs font-semibold text-zinc-900 dark:text-zinc-100 mb-3 flex items-center gap-1.5">
+                <LinkIcon size={12} />
+                Relationships
+              </h3>
+              <div className="overflow-x-auto">
+                <table className="w-full text-[10px]">
+                  <thead>
+                    <tr>
+                      <th className="p-1 text-left text-zinc-500 font-medium"></th>
+                      {relData.filter(a => !["ella", "arty"].includes(a.agentId)).map(a => (
+                        <th key={a.agentId} className="p-1 text-center text-zinc-500 font-medium">
+                          <span className="text-[9px]">{a.agentName}</span>
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {relData.filter(a => !["ella", "arty"].includes(a.agentId)).map(agent => (
+                      <tr key={agent.agentId} className="border-t border-zinc-100 dark:border-zinc-800">
+                        <td className="p-1 font-medium text-zinc-600 dark:text-zinc-400 text-[10px]">
+                          {agent.agentName}
+                        </td>
+                        {relData.filter(a => !["ella", "arty"].includes(a.agentId)).map(other => {
+                          if (agent.agentId === other.agentId) {
+                            return <td key={other.agentId} className="p-1 text-center text-zinc-300 dark:text-zinc-700">—</td>;
+                          }
+                          const rel = agent.relationships?.[other.agentId];
+                          const trust = rel?.trust ?? 50;
+                          const color = trust >= 60 ? "text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400"
+                            : trust >= 40 ? "text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400"
+                            : "text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400";
+                          return (
+                            <td
+                              key={other.agentId}
+                              className="p-1 text-center cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800 transition"
+                              onClick={() => setSelectedPair({ from: agent.agentId, to: other.agentId })}
+                            >
+                              <span className={`px-1 py-0.5 rounded text-[9px] font-bold ${color}`}>{trust}</span>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Selected pair detail */}
+              {selectedPair && (() => {
+                const agent = relData.find(a => a.agentId === selectedPair.from);
+                const rel = agent?.relationships?.[selectedPair.to];
+                if (!rel) return null;
+                const toName = relData.find(a => a.agentId === selectedPair.to)?.agentName;
+                return (
+                  <div className="mt-3 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+                    <div className="flex items-center justify-between mb-1.5">
+                      <h4 className="text-[11px] font-semibold text-zinc-900 dark:text-zinc-100">
+                        {agent?.agentName} → {toName}
+                      </h4>
+                      <button onClick={() => setSelectedPair(null)} className="text-zinc-400 hover:text-zinc-600 text-[10px]">✕</button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3 text-[10px]">
+                      <div>
+                        <p className="text-zinc-500">Trust</p>
+                        <p className="font-bold text-sm text-zinc-900 dark:text-zinc-100">{rel.trust}/100</p>
+                      </div>
+                      <div>
+                        <p className="text-zinc-500">Interactions</p>
+                        <p className="font-bold text-sm text-zinc-900 dark:text-zinc-100">{rel.interactionCount}</p>
+                      </div>
+                      <div>
+                        <p className="text-zinc-500">Trend</p>
+                        <p className="font-bold text-sm flex items-center gap-1">
+                          <TrendIcon trend={rel.trend === "up" ? "improving" : rel.trend === "down" ? "declining" : "stable"} size={14} />
+                          {rel.trend}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-zinc-500 mt-1.5 italic">&quot;{rel.opinion}&quot;</p>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -326,7 +462,7 @@ function OrgCard({
   color: string; href?: string; size?: "sm" | "lg"; isHuman?: boolean; badge?: string;
   expandable?: boolean; collapsed?: boolean; reportCount?: number;
 }) {
-  const sizeClass = size === "lg" ? "px-6 py-4 min-w-[160px]" : size === "sm" ? "px-3 py-2 min-w-[90px]" : "px-4 py-3 min-w-[120px]";
+  const sizeClass = size === "lg" ? "px-6 py-4 min-w-[180px]" : size === "sm" ? "px-3 py-2 min-w-[140px]" : "px-4 py-3 min-w-[160px]";
   const textSize = size === "lg" ? "text-sm" : size === "sm" ? "text-xs" : "text-xs";
 
   const colorClasses: Record<string, string> = {

@@ -6,9 +6,8 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { KeyHint } from "@/components/KeyHint";
 import {
-  LayoutGrid, GitBranch, Calendar, Link as LinkIcon,
-  Inbox, Gauge, Hammer, RefreshCw, MessageSquare, Brain, DollarSign,
-  ScrollText, Clock, Search, Menu, X, Scale, Save, HeartPulse, Database, Shield, Lightbulb
+  LayoutGrid, GitBranch, Calendar,
+  Gauge, Hammer, RefreshCw, Search, Menu, X, HeartPulse, Database, Shield, Lightbulb, Activity
 } from "lucide-react";
 
 const navigation = [
@@ -16,23 +15,15 @@ const navigation = [
   { name: "The Floor", href: "/company/floor", icon: LayoutGrid, shortcut: null },
   { name: "Org Chart", href: "/company/org", icon: GitBranch, shortcut: null },
   { name: "Meetings", href: "/company/meetings", icon: Calendar, shortcut: null },
-  { name: "Relationships", href: "/company/relationships", icon: LinkIcon, shortcut: null },
-  { name: "Action Items", href: "/company/actions", icon: Inbox, shortcut: null },
   { name: "divider", href: "", icon: null, shortcut: null },
   { name: "Command Center", href: "/command-center", icon: Gauge, shortcut: "mod+2" },
   { name: "Builds", href: "/builds", icon: Hammer, shortcut: "mod+3" },
   { name: "CI Pipeline", href: "/ci-pipeline", icon: RefreshCw, shortcut: null },
-  { name: "Checkpoints", href: "/checkpoints", icon: Save, shortcut: null },
-  { name: "Sessions", href: "/sessions", icon: MessageSquare, shortcut: null },
-  { name: "Crons", href: "/crons", icon: Clock, shortcut: "mod+4" },
   { name: "Research Hub", href: "/hub-research", icon: Lightbulb, shortcut: null },
   { name: "divider2", href: "", icon: null, shortcut: null },
-  { name: "Memory", href: "/memory", icon: Brain, shortcut: null },
-  { name: "Decisions", href: "/decisions", icon: Scale, shortcut: null },
-  { name: "Costs", href: "/costs", icon: DollarSign, shortcut: "mod+5" },
+  { name: "Usage & Costs", href: "/usage", icon: Activity, shortcut: "mod+5" },
   { name: "Governance", href: "/governance", icon: Shield, shortcut: null },
   { name: "Caching", href: "/caching", icon: Database, shortcut: null },
-  { name: "Logs", href: "/logs", icon: ScrollText, shortcut: null },
   { name: "Search", href: "/search", icon: Search, shortcut: null },
 ];
 
@@ -62,7 +53,6 @@ export function Sidebar() {
           <h1 className="text-lg font-semibold text-zinc-900">
             Nexus
           </h1>
-          <p className="text-xs text-zinc-500">Q&apos;s Activity Dashboard</p>
         </div>
 
         <nav className="flex-1 p-2 overflow-y-auto">
