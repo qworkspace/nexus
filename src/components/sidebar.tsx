@@ -21,7 +21,6 @@ const navigation = [
   { name: "divider2", href: "", icon: null, shortcut: null },
   { name: "Usage & Costs", href: "/usage", icon: Activity, shortcut: "mod+5" },
   { name: "Governance", href: "/governance", icon: Shield, shortcut: null },
-  { name: "Caching", href: "/caching", icon: Database, shortcut: null },
   { name: "Search", href: "/search", icon: Search, shortcut: null },
 ];
 
