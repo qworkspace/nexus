@@ -7,7 +7,7 @@ import { useState } from "react";
 import { KeyHint } from "@/components/KeyHint";
 import {
   LayoutGrid, GitBranch, Calendar,
-  Gauge, Hammer, RefreshCw, Search, Menu, X, HeartPulse, Database, Shield, Lightbulb, Activity
+  Gauge, Hammer, Search, Menu, X, HeartPulse, Database, Shield, Activity
 } from "lucide-react";
 
 const navigation = [
@@ -17,9 +17,7 @@ const navigation = [
   { name: "Meetings", href: "/company/meetings", icon: Calendar, shortcut: null },
   { name: "divider", href: "", icon: null, shortcut: null },
   { name: "Command Center", href: "/command-center", icon: Gauge, shortcut: "mod+2" },
-  { name: "Builds", href: "/builds", icon: Hammer, shortcut: "mod+3" },
-  { name: "CI Pipeline", href: "/ci-pipeline", icon: RefreshCw, shortcut: null },
-  { name: "Research Hub", href: "/hub-research", icon: Lightbulb, shortcut: null },
+  { name: "Pipeline", href: "/hub-research", icon: Hammer, shortcut: "mod+3" },
   { name: "divider2", href: "", icon: null, shortcut: null },
   { name: "Usage & Costs", href: "/usage", icon: Activity, shortcut: "mod+5" },
   { name: "Governance", href: "/governance", icon: Shield, shortcut: null },

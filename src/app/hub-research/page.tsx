@@ -15,9 +15,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  RefreshCw, Clock, CheckCircle, XCircle, PauseCircle, ArrowRight,
-  TrendingUp, ExternalLink, Plus, Wrench
+  RefreshCw, Clock, CheckCircle, XCircle, PauseCircle,
+  TrendingUp, ExternalLink, Plus, Wrench, FileText, Hammer
 } from "lucide-react";
+import { ActiveBuilds } from '@/components/builds/ActiveBuilds';
+import { PipelineView } from '@/components/builds/PipelineView';
+import { CompletedBuilds } from '@/components/builds/CompletedBuilds';
+import { BuildStats } from '@/components/builds/BuildStats';
+import { BuildSpeedMetrics } from '@/components/builds/BuildSpeedMetrics';
+import type { SpecQueueItem } from '@/app/api/ci/specs/route';
+import type { BuildEntry, BuildSummary } from '@/app/api/ci/builds/route';
+import type { ActiveSession } from '@/app/api/ci/active/route';
 
 type BriefStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
 type SourceTag = "research" | "pj-request" | "q-identified";
@@ -64,6 +72,12 @@ export default function HubResearchPage() {
   const [stats, setStats] = useState<BriefStats | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // CI Pipeline Data
+  const [specs, setSpecs] = useState<SpecQueueItem[]>([]);
+  const [activeBuilds, setActiveBuilds] = useState<ActiveSession[]>([]);
+  const [recentBuilds, setRecentBuilds] = useState<BuildEntry[]>([]);
+  const [buildSummary, setBuildSummary] = useState<BuildSummary | null>(null);
+
   // New Brief Dialog state
   const [newBriefDialogOpen, setNewBriefDialogOpen] = useState(false);
   const [newBriefTitle, setNewBriefTitle] = useState("");
@@ -85,10 +99,13 @@ export default function HubResearchPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [briefsRes, statsRes, fixesRes] = await Promise.all([
+      const [briefsRes, statsRes, fixesRes, specsRes, buildsRes, activeRes] = await Promise.all([
         fetch("/api/ideas"),
         fetch("/api/ideas/stats"),
         fetch("/api/fixes"),
+        fetch("/api/ci/specs", { cache: 'no-store' }),
+        fetch("/api/ci/builds", { cache: 'no-store' }),
+        fetch("/api/ci/active", { cache: 'no-store' }),
       ]);
 
       const briefsData = await briefsRes.json();
@@ -98,6 +115,23 @@ export default function HubResearchPage() {
       setBriefs(briefsData.briefs || []);
       setStats(statsData);
       setFixes(fixesData.fixes || []);
+
+      // CI Pipeline data
+      if (specsRes.ok) {
+        const specsData = await specsRes.json();
+        setSpecs(specsData);
+      }
+
+      if (buildsRes.ok) {
+        const buildsData = await buildsRes.json();
+        setRecentBuilds(buildsData.builds || []);
+        setBuildSummary(buildsData.summary || null);
+      }
+
+      if (activeRes.ok) {
+        const activeData = await activeRes.json();
+        setActiveBuilds(activeData.sessions || []);
+      }
     } catch (error) {
       console.error("Failed to fetch data:", error);
     } finally {
@@ -256,6 +290,24 @@ export default function HubResearchPage() {
         return "bg-green-100 text-green-700";
     }
   };
+
+  function formatRelativeTime(isoString: string): string {
+    const date = new Date(isoString);
+    const now = new Date();
+
+    if (isNaN(date.getTime())) {
+      return isoString;
+    }
+
+    const diffMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
+
+    if (diffMinutes < 1) return 'just now';
+    if (diffMinutes < 60) return `${diffMinutes} minute${diffMinutes !== 1 ? 's' : ''} ago`;
+    const diffHours = Math.floor(diffMinutes / 60);
+    if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? 's' : ''} ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
+  }
 
   // Brief Card Component
   function BriefCard({ brief, onApprove, onPark, onReject, onViewSource }: {
@@ -570,10 +622,10 @@ export default function HubResearchPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-semibold text-zinc-900 mb-2">
-                  Research Hub v3
+                  Pipeline
                 </h1>
                 <p className="text-zinc-500">
-                  Brief management, fix logs, and pipeline tracking
+                  Brief management, builds, QA, and deployment tracking
                 </p>
               </div>
               <Button
@@ -590,10 +642,11 @@ export default function HubResearchPage() {
 
           {/* Tabs */}
           <Tabs defaultValue="brief-bank" className="flex-1 overflow-hidden">
-            <TabsList className="grid w-full max-w-lg grid-cols-3">
+            <TabsList className="grid w-full max-w-xl grid-cols-4">
               <TabsTrigger value="brief-bank">Brief Bank</TabsTrigger>
+              <TabsTrigger value="builds">Builds</TabsTrigger>
+              <TabsTrigger value="qa">QA</TabsTrigger>
               <TabsTrigger value="fix-log">Fix Log</TabsTrigger>
-              <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
             </TabsList>
 
             {/* Brief Bank Tab */}
@@ -646,6 +699,200 @@ export default function HubResearchPage() {
                   </ScrollArea>
                 </div>
               </div>
+            </TabsContent>
+
+            {/* QA Tab */}
+            <TabsContent value="qa" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
+              <ScrollArea className="h-full">
+                <div className="space-y-6 pb-4">
+                  {/* Build Trends Summary */}
+                  {buildSummary && (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center gap-2">
+                          <TrendingUp className="h-5 w-5" />
+                          Build Trends
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                          <div className="text-center p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg">
+                            <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                              {buildSummary.successRate}%
+                            </p>
+                            <p className="text-xs text-zinc-500 mt-1">Success Rate</p>
+                          </div>
+                          <div className="text-center p-4 bg-zinc-50 dark:bg-zinc-900 rounded-lg">
+                            <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                              {buildSummary.totalBuilds}
+                            </p>
+                            <p className="text-xs text-zinc-500 mt-1">Total Builds</p>
+                          </div>
+                          <div className="text-center p-4 bg-green-50 dark:bg-green-950/30 rounded-lg">
+                            <p className="text-3xl font-bold text-green-600">
+                              {buildSummary.successCount}
+                            </p>
+                            <p className="text-xs text-zinc-500 mt-1">Successful</p>
+                          </div>
+                          <div className="text-center p-4 bg-red-50 dark:bg-red-950/30 rounded-lg">
+                            <p className="text-3xl font-bold text-red-600">
+                              {buildSummary.failedCount}
+                            </p>
+                            <p className="text-xs text-zinc-500 mt-1">Failed</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {/* Spec Queue Panel */}
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="flex items-center gap-2">
+                          <FileText className="h-5 w-5" />
+                          Next Up ({specs.length} spec{specs.length !== 1 ? 's' : ''} waiting)
+                        </CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {specs.length === 0 ? (
+                        <div className="text-center py-8 text-zinc-500">
+                          <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                          <p className="text-sm">No specs queued. All caught up!</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 max-h-80 overflow-y-auto">
+                          {specs.map((spec) => (
+                            <div key={spec.id} className="flex items-start gap-3 p-3 bg-zinc-900 rounded-lg border border-zinc-700">
+                              <span className="text-xl">📋</span>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-white truncate">
+                                  {spec.title}
+                                </p>
+                                <p className="text-xs text-zinc-400 mt-1">
+                                  Created: {spec.createdAt}
+                                </p>
+                              </div>
+                              {spec.priority === 'HIGH' && (
+                                <span className="text-xs bg-red-900/50 text-red-400 px-2 py-1 rounded whitespace-nowrap">
+                                  Critical
+                                </span>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Active Builds Panel */}
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="flex items-center gap-2">
+                          <Hammer className="h-5 w-5" />
+                          What&apos;s Building Now ({activeBuilds.length})
+                        </CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {activeBuilds.length === 0 ? (
+                        <div className="text-center py-8 text-zinc-500">
+                          <Hammer className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                          <p className="text-sm">Nothing building right now.</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2 max-h-80 overflow-y-auto">
+                          {activeBuilds.map((build) => (
+                            <div key={build.id} className="flex items-start gap-3 p-4 bg-zinc-800 rounded-lg border border-zinc-700">
+                              <span className="text-2xl">🛠️</span>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center justify-between mb-2">
+                                  <h4 className="font-bold text-white text-lg truncate">
+                                    Building: {build.key.replace(/^(spec-|ci-|dev-)/, '').replace(/-/g, ' ')}
+                                  </h4>
+                                  <span className="text-xs bg-yellow-900/50 text-yellow-400 px-3 py-1 rounded-full whitespace-nowrap">
+                                    Building...
+                                  </span>
+                                </div>
+                                <p className="text-sm text-zinc-400 mb-3">
+                                  Started {formatRelativeTime(build.startedAt)}
+                                </p>
+                                <button className="w-full bg-zinc-700 hover:bg-zinc-600 text-white text-sm py-2 px-4 rounded-lg">
+                                  View Details
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* Recently Completed Panel */}
+                  <Card>
+                    <CardHeader>
+                      <div className="flex items-center justify-between">
+                        <CardTitle className="flex items-center gap-2">
+                          <Clock className="h-5 w-5" />
+                          Recently Completed ({recentBuilds.length})
+                        </CardTitle>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      {recentBuilds.length === 0 ? (
+                        <div className="text-center py-8 text-zinc-500">
+                          <p className="text-sm">No builds yet.</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-2">
+                          {recentBuilds.map((build) => {
+                            const isSuccess = build.status === 'SUCCESS';
+                            const isFailed = build.status === 'FAILED';
+
+                            const icon = isSuccess ? '✅' : isFailed ? '❌' : '⚠️';
+                            const statusText = isSuccess ? 'SUCCESS' : isFailed ? 'FAILED' : 'STALLED';
+                            const statusColor = isSuccess ? 'text-green-400' : isFailed ? 'text-red-400' : 'text-yellow-400';
+
+                            return (
+                              <div key={build.id} className="flex items-start gap-3 p-4 bg-zinc-800 rounded-lg border border-zinc-700">
+                                <span className="text-2xl">{icon}</span>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <h4 className="font-bold text-white truncate">
+                                      {build.spec.replace(/^(CI:\s*)?/, '').replace(/-/g, ' ')}
+                                    </h4>
+                                    <span className={`text-xs font-bold ${statusColor}`}>
+                                      {statusText}
+                                    </span>
+                                  </div>
+                                  <p className="text-sm text-zinc-400 mb-3">
+                                    Completed {formatRelativeTime(build.timestamp)}
+                                  </p>
+                                  {build.testStatus && (
+                                    <p className="text-sm text-zinc-400 mb-3">
+                                      {isSuccess ? '✓' : '✗'} {build.testDetails || build.testStatus}
+                                    </p>
+                                  )}
+                                  <button className="w-full bg-zinc-700 hover:bg-zinc-600 text-white text-sm py-2 px-4 rounded-lg">
+                                    View Details
+                                  </button>
+                                  {!isSuccess && (
+                                    <button className="w-full mt-2 bg-red-900/50 hover:bg-red-900/70 text-white text-sm py-2 px-4 rounded-lg">
+                                      Retry Build
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                </div>
+              </ScrollArea>
             </TabsContent>
 
             {/* Fix Log Tab - Read-only chronological log */}
@@ -708,73 +955,30 @@ export default function HubResearchPage() {
               </div>
             </TabsContent>
 
-            {/* Pipeline Tab - Existing visualization */}
-            <TabsContent value="pipeline" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
-              <div className="h-full">
-                <Card className="h-full">
-                  <CardHeader>
-                    <CardTitle>Build Pipeline</CardTitle>
-                    <p className="text-sm text-zinc-500">
-                      Track briefs from approval to deployment
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-6">
-                      {/* Pipeline Visualization */}
-                      <div className="flex items-center justify-between text-sm">
-                        {[
-                          { label: "New", status: "new" as BriefStatus, count: stats?.new || 0 },
-                          { label: "Approved", status: "approved" as BriefStatus, count: stats?.approved || 0 },
-                          { label: "Specced", status: "specced" as BriefStatus, count: stats?.specced || 0 },
-                          { label: "Building", status: "building" as BriefStatus, count: stats?.building || 0 },
-                          { label: "Shipped", status: "shipped" as BriefStatus, count: stats?.shipped || 0 },
-                        ].map((stage, i) => (
-                          <div key={stage.label} className="flex items-center flex-1">
-                            <div className={`text-center flex-1 ${stage.count > 0 ? "font-bold" : ""}`}>
-                              <div className={`inline-flex items-center justify-center w-12 h-12 rounded-full ${getStatusColor(stage.status)} mb-2`}>
-                                {stage.count}
-                              </div>
-                              <div>{stage.label}</div>
-                            </div>
-                            {i < 4 && <ArrowRight className="h-4 w-4 text-zinc-400" />}
-                          </div>
-                        ))}
-                      </div>
+            {/* Builds Tab */}
+            <TabsContent value="builds" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
+              <ScrollArea className="h-full">
+                <div className="space-y-6 pb-4">
+                  {/* Stats Row */}
+                  <div>
+                    <BuildStats />
+                  </div>
 
-                      {/* Link to Builds Dashboard */}
-                      <div className="pt-4 border-t border-zinc-200">
-                        <Button variant="outline" className="w-full" asChild>
-                          <a href="/builds">
-                            <TrendingUp className="h-4 w-4 mr-2" />
-                            View Builds Dashboard
-                          </a>
-                        </Button>
-                      </div>
+                  {/* Active Builds */}
+                  <div>
+                    <ActiveBuilds />
+                  </div>
 
-                      {/* Recent Approved Briefs */}
-                      {briefs.filter((b) => b.status === "approved").length > 0 && (
-                        <div className="pt-4 border-t border-zinc-200">
-                          <h4 className="text-sm font-medium text-zinc-900 mb-3">Recently Approved</h4>
-                          <div className="space-y-2">
-                            {briefs
-                              .filter((b) => b.status === "approved")
-                              .slice(0, 5)
-                              .map((brief) => (
-                                <div
-                                  key={brief.id}
-                                  className="flex items-center justify-between p-2 rounded-md bg-zinc-50"
-                                >
-                                  <span className="text-sm truncate flex-1 mr-2">{brief.title}</span>
-                                  <Badge className={getPriorityColor(brief.priority)}>{brief.priority}</Badge>
-                                </div>
-                              ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                  {/* Pipeline View */}
+                  <PipelineView />
+
+                  {/* Completed Builds */}
+                  <CompletedBuilds />
+
+                  {/* Build Speed Metrics */}
+                  <BuildSpeedMetrics />
+                </div>
+              </ScrollArea>
             </TabsContent>
           </Tabs>
         </div>
