@@ -10,12 +10,20 @@ interface CronJob {
     expr: string;
     tz: string;
   };
+  payload: {
+    model: string;
+  };
+  delivery: {
+    mode: 'none' | 'announce';
+  };
+  sessionTarget: 'main' | 'isolated';
   state: {
     nextRunAtMs: number;
     lastRunAtMs?: number;
     lastStatus?: 'ok' | 'error' | 'timeout';
     lastDurationMs?: number;
     lastError?: string;
+    consecutiveErrors?: number;
   };
 }
 
@@ -51,12 +59,20 @@ export async function GET(): Promise<NextResponse<CronListResponse>> {
         expr: String((job.schedule as Record<string, unknown>)?.expr || ''),
         tz: String((job.schedule as Record<string, unknown>)?.tz || 'UTC'),
       },
+      payload: {
+        model: String((job.payload as Record<string, unknown>)?.model || 'unknown'),
+      },
+      delivery: {
+        mode: ((job.delivery as Record<string, unknown>)?.mode || 'none') as 'none' | 'announce',
+      },
+      sessionTarget: String(job.sessionTarget || 'main') as 'main' | 'isolated',
       state: {
         nextRunAtMs: Number((job.state as Record<string, unknown>)?.nextRunAtMs || Date.now() + 3600000),
         lastRunAtMs: (job.state as Record<string, unknown>)?.lastRunAtMs as number | undefined,
         lastStatus: (job.state as Record<string, unknown>)?.lastStatus as CronJob['state']['lastStatus'],
         lastDurationMs: (job.state as Record<string, unknown>)?.lastDurationMs as number | undefined,
         lastError: (job.state as Record<string, unknown>)?.lastError as string | undefined,
+        consecutiveErrors: Number((job.state as Record<string, unknown>)?.consecutiveErrors || 0),
       },
     }));
 
@@ -81,6 +97,9 @@ function getMockJobs(): CronJob[] {
       name: 'Morning Brief',
       enabled: true,
       schedule: { kind: 'cron', expr: '0 7 * * *', tz: 'Australia/Sydney' },
+      payload: { model: 'anthropic/claude-opus-4' },
+      delivery: { mode: 'announce' },
+      sessionTarget: 'main',
       state: {
         nextRunAtMs: Date.now() + 3600000,
         lastRunAtMs: Date.now() - 86400000,
@@ -93,6 +112,9 @@ function getMockJobs(): CronJob[] {
       name: 'Discord Digest (Morning)',
       enabled: true,
       schedule: { kind: 'cron', expr: '0 9 * * *', tz: 'Australia/Sydney' },
+      payload: { model: 'zai/glm-5' },
+      delivery: { mode: 'announce' },
+      sessionTarget: 'main',
       state: {
         nextRunAtMs: Date.now() + 7200000,
         lastRunAtMs: Date.now() - 82800000,
@@ -105,6 +127,9 @@ function getMockJobs(): CronJob[] {
       name: 'CryptoMon Checkpoint',
       enabled: true,
       schedule: { kind: 'cron', expr: '0 1,3,5 * * *', tz: 'Australia/Sydney' },
+      payload: { model: 'zai/glm-4.7' },
+      delivery: { mode: 'none' },
+      sessionTarget: 'isolated',
       state: {
         nextRunAtMs: Date.now() + 14400000,
         lastRunAtMs: Date.now() - 10800000,
@@ -117,6 +142,9 @@ function getMockJobs(): CronJob[] {
       name: 'Night Mode',
       enabled: true,
       schedule: { kind: 'cron', expr: '0 23 * * *', tz: 'Australia/Sydney' },
+      payload: { model: 'zai/glm-5' },
+      delivery: { mode: 'none' },
+      sessionTarget: 'main',
       state: {
         nextRunAtMs: Date.now() + 36000000,
         lastRunAtMs: Date.now() - 50400000,
