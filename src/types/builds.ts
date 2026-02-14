@@ -45,6 +45,28 @@ export interface CompletedBuild {
   durationMs?: number;
 }
 
+export interface FeedbackEntry {
+  spec: string;
+  commit: string;
+  rating: 'great' | 'good' | 'meh' | 'bad' | 'useless';
+  ratedBy: string;
+  ratedAt: string;
+  model?: string;
+  agent?: string;
+  issues?: string[];
+  context?: string;
+}
+
+export interface BuildWithFeedback {
+  id: string;
+  spec: string;
+  status: 'SUCCESS' | 'FAILED' | 'SKIPPED' | 'STALLED' | 'OTHER';
+  timestamp: string;
+  testStatus?: string;
+  testDetails?: string;
+  feedback?: FeedbackEntry;
+}
+
 export interface PipelineStage {
   name: string;
   agent: 'cipher' | 'spark' | 'flux';

@@ -161,22 +161,38 @@ export function CompletedBuilds() {
                     
                     {/* Feedback display from PJ ratings */}
                     {feedbackForBuild ? (
-                      <div className={`mt-2 px-2 py-1 rounded text-xs ${getRatingColor(feedbackForBuild.rating)}`}>
-                        <span className="font-medium">
-                          {getRatingEmoji(feedbackForBuild.rating)} {feedbackForBuild.rating.toUpperCase()}
-                        </span>
-                        <span className="text-zinc-400 ml-2">
-                          by {feedbackForBuild.ratedBy} • {formatRelativeTime(feedbackForBuild.ratedAt)}
-                        </span>
-                        {feedbackForBuild.issues.length > 0 && (
-                          <div className="mt-1 text-red-600">
-                            Issues: {feedbackForBuild.issues.join(', ')}
-                          </div>
+                      <div className="mt-2">
+                        <div className={`px-2 py-1 rounded text-xs ${getRatingColor(feedbackForBuild.rating)}`}>
+                          <span className="font-medium">
+                            {getRatingEmoji(feedbackForBuild.rating)} {feedbackForBuild.rating.toUpperCase()}
+                          </span>
+                          <span className="text-zinc-400 ml-2">
+                            by {feedbackForBuild.ratedBy} • {formatRelativeTime(feedbackForBuild.ratedAt)}
+                          </span>
+                          {feedbackForBuild.issues.length > 0 && (
+                            <div className="mt-1 text-red-600">
+                              Issues: {feedbackForBuild.issues.join(', ')}
+                            </div>
+                          )}
+                        </div>
+                        {/* Link to Fix Log for bad/useless ratings */}
+                        {(feedbackForBuild.rating === 'bad' || feedbackForBuild.rating === 'useless') && (
+                          <button
+                            onClick={() => {
+                              // Dispatch custom event to switch to fix-log tab and filter
+                              window.dispatchEvent(new CustomEvent('navigate-to-fix-log', {
+                                detail: { spec: feedbackForBuild.spec }
+                              }));
+                            }}
+                            className="mt-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                          >
+                            → View in Fix Log
+                          </button>
                         )}
                       </div>
                     ) : (
                       <div className="mt-2 text-xs text-zinc-400 italic">
-                        Awaiting review
+                        ⏳ Awaiting review
                       </div>
                     )}
                   </div>

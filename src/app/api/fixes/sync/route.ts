@@ -1,9 +1,26 @@
-import { NextResponse } from 'next/server';
-import { readFile, writeFile } from 'fs/promises';
-import { existsSync } from 'fs';
+import { NextResponse } from "next/server";
+import { readFileSync, writeFileSync, existsSync } from "fs";
 
-const FEEDBACK_FILE = '/Users/paulvillanueva/shared/decisions/build-feedback.json';
-const FIXES_FILE = '/Users/paulvillanueva/shared/pipeline/fixes.json';
+export const dynamic = "force-dynamic";
+
+const FIXES_FILE = "/Users/paulvillanueva/shared/pipeline/fixes.json";
+const FEEDBACK_FILE = "/Users/paulvillanueva/shared/decisions/build-feedback.json";
+
+interface FixEntry {
+  id: string;
+  spec: string;
+  commit: string;
+  whatBroke: string;
+  whatFixed: string;
+  when: string;
+  status: 'open' | 'fix_briefed' | 'fix_building' | 'fix_shipped' | 'verified';
+  sourceRating: 'bad' | 'useless';
+  issues: string[];
+  pjComment?: string;
+  fixBriefPath?: string;
+  fixCommit?: string;
+  agent: string;
+}
 
 interface FeedbackEntry {
   spec: string;
@@ -11,77 +28,65 @@ interface FeedbackEntry {
   rating: 'great' | 'good' | 'meh' | 'bad' | 'useless';
   ratedBy: string;
   ratedAt: string;
-  issues?: string[];
-  context?: string;
+  model?: string;
   agent?: string;
-}
-
-interface FixEntry {
-  id: string;
-  whatBroke: string;
-  whatFixed: string;
-  when: string;
-  agent: string;
-  status: 'open' | 'fix_briefed' | 'fix_shipped' | 'verified';
-  sourceRating: string;
-  spec?: string;
-  commit?: string;
   issues?: string[];
   context?: string;
 }
 
 export async function POST() {
   try {
-    // Read feedback
-    const feedbackData = await readFile(FEEDBACK_FILE, 'utf-8');
-    const feedback: FeedbackEntry[] = JSON.parse(feedbackData);
-    
     // Read existing fixes
     let fixes: FixEntry[] = [];
     if (existsSync(FIXES_FILE)) {
-      const fixesData = await readFile(FIXES_FILE, 'utf-8');
-      fixes = JSON.parse(fixesData);
+      const content = readFileSync(FIXES_FILE, 'utf-8');
+      fixes = JSON.parse(content);
     }
-    
-    // Find bad/useless ratings that don't have fix entries yet
-    const existingFixIds = new Set(fixes.map(f => f.id));
-    const newFixes: FixEntry[] = [];
-    
-    for (const entry of feedback) {
-      if (entry.rating === 'bad' || entry.rating === 'useless') {
-        const fixId = `fix-${entry.spec}-${entry.commit}`;
-        
-        if (!existingFixIds.has(fixId)) {
-          newFixes.push({
-            id: fixId,
-            whatBroke: entry.issues?.join('; ') || `${entry.spec} rated ${entry.rating}`,
-            whatFixed: '', // Empty until fix is shipped
-            when: entry.ratedAt,
-            agent: entry.agent || 'unknown',
-            status: 'open',
-            sourceRating: entry.rating,
-            spec: entry.spec,
-            commit: entry.commit,
-            issues: entry.issues,
-            context: entry.context,
-          });
-        }
+
+    // Read feedback
+    if (!existsSync(FEEDBACK_FILE)) {
+      return NextResponse.json({ message: 'No feedback file found' });
+    }
+
+    const feedbackContent = readFileSync(FEEDBACK_FILE, 'utf-8');
+    const feedback: FeedbackEntry[] = JSON.parse(feedbackContent);
+
+    // Find bad/useless ratings that don't have a fix entry
+    const badFeedback = feedback.filter(f => f.rating === 'bad' || f.rating === 'useless');
+    let newEntries = 0;
+
+    for (const fb of badFeedback) {
+      const exists = fixes.find(f => f.spec === fb.spec && f.commit === fb.commit);
+      if (!exists) {
+        const newEntry: FixEntry = {
+          id: `fix-${fb.spec}-${new Date(fb.ratedAt).toISOString().split('T')[0]}`,
+          spec: fb.spec,
+          commit: fb.commit,
+          whatBroke: (fb.issues || []).join('; '),
+          whatFixed: '',
+          when: fb.ratedAt,
+          status: 'open',
+          sourceRating: fb.rating,
+          issues: fb.issues || [],
+          pjComment: fb.context,
+          agent: fb.agent || 'unknown',
+        };
+        fixes.unshift(newEntry);
+        newEntries++;
       }
     }
-    
-    // Append new fixes
-    if (newFixes.length > 0) {
-      fixes = [...fixes, ...newFixes];
-      await writeFile(FIXES_FILE, JSON.stringify(fixes, null, 2));
+
+    if (newEntries > 0) {
+      writeFileSync(FIXES_FILE, JSON.stringify(fixes, null, 2));
     }
-    
+
     return NextResponse.json({
-      created: newFixes.length,
-      total: fixes.length,
-      newFixes,
+      message: 'Sync complete',
+      newEntries,
+      totalFixes: fixes.length
     });
   } catch (error) {
-    console.error('Failed to sync fixes:', error);
+    console.error('Error syncing fixes:', error);
     return NextResponse.json(
       { error: 'Failed to sync fixes' },
       { status: 500 }

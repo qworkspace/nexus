@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   RefreshCw, Clock, CheckCircle, XCircle, PauseCircle,
-  TrendingUp, ExternalLink, Plus, Wrench, FileText, Hammer
+  TrendingUp, ExternalLink, Plus, Wrench, FileText, Hammer, Star, AlertTriangle
 } from "lucide-react";
 import { ActiveBuilds } from '@/components/builds/ActiveBuilds';
 import { PipelineView } from '@/components/builds/PipelineView';
@@ -77,15 +77,27 @@ interface BriefStats {
 }
 
 interface FixEntry {
-  id?: string;
+  id: string;
+  spec: string;
+  commit: string;
   whatBroke: string;
   whatFixed: string;
   when: string;
+  status: 'open' | 'fix_briefed' | 'fix_building' | 'fix_shipped' | 'verified';
+  sourceRating: 'bad' | 'useless';
+  issues: string[];
+  pjComment?: string;
+  fixBriefPath?: string;
+  fixCommit?: string;
   agent: string;
-  status?: 'open' | 'fix_briefed' | 'fix_shipped' | 'verified';
-  sourceRating?: string;
-  spec?: string;
-  commit?: string;
+}
+
+interface FeedbackEntry {
+  spec: string;
+  commit: string;
+  rating: 'great' | 'good' | 'meh' | 'bad' | 'useless';
+  ratedBy: string;
+  ratedAt: string;
   issues?: string[];
   context?: string;
 }
@@ -93,6 +105,7 @@ interface FixEntry {
 export default function HubResearchPage() {
   const [briefs, setBriefs] = useState<BriefItem[]>([]);
   const [fixes, setFixes] = useState<FixEntry[]>([]);
+  const [feedback, setFeedback] = useState<FeedbackEntry[]>([]);
   const [stats, setStats] = useState<BriefStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -169,10 +182,11 @@ export default function HubResearchPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [briefsRes, statsRes, fixesRes, specsRes, buildsRes, activeRes] = await Promise.all([
+      const [briefsRes, statsRes, fixesRes, feedbackRes, specsRes, buildsRes, activeRes] = await Promise.all([
         fetch("/api/ideas"),
         fetch("/api/ideas/stats"),
         fetch("/api/fixes"),
+        fetch("/api/builds/ratings"),
         fetch("/api/ci/specs", { cache: 'no-store' }),
         fetch("/api/ci/builds", { cache: 'no-store' }),
         fetch("/api/ci/active", { cache: 'no-store' }),
@@ -181,10 +195,12 @@ export default function HubResearchPage() {
       const briefsData = await briefsRes.json();
       const statsData = await statsRes.json();
       const fixesData = await fixesRes.json();
+      const feedbackData = await feedbackRes.json();
 
       setBriefs(briefsData.briefs || []);
       setStats(statsData);
       setFixes(fixesData.fixes || []);
+      setFeedback(feedbackData.feedback || []);
 
       // CI Pipeline data
       if (specsRes.ok) {
@@ -331,6 +347,16 @@ export default function HubResearchPage() {
     setEditedBrief({});
   };
 
+  const getFixStatusColor = (status: string) => {
+    switch (status) {
+      case 'open': return 'bg-red-100 text-red-700';
+      case 'fix_briefed': return 'bg-yellow-100 text-yellow-700';
+      case 'fix_shipped': return 'bg-blue-100 text-blue-700';
+      case 'verified': return 'bg-green-100 text-green-700';
+      default: return 'bg-zinc-100 text-zinc-700';
+    }
+  };
+
   const getStatusColor = (status: BriefStatus) => {
     switch (status) {
       case "new":
@@ -382,6 +408,45 @@ export default function HubResearchPage() {
     const diffDays = Math.floor(diffHours / 24);
     return `${diffDays} day${diffDays !== 1 ? 's' : ''} ago`;
   }
+
+  // Rating badge component
+  const RatingBadge = ({ rating }: { rating: string }) => {
+    const config = {
+      great: { emoji: '⭐', label: 'Great', color: 'text-green-600 bg-green-50' },
+      good: { emoji: '👍', label: 'Good', color: 'text-green-600 bg-green-50' },
+      meh: { emoji: '😐', label: 'Meh', color: 'text-yellow-600 bg-yellow-50' },
+      bad: { emoji: '👎', label: 'Bad', color: 'text-red-600 bg-red-50' },
+      useless: { emoji: '🗑', label: 'Useless', color: 'text-red-600 bg-red-50' },
+    };
+
+    const c = config[rating as keyof typeof config] || { emoji: '⏳', label: 'Awaiting', color: 'text-zinc-400' };
+
+    return (
+      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs ${c.color}`}>
+        <span>{c.emoji}</span>
+        <span>{c.label}</span>
+      </span>
+    );
+  };
+
+  // Status badge component for Fix Log
+  const FixStatusBadge = ({ status }: { status: string }) => {
+    const config = {
+      open: { color: 'bg-red-100 text-red-700', icon: '🔴' },
+      fix_briefed: { color: 'bg-yellow-100 text-yellow-700', icon: '📝' },
+      fix_building: { color: 'bg-blue-100 text-blue-700', icon: '🔨' },
+      fix_shipped: { color: 'bg-purple-100 text-purple-700', icon: '🚀' },
+      verified: { color: 'bg-green-100 text-green-700', icon: '✅' },
+    };
+
+    const c = config[status as keyof typeof config] || config.open;
+
+    return (
+      <Badge className={c.color}>
+        {c.icon} {status.replace('_', ' ')}
+      </Badge>
+    );
+  };
 
   // Brief Card Component
   function BriefCard({ brief, onApprove, onPark, onReject, onViewSource }: {
@@ -845,42 +910,99 @@ export default function HubResearchPage() {
                     </Card>
                   )}
 
-                  {/* Spec Queue Panel */}
+                  {/* PJ Ratings Panel */}
                   <Card>
                     <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="flex items-center gap-2">
-                          <FileText className="h-5 w-5" />
-                          Next Up ({specs.length} spec{specs.length !== 1 ? 's' : ''} waiting)
-                        </CardTitle>
-                      </div>
+                      <CardTitle className="flex items-center gap-2">
+                        <Star className="h-5 w-5" />
+                        Recent PJ Ratings
+                      </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      {specs.length === 0 ? (
+                      {feedback.length === 0 ? (
                         <div className="text-center py-8 text-zinc-500">
-                          <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
-                          <p className="text-sm">No specs queued. All caught up!</p>
+                          <p className="text-sm">No ratings yet</p>
                         </div>
                       ) : (
-                        <div className="space-y-2 max-h-80 overflow-y-auto">
-                          {specs.map((spec) => (
-                            <div key={spec.id} className="flex items-start gap-3 p-3 bg-zinc-900 rounded-lg border border-zinc-700">
-                              <span className="text-xl">📋</span>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm font-bold text-white truncate">
-                                  {spec.title}
-                                </p>
-                                <p className="text-xs text-zinc-400 mt-1">
-                                  Created: {spec.createdAt}
-                                </p>
+                        <div className="space-y-2">
+                          {feedback
+                            .sort((a, b) => new Date(b.ratedAt).getTime() - new Date(a.ratedAt).getTime())
+                            .slice(0, 10)
+                            .map((f, i) => (
+                              <div key={i} className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg">
+                                <RatingBadge rating={f.rating} />
+                                <div className="flex-1">
+                                  <p className="font-medium text-sm">{f.spec}</p>
+                                  {f.issues && f.issues.length > 0 && (
+                                    <ul className="text-xs text-red-600 mt-1">
+                                      {f.issues.map((issue, j) => (
+                                        <li key={j}>• {issue}</li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                  <p className="text-xs text-zinc-400 mt-1">
+                                    {formatRelativeTime(f.ratedAt)} by {f.ratedBy}
+                                  </p>
+                                </div>
+                                {(f.rating === 'bad' || f.rating === 'useless') && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => {
+                                      window.dispatchEvent(new CustomEvent('navigate-to-fix-log', {
+                                        detail: { spec: f.spec }
+                                      }));
+                                    }}
+                                  >
+                                    View in Fix Log
+                                  </Button>
+                                )}
                               </div>
-                              {spec.priority === 'HIGH' && (
-                                <span className="text-xs bg-red-900/50 text-red-400 px-2 py-1 rounded whitespace-nowrap">
-                                  Critical
-                                </span>
-                              )}
-                            </div>
-                          ))}
+                            ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {/* QA Gap Analysis Panel */}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center gap-2">
+                        <AlertTriangle className="h-5 w-5 text-yellow-500" />
+                        QA Gap Analysis
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-sm text-zinc-500 mb-4">
+                        Builds that passed QA but received negative PJ ratings
+                      </p>
+                      {feedback.filter(f =>
+                        (f.rating === 'bad' || f.rating === 'useless') &&
+                        f.context?.includes('QA passed')
+                      ).length === 0 ? (
+                        <p className="text-sm text-zinc-500">No QA gaps detected</p>
+                      ) : (
+                        <div className="space-y-2">
+                          {feedback
+                            .filter(f =>
+                              (f.rating === 'bad' || f.rating === 'useless') &&
+                              f.context?.includes('QA passed')
+                            )
+                            .map((g, i) => (
+                              <div key={i} className="p-3 bg-yellow-50 dark:bg-yellow-950/30 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                                <p className="font-medium text-sm">{g.spec}</p>
+                                <p className="text-xs text-yellow-700 dark:text-yellow-400 mt-1">
+                                  QA passed but PJ rated {g.rating}
+                                </p>
+                                {g.issues && (
+                                  <ul className="text-xs text-yellow-600 dark:text-yellow-500 mt-2">
+                                    {g.issues.map((issue, j) => (
+                                      <li key={j}>• {issue}</li>
+                                    ))}
+                                  </ul>
+                                )}
+                              </div>
+                            ))}
                         </div>
                       )}
                     </CardContent>
@@ -1001,10 +1123,19 @@ export default function HubResearchPage() {
                 <div className="flex-1 overflow-hidden flex flex-col">
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-lg font-semibold">Fix Log</h2>
-                    <Badge variant="secondary">
-                      <Wrench className="h-3 w-3 mr-1" />
-                      Read-only
-                    </Badge>
+                    <div className="flex gap-2">
+                      <Badge variant="secondary">
+                        <Wrench className="h-3 w-3 mr-1" />
+                        {fixes.filter(f => f.status === 'open').length} open
+                      </Badge>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => fetch('/api/fixes/sync', { method: 'POST' }).then(fetchData)}
+                      >
+                        Sync from Feedback
+                      </Button>
+                    </div>
                   </div>
 
                   <ScrollArea className="flex-1">
@@ -1013,37 +1144,81 @@ export default function HubResearchPage() {
                         <div className="space-y-3">
                           <Card className="h-24 animate-pulse" />
                           <Card className="h-24 animate-pulse" />
-                          <Card className="h-24 animate-pulse" />
                         </div>
                       ) : fixes.length === 0 ? (
                         <div className="text-center py-12 text-zinc-500">
                           <p className="text-lg mb-2">No fixes logged</p>
-                          <p className="text-sm">Automated bug fixes will appear here</p>
+                          <p className="text-sm">When builds are rated &quot;bad&quot; or &quot;useless&quot;, they&apos;ll appear here</p>
                         </div>
                       ) : (
                         fixes.map((fix, index) => (
-                          <Card key={index}>
+                          <Card key={fix.id || index}>
                             <CardHeader className="pb-2">
                               <div className="flex items-start justify-between">
-                                <CardTitle className="text-base">Fix #{index + 1}</CardTitle>
-                                <Badge variant="secondary" className="text-xs">
-                                  <Clock className="h-3 w-3 mr-1" />
-                                  {new Date(fix.when).toLocaleString()}
-                                </Badge>
+                                <CardTitle className="text-base">
+                                  {fix.spec || `Fix #${index + 1}`}
+                                </CardTitle>
+                                <div className="flex gap-1">
+                                  {fix.status && (
+                                    <Badge className={getFixStatusColor(fix.status)}>
+                                      {fix.status.replace('_', ' ')}
+                                    </Badge>
+                                  )}
+                                  <Badge variant="secondary" className="text-xs">
+                                    <Clock className="h-3 w-3 mr-1" />
+                                    {new Date(fix.when).toLocaleDateString()}
+                                  </Badge>
+                                </div>
                               </div>
                             </CardHeader>
                             <CardContent className="space-y-2">
+                              {/* What Broke */}
                               <div>
                                 <p className="text-xs font-medium text-red-600 mb-1">What broke</p>
                                 <p className="text-sm text-zinc-700">{fix.whatBroke}</p>
+                                {fix.issues && fix.issues.length > 0 && (
+                                  <ul className="mt-1 text-xs text-zinc-500 list-disc list-inside">
+                                    {fix.issues.map((issue, i) => (
+                                      <li key={i}>{issue}</li>
+                                    ))}
+                                  </ul>
+                                )}
                               </div>
-                              <div>
-                                <p className="text-xs font-medium text-emerald-600 mb-1">What was fixed</p>
-                                <p className="text-sm text-zinc-700">{fix.whatFixed}</p>
-                              </div>
-                              <div>
-                                <p className="text-xs font-medium text-zinc-500 mb-1">Agent</p>
-                                <p className="text-sm text-zinc-700">{fix.agent}</p>
+                              
+                              {/* Context */}
+                              {fix.context && (
+                                <div className="bg-amber-50 p-2 rounded border border-amber-200">
+                                  <p className="text-xs text-amber-700">
+                                    <strong>Context:</strong> {fix.context}
+                                  </p>
+                                </div>
+                              )}
+                              
+                              {/* What Fixed (if any) */}
+                              {fix.whatFixed && (
+                                <div>
+                                  <p className="text-xs font-medium text-emerald-600 mb-1">What was fixed</p>
+                                  <p className="text-sm text-zinc-700">{fix.whatFixed}</p>
+                                </div>
+                              )}
+                              
+                              {/* Metadata */}
+                              <div className="flex items-center gap-3 text-xs text-zinc-500">
+                                <span>Agent: {fix.agent}</span>
+                                {fix.commit && (
+                                  <>
+                                    <span>•</span>
+                                    <span className="font-mono">{fix.commit}</span>
+                                  </>
+                                )}
+                                {fix.sourceRating && (
+                                  <>
+                                    <span>•</span>
+                                    <Badge variant="outline" className="text-xs">
+                                      Rated: {fix.sourceRating}
+                                    </Badge>
+                                  </>
+                                )}
                               </div>
                             </CardContent>
                           </Card>
