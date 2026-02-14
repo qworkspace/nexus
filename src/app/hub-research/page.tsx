@@ -77,10 +77,17 @@ interface BriefStats {
 }
 
 interface FixEntry {
+  id?: string;
   whatBroke: string;
   whatFixed: string;
   when: string;
   agent: string;
+  status?: 'open' | 'fix_briefed' | 'fix_shipped' | 'verified';
+  sourceRating?: string;
+  spec?: string;
+  commit?: string;
+  issues?: string[];
+  context?: string;
 }
 
 export default function HubResearchPage() {
@@ -130,37 +137,6 @@ export default function HubResearchPage() {
     } catch {
       return isoString;
     }
-  }
-
-  // Bullet transformer - converts informational to actionable format
-  function transformToActionable(bullet: string): string {
-    // If already has arrow, return as-is
-    const arrowPattern = /→|->/;
-    if (arrowPattern.test(bullet)) {
-      return bullet;
-    }
-
-    const actionVerbs = /^(Add|Create|Implement|Build|Fix|Update|Remove|Refactor|Improve|Optimize|Enhance|Integrate|Deploy|Configure|Set up)/i;
-    if (actionVerbs.test(bullet)) {
-      return bullet;
-    }
-
-    // Transformation patterns
-    const patterns = [
-      { regex: /(.+)\s+exists?\s*(?:in\s+.+)?$/i, template: (m: string[]) => `Integrate ${m[1]} → leverage existing capability` },
-      { regex: /(.+)\s+supports?\s+(.+)$/i, template: (m: string[]) => `Use ${m[1]} for ${m[2]} → saves development time` },
-      { regex: /(.+)\s+available\s+(?:as\s+)?(.+)$/i, template: (m: string[]) => `Adopt ${m[1]} as ${m[2]} → ready to use` },
-      { regex: /API\s+(?:for\s+)?(.+)\s+exists$/i, template: (m: string[]) => `Integrate ${m[1]} API → adds capability without custom dev` },
-    ];
-
-    for (const { regex, template } of patterns) {
-      const match = bullet.match(regex);
-      if (match) {
-        return template(match);
-      }
-    }
-
-    return `${bullet} → consider implementing`;
   }
 
   const handleViewSource = async (brief: BriefItem) => {
@@ -226,6 +202,10 @@ export default function HubResearchPage() {
         const activeData = await activeRes.json();
         setActiveBuilds(activeData.sessions || []);
       }
+
+      // Sync fixes from feedback (fire and forget)
+      fetch('/api/fixes/sync', { method: 'POST' }).catch(console.error);
+
     } catch (error) {
       console.error("Failed to fetch data:", error);
     } finally {
@@ -469,10 +449,10 @@ export default function HubResearchPage() {
             <Badge variant="outline">Complexity: {brief.complexity}</Badge>
             {(brief.sourceResearchId || brief.sourceUrl) && !isEditing && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={() => onViewSource(brief)}
-                className="text-xs h-6"
+                className="text-xs h-6 bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
               >
                 <ExternalLink className="h-3 w-3 mr-1" />
                 Source
@@ -498,24 +478,12 @@ export default function HubResearchPage() {
             </div>
           ) : (
             <ul className="space-y-1 text-sm text-zinc-600">
-              {(brief.bullets || []).slice(0, 5).map((bullet, i) => {
-                const actionableBullet = transformToActionable(bullet);
-                const parts = actionableBullet.split(/→|->/);
-                return (
-                  <li key={i} className="flex gap-1">
-                    <span className="text-zinc-400">•</span>
-                    {parts.length > 1 ? (
-                      <>
-                        <span className="font-medium text-zinc-700">{parts[0].trim()}</span>
-                        <span className="text-zinc-400">→</span>
-                        <span className="text-zinc-500">{parts[1].trim()}</span>
-                      </>
-                    ) : (
-                      <span>{actionableBullet}</span>
-                    )}
-                  </li>
-                );
-              })}
+              {(brief.bullets || []).slice(0, 5).map((bullet, i) => (
+                <li key={i} className="flex gap-1">
+                  <span className="text-zinc-400">•</span>
+                  <span>{bullet}</span>
+                </li>
+              ))}
             </ul>
           )}
 

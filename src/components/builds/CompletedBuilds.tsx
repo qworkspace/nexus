@@ -5,16 +5,19 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CompletedBuild } from '@/types/builds';
 import { CheckCircle } from 'lucide-react';
 
-interface BuildRating {
-  commitHash: string;
-  rating: number;
-  commitMessage: string;
-  timestamp: string;
+interface FeedbackRating {
+  commit: string;
+  spec: string;
+  rating: 'great' | 'good' | 'meh' | 'bad' | 'useless';
+  ratedBy: string;
+  ratedAt: string;
+  issues: string[];
+  context?: string;
 }
 
 export function CompletedBuilds() {
   const [builds, setBuilds] = useState<CompletedBuild[]>([]);
-  const [ratings, setRatings] = useState<Map<string, number>>(new Map());
+  const [feedback, setFeedback] = useState<Map<string, FeedbackRating>>(new Map());
   const [loading, setLoading] = useState(true);
 
   const fetchBuilds = async () => {
@@ -57,31 +60,36 @@ export function CompletedBuilds() {
       const res = await fetch('/api/builds/ratings');
       if (res.ok) {
         const data = await res.json();
-        const ratingsMap = new Map<string, number>();
-        (data.ratings || []).forEach((r: BuildRating) => {
-          ratingsMap.set(r.commitHash, r.rating);
+        const feedbackMap = new Map<string, FeedbackRating>();
+        (data.feedback || []).forEach((f: FeedbackRating) => {
+          feedbackMap.set(f.commit, f);
         });
-        setRatings(ratingsMap);
+        setFeedback(feedbackMap);
       }
     } catch (error) {
-      console.error('Failed to fetch ratings:', error);
+      console.error('Failed to fetch feedback:', error);
     }
   };
 
-  const submitRating = async (commitHash: string, rating: number, commitMessage: string) => {
-    try {
-      const res = await fetch('/api/builds/rate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ commitHash, rating, commitMessage }),
-      });
-      if (res.ok) {
-        const newRatings = new Map(ratings);
-        newRatings.set(commitHash, rating);
-        setRatings(newRatings);
-      }
-    } catch (error) {
-      console.error('Failed to submit rating:', error);
+  const getRatingEmoji = (rating: string) => {
+    switch (rating) {
+      case 'great': return '⭐';
+      case 'good': return '👍';
+      case 'meh': return '😐';
+      case 'bad': return '👎';
+      case 'useless': return '🗑';
+      default: return '❓';
+    }
+  };
+
+  const getRatingColor = (rating: string) => {
+    switch (rating) {
+      case 'great':
+      case 'good': return 'text-green-600 bg-green-50';
+      case 'meh': return 'text-yellow-600 bg-yellow-50';
+      case 'bad':
+      case 'useless': return 'text-red-600 bg-red-50';
+      default: return 'text-zinc-400';
     }
   };
 
@@ -123,7 +131,7 @@ export function CompletedBuilds() {
         ) : (
           <div className="space-y-3">
             {builds.map((build) => {
-              const currentRating = ratings.get(build.hash);
+              const feedbackForBuild = feedback.get(build.hash);
               return (
                 <div
                   key={build.hash}
@@ -150,57 +158,27 @@ export function CompletedBuilds() {
                         </span>
                       </div>
                     )}
-                    <div className="flex items-center gap-1 mt-2">
-                      {currentRating === 3 ? (
-                        <span className="text-sm">🔥</span>
-                      ) : (
-                        <button
-                          onClick={() => submitRating(build.hash, 3, build.message)}
-                          className="text-sm opacity-40 hover:opacity-100 transition-opacity"
-                          title="Great (3)"
-                        >
-                          🔥
-                        </button>
-                      )}
-                      {currentRating === 2 ? (
-                        <span className="text-sm">👍</span>
-                      ) : (
-                        <button
-                          onClick={() => submitRating(build.hash, 2, build.message)}
-                          className="text-sm opacity-40 hover:opacity-100 transition-opacity"
-                          title="Good (2)"
-                        >
-                          👍
-                        </button>
-                      )}
-                      {currentRating === 1 ? (
-                        <span className="text-sm">😐</span>
-                      ) : (
-                        <button
-                          onClick={() => submitRating(build.hash, 1, build.message)}
-                          className="text-sm opacity-40 hover:opacity-100 transition-opacity"
-                          title="Meh (1)"
-                        >
-                          😐
-                        </button>
-                      )}
-                      {currentRating === 0 ? (
-                        <span className="text-sm">👎</span>
-                      ) : (
-                        <button
-                          onClick={() => submitRating(build.hash, 0, build.message)}
-                          className="text-sm opacity-40 hover:opacity-100 transition-opacity"
-                          title="Bad (0)"
-                        >
-                          👎
-                        </button>
-                      )}
-                      {currentRating !== undefined && (
-                        <span className="text-xs text-zinc-400 ml-2">
-                          ({currentRating})
+                    
+                    {/* Feedback display from PJ ratings */}
+                    {feedbackForBuild ? (
+                      <div className={`mt-2 px-2 py-1 rounded text-xs ${getRatingColor(feedbackForBuild.rating)}`}>
+                        <span className="font-medium">
+                          {getRatingEmoji(feedbackForBuild.rating)} {feedbackForBuild.rating.toUpperCase()}
                         </span>
-                      )}
-                    </div>
+                        <span className="text-zinc-400 ml-2">
+                          by {feedbackForBuild.ratedBy} • {formatRelativeTime(feedbackForBuild.ratedAt)}
+                        </span>
+                        {feedbackForBuild.issues.length > 0 && (
+                          <div className="mt-1 text-red-600">
+                            Issues: {feedbackForBuild.issues.join(', ')}
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="mt-2 text-xs text-zinc-400 italic">
+                        Awaiting review
+                      </div>
+                    )}
                   </div>
                 </div>
               );

@@ -16,6 +16,8 @@ async function getSpecQueue(): Promise<SpecQueueItem[]> {
   try {
     const files = await fs.readdir(SPECS_DIR);
     const queueItems: SpecQueueItem[] = [];
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
     for (const file of files) {
       // Skip processed, parked, and stuck files
@@ -31,6 +33,24 @@ async function getSpecQueue(): Promise<SpecQueueItem[]> {
       const priorityMatch = content.match(/\*\*Priority:\*\*\s*(\w+)/i);
       const titleMatch = content.match(/^#\s+(.+)$/m);
       const createdMatch = content.match(/\*\*Created:\*\*\s*(.+)/i);
+      const statusMatch = content.match(/\*\*Status:\*\*\s*(\w+)/i);
+
+      // Determine status
+      const status = statusMatch?.[1]?.toLowerCase();
+      
+      // Only include if:
+      // 1. Status is explicitly 'queued', OR
+      // 2. No status AND created within 7 days
+      const createdAt = createdMatch?.[1]?.trim() 
+        ? new Date(createdMatch[1].trim()) 
+        : new Date(0);
+      
+      const isQueued = status === 'queued';
+      const isRecent = !status && createdAt >= sevenDaysAgo;
+      
+      if (!isQueued && !isRecent) {
+        continue; // Skip stale specs
+      }
 
       // Determine priority
       let priority: 'HIGH' | 'MEDIUM' | 'LOW' = 'LOW';
