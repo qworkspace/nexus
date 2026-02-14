@@ -90,6 +90,7 @@ interface FixEntry {
   fixBriefPath?: string;
   fixCommit?: string;
   agent: string;
+  context?: string;
 }
 
 interface FeedbackEntry {
@@ -110,7 +111,8 @@ export default function HubResearchPage() {
   const [loading, setLoading] = useState(true);
 
   // CI Pipeline Data
-  const [specs, setSpecs] = useState<SpecQueueItem[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_specs, setSpecs] = useState<SpecQueueItem[]>([]);
   const [activeBuilds, setActiveBuilds] = useState<ActiveSession[]>([]);
   const [recentBuilds, setRecentBuilds] = useState<BuildEntry[]>([]);
   const [buildSummary, setBuildSummary] = useState<BuildSummary | null>(null);
@@ -430,6 +432,7 @@ export default function HubResearchPage() {
   };
 
   // Status badge component for Fix Log
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const FixStatusBadge = ({ status }: { status: string }) => {
     const config = {
       open: { color: 'bg-red-100 text-red-700', icon: '🔴' },

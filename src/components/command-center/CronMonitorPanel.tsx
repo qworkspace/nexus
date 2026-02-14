@@ -129,6 +129,7 @@ function CronStatsHeader({ jobs }: { jobs: CronJob[] }) {
   const enabled = jobs.filter(j => j.enabled).length;
   const disabled = jobs.length - enabled;
   const errored = jobs.filter(j => j.state.lastStatus === 'error').length;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const consecutiveErrors = jobs.filter(j => (j.state.consecutiveErrors || 0) > 0).length;
 
   const models = [...new Set(jobs.map(j => j.payload.model))];

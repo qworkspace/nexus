@@ -14,7 +14,7 @@ interface FixEntry {
   whatFixed: string;
   when: string;
   status: 'open' | 'fix_briefed' | 'fix_building' | 'fix_shipped' | 'verified';
-  sourceRating: 'bad' | 'useless';
+  sourceRating: 'great' | 'good' | 'meh' | 'bad' | 'useless';
   issues: string[];
   pjComment?: string;
   fixBriefPath?: string;
