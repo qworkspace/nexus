@@ -7,9 +7,9 @@ export const dynamic = "force-dynamic";
 const SPEC_BRIEFS_DIR = "/Users/paulvillanueva/shared/research/ai-intel/spec-briefs";
 const STATUS_FILE = "/Users/paulvillanueva/shared/research/ai-intel/idea-status.json";
 
-type IdeaStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
+type BriefStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
 
-interface IdeaSummary {
+interface BriefSummary {
   idea?: string;
   title?: string;
   summary?: string;
@@ -22,80 +22,93 @@ interface IdeaSummary {
   generatedAt?: string;
 }
 
-interface IdeaStatusEntry {
-  status: IdeaStatus;
+interface BriefStatusEntry {
+  status: BriefStatus;
+  title?: string;
+  bullets?: string[];
+  priority?: "HIGH" | "MED" | "LOW";
+  complexity?: "LOW" | "MED" | "HIGH";
+  notes?: string;
   approvedAt?: string;
   specPath?: string;
-  buildStatus?: IdeaStatus;
+  buildStatus?: BriefStatus;
   buildId?: string;
   shippedAt?: string;
   reviewOutcome?: "success" | "partial" | "failed";
   reviewNote?: string;
   reviewedAt?: string;
+  sourceUrl?: string;
 }
 
-interface IdeaItem {
+interface BriefItem {
   id: string;
   filename: string;
   title: string;
-  problem: string;
-  solution: string;
-  priority: string;
-  complexity: string;
-  status: IdeaStatus;
+  bullets: string[];
+  priority: "HIGH" | "MED" | "LOW";
+  complexity: "LOW" | "MED" | "HIGH";
+  status: BriefStatus;
   createdAt: string;
-  path: string;
-  summary?: IdeaSummary;
+  sourceUrl?: string;
+  notes?: string;
+  summary?: BriefSummary;
   reviewOutcome?: "success" | "partial" | "failed";
   reviewNote?: string;
   reviewedAt?: string;
 }
 
-interface IdeasResponse {
-  ideas: IdeaItem[];
-  stats: {
-    total: number;
-    new: number;
-    approved: number;
-    parked: number;
-    rejected: number;
-    specced: number;
-    building: number;
-    shipped: number;
-  };
+interface BriefStats {
+  total: number;
+  new: number;
+  approved: number;
+  parked: number;
+  rejected: number;
+  specced: number;
+  building: number;
+  shipped: number;
+  review: number;
+  approvalRate: number;
+  avgTimeToShip: string;
+  complexityBreakdown: { LOW: number; MED: number; HIGH: number };
+  priorityBreakdown: { LOW: number; MED: number; HIGH: number };
+}
+
+interface BriefsResponse {
+  briefs: BriefItem[];
+  stats: BriefStats;
 }
 
 export async function GET(request: Request) {
   try {
     const searchParams = new URL(request.url).searchParams;
-    const status = searchParams.get("status") as IdeaStatus | null;
+    const status = searchParams.get("status") as BriefStatus | null;
 
-    const ideas = await getIdeas();
-    const stats = calculateStats(ideas);
+    const briefs = await getBriefs();
+    const stats = calculateStats(briefs);
 
     const filtered = status
-      ? ideas.filter((idea) => idea.status === status)
-      : ideas;
+      ? briefs.filter((brief) => brief.status === status)
+      : briefs;
 
     return NextResponse.json({
-      ideas: filtered,
+      briefs: filtered,
       stats,
-    } as IdeasResponse);
+    } as BriefsResponse);
   } catch (error) {
-    console.error("Error fetching ideas:", error);
+    console.error("Error fetching briefs:", error);
     return NextResponse.json(
-      { error: "Failed to fetch ideas" },
+      { error: "Failed to fetch briefs" },
       { status: 500 }
     );
   }
 }
 
-async function getIdeas(): Promise<IdeaItem[]> {
-  const ideas: IdeaItem[] = [];
+async function getBriefs(): Promise<BriefItem[]> {
+  const briefs: BriefItem[] = [];
   const statusMap = loadStatusMap();
 
   if (!existsSync(SPEC_BRIEFS_DIR)) {
-    return ideas;
+    return briefs;
   }
 
   const files = readdirSync(SPEC_BRIEFS_DIR)
@@ -106,71 +119,87 @@ async function getIdeas(): Promise<IdeaItem[]> {
   for (const filename of files) {
     const filepath = join(SPEC_BRIEFS_DIR, filename);
     const content = readFileSync(filepath, "utf-8");
-    const status = statusMap.get(filename)?.status || "new";
+    const statusEntry = statusMap.get(filename) || { status: "new" as BriefStatus };
 
     // Load summary.json if it exists
     const summaryPath = filepath.replace(".md", ".summary.json");
-    let summary: IdeaSummary | undefined = undefined;
+    let summary: BriefSummary | undefined = undefined;
     if (existsSync(summaryPath)) {
       try {
         const summaryContent = readFileSync(summaryPath, "utf-8");
-        summary = JSON.parse(summaryContent) as IdeaSummary;
+        summary = JSON.parse(summaryContent) as BriefSummary;
       } catch (error) {
         console.error(`Error loading summary for ${filename}:`, error);
       }
     }
 
-    const parsed = parseSpecBrief(filename, content, filepath, status, summary);
+    const parsed = parseSpecBrief(filename, content, filepath, statusEntry, summary);
 
     // Add review fields from status entry
-    const statusEntry = statusMap.get(filename);
-    if (statusEntry) {
+    if (statusEntry.reviewOutcome) {
       parsed.reviewOutcome = statusEntry.reviewOutcome;
       parsed.reviewNote = statusEntry.reviewNote;
       parsed.reviewedAt = statusEntry.reviewedAt;
     }
 
-    ideas.push(parsed);
+    briefs.push(parsed);
   }
 
-  return ideas;
+  return briefs;
 }
 
 function parseSpecBrief(
   filename: string,
   content: string,
   path: string,
-  status: IdeaStatus,
-  summary?: IdeaSummary
-): IdeaItem {
+  statusEntry: BriefStatusEntry,
+  summary?: BriefSummary
+): BriefItem {
   const id = filename.replace(".md", "");
 
   // Extract title from Spec Brief: or first #
   const titleMatch = content.match(/(?:^# Spec Brief:\s+(.+)$|^#\s+(.+)$)/m);
-  const title = titleMatch ? (titleMatch[1] || titleMatch[2]).trim() : id;
+  const title = statusEntry.title || (titleMatch ? (titleMatch[1] || titleMatch[2]).trim() : id);
+
+  // Extract bullets from Benefits section or summary
+  let bullets: string[] = statusEntry.bullets || [];
+
+  if (bullets.length === 0) {
+    // Try to extract from benefits section
+    const benefitsMatch = content.match(/##\s*Why This Matters.*?\n([\s\S]+?)(?=##|$)/i);
+    if (benefitsMatch) {
+      bullets = benefitsMatch[1]
+        .split("\n")
+        .map(line => line.replace(/^\s*-\s*/, "").trim())
+        .filter(line => line.length > 0);
+    }
+
+    // Fallback to summary
+    if (bullets.length === 0 && summary) {
+      bullets = summary.benefits || summary.keyFindings || [];
+    }
+
+    // Last resort: extract from content
+    if (bullets.length === 0) {
+      const problemMatch = content.match(/##\s*Problem Statement\s*\n([\s\S]+?)(?=##|$)/i);
+      if (problemMatch) {
+        bullets = problemMatch[1]
+          .split("\n")
+          .map(line => line.trim())
+          .filter(line => line.length > 20)
+          .slice(0, 5);
+      }
+    }
+  }
 
   // Extract priority from frontmatter or **Priority:**
   const priorityMatch = content.match(/\*\*Priority:\*\*\s*(HIGH|MED|LOW)/i) ||
                          content.match(/priority:\s*(HIGH|MED|LOW)/i);
-  const priority = priorityMatch ? priorityMatch[1].toUpperCase() : "MED";
+  const priority = (statusEntry.priority || priorityMatch?.[1]?.toUpperCase() || "MED") as "HIGH" | "MED" | "LOW";
 
-  // Extract complexity from content
+  // Extract complexity from content or status entry
   const complexityMatch = content.match(/complexity:\s*(LOW|MED|HIGH)/i);
-  const complexity = complexityMatch ? complexityMatch[1].toUpperCase() : "MED";
-
-  // Extract problem
-  const problemMatch = content.match(/##\s*Problem\s*\n([\s\S]+?)(?=##|$)/i) ||
-                        content.match(/\*\*Problem:\*\*\s*([\s\S]+?)(?=\*\*|$)/i);
-  const problem = problemMatch
-    ? problemMatch[1].trim().slice(0, 200) + (problemMatch[1].length > 200 ? "..." : "")
-    : "No problem defined";
-
-  // Extract solution
-  const solutionMatch = content.match(/##\s*Solution\s*\n([\s\S]+?)(?=##|$)/i) ||
-                        content.match(/\*\*Solution:\*\*\s*([\s\S]+?)(?=\*\*|$)/i);
-  const solution = solutionMatch
-    ? solutionMatch[1].trim().slice(0, 200) + (solutionMatch[1].length > 200 ? "..." : "")
-    : "No solution defined";
+  const complexity = (statusEntry.complexity || complexityMatch?.[1]?.toUpperCase() || "MED") as "LOW" | "MED" | "HIGH";
 
   // Extract date from filename
   const dateMatch = filename.match(/(\d{4}-\d{2}-\d{2})/);
@@ -180,19 +209,19 @@ function parseSpecBrief(
     id,
     filename,
     title,
-    problem,
-    solution,
+    bullets,
     priority,
     complexity,
-    status,
+    status: statusEntry.status,
     createdAt,
-    path,
+    sourceUrl: statusEntry.sourceUrl,
+    notes: statusEntry.notes,
     summary,
   };
 }
 
-function loadStatusMap(): Map<string, IdeaStatusEntry> {
-  const map = new Map<string, IdeaStatusEntry>();
+function loadStatusMap(): Map<string, BriefStatusEntry> {
+  const map = new Map<string, BriefStatusEntry>();
 
   if (!existsSync(STATUS_FILE)) {
     return map;
@@ -203,7 +232,7 @@ function loadStatusMap(): Map<string, IdeaStatusEntry> {
     const data = JSON.parse(content);
 
     for (const [filename, entry] of Object.entries(data)) {
-      map.set(filename, entry as IdeaStatusEntry);
+      map.set(filename, entry as BriefStatusEntry);
     }
   } catch (error) {
     console.error("Error loading status map:", error);
@@ -212,9 +241,9 @@ function loadStatusMap(): Map<string, IdeaStatusEntry> {
   return map;
 }
 
-function calculateStats(ideas: IdeaItem[]) {
+function calculateStats(briefs: BriefItem[]): BriefStats {
   const stats = {
-    total: ideas.length,
+    total: briefs.length,
     new: 0,
     approved: 0,
     parked: 0,
@@ -222,20 +251,88 @@ function calculateStats(ideas: IdeaItem[]) {
     specced: 0,
     building: 0,
     shipped: 0,
+    review: 0,
+    approvalRate: 0,
+    avgTimeToShip: "N/A",
+    complexityBreakdown: { LOW: 0, MED: 0, HIGH: 0 },
+    priorityBreakdown: { LOW: 0, MED: 0, HIGH: 0 },
   };
 
-  for (const idea of ideas) {
-    const s = idea.status;
-    if (s in stats) {
-      stats[s as keyof typeof stats] = (stats[s as keyof typeof stats] as number) + 1;
+  for (const brief of briefs) {
+    const s = brief.status;
+    switch (s) {
+      case "new":
+        stats.new++;
+        break;
+      case "approved":
+        stats.approved++;
+        break;
+      case "parked":
+        stats.parked++;
+        break;
+      case "rejected":
+        stats.rejected++;
+        break;
+      case "specced":
+        stats.specced++;
+        break;
+      case "building":
+        stats.building++;
+        break;
+      case "shipped":
+        stats.shipped++;
+        break;
+      case "review":
+        stats.review++;
+        break;
     }
+
+    // Track complexity
+    stats.complexityBreakdown[brief.complexity]++;
+
+    // Track priority
+    stats.priorityBreakdown[brief.priority]++;
+  }
+
+  // Calculate approval rate
+  if (stats.total > 0) {
+    stats.approvalRate = stats.approved / stats.total;
+  }
+
+  // Calculate average time to ship
+  const shipped = briefs.filter(b => b.status === "shipped");
+  if (shipped.length > 0) {
+    const totalTime = shipped.reduce((sum, b) => {
+      const created = new Date(b.createdAt).getTime();
+      const statusMap = loadStatusMap();
+      const statusEntry = statusMap.get(b.filename);
+      const shippedDate = statusEntry?.shippedAt ? new Date(statusEntry.shippedAt).getTime() : Date.now();
+      return sum + (shippedDate - created);
+    }, 0);
+
+    const avgMs = totalTime / shipped.length;
+    stats.avgTimeToShip = formatTime(avgMs);
   }
 
   return stats;
 }
 
-function saveStatusMap(map: Map<string, IdeaStatusEntry>) {
-  const data: Record<string, IdeaStatusEntry> = {};
+function formatTime(ms: number): string {
+  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((ms % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+  if (days > 0) {
+    return `${days} day${days > 1 ? "s" : ""} ${hours} hour${hours !== 1 ? "s" : ""}`;
+  }
+  const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+  if (hours > 0) {
+    return `${hours} hour${hours !== 1 ? "s" : ""} ${minutes} minute${minutes !== 1 ? "s" : ""}`;
+  }
+  return `${minutes} minute${minutes !== 1 ? "s" : ""}`;
+}
+
+function saveStatusMap(map: Map<string, BriefStatusEntry>) {
+  const data: Record<string, BriefStatusEntry> = {};
 
   for (const [filename, entry] of map.entries()) {
     data[filename] = entry;
@@ -291,9 +388,9 @@ export async function POST(request: Request) {
       approvedAt: entry.approvedAt,
     });
   } catch (error) {
-    console.error("Error updating idea status:", error);
+    console.error("Error updating brief status:", error);
     return NextResponse.json(
-      { error: "Failed to update idea status" },
+      { error: "Failed to update brief status" },
       { status: 500 }
     );
   }

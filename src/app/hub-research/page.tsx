@@ -15,56 +15,27 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
-  Search, RefreshCw, Clock, FileText, Lightbulb, CheckCircle,
-  XCircle, PauseCircle, ArrowRight, TrendingUp, Brain, Newspaper,
-  Star, ThumbsUp, ThumbsDown, AlertTriangle, Plus, Wrench
+  RefreshCw, Clock, CheckCircle, XCircle, PauseCircle, ArrowRight,
+  TrendingUp, ExternalLink, Plus, Wrench
 } from "lucide-react";
 
-type ResearchType = "deep-focus" | "whats-new";
-type IdeaStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
+type BriefStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
 type SourceTag = "research" | "pj-request" | "q-identified";
 
-interface ResearchItem {
-  id: string;
-  type: ResearchType;
-  title: string;
-  date: string;
-  path: string;
-  snippet: string;
-  frontmatter?: Record<string, unknown>;
-}
-
-interface IdeaSummary {
-  idea?: string;
-  title?: string;
-  summary?: string;
-  benefits?: string[];
-  successMetrics?: string[];
-  notes?: string;
-  keyFindings?: string[];
-  tags?: string[];
-  priority?: string;
-  generatedAt?: string;
-}
-
-interface IdeaItem {
+interface BriefItem {
   id: string;
   filename: string;
   title: string;
-  problem: string;
-  solution: string;
-  priority: string;
-  complexity: string;
-  status: IdeaStatus;
+  bullets: string[];
+  priority: "HIGH" | "MED" | "LOW";
+  complexity: "LOW" | "MED" | "HIGH";
+  status: BriefStatus;
   createdAt: string;
-  path: string;
-  summary?: IdeaSummary;
-  reviewOutcome?: "success" | "partial" | "failed";
-  reviewNote?: string;
-  reviewedAt?: string;
+  sourceUrl?: string;
+  notes?: string;
 }
 
-interface IdeasStats {
+interface BriefStats {
   total: number;
   new: number;
   approved: number;
@@ -76,17 +47,8 @@ interface IdeasStats {
   review: number;
   approvalRate: number;
   avgTimeToShip: string;
-  successRate: number;
-  completionRate: number;
-}
-
-interface ResearchDetail {
-  id: string;
-  type: string;
-  title: string;
-  content: string;
-  date: string;
-  path: string;
+  complexityBreakdown: { LOW: number; MED: number; HIGH: number };
+  priorityBreakdown: { LOW: number; MED: number; HIGH: number };
 }
 
 interface FixEntry {
@@ -97,30 +59,24 @@ interface FixEntry {
 }
 
 export default function HubResearchPage() {
-  const [research, setResearch] = useState<ResearchItem[]>([]);
-  const [ideas, setIdeas] = useState<IdeaItem[]>([]);
+  const [briefs, setBriefs] = useState<BriefItem[]>([]);
   const [fixes, setFixes] = useState<FixEntry[]>([]);
-  const [stats, setStats] = useState<IdeasStats | null>(null);
-  const [selectedResearch, setSelectedResearch] = useState<ResearchDetail | null>(null);
+  const [stats, setStats] = useState<BriefStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [typeFilter, setTypeFilter] = useState<ResearchType | "all">("all" as const);
 
-  // New Idea Dialog state
-  const [newIdeaDialogOpen, setNewIdeaDialogOpen] = useState(false);
-  const [newIdeaTitle, setNewIdeaTitle] = useState("");
-  const [newIdeaDescription, setNewIdeaDescription] = useState("");
-  const [newIdeaBenefits, setNewIdeaBenefits] = useState("");
-  const [newIdeaSuccessMetrics, setNewIdeaSuccessMetrics] = useState("");
-  const [newIdeaSource, setNewIdeaSource] = useState<SourceTag>("research");
-  const [newIdeaPriority, setNewIdeaPriority] = useState<"HIGH" | "MED" | "LOW">("MED" as const);
-  const [creatingIdea, setCreatingIdea] = useState(false);
+  // New Brief Dialog state
+  const [newBriefDialogOpen, setNewBriefDialogOpen] = useState(false);
+  const [newBriefTitle, setNewBriefTitle] = useState("");
+  const [newBriefBullets, setNewBriefBullets] = useState("");
+  const [newBriefSource, setNewBriefSource] = useState<SourceTag>("research");
+  const [newBriefPriority, setNewBriefPriority] = useState<"HIGH" | "MED" | "LOW">("MED" as const);
+  const [newBriefComplexity, setNewBriefComplexity] = useState<"LOW" | "MED" | "HIGH">("MED" as const);
+  const [newBriefSourceUrl, setNewBriefSourceUrl] = useState("");
+  const [creatingBrief, setCreatingBrief] = useState(false);
 
-  // Review Dialog state
-  const [reviewDialogOpen, setReviewDialogOpen] = useState(false);
-  const [reviewingIdea, setReviewingIdea] = useState<IdeaItem | null>(null);
-  const [reviewOutcome, setReviewOutcome] = useState<"success" | "partial" | "failed">("success");
-  const [reviewNote, setReviewNote] = useState("");
+  // Edit mode state
+  const [editingBriefId, setEditingBriefId] = useState<string | null>(null);
+  const [editedBrief, setEditedBrief] = useState<Partial<BriefItem>>({});
 
   useEffect(() => {
     fetchData();
@@ -129,20 +85,17 @@ export default function HubResearchPage() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [researchRes, ideasRes, statsRes, fixesRes] = await Promise.all([
-        fetch("/api/research?intelligenceOnly=true&limit=100"),
+      const [briefsRes, statsRes, fixesRes] = await Promise.all([
         fetch("/api/ideas"),
         fetch("/api/ideas/stats"),
         fetch("/api/fixes"),
       ]);
 
-      const researchData = await researchRes.json();
-      const ideasData = await ideasRes.json();
+      const briefsData = await briefsRes.json();
       const statsData = await statsRes.json();
       const fixesData = await fixesRes.json();
 
-      setResearch(researchData.research || []);
-      setIdeas(ideasData.ideas || []);
+      setBriefs(briefsData.briefs || []);
       setStats(statsData);
       setFixes(fixesData.fixes || []);
     } catch (error) {
@@ -152,103 +105,125 @@ export default function HubResearchPage() {
     }
   };
 
-  const handleResearchClick = async (id: string) => {
-    try {
-      const res = await fetch(`/api/research/${id}`);
-      const data = await res.json();
-      setSelectedResearch(data);
-    } catch (error) {
-      console.error("Failed to fetch research detail:", error);
-    }
-  };
-
-  const handleCreateIdeaFromResearch = async (researchItem: ResearchItem) => {
-    setNewIdeaTitle(researchItem.title);
-    setNewIdeaDescription(`Based on research: ${researchItem.snippet}`);
-    setNewIdeaDialogOpen(true);
-  };
-
-  const handleCreateNewIdea = async () => {
-    if (!newIdeaTitle || !newIdeaDescription || !newIdeaSource || !newIdeaPriority) {
+  const handleCreateNewBrief = async () => {
+    if (!newBriefTitle || !newBriefBullets || !newBriefSource || !newBriefPriority || !newBriefComplexity) {
       return;
     }
 
-    setCreatingIdea(true);
+    setCreatingBrief(true);
     try {
-      const benefits = newIdeaBenefits
+      const bullets = newBriefBullets
         .split("\n")
         .map(b => b.trim())
         .filter(b => b.length > 0);
 
-      const successMetrics = newIdeaSuccessMetrics
-        .split("\n")
-        .map(m => m.trim())
-        .filter(m => m.length > 0);
+      if (bullets.length < 3) {
+        alert("Please provide at least 3 bullet points");
+        setCreatingBrief(false);
+        return;
+      }
 
       const res = await fetch("/api/ideas/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          title: newIdeaTitle,
-          description: newIdeaDescription,
-          benefits,
-          successMetrics,
-          source: newIdeaSource,
-          priority: newIdeaPriority,
+          title: newBriefTitle,
+          description: bullets.join("\n"), // Use bullets as description
+          benefits: bullets, // Use bullets as benefits
+          successMetrics: [],
+          source: newBriefSource,
+          priority: newBriefPriority,
         }),
       });
 
       if (res.ok) {
-        setNewIdeaDialogOpen(false);
-        setNewIdeaTitle("");
-        setNewIdeaDescription("");
-        setNewIdeaBenefits("");
-        setNewIdeaSuccessMetrics("");
-        setNewIdeaSource("research");
-        setNewIdeaPriority("MED");
+        setNewBriefDialogOpen(false);
+        setNewBriefTitle("");
+        setNewBriefBullets("");
+        setNewBriefSource("research");
+        setNewBriefPriority("MED");
+        setNewBriefComplexity("MED");
+        setNewBriefSourceUrl("");
         await fetchData();
       }
     } catch (error) {
-      console.error("Failed to create idea:", error);
+      console.error("Failed to create brief:", error);
     } finally {
-      setCreatingIdea(false);
+      setCreatingBrief(false);
     }
   };
 
-  const filteredResearch = research.filter((item) => {
-    const matchesType = typeFilter === "all" || item.type === typeFilter;
-    const matchesSearch =
-      !searchQuery ||
-      item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.snippet.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesType && matchesSearch;
-  });
+  const handleBriefApprove = async (briefId: string) => {
+    const brief = briefs.find(b => b.id === briefId);
+    if (!brief) return;
 
-  const visibleIdeas = ideas.filter((idea) => idea.status !== "rejected");
+    // If not editing, open edit mode
+    if (!editingBriefId) {
+      setEditingBriefId(briefId);
+      setEditedBrief(brief);
+      return;
+    }
 
-  const getTypeIcon = (type: ResearchType) => {
-    switch (type) {
-      case "deep-focus":
-        return <Brain className="h-4 w-4" />;
-      case "whats-new":
-        return <Newspaper className="h-4 w-4" />;
-      default:
-        return <FileText className="h-4 w-4" />;
+    // If already editing, submit for approval
+    try {
+      const res = await fetch(`/api/ideas/${briefId}/approve`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: editedBrief.title || brief.title,
+          bullets: editedBrief.bullets || brief.bullets,
+          priority: editedBrief.priority || brief.priority,
+          complexity: editedBrief.complexity || brief.complexity,
+          notes: editedBrief.notes || brief.notes,
+        }),
+      });
+
+      if (res.ok) {
+        setEditingBriefId(null);
+        setEditedBrief({});
+        await fetchData();
+      }
+    } catch (error) {
+      console.error("Failed to approve brief:", error);
     }
   };
 
-  const getTypeLabel = (type: ResearchType) => {
-    switch (type) {
-      case "deep-focus":
-        return "Deep Focus";
-      case "whats-new":
-        return "What's New";
-      default:
-        return type;
+  const handleBriefPark = async (briefId: string) => {
+    try {
+      const res = await fetch("/api/ideas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: briefId, action: "park" }),
+      });
+      if (res.ok) {
+        await fetchData();
+      }
+    } catch (error) {
+      console.error("Failed to park brief:", error);
     }
   };
 
-  const getStatusColor = (status: IdeaStatus) => {
+  const handleBriefReject = async (briefId: string) => {
+    try {
+      const res = await fetch("/api/ideas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: briefId, action: "reject" }),
+      });
+      if (res.ok) {
+        await fetchData();
+      }
+    } catch (error) {
+      console.error("Failed to reject brief:", error);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingBriefId(null);
+    setEditedBrief({});
+  };
+
+  const getStatusColor = (status: BriefStatus) => {
     switch (status) {
       case "new":
         return "bg-zinc-100 text-zinc-700";
@@ -271,82 +246,319 @@ export default function HubResearchPage() {
     }
   };
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority.toUpperCase()) {
+  const getPriorityColor = (priority: "HIGH" | "MED" | "LOW") => {
+    switch (priority) {
       case "HIGH":
         return "bg-red-100 text-red-700";
       case "MED":
         return "bg-amber-100 text-amber-700";
       case "LOW":
         return "bg-green-100 text-green-700";
-      default:
-        return "bg-zinc-100 text-zinc-700";
     }
   };
 
-  const getReviewOutcomeColor = (outcome: "success" | "partial" | "failed") => {
-    switch (outcome) {
-      case "success":
-        return "bg-green-100 text-green-700 border-green-300";
-      case "partial":
-        return "bg-amber-100 text-amber-700 border-amber-300";
-      case "failed":
-        return "bg-red-100 text-red-700 border-red-300";
-    }
-  };
+  // Brief Card Component
+  function BriefCard({ brief, onApprove, onPark, onReject, onViewSource }: {
+    brief: BriefItem;
+    onApprove: (id: string) => void;
+    onPark: (id: string) => void;
+    onReject: (id: string) => void;
+    onViewSource: (url: string) => void;
+  }) {
+    const isEditing = editingBriefId === brief.id;
+    const currentBrief = isEditing ? { ...brief, ...editedBrief } : brief;
 
-  const getReviewOutcomeIcon = (outcome: "success" | "partial" | "failed") => {
-    switch (outcome) {
-      case "success":
-        return <ThumbsUp className="h-3 w-3" />;
-      case "partial":
-        return <AlertTriangle className="h-3 w-3" />;
-      case "failed":
-        return <ThumbsDown className="h-3 w-3" />;
-    }
-  };
+    return (
+      <Card className={`transition-all ${isEditing ? "ring-2 ring-blue-500" : ""}`}>
+        <CardHeader className="pb-2">
+          <div className="flex items-start justify-between gap-2">
+            {isEditing ? (
+              <Input
+                value={currentBrief.title}
+                onChange={(e) => setEditedBrief({ ...editedBrief, title: e.target.value })}
+                className="text-base font-semibold"
+              />
+            ) : (
+              <CardTitle className="text-base">{brief.title}</CardTitle>
+            )}
 
-  const handleIdeaAction = async (id: string, action: "approve" | "park" | "reject") => {
-    try {
-      const res = await fetch(`/api/ideas/${id}/${action}`, { method: "POST" });
-      if (res.ok) {
-        await fetchData();
-      }
-    } catch (error) {
-      console.error("Failed to update idea:", error);
-    }
-  };
+            <div className="flex gap-1 shrink-0">
+              <Badge className={getStatusColor(brief.status)}>
+                {brief.status}
+              </Badge>
+              <Badge variant="outline" className={getPriorityColor(brief.priority)}>
+                {brief.priority}
+              </Badge>
+            </div>
+          </div>
 
-  const handleOpenReviewDialog = (idea: IdeaItem) => {
-    setReviewingIdea(idea);
-    setReviewOutcome("success");
-    setReviewNote("");
-    setReviewDialogOpen(true);
-  };
+          <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
+            <Badge variant="secondary">
+              <Clock className="h-3 w-3 mr-1" />
+              {new Date(brief.createdAt).toLocaleDateString()}
+            </Badge>
+            <Badge variant="outline">Complexity: {brief.complexity}</Badge>
+            {brief.sourceUrl && !isEditing && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onViewSource(brief.sourceUrl!)}
+                className="text-xs h-6"
+              >
+                <ExternalLink className="h-3 w-3 mr-1" />
+                Source
+              </Button>
+            )}
+          </div>
+        </CardHeader>
 
-  const handleSubmitReview = async () => {
-    if (!reviewingIdea) return;
+        <CardContent className="space-y-3">
+          {/* 3-5 key bullet points */}
+          {isEditing ? (
+            <div className="space-y-2">
+              <Label>Key Points (3-5)</Label>
+              <Textarea
+                value={(currentBrief.bullets || []).join("\n")}
+                onChange={(e) => setEditedBrief({
+                  ...editedBrief,
+                  bullets: e.target.value.split("\n").map(b => b.trim()).filter(b => b)
+                })}
+                rows={5}
+                placeholder="Enter 3-5 key points..."
+              />
+            </div>
+          ) : (
+            <ul className="space-y-1 text-sm text-zinc-600">
+              {(brief.bullets || []).slice(0, 5).map((bullet, i) => (
+                <li key={i}>• {bullet}</li>
+              ))}
+            </ul>
+          )}
 
-    try {
-      const res = await fetch(`/api/ideas/${reviewingIdea.id}/review`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          outcome: reviewOutcome,
-          note: reviewNote,
-        }),
-      });
+          {/* Complexity selector in edit mode */}
+          {isEditing && (
+            <div className="space-y-2">
+              <Label>Complexity</Label>
+              <Select
+                value={currentBrief.complexity || "MED"}
+                onValueChange={(v) => setEditedBrief({ ...editedBrief, complexity: v as "LOW" | "MED" | "HIGH" })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="LOW">Low</SelectItem>
+                  <SelectItem value="MED">Medium</SelectItem>
+                  <SelectItem value="HIGH">High</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
 
-      if (res.ok) {
-        setReviewDialogOpen(false);
-        setReviewingIdea(null);
-        setReviewNote("");
-        await fetchData();
-      }
-    } catch (error) {
-      console.error("Failed to submit review:", error);
-    }
-  };
+          {/* Priority selector in edit mode */}
+          {isEditing && (
+            <div className="space-y-2">
+              <Label>Priority</Label>
+              <Select
+                value={currentBrief.priority || "MED"}
+                onValueChange={(v) => setEditedBrief({ ...editedBrief, priority: v as "HIGH" | "MED" | "LOW" })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="HIGH">High</SelectItem>
+                  <SelectItem value="MED">Medium</SelectItem>
+                  <SelectItem value="LOW">Low</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          )}
+
+          {/* Notes for Cipher */}
+          {brief.notes && !isEditing && (
+            <div className="bg-amber-50 p-2 rounded-md border border-amber-200">
+              <p className="text-xs text-amber-700">
+                <strong>Cipher Notes:</strong> {brief.notes}
+              </p>
+            </div>
+          )}
+
+          {/* Notes input in edit mode */}
+          {isEditing && (
+            <div className="space-y-2">
+              <Label>Notes for Cipher (optional)</Label>
+              <Textarea
+                value={currentBrief.notes || ""}
+                onChange={(e) => setEditedBrief({ ...editedBrief, notes: e.target.value })}
+                rows={2}
+                placeholder="Any notes for the AI agent..."
+              />
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          {brief.status === "new" && (
+            <div className="flex gap-2 pt-2 border-t border-zinc-200">
+              {isEditing ? (
+                <>
+                  <Button
+                    size="sm"
+                    variant="default"
+                    className="flex-1"
+                    onClick={() => onApprove(brief.id)}
+                  >
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    Confirm & Send to Pipeline
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleCancelEdit}
+                  >
+                    Cancel
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Button
+                    size="sm"
+                    variant="default"
+                    className="flex-1"
+                    onClick={() => onApprove(brief.id)}
+                  >
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    Approve
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => onPark(brief.id)}
+                  >
+                    <PauseCircle className="h-4 w-4 mr-1" />
+                    Park
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="text-red-600 hover:text-red-700"
+                    onClick={() => onReject(brief.id)}
+                  >
+                    <XCircle className="h-4 w-4 mr-1" />
+                    Reject
+                  </Button>
+                </>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // Stats Panel Component
+  function StatsPanel({ stats }: { stats: BriefStats }) {
+    return (
+      <div className="space-y-4">
+        <h3 className="font-semibold text-zinc-900">Brief Statistics</h3>
+
+        {/* Status Overview */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm">Status Overview</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500">Total Briefs</span>
+              <span className="font-medium">{stats.total}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500">New</span>
+              <span className="font-medium">{stats.new}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500">Approved</span>
+              <span className="font-medium text-emerald-600">{stats.approved}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500">Parked</span>
+              <span className="font-medium text-amber-600">{stats.parked}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500">Building</span>
+              <span className="font-medium text-violet-600">{stats.building}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500">Shipped</span>
+              <span className="font-medium text-green-600">{stats.shipped}</span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Approval Rate */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm">Approval Rate</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500">Approved / Total</span>
+              <span className="font-medium">
+                {stats.approved} / {stats.total}
+              </span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-zinc-500">Rate</span>
+              <span className="font-medium">
+                {stats.total > 0 ? ((stats.approved / stats.total) * 100).toFixed(1) : 0}%
+              </span>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Time to Ship */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm">Avg Time to Ship</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-lg font-semibold">{stats.avgTimeToShip || "N/A"}</p>
+          </CardContent>
+        </Card>
+
+        {/* Complexity Breakdown */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm">Complexity</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {Object.entries(stats.complexityBreakdown || {}).map(([level, count]) => (
+              <div key={level} className="flex justify-between text-sm">
+                <span className="text-zinc-500">{level}</span>
+                <span className="font-medium">{count}</span>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        {/* Priority Breakdown */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm">Priority</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {Object.entries(stats.priorityBreakdown || {}).map(([level, count]) => (
+              <div key={level} className="flex justify-between text-sm">
+                <span className="text-zinc-500">{level}</span>
+                <span className="font-medium">{count}</span>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen">
@@ -358,10 +570,10 @@ export default function HubResearchPage() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="text-3xl font-semibold text-zinc-900 mb-2">
-                  Research Hub v2
+                  Research Hub v3
                 </h1>
                 <p className="text-zinc-500">
-                  Research intelligence, idea management, fix logs, and pipeline tracking
+                  Brief management, fix logs, and pipeline tracking
                 </p>
               </div>
               <Button
@@ -377,156 +589,24 @@ export default function HubResearchPage() {
           </div>
 
           {/* Tabs */}
-          <Tabs defaultValue="research-feed" className="flex-1 overflow-hidden">
-            <TabsList className="grid w-full max-w-lg grid-cols-4">
-              <TabsTrigger value="research-feed">Research Feed</TabsTrigger>
-              <TabsTrigger value="idea-bank">Idea Bank</TabsTrigger>
+          <Tabs defaultValue="brief-bank" className="flex-1 overflow-hidden">
+            <TabsList className="grid w-full max-w-lg grid-cols-3">
+              <TabsTrigger value="brief-bank">Brief Bank</TabsTrigger>
               <TabsTrigger value="fix-log">Fix Log</TabsTrigger>
               <TabsTrigger value="pipeline">Pipeline</TabsTrigger>
             </TabsList>
 
-            {/* Research Feed Tab - Intelligence Only */}
-            <TabsContent value="research-feed" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
+            {/* Brief Bank Tab */}
+            <TabsContent value="brief-bank" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
               <div className="flex h-full gap-4">
-                {/* Feed List */}
+                {/* Briefs List */}
                 <div className="flex-1 overflow-hidden flex flex-col">
-                  {/* Search & Filter */}
-                  <div className="flex gap-2 mb-4">
-                    <div className="relative flex-1">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-                      <Input
-                        placeholder="Search research intelligence..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9"
-                      />
-                    </div>
-                    <div className="flex gap-1">
-                      {(["all", "deep-focus", "whats-new"] as const).map((type) => (
-                        <Button
-                          key={type}
-                          variant={typeFilter === type ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => setTypeFilter(type)}
-                        >
-                          {getTypeLabel(type as ResearchType)}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Research Cards */}
-                  <ScrollArea className="flex-1">
-                    <div className="space-y-3 pr-4">
-                      {loading ? (
-                        <div className="space-y-3">
-                          <Card className="h-32 animate-pulse" />
-                          <Card className="h-32 animate-pulse" />
-                          <Card className="h-32 animate-pulse" />
-                        </div>
-                      ) : filteredResearch.length === 0 ? (
-                        <div className="text-center py-12 text-zinc-500">
-                          <p className="text-lg mb-2">No research found</p>
-                          <p className="text-sm">
-                            {searchQuery
-                              ? "Try a different search term"
-                              : "Research will appear here as it's generated"}
-                          </p>
-                        </div>
-                      ) : (
-                        filteredResearch.map((item) => (
-                          <Card
-                            key={`${item.type}-${item.id}`}
-                            className="cursor-pointer hover:shadow-md transition-shadow"
-                          >
-                            <CardHeader className="pb-2">
-                              <div className="flex items-start justify-between gap-2">
-                                <CardTitle
-                                  className="text-base flex-1 cursor-pointer"
-                                  onClick={() => handleResearchClick(item.id)}
-                                >
-                                  {item.title}
-                                </CardTitle>
-                                <div className="flex items-center gap-2 shrink-0">
-                                  <Badge variant="outline" className="gap-1">
-                                    {getTypeIcon(item.type)}
-                                    <span>{getTypeLabel(item.type)}</span>
-                                  </Badge>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="h-7 text-xs"
-                                    onClick={() => handleCreateIdeaFromResearch(item)}
-                                  >
-                                    <Plus className="h-3 w-3 mr-1" />
-                                    Idea
-                                  </Button>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Badge variant="secondary" className="text-xs">
-                                  <Clock className="h-3 w-3 mr-1" />
-                                  {new Date(item.date).toLocaleDateString()}
-                                </Badge>
-                              </div>
-                            </CardHeader>
-                            <CardContent>
-                              <p className="text-sm text-zinc-600 line-clamp-2">{item.snippet}</p>
-                            </CardContent>
-                          </Card>
-                        ))
-                      )}
-                    </div>
-                  </ScrollArea>
-                </div>
-
-                {/* Detail Panel */}
-                <div className="w-1/2 border-l border-zinc-200 pl-4 overflow-hidden">
-                  <ScrollArea className="h-full">
-                    {selectedResearch ? (
-                      <div className="space-y-4">
-                        <div>
-                          <h2 className="text-2xl font-semibold text-zinc-900 mb-2">
-                            {selectedResearch.title}
-                          </h2>
-                          <div className="flex items-center gap-2 mb-4">
-                            <Badge variant="outline" className="gap-1">
-                              {getTypeIcon(selectedResearch.type as ResearchType)}
-                              <span>{getTypeLabel(selectedResearch.type as ResearchType)}</span>
-                            </Badge>
-                            <Badge variant="secondary" className="text-xs">
-                              <Clock className="h-3 w-3 mr-1" />
-                              {new Date(selectedResearch.date).toLocaleString()}
-                            </Badge>
-                          </div>
-                        </div>
-                        <div className="prose prose-sm max-w-none">
-                          <pre className="whitespace-pre-wrap font-sans text-sm">
-                            {selectedResearch.content}
-                          </pre>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center h-full text-zinc-400">
-                        <p>Select a research item to view details</p>
-                      </div>
-                    )}
-                  </ScrollArea>
-                </div>
-              </div>
-            </TabsContent>
-
-            {/* Idea Bank Tab - All Ideas */}
-            <TabsContent value="idea-bank" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
-              <div className="flex h-full gap-4">
-                {/* Ideas List */}
-                <div className="flex-1 overflow-hidden flex flex-col">
-                  {/* Header with New Idea button */}
+                  {/* Header with New Brief button */}
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold">Idea Bank</h2>
-                    <Button onClick={() => setNewIdeaDialogOpen(true)}>
+                    <h2 className="text-lg font-semibold">Brief Bank</h2>
+                    <Button onClick={() => setNewBriefDialogOpen(true)}>
                       <Plus className="h-4 w-4 mr-2" />
-                      New Idea
+                      New Brief
                     </Button>
                   </div>
 
@@ -538,185 +618,21 @@ export default function HubResearchPage() {
                           <Card className="h-40 animate-pulse" />
                           <Card className="h-40 animate-pulse" />
                         </div>
-                      ) : visibleIdeas.length === 0 ? (
+                      ) : briefs.length === 0 ? (
                         <div className="text-center py-12 text-zinc-500">
-                          <p className="text-lg mb-2">No ideas found</p>
-                          <p className="text-sm">Create your first idea to get started</p>
+                          <p className="text-lg mb-2">No briefs yet</p>
+                          <p className="text-sm">Create a brief or wait for auto-extraction from research</p>
                         </div>
                       ) : (
-                        visibleIdeas.map((idea) => (
-                          <Card
-                            key={idea.id}
-                            className={`transition-all ${
-                              idea.status === "parked" ? "opacity-50" : ""
-                            }`}
-                          >
-                            <CardHeader className="pb-2">
-                              <div className="flex items-start justify-between gap-2">
-                                <CardTitle className="text-base">{idea.title}</CardTitle>
-                                <div className="flex gap-1 shrink-0">
-                                  <Badge variant="outline" className={getPriorityColor(idea.priority)}>
-                                    {idea.priority}
-                                  </Badge>
-                                  <Badge className={getStatusColor(idea.status)}>
-                                    {idea.status}
-                                  </Badge>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2 mt-1">
-                                <Badge variant="secondary" className="text-xs">
-                                  <Clock className="h-3 w-3 mr-1" />
-                                  {new Date(idea.createdAt).toLocaleDateString()}
-                                </Badge>
-                                <Badge variant="outline" className="text-xs">
-                                  Complexity: {idea.complexity}
-                                </Badge>
-                              </div>
-                            </CardHeader>
-                            <CardContent className="space-y-3">
-                              {/* Summary Display */}
-                              {idea.summary ? (
-                                <div className="space-y-2">
-                                  {/* What's the idea */}
-                                  {(idea.summary.idea || idea.summary.summary) && (
-                                    <div className="flex gap-2">
-                                      <Lightbulb className="h-4 w-4 text-zinc-400 shrink-0 mt-0.5" />
-                                      <div>
-                                        <p className="text-xs font-medium text-zinc-500 mb-0.5">What is the idea?</p>
-                                        <p className="text-sm text-zinc-700">{idea.summary.idea || idea.summary.summary}</p>
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  {/* Benefits */}
-                                  {idea.summary.benefits && idea.summary.benefits.length > 0 && (
-                                    <div className="flex gap-2">
-                                      <TrendingUp className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                                      <div>
-                                        <p className="text-xs font-medium text-zinc-500 mb-0.5">Why is it beneficial?</p>
-                                        <ul className="text-sm text-zinc-700 space-y-1">
-                                          {idea.summary.benefits.map((benefit, i) => (
-                                            <li key={i}>• {benefit}</li>
-                                          ))}
-                                        </ul>
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  {/* Success Metrics */}
-                                  {idea.summary.successMetrics && idea.summary.successMetrics.length > 0 && (
-                                    <div className="flex gap-2">
-                                      <Star className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
-                                      <div>
-                                        <p className="text-xs font-medium text-zinc-500 mb-0.5">Success Metrics</p>
-                                        <ul className="text-sm text-zinc-700 space-y-1">
-                                          {idea.summary.successMetrics.map((metric, i) => (
-                                            <li key={i}>• {metric}</li>
-                                          ))}
-                                        </ul>
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  {/* Notes */}
-                                  {idea.summary.notes && (
-                                    <div className="flex gap-2">
-                                      <FileText className="h-4 w-4 text-blue-500 shrink-0 mt-0.5" />
-                                      <div>
-                                        <p className="text-xs font-medium text-zinc-500 mb-0.5">Notes</p>
-                                        <p className="text-sm text-zinc-700">{idea.summary.notes}</p>
-                                      </div>
-                                    </div>
-                                  )}
-
-                                  {/* Key Findings (fallback for benefits) */}
-                                  {!idea.summary.benefits && idea.summary.keyFindings && idea.summary.keyFindings.length > 0 && (
-                                    <div className="flex gap-2">
-                                      <TrendingUp className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
-                                      <div>
-                                        <p className="text-xs font-medium text-zinc-500 mb-0.5">Key Findings</p>
-                                        <ul className="text-sm text-zinc-700 space-y-1">
-                                          {idea.summary.keyFindings.map((finding, i) => (
-                                            <li key={i}>• {finding}</li>
-                                          ))}
-                                        </ul>
-                                      </div>
-                                    </div>
-                                  )}
-                                </div>
-                              ) : (
-                                /* Graceful fallback to Problem/Solution */
-                                <>
-                                  <div>
-                                    <p className="text-xs font-medium text-zinc-500 mb-1">Problem</p>
-                                    <p className="text-sm text-zinc-700">{idea.problem}</p>
-                                  </div>
-                                  <div>
-                                    <p className="text-xs font-medium text-zinc-500 mb-1">Solution</p>
-                                    <p className="text-sm text-zinc-700">{idea.solution}</p>
-                                  </div>
-                                </>
-                              )}
-
-                              {/* Review Outcome Badge */}
-                              {idea.reviewOutcome && (
-                                <div className={`flex items-center gap-2 p-2 rounded-md border ${getReviewOutcomeColor(idea.reviewOutcome)}`}>
-                                  {getReviewOutcomeIcon(idea.reviewOutcome)}
-                                  <div className="flex-1">
-                                    <p className="text-xs font-medium capitalize">{idea.reviewOutcome}</p>
-                                    {idea.reviewNote && <p className="text-xs mt-0.5">{idea.reviewNote}</p>}
-                                  </div>
-                                </div>
-                              )}
-
-                              {idea.status === "new" && (
-                                <div className="flex gap-2 pt-2 border-t border-zinc-200">
-                                  <Button
-                                    size="sm"
-                                    variant="default"
-                                    className="flex-1"
-                                    onClick={() => handleIdeaAction(idea.id, "approve")}
-                                  >
-                                    <CheckCircle className="h-4 w-4 mr-1" />
-                                    Approve
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="flex-1"
-                                    onClick={() => handleIdeaAction(idea.id, "park")}
-                                  >
-                                    <PauseCircle className="h-4 w-4 mr-1" />
-                                    Park
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    className="text-red-600 hover:text-red-700"
-                                    onClick={() => handleIdeaAction(idea.id, "reject")}
-                                  >
-                                    <XCircle className="h-4 w-4 mr-1" />
-                                    Reject
-                                  </Button>
-                                </div>
-                              )}
-
-                              {/* Review Button for Shipped Ideas */}
-                              {idea.status === "shipped" && (
-                                <div className="pt-2 border-t border-zinc-200">
-                                  <Button
-                                    size="sm"
-                                    variant="default"
-                                    className="w-full"
-                                    onClick={() => handleOpenReviewDialog(idea)}
-                                  >
-                                    <Star className="h-4 w-4 mr-1" />
-                                    Review Outcome
-                                  </Button>
-                                </div>
-                              )}
-                            </CardContent>
-                          </Card>
+                        briefs.map((brief) => (
+                          <BriefCard
+                            key={brief.id}
+                            brief={brief}
+                            onApprove={handleBriefApprove}
+                            onPark={handleBriefPark}
+                            onReject={handleBriefReject}
+                            onViewSource={(url) => window.open(url, "_blank")}
+                          />
                         ))
                       )}
                     </div>
@@ -726,82 +642,7 @@ export default function HubResearchPage() {
                 {/* Stats Panel */}
                 <div className="w-80 border-l border-zinc-200 pl-4 overflow-hidden">
                   <ScrollArea className="h-full">
-                    {stats && (
-                      <div className="space-y-4">
-                        <h3 className="font-semibold text-zinc-900">Idea Statistics</h3>
-                        <Card>
-                          <CardHeader className="pb-3">
-                            <CardTitle className="text-sm">Overview</CardTitle>
-                          </CardHeader>
-                          <CardContent className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">Total Ideas</span>
-                              <span className="font-medium">{stats.total}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">New</span>
-                              <span className="font-medium">{stats.new}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">Approved</span>
-                              <span className="font-medium text-emerald-600">{stats.approved}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">Parked</span>
-                              <span className="font-medium text-amber-600">{stats.parked}</span>
-                            </div>
-                          </CardContent>
-                        </Card>
-                        <Card>
-                          <CardHeader className="pb-3">
-                            <CardTitle className="text-sm">Pipeline Status</CardTitle>
-                          </CardHeader>
-                          <CardContent className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">Specced</span>
-                              <span className="font-medium text-blue-600">{stats.specced}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">Building</span>
-                              <span className="font-medium text-violet-600">{stats.building}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">Shipped</span>
-                              <span className="font-medium text-green-600">{stats.shipped}</span>
-                            </div>
-                          </CardContent>
-                        </Card>
-                        <Card>
-                          <CardHeader className="pb-3">
-                            <CardTitle className="text-sm">Metrics</CardTitle>
-                          </CardHeader>
-                          <CardContent className="space-y-2">
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">Approval Rate</span>
-                              <span className="font-medium">
-                                {(stats.approvalRate * 100).toFixed(0)}%
-                              </span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">Avg Time to Ship</span>
-                              <span className="font-medium">{stats.avgTimeToShip}</span>
-                            </div>
-                            <div className="flex justify-between text-sm">
-                              <span className="text-zinc-500">Completion Rate</span>
-                              <span className="font-medium">{(stats.completionRate * 100).toFixed(0)}%</span>
-                            </div>
-                            {stats.review > 0 && (
-                              <div className="flex justify-between text-sm">
-                                <span className="text-zinc-500">Success Rate</span>
-                                <span className="font-medium text-emerald-600">
-                                  {(stats.successRate * 100).toFixed(0)}%
-                                </span>
-                              </div>
-                            )}
-                          </CardContent>
-                        </Card>
-                      </div>
-                    )}
+                    {stats && <StatsPanel stats={stats} />}
                   </ScrollArea>
                 </div>
               </div>
@@ -874,7 +715,7 @@ export default function HubResearchPage() {
                   <CardHeader>
                     <CardTitle>Build Pipeline</CardTitle>
                     <p className="text-sm text-zinc-500">
-                      Track ideas from approval to deployment
+                      Track briefs from approval to deployment
                     </p>
                   </CardHeader>
                   <CardContent>
@@ -882,12 +723,11 @@ export default function HubResearchPage() {
                       {/* Pipeline Visualization */}
                       <div className="flex items-center justify-between text-sm">
                         {[
-                          { label: "Idea", status: "new" as IdeaStatus, count: stats?.new || 0 },
-                          { label: "Approved", status: "approved" as IdeaStatus, count: stats?.approved || 0 },
-                          { label: "Specced", status: "specced" as IdeaStatus, count: stats?.specced || 0 },
-                          { label: "Building", status: "building" as IdeaStatus, count: stats?.building || 0 },
-                          { label: "Live", status: "shipped" as IdeaStatus, count: stats?.shipped || 0 },
-                          { label: "Reviewed", status: "review" as IdeaStatus, count: stats?.review || 0 },
+                          { label: "New", status: "new" as BriefStatus, count: stats?.new || 0 },
+                          { label: "Approved", status: "approved" as BriefStatus, count: stats?.approved || 0 },
+                          { label: "Specced", status: "specced" as BriefStatus, count: stats?.specced || 0 },
+                          { label: "Building", status: "building" as BriefStatus, count: stats?.building || 0 },
+                          { label: "Shipped", status: "shipped" as BriefStatus, count: stats?.shipped || 0 },
                         ].map((stage, i) => (
                           <div key={stage.label} className="flex items-center flex-1">
                             <div className={`text-center flex-1 ${stage.count > 0 ? "font-bold" : ""}`}>
@@ -896,7 +736,7 @@ export default function HubResearchPage() {
                               </div>
                               <div>{stage.label}</div>
                             </div>
-                            {i < 5 && <ArrowRight className="h-4 w-4 text-zinc-400" />}
+                            {i < 4 && <ArrowRight className="h-4 w-4 text-zinc-400" />}
                           </div>
                         ))}
                       </div>
@@ -911,21 +751,21 @@ export default function HubResearchPage() {
                         </Button>
                       </div>
 
-                      {/* Recent Approved Ideas */}
-                      {ideas.filter((i) => i.status === "approved").length > 0 && (
+                      {/* Recent Approved Briefs */}
+                      {briefs.filter((b) => b.status === "approved").length > 0 && (
                         <div className="pt-4 border-t border-zinc-200">
                           <h4 className="text-sm font-medium text-zinc-900 mb-3">Recently Approved</h4>
                           <div className="space-y-2">
-                            {ideas
-                              .filter((i) => i.status === "approved")
+                            {briefs
+                              .filter((b) => b.status === "approved")
                               .slice(0, 5)
-                              .map((idea) => (
+                              .map((brief) => (
                                 <div
-                                  key={idea.id}
+                                  key={brief.id}
                                   className="flex items-center justify-between p-2 rounded-md bg-zinc-50"
                                 >
-                                  <span className="text-sm truncate flex-1 mr-2">{idea.title}</span>
-                                  <Badge className={getPriorityColor(idea.priority)}>{idea.priority}</Badge>
+                                  <span className="text-sm truncate flex-1 mr-2">{brief.title}</span>
+                                  <Badge className={getPriorityColor(brief.priority)}>{brief.priority}</Badge>
                                 </div>
                               ))}
                           </div>
@@ -940,68 +780,44 @@ export default function HubResearchPage() {
         </div>
       </div>
 
-      {/* New Idea Dialog */}
-      <Dialog open={newIdeaDialogOpen} onOpenChange={setNewIdeaDialogOpen}>
+      {/* New Brief Dialog */}
+      <Dialog open={newBriefDialogOpen} onOpenChange={setNewBriefDialogOpen}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Create New Idea</DialogTitle>
+            <DialogTitle>Create New Brief</DialogTitle>
             <DialogDescription>
-              Add a new idea to the Idea Bank for tracking and approval
+              Add a new brief to the Brief Bank for tracking and approval
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             {/* Title */}
             <div className="space-y-2">
-              <Label htmlFor="idea-title">Title *</Label>
+              <Label htmlFor="brief-title">Title *</Label>
               <Input
-                id="idea-title"
-                placeholder="Brief title for the idea"
-                value={newIdeaTitle}
-                onChange={(e) => setNewIdeaTitle(e.target.value)}
+                id="brief-title"
+                placeholder="Brief title"
+                value={newBriefTitle}
+                onChange={(e) => setNewBriefTitle(e.target.value)}
               />
             </div>
 
-            {/* Description */}
+            {/* Bullets */}
             <div className="space-y-2">
-              <Label htmlFor="idea-description">Description *</Label>
+              <Label htmlFor="brief-bullets">Key Points (3-5, one per line) *</Label>
               <Textarea
-                id="idea-description"
-                placeholder="Describe the problem or opportunity..."
-                value={newIdeaDescription}
-                onChange={(e) => setNewIdeaDescription(e.target.value)}
-                rows={4}
-              />
-            </div>
-
-            {/* Benefits */}
-            <div className="space-y-2">
-              <Label htmlFor="idea-benefits">Benefits (one per line)</Label>
-              <Textarea
-                id="idea-benefits"
-                placeholder="What value does this bring?"
-                value={newIdeaBenefits}
-                onChange={(e) => setNewIdeaBenefits(e.target.value)}
-                rows={3}
-              />
-            </div>
-
-            {/* Success Metrics */}
-            <div className="space-y-2">
-              <Label htmlFor="idea-metrics">Success Metrics (one per line)</Label>
-              <Textarea
-                id="idea-metrics"
-                placeholder="How will we measure success?"
-                value={newIdeaSuccessMetrics}
-                onChange={(e) => setNewIdeaSuccessMetrics(e.target.value)}
-                rows={3}
+                id="brief-bullets"
+                placeholder="• First key point&#10;• Second key point&#10;• Third key point"
+                value={newBriefBullets}
+                onChange={(e) => setNewBriefBullets(e.target.value)}
+                rows={5}
               />
             </div>
 
             {/* Source Tag */}
             <div className="space-y-2">
-              <Label htmlFor="idea-source">Source *</Label>
-              <Select value={newIdeaSource} onValueChange={(v) => setNewIdeaSource(v as SourceTag)}>
-                <SelectTrigger id="idea-source">
+              <Label htmlFor="brief-source">Source *</Label>
+              <Select value={newBriefSource} onValueChange={(v) => setNewBriefSource(v as SourceTag)}>
+                <SelectTrigger id="brief-source">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1014,9 +830,9 @@ export default function HubResearchPage() {
 
             {/* Priority */}
             <div className="space-y-2">
-              <Label htmlFor="idea-priority">Priority *</Label>
-              <Select value={newIdeaPriority} onValueChange={(v) => setNewIdeaPriority(v as "HIGH" | "MED" | "LOW")}>
-                <SelectTrigger id="idea-priority">
+              <Label htmlFor="brief-priority">Priority *</Label>
+              <Select value={newBriefPriority} onValueChange={(v) => setNewBriefPriority(v as "HIGH" | "MED" | "LOW")}>
+                <SelectTrigger id="brief-priority">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -1026,80 +842,42 @@ export default function HubResearchPage() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setNewIdeaDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={handleCreateNewIdea}
-              disabled={creatingIdea || !newIdeaTitle || !newIdeaDescription}
-            >
-              {creatingIdea ? "Creating..." : "Create Idea"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
 
-      {/* Review Dialog */}
-      <Dialog open={reviewDialogOpen} onOpenChange={setReviewDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Review Idea Outcome</DialogTitle>
-            <DialogDescription>
-              How did &ldquo;{reviewingIdea?.title}&rdquo; perform after shipping?
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            {/* Outcome Selector */}
+            {/* Complexity */}
             <div className="space-y-2">
-              <Label>Outcome</Label>
-              <div className="grid grid-cols-3 gap-2">
-                <Button
-                  variant={reviewOutcome === "success" ? "default" : "outline"}
-                  className={reviewOutcome === "success" ? "bg-green-600 hover:bg-green-700" : ""}
-                  onClick={() => setReviewOutcome("success")}
-                >
-                  <ThumbsUp className="h-4 w-4 mr-1" />
-                  Success
-                </Button>
-                <Button
-                  variant={reviewOutcome === "partial" ? "default" : "outline"}
-                  className={reviewOutcome === "partial" ? "bg-amber-600 hover:bg-amber-700" : ""}
-                  onClick={() => setReviewOutcome("partial")}
-                >
-                  <AlertTriangle className="h-4 w-4 mr-1" />
-                  Partial
-                </Button>
-                <Button
-                  variant={reviewOutcome === "failed" ? "default" : "outline"}
-                  className={reviewOutcome === "failed" ? "bg-red-600 hover:bg-red-700" : ""}
-                  onClick={() => setReviewOutcome("failed")}
-                >
-                  <ThumbsDown className="h-4 w-4 mr-1" />
-                  Failed
-                </Button>
-              </div>
+              <Label htmlFor="brief-complexity">Complexity *</Label>
+              <Select value={newBriefComplexity} onValueChange={(v) => setNewBriefComplexity(v as "LOW" | "MED" | "HIGH")}>
+                <SelectTrigger id="brief-complexity">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="LOW">Low</SelectItem>
+                  <SelectItem value="MED">Medium</SelectItem>
+                  <SelectItem value="HIGH">High</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            {/* Notes Input */}
+            {/* Source URL */}
             <div className="space-y-2">
-              <Label htmlFor="review-note">Notes (optional)</Label>
-              <Textarea
-                id="review-note"
-                placeholder="What worked? What didn't? Any lessons learned?"
-                value={reviewNote}
-                onChange={(e) => setReviewNote(e.target.value)}
-                rows={4}
+              <Label htmlFor="brief-source-url">Source URL (optional)</Label>
+              <Input
+                id="brief-source-url"
+                placeholder="https://..."
+                value={newBriefSourceUrl}
+                onChange={(e) => setNewBriefSourceUrl(e.target.value)}
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setReviewDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setNewBriefDialogOpen(false)}>
               Cancel
             </Button>
-            <Button onClick={handleSubmitReview}>
-              Submit Review
+            <Button
+              onClick={handleCreateNewBrief}
+              disabled={creatingBrief || !newBriefTitle || !newBriefBullets}
+            >
+              {creatingBrief ? "Creating..." : "Create Brief"}
             </Button>
           </DialogFooter>
         </DialogContent>

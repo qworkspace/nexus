@@ -5,15 +5,24 @@ export const dynamic = "force-dynamic";
 
 const STATUS_FILE = "/Users/paulvillanueva/shared/research/ai-intel/idea-status.json";
 
-type IdeaStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped";
+type BriefStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
 
-interface IdeaStatusEntry {
-  status: IdeaStatus;
+interface BriefStatusEntry {
+  status: BriefStatus;
+  title?: string;
+  bullets?: string[];
+  priority?: "HIGH" | "MED" | "LOW";
+  complexity?: "LOW" | "MED" | "HIGH";
+  notes?: string;
   approvedAt?: string;
   specPath?: string;
-  buildStatus?: IdeaStatus;
+  buildStatus?: BriefStatus;
   buildId?: string;
   shippedAt?: string;
+  reviewOutcome?: "success" | "partial" | "failed";
+  reviewNote?: string;
+  reviewedAt?: string;
+  sourceUrl?: string;
 }
 
 export async function POST(
@@ -22,8 +31,10 @@ export async function POST(
 ) {
   try {
     const { id } = params;
-    const filename = `${id}.md`;
+    const body = await request.json();
+    const { title, bullets, priority, complexity, notes } = body;
 
+    const filename = `${id}.md`;
     const statusMap = loadStatusMap();
 
     if (!statusMap.has(filename)) {
@@ -31,8 +42,33 @@ export async function POST(
     }
 
     const entry = statusMap.get(filename)!;
+
+    // Update brief details from edit form
+    if (title) {
+      entry.title = title;
+    }
+    if (bullets && Array.isArray(bullets)) {
+      entry.bullets = bullets;
+    }
+    if (priority) {
+      entry.priority = priority;
+    }
+    if (complexity) {
+      entry.complexity = complexity;
+    }
+    if (notes !== undefined) {
+      entry.notes = notes;
+    }
+
+    // Mark as approved
     entry.status = "approved";
     entry.approvedAt = new Date().toISOString();
+
+    // Create next status
+    if (entry.specPath) {
+      entry.buildStatus = "specced";
+      entry.buildId = generateBuildId();
+    }
 
     saveStatusMap(statusMap);
 
@@ -41,18 +77,27 @@ export async function POST(
       filename,
       status: entry.status,
       approvedAt: entry.approvedAt,
+      title: entry.title,
+      bullets: entry.bullets,
+      priority: entry.priority,
+      complexity: entry.complexity,
+      notes: entry.notes,
     });
   } catch (error) {
-    console.error("Error approving idea:", error);
+    console.error("Error approving brief:", error);
     return NextResponse.json(
-      { error: "Failed to approve idea" },
+      { error: "Failed to approve brief" },
       { status: 500 }
     );
   }
 }
 
-function loadStatusMap(): Map<string, IdeaStatusEntry> {
-  const map = new Map<string, IdeaStatusEntry>();
+function generateBuildId(): string {
+  return `build-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+}
+
+function loadStatusMap(): Map<string, BriefStatusEntry> {
+  const map = new Map<string, BriefStatusEntry>();
 
   if (!existsSync(STATUS_FILE)) {
     return map;
@@ -63,7 +108,7 @@ function loadStatusMap(): Map<string, IdeaStatusEntry> {
     const data = JSON.parse(content);
 
     for (const [filename, entry] of Object.entries(data)) {
-      map.set(filename, entry as IdeaStatusEntry);
+      map.set(filename, entry as BriefStatusEntry);
     }
   } catch (error) {
     console.error("Error loading status map:", error);
@@ -72,8 +117,8 @@ function loadStatusMap(): Map<string, IdeaStatusEntry> {
   return map;
 }
 
-function saveStatusMap(map: Map<string, IdeaStatusEntry>) {
-  const data: Record<string, IdeaStatusEntry> = {};
+function saveStatusMap(map: Map<string, BriefStatusEntry>) {
+  const data: Record<string, BriefStatusEntry> = {};
 
   for (const [filename, entry] of map.entries()) {
     data[filename] = entry;
