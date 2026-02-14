@@ -19,6 +19,8 @@ interface ResearchItem {
   path: string;
   snippet: string;
   frontmatter?: Record<string, string | string[]>;
+  sourceModel?: string;
+  content?: string;
 }
 
 interface ResearchResponse {
@@ -36,6 +38,25 @@ export async function GET(request: Request) {
     const limit = parseInt(searchParams.get("limit") || "50");
     const offset = parseInt(searchParams.get("offset") || "0");
     const intelligenceOnly = searchParams.get("intelligenceOnly") === "true";
+    const id = searchParams.get("id");
+
+    // If id is provided, return single item with full content
+    if (id) {
+      const allItems = await getAllResearch();
+      const item = allItems.find(i => i.id === id);
+
+      if (!item) {
+        return NextResponse.json({ error: "Research not found" }, { status: 404 });
+      }
+
+      // Read full content for slide-over
+      const fullContent = readFileSync(item.path, "utf-8");
+
+      return NextResponse.json({
+        ...item,
+        content: fullContent,
+      });
+    }
 
     const allItems = await getAllResearch();
 
@@ -170,6 +191,7 @@ function parseResearchFile(
 
   // Extract frontmatter (simple YAML-like parsing)
   const frontmatter: Record<string, string | string[]> = {};
+  let sourceModel: string | undefined;
   const frontmatterMatch = content.match(/^---\n([\s\S]+?)\n---/);
   if (frontmatterMatch) {
     const frontmatterLines = frontmatterMatch[1].split("\n");
@@ -178,6 +200,10 @@ function parseResearchFile(
       if (key && valueParts.length) {
         const value = valueParts.join(":").trim().replace(/^["']|["']$/g, "");
         frontmatter[key.trim()] = value;
+        // Extract model from frontmatter
+        if (key.trim().toLowerCase() === 'model') {
+          sourceModel = value;
+        }
       }
     }
   }
@@ -190,5 +216,6 @@ function parseResearchFile(
     path,
     snippet,
     frontmatter,
+    sourceModel,
   };
 }

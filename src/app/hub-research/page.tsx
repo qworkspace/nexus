@@ -26,6 +26,7 @@ import { BuildSpeedMetrics } from '@/components/builds/BuildSpeedMetrics';
 import type { SpecQueueItem } from '@/app/api/ci/specs/route';
 import type { BuildEntry, BuildSummary } from '@/app/api/ci/builds/route';
 import type { ActiveSession } from '@/app/api/ci/active/route';
+import ReactMarkdown from 'react-markdown';
 
 type BriefStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
 type SourceTag = "research" | "pj-request" | "q-identified";
@@ -41,6 +42,22 @@ interface BriefItem {
   createdAt: string;
   sourceUrl?: string;
   notes?: string;
+  sourceResearchId?: string;
+  sourceModel?: string;
+  sourceDate?: string;
+  sourceTitle?: string;
+}
+
+interface ResearchItem {
+  id: string;
+  type: "deep-focus" | "whats-new" | "spec-briefs" | "specs";
+  title: string;
+  date: string;
+  path: string;
+  snippet: string;
+  frontmatter?: Record<string, string | string[]>;
+  sourceModel?: string;
+  content?: string;
 }
 
 interface BriefStats {
@@ -91,6 +108,83 @@ export default function HubResearchPage() {
   // Edit mode state
   const [editingBriefId, setEditingBriefId] = useState<string | null>(null);
   const [editedBrief, setEditedBrief] = useState<Partial<BriefItem>>({});
+
+  // Slide-over state
+  const [slideOverOpen, setSlideOverOpen] = useState(false);
+  const [selectedResearch, setSelectedResearch] = useState<ResearchItem | null>(null);
+  const [loadingResearch, setLoadingResearch] = useState(false);
+
+  // AEST date formatter
+  function formatAESTDateTime(isoString: string): string {
+    try {
+      const date = new Date(isoString);
+      return date.toLocaleString('en-AU', {
+        timeZone: 'Australia/Sydney',
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      }) + ' AEST';
+    } catch {
+      return isoString;
+    }
+  }
+
+  // Bullet transformer - converts informational to actionable format
+  function transformToActionable(bullet: string): string {
+    // If already has arrow, return as-is
+    const arrowPattern = /→|->/;
+    if (arrowPattern.test(bullet)) {
+      return bullet;
+    }
+
+    const actionVerbs = /^(Add|Create|Implement|Build|Fix|Update|Remove|Refactor|Improve|Optimize|Enhance|Integrate|Deploy|Configure|Set up)/i;
+    if (actionVerbs.test(bullet)) {
+      return bullet;
+    }
+
+    // Transformation patterns
+    const patterns = [
+      { regex: /(.+)\s+exists?\s*(?:in\s+.+)?$/i, template: (m: string[]) => `Integrate ${m[1]} → leverage existing capability` },
+      { regex: /(.+)\s+supports?\s+(.+)$/i, template: (m: string[]) => `Use ${m[1]} for ${m[2]} → saves development time` },
+      { regex: /(.+)\s+available\s+(?:as\s+)?(.+)$/i, template: (m: string[]) => `Adopt ${m[1]} as ${m[2]} → ready to use` },
+      { regex: /API\s+(?:for\s+)?(.+)\s+exists$/i, template: (m: string[]) => `Integrate ${m[1]} API → adds capability without custom dev` },
+    ];
+
+    for (const { regex, template } of patterns) {
+      const match = bullet.match(regex);
+      if (match) {
+        return template(match);
+      }
+    }
+
+    return `${bullet} → consider implementing`;
+  }
+
+  const handleViewSource = async (brief: BriefItem) => {
+    if (!brief.sourceResearchId) {
+      if (brief.sourceUrl) {
+        window.open(brief.sourceUrl, "_blank");
+      }
+      return;
+    }
+
+    setLoadingResearch(true);
+    try {
+      const res = await fetch(`/api/research?id=${brief.sourceResearchId}`);
+      if (res.ok) {
+        const research = await res.json();
+        setSelectedResearch(research);
+        setSlideOverOpen(true);
+      }
+    } catch (error) {
+      console.error("Failed to load research:", error);
+    } finally {
+      setLoadingResearch(false);
+    }
+  };
 
   useEffect(() => {
     fetchData();
@@ -315,7 +409,7 @@ export default function HubResearchPage() {
     onApprove: (id: string) => void;
     onPark: (id: string) => void;
     onReject: (id: string) => void;
-    onViewSource: (url: string) => void;
+    onViewSource: (brief: BriefItem) => void;
   }) {
     const isEditing = editingBriefId === brief.id;
     const currentBrief = isEditing ? { ...brief, ...editedBrief } : brief;
@@ -344,17 +438,40 @@ export default function HubResearchPage() {
             </div>
           </div>
 
+          {/* Source Attribution Row */}
+          {brief.sourceTitle && (
+            <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500 bg-zinc-50 px-2 py-1 rounded">
+              <FileText className="h-3 w-3" />
+              <span className="font-medium text-zinc-700">From:</span>
+              <span className="truncate flex-1">{brief.sourceTitle}</span>
+              {brief.sourceModel && (
+                <>
+                  <span className="text-zinc-300">|</span>
+                  <Badge variant="outline" className="text-xs h-5">
+                    {brief.sourceModel}
+                  </Badge>
+                </>
+              )}
+              {brief.sourceDate && (
+                <>
+                  <span className="text-zinc-300">|</span>
+                  <span>{formatAESTDateTime(brief.sourceDate)}</span>
+                </>
+              )}
+            </div>
+          )}
+
           <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
             <Badge variant="secondary">
               <Clock className="h-3 w-3 mr-1" />
               {new Date(brief.createdAt).toLocaleDateString()}
             </Badge>
             <Badge variant="outline">Complexity: {brief.complexity}</Badge>
-            {brief.sourceUrl && !isEditing && (
+            {(brief.sourceResearchId || brief.sourceUrl) && !isEditing && (
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => onViewSource(brief.sourceUrl!)}
+                onClick={() => onViewSource(brief)}
                 className="text-xs h-6"
               >
                 <ExternalLink className="h-3 w-3 mr-1" />
@@ -381,9 +498,24 @@ export default function HubResearchPage() {
             </div>
           ) : (
             <ul className="space-y-1 text-sm text-zinc-600">
-              {(brief.bullets || []).slice(0, 5).map((bullet, i) => (
-                <li key={i}>• {bullet}</li>
-              ))}
+              {(brief.bullets || []).slice(0, 5).map((bullet, i) => {
+                const actionableBullet = transformToActionable(bullet);
+                const parts = actionableBullet.split(/→|->/);
+                return (
+                  <li key={i} className="flex gap-1">
+                    <span className="text-zinc-400">•</span>
+                    {parts.length > 1 ? (
+                      <>
+                        <span className="font-medium text-zinc-700">{parts[0].trim()}</span>
+                        <span className="text-zinc-400">→</span>
+                        <span className="text-zinc-500">{parts[1].trim()}</span>
+                      </>
+                    ) : (
+                      <span>{actionableBullet}</span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           )}
 
@@ -684,7 +816,7 @@ export default function HubResearchPage() {
                             onApprove={handleBriefApprove}
                             onPark={handleBriefPark}
                             onReject={handleBriefReject}
-                            onViewSource={(url) => window.open(url, "_blank")}
+                            onViewSource={handleViewSource}
                           />
                         ))
                       )}
@@ -1086,6 +1218,66 @@ export default function HubResearchPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Research Slide-Over Panel */}
+      {slideOverOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50 transition-opacity"
+            onClick={() => setSlideOverOpen(false)}
+          />
+
+          {/* Panel */}
+          <div className="absolute inset-y-0 right-0 w-full max-w-2xl bg-white shadow-xl">
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="flex items-center justify-between p-4 border-b border-zinc-200">
+                <div>
+                  <h2 className="text-lg font-semibold text-zinc-900">
+                    {selectedResearch?.title || "Research"}
+                  </h2>
+                  <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
+                    <Badge variant="outline">
+                      {selectedResearch?.type === "deep-focus" ? "Deep Focus" :
+                       selectedResearch?.type === "whats-new" ? "What's New" :
+                       selectedResearch?.type}
+                    </Badge>
+                    {selectedResearch?.sourceModel && (
+                      <Badge variant="secondary">{selectedResearch.sourceModel}</Badge>
+                    )}
+                    {selectedResearch?.date && (
+                      <span>{formatAESTDateTime(selectedResearch.date)}</span>
+                    )}
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSlideOverOpen(false)}
+                >
+                  <XCircle className="h-5 w-5" />
+                </Button>
+              </div>
+
+              {/* Content */}
+              <ScrollArea className="flex-1 p-6">
+                {loadingResearch ? (
+                  <div className="flex items-center justify-center h-32">
+                    <RefreshCw className="h-6 w-6 animate-spin text-zinc-400" />
+                  </div>
+                ) : selectedResearch?.content ? (
+                  <div className="prose prose-sm max-w-none">
+                    <ReactMarkdown>{selectedResearch.content}</ReactMarkdown>
+                  </div>
+                ) : (
+                  <p className="text-zinc-500">No content available</p>
+                )}
+              </ScrollArea>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

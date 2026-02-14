@@ -38,6 +38,10 @@ interface BriefStatusEntry {
   reviewNote?: string;
   reviewedAt?: string;
   sourceUrl?: string;
+  sourceResearchId?: string;
+  sourceModel?: string;
+  sourceDate?: string;
+  sourceTitle?: string;
 }
 
 interface BriefItem {
@@ -55,6 +59,10 @@ interface BriefItem {
   reviewOutcome?: "success" | "partial" | "failed";
   reviewNote?: string;
   reviewedAt?: string;
+  sourceResearchId?: string;
+  sourceModel?: string;
+  sourceDate?: string;
+  sourceTitle?: string;
 }
 
 interface BriefStats {
@@ -217,6 +225,10 @@ function parseSpecBrief(
     sourceUrl: statusEntry.sourceUrl,
     notes: statusEntry.notes,
     summary,
+    sourceResearchId: statusEntry.sourceResearchId,
+    sourceModel: statusEntry.sourceModel,
+    sourceDate: statusEntry.sourceDate,
+    sourceTitle: statusEntry.sourceTitle,
   };
 }
 

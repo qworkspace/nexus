@@ -7,7 +7,7 @@ import { useState } from "react";
 import { KeyHint } from "@/components/KeyHint";
 import {
   LayoutGrid, GitBranch, Calendar,
-  Gauge, Hammer, Search, Menu, X, HeartPulse, Database, Shield, Activity
+  Gauge, Hammer, Search, Menu, X, HeartPulse, Shield, Activity
 } from "lucide-react";
 
 const navigation = [
