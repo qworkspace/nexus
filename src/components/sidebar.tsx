@@ -19,7 +19,7 @@ const navigation = [
   { name: "Command Center", href: "/command-center", icon: Gauge, shortcut: "mod+2" },
   { name: "Pipeline", href: "/hub-research", icon: Hammer, shortcut: "mod+3" },
   { name: "divider2", href: "", icon: null, shortcut: null },
-  { name: "Usage & Costs", href: "/usage", icon: Activity, shortcut: "mod+5" },
+  { name: "Usage", href: "/usage", icon: Activity, shortcut: "mod+5" },
   { name: "Governance", href: "/governance", icon: Shield, shortcut: null },
   { name: "Search", href: "/search", icon: Search, shortcut: null },
 ];
