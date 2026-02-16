@@ -63,6 +63,7 @@ interface Particle {
   vy: number;
   size: number;
   opacity: number;
+  zone?: string; // Zone-specific particles
 }
 
 interface WaterParticle {
@@ -70,6 +71,26 @@ interface WaterParticle {
   y: number;
   speed: number;
   size: number;
+}
+
+interface EnergyBeam {
+  from: string;
+  to: string;
+  startTime: number;
+  color: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+interface DemoChatMessage {
+  from: string;
+  to: string;
+  text: string;
+}
+
+interface TypingIndicator {
+  agentId: string | null;
+  targetAgentId: string | null;
+  startTime: number;
 }
 
 // Pixel art colours per agent
@@ -149,10 +170,18 @@ function generateDemoMessage(agentId: string, activities: string[]): string {
 
 // Zone centers (targets for agents to drift toward)
 const ZONE_CENTERS: Record<string, { x: number; y: number }> = {
-  forge:   { x: 200, y: 250 },  // Building zone (left)
-  stream:  { x: 620, y: 250 },  // Research zone (right)
-  pulse:   { x: 410, y: 500 },  // Comms zone (bottom)
-  void:    { x: 410, y: 100 },  // Idle zone (top)
+  forge:   { x: 150, y: 400 },  // Building zone (bottom-left)
+  stream:  { x: 650, y: 150 },  // Research zone (top-right)
+  pulse:   { x: 650, y: 450 },  // Comms zone (bottom-right)
+  void:    { x: 150, y: 150 },  // Idle zone (top-left)
+};
+
+// Jitter radius per zone (40-60px for zone spread)
+const ZONE_JITTER: Record<string, number> = {
+  forge: 50,
+  stream: 50,
+  pulse: 50,
+  void: 50,
 };
 
 // War Room convergence (meeting mode)
@@ -177,6 +206,37 @@ const ACTIVITIES: Record<string, string[]> = {
   testing: ["Running tests", "Edge case hunt", "Bug hunting"],
   events: ["Event planning", "Lineup coordination", "Venue logistics"],
   support: ["Resolving tickets", "User feedback", "Doc updates"],
+};
+
+// Demo chat messages for Office Chat simulation
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const DEMO_CHAT_MESSAGES = [
+  { from: 'main', to: 'all', text: "Morning team. Cipher, how's the research queue looking?" },
+  { from: 'research', to: 'main', text: 'Got 3 specs ready for review. Prioritising the auth layer one.' },
+  { from: 'main', to: 'creative', text: 'Spark, pick up the content pipeline spec when you\'re free.' },
+  { from: 'creative', to: 'main', text: 'On it. Pulling the spec now.' },
+  { from: 'testing', to: 'creative', text: 'Last build had a failing test in the API routes. Check line 42.' },
+  { from: 'creative', to: 'testing', text: 'Good catch. Fixing now.' },
+  { from: 'design', to: 'main', text: 'New brand assets ready for review. Uploaded to /creative/assets.' },
+  { from: 'growth', to: 'main', text: 'Engagement up 23% this week. Newsletter performing well.' },
+  { from: 'support', to: 'main', text: 'Customer asked about API rate limits. Drafted a KB article.' },
+  { from: 'events', to: 'main', text: 'Next event venue confirmed. Sending logistics brief.' },
+  { from: 'main', to: 'all', text: 'Nice work team. Flux, run QA on Spark\'s latest commit.' },
+  { from: 'testing', to: 'main', text: 'QA passed. All tests green. Ready to ship.' },
+  { from: 'design', to: 'design', text: 'Updated the component library. New button variants ready.' },
+  { from: 'support', to: 'main', text: 'Heads up — got a handoff request from Discord. Routing to Echo.' },
+];
+
+// Initial agent zone assignments for demo mode to ensure spread across zones
+const DEMO_AGENT_ZONES: Record<string, string> = {
+  main: 'pulse',      // Q - center orchestrator, starts in pulse for comms
+  creative: 'forge',  // Spark - building
+  testing: 'forge',   // Flux - building
+  research: 'stream', // Cipher - research
+  design: 'pulse',    // Aura - comms
+  growth: 'pulse',    // Surge - comms
+  events: 'stream',   // Volt - planning
+  support: 'void',    // Echo - idle/support
 };
 
 function assignAgentToZone(agentId: string, activity: string, status: string): string {
@@ -251,10 +311,13 @@ export default function FloorPage() {
   const [particleCount, setParticleCount] = useState(50);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [handoffMessages, setHandoffMessages] = useState<Array<{ from: string; to: string; task: string; time: string }>>([]);
+  const [energyBeams, setEnergyBeams] = useState<EnergyBeam[]>([]);
+  const [typingIndicator, setTypingIndicator] = useState<TypingIndicator>({ agentId: null, targetAgentId: null, startTime: 0 });
+  const [demoChatIndex, setDemoChatIndex] = useState(0);
 
   // Demo mode state
   const [demoMode, setDemoMode] = useState(false);
-  const [demoSpeed, setDemoSpeed] = useState(1); // 0.5, 1, 2
+  const [demoSpeed, setDemoSpeed] = useState(1); // 0.5, 1 (removed 2x)
   const [demoIntensity, setDemoIntensity] = useState<'calm' | 'normal' | 'busy'>('normal');
   const demoIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -311,7 +374,7 @@ export default function FloorPage() {
         });
         setAgentStates(states);
 
-        // Initialize agent positions
+        // Initialize agent positions with proper zone jitter
         const positions: Record<string, AgentPosition> = {};
         agts.forEach((agent) => {
           const zone = assignAgentToZone(
@@ -320,33 +383,46 @@ export default function FloorPage() {
             'idle'
           );
           const center = ZONE_CENTERS[zone];
+          const jitter = ZONE_JITTER[zone as keyof typeof ZONE_JITTER] || 40;
 
-          // Start with random offset from zone center
-          const offsetX = (Math.random() - 0.5) * 200;
-          const offsetY = (Math.random() - 0.5) * 200;
+          // Start with jittered offset from zone center (40-60px radius)
+          const angle = Math.random() * Math.PI * 2;
+          const radius = Math.random() * jitter;
 
           positions[agent.id] = {
-            currentX: center.x + offsetX,
-            currentY: center.y + offsetY,
-            targetX: center.x + offsetX,
-            targetY: center.y + offsetY,
+            currentX: center.x + Math.cos(angle) * radius,
+            currentY: center.y + Math.sin(angle) * radius,
+            targetX: center.x + Math.cos(angle) * radius,
+            targetY: center.y + Math.sin(angle) * radius,
             zone,
           };
         });
         setAgentPositions(positions);
 
-        // Initialize ambient particles
+        // Initialize ambient particles (zone-specific)
         const ps: Particle[] = [];
-        for (let i = 0; i < 100; i++) {
-          ps.push({
-            x: Math.random() * 840,
-            y: Math.random() * 640,
-            vx: (Math.random() - 0.5) * 0.3,
-            vy: (Math.random() - 0.5) * 0.3,
-            size: Math.random() * 2 + 1,
-            opacity: Math.random() * 0.5 + 0.2,
-          });
-        }
+        const zones = ['forge', 'stream', 'pulse', 'void'];
+        const particlesPerZone = 25;
+
+        zones.forEach((zoneName) => {
+          const center = ZONE_CENTERS[zoneName];
+
+          for (let i = 0; i < particlesPerZone; i++) {
+            // Start particles within zone radius
+            const angle = Math.random() * Math.PI * 2;
+            const radius = Math.random() * 100; // 100px radius around zone center
+
+            ps.push({
+              x: center.x + Math.cos(angle) * radius,
+              y: center.y + Math.sin(angle) * radius,
+              vx: (Math.random() - 0.5) * 0.2,
+              vy: (Math.random() - 0.5) * 0.2,
+              size: Math.random() * 2 + 1,
+              opacity: Math.random() * 0.4 + 0.1,
+              zone: zoneName,
+            });
+          }
+        });
         setParticles(ps);
 
         // Initialize waterfall particles
@@ -434,7 +510,7 @@ export default function FloorPage() {
     };
   }, [timelineMode]);
 
-  // Update agent positions with smooth drift animation
+  // Update agent positions with smooth drift animation (SLOWER: 0.02 speed)
   useEffect(() => {
     const interval = setInterval(() => {
       setAgentPositions((prev) => {
@@ -461,16 +537,17 @@ export default function FloorPage() {
             };
           }
 
-          // Zone changed? Update target
+          // Zone changed? Update target with jitter
           else if (pos.zone !== zone) {
             const center = ZONE_CENTERS[zone];
-            const offsetX = (Math.random() - 0.5) * 200;
-            const offsetY = (Math.random() - 0.5) * 200;
+            const jitter = ZONE_JITTER[zone as keyof typeof ZONE_JITTER] || 40;
+            const angle = Math.random() * Math.PI * 2;
+            const radius = Math.random() * jitter;
 
             next[agent.id] = {
               ...pos,
-              targetX: center.x + offsetX,
-              targetY: center.y + offsetY,
+              targetX: center.x + Math.cos(angle) * radius,
+              targetY: center.y + Math.sin(angle) * radius,
               zone,
             };
             return next;
@@ -483,7 +560,7 @@ export default function FloorPage() {
             const distance = Math.sqrt(dx * dx + dy * dy);
 
             if (distance > 1) {
-              const speed = 0.05;
+              const speed = 0.02; // Slower movement
               next[agent.id] = {
                 ...pos,
                 currentX: pos.currentX + dx * speed,
@@ -493,27 +570,37 @@ export default function FloorPage() {
             return next;
           }
 
-          // Idle agents in Void: subtle random drift
+          // Idle agents in Void: subtle bobbing animation
           if (zone === 'void' && agentState?.status === 'idle') {
+            const time = Date.now() / 1000;
             next[agent.id] = {
               ...pos,
-              currentX: pos.currentX + Math.sin(Date.now() / 2000) * 0.3,
-              currentY: pos.currentY + Math.cos(Date.now() / 2500) * 0.2,
+              currentX: pos.targetX + Math.sin(time * 0.5) * 3,
+              currentY: pos.targetY + Math.cos(time * 0.4) * 2,
             };
             return next;
           }
 
-          // Interpolate toward target (smooth drift)
+          // Interpolate toward target (smooth drift) - SLOWER
           const dx = pos.targetX - pos.currentX;
           const dy = pos.targetY - pos.currentY;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
           if (distance > 1) {
-            const speed = 0.05;
+            const speed = 0.02; // Slower movement (was 0.05)
             next[agent.id] = {
               ...pos,
               currentX: pos.currentX + dx * speed,
               currentY: pos.currentY + dy * speed,
+            };
+          } else {
+            // Near target: add subtle bobbing while stationary
+            const time = Date.now() / 1000;
+            const jitter = ZONE_JITTER[zone as keyof typeof ZONE_JITTER] || 40;
+            next[agent.id] = {
+              ...pos,
+              currentX: pos.targetX + Math.sin(time * 0.3 + agent.id.charCodeAt(0)) * (jitter * 0.1),
+              currentY: pos.targetY + Math.cos(time * 0.25 + agent.id.charCodeAt(1)) * (jitter * 0.1),
             };
           }
         });
@@ -618,9 +705,9 @@ export default function FloorPage() {
     }
 
     const intensitySettings = {
-      calm: { interval: 8000, activeRatio: 0.3 },
-      normal: { interval: 4000, activeRatio: 0.5 },
-      busy: { interval: 2000, activeRatio: 0.7 },
+      calm: { interval: 10000, activeRatio: 0.3 }, // 8-12s avg
+      normal: { interval: 6500, activeRatio: 0.5 }, // 5-8s avg
+      busy: { interval: 4000, activeRatio: 0.7 }, // 3-5s avg
     };
 
     const settings = intensitySettings[demoIntensity];
@@ -664,6 +751,43 @@ export default function FloorPage() {
         return next;
       });
 
+      // Simulate chat messages in demo mode
+      const chatInterval = demoIntensity === 'calm' ? 10000 : demoIntensity === 'normal' ? 5000 : 3000;
+      const chatDelay = Math.random() * (chatInterval * 0.4); // Add some randomness
+
+      setTimeout(() => {
+        if (!demoMode) return;
+
+        const nextChatIndex = demoChatIndex % DEMO_CHAT_MESSAGES.length;
+        const chatMessage = DEMO_CHAT_MESSAGES[nextChatIndex];
+
+        // Show typing indicator first
+        setTypingIndicator({
+          agentId: chatMessage.from,
+          targetAgentId: chatMessage.to !== 'all' ? chatMessage.to : null,
+          startTime: Date.now(),
+        });
+
+        // Then show message after typing delay
+        setTimeout(() => {
+          if (!demoMode) return;
+
+          const fromAgent = agents.find(a => a.id === chatMessage.from);
+
+          setChatMessages(prev => [
+            ...prev,
+            {
+              agent: chatMessage.from,
+              name: fromAgent?.name || chatMessage.from,
+              text: chatMessage.text,
+            },
+          ]);
+
+          setTypingIndicator({ agentId: null, targetAgentId: null, startTime: 0 });
+          setDemoChatIndex(prev => prev + 1);
+        }, 1500); // 1.5s typing delay
+      }, chatDelay);
+
       // Occasionally simulate handoffs
       if (Math.random() < 0.3 * demoSpeed) {
         const agentIds = Object.keys(agentStates);
@@ -681,6 +805,18 @@ export default function FloorPage() {
           "Client feedback ready",
           "Content brief complete",
         ];
+
+        // Create energy beam for handoff
+        const fromColor = AGENT_COLORS[from]?.body || '#888';
+        setEnergyBeams(prev => [
+          ...prev,
+          {
+            from,
+            to,
+            startTime: Date.now(),
+            color: fromColor,
+          },
+        ]);
 
         setAgentStates((prev) => ({
           ...prev,
@@ -703,7 +839,12 @@ export default function FloorPage() {
               handoff: null,
             },
           }));
-        }, 3000 / demoSpeed);
+        }, 3000);
+
+        // Remove energy beam after 3 seconds (matches handoff duration)
+        setTimeout(() => {
+          setEnergyBeams(prev => prev.filter(b => !(b.from === from && b.to === to)));
+        }, 3000);
       }
 
       // Occasionally trigger build celebrations
@@ -753,7 +894,7 @@ export default function FloorPage() {
         clearInterval(demoIntervalRef.current);
       }
     };
-  }, [demoMode, demoSpeed, demoIntensity, agents, agentStates]);
+  }, [demoMode, demoSpeed, demoIntensity, agents, agentStates, demoChatIndex]);
 
   // Adjust particle count based on activity + demo mode
   useEffect(() => {
@@ -817,7 +958,7 @@ export default function FloorPage() {
     const render = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Render ambient particles
+      // Render ambient particles (zone-specific)
       setParticles(prev => {
         const next = [...prev];
         next.slice(0, particleCount).forEach((p, i) => {
@@ -826,16 +967,39 @@ export default function FloorPage() {
           p.x += p.vx;
           p.y += p.vy;
 
-          // Wrap around edges
-          if (p.x < 0) p.x = canvas.width;
-          if (p.x > canvas.width) p.x = 0;
-          if (p.y < 0) p.y = canvas.height;
-          if (p.y > canvas.height) p.y = 0;
+          // Keep particles within their assigned zone (with gentle boundary)
+          if (p.zone) {
+            const center = ZONE_CENTERS[p.zone];
+            const dx = p.x - center.x;
+            const dy = p.y - center.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const maxRadius = 120; // Maximum distance from zone center
 
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
-          ctx.fill();
+            if (distance > maxRadius) {
+              // Gently push back toward zone center
+              const angle = Math.atan2(dy, dx);
+              p.vx -= Math.cos(angle) * 0.01;
+              p.vy -= Math.sin(angle) * 0.01;
+            }
+
+            // Draw particle with zone-specific color
+            const zoneColor = ZONE_COLORS[p.zone as keyof typeof ZONE_COLORS];
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = zoneColor?.glow.replace('0.3', p.opacity.toString()) || `rgba(255, 255, 255, ${p.opacity})`;
+            ctx.fill();
+          } else {
+            // Fallback for non-zone particles
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+            ctx.fill();
+          }
         });
         return next;
       });
@@ -922,6 +1086,103 @@ export default function FloorPage() {
         ctx.globalAlpha = 1;
       });
 
+      // Render energy beams (demo mode handoffs)
+      energyBeams.forEach((beam) => {
+        const fromPos = agentPositions[beam.from];
+        const toPos = agentPositions[beam.to];
+
+        if (!fromPos || !toPos) return;
+
+        const elapsed = Date.now() - beam.startTime;
+        const duration = 3000; // 3 seconds
+
+        if (elapsed > duration) return;
+
+        // Fade in/out
+        let alpha = 0;
+        if (elapsed < 500) {
+          alpha = elapsed / 500; // Fade in
+        } else if (elapsed > 2500) {
+          alpha = 1 - (elapsed - 2500) / 500; // Fade out
+        } else {
+          alpha = 1;
+        }
+
+        // Pulsing effect (2-3 pulses over 3 seconds)
+        const pulsePhase = (elapsed / duration) * Math.PI * 6;
+        const pulse = 1 + Math.sin(pulsePhase) * 0.3;
+
+        // Draw curved energy beam
+        const midX = (fromPos.currentX + toPos.currentX) / 2;
+        const midY = (fromPos.currentY + toPos.currentY) / 2 - 50; // Higher arc for beams
+
+        // Outer glow
+        ctx.save();
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = beam.color;
+        ctx.globalAlpha = alpha * 0.6;
+
+        // Draw beam path with animated dash
+        ctx.beginPath();
+        ctx.moveTo(fromPos.currentX, fromPos.currentY);
+        ctx.quadraticCurveTo(midX, midY, toPos.currentX, toPos.currentY);
+
+        ctx.strokeStyle = beam.color;
+        ctx.lineWidth = 3 * pulse;
+        ctx.lineCap = 'round';
+        ctx.setLineDash([10, 5]);
+        ctx.lineDashOffset = -elapsed / 20; // Animated flow
+        ctx.stroke();
+
+        // Inner bright core
+        ctx.beginPath();
+        ctx.moveTo(fromPos.currentX, fromPos.currentY);
+        ctx.quadraticCurveTo(midX, midY, toPos.currentX, toPos.currentY);
+        ctx.strokeStyle = '#fff';
+        ctx.lineWidth = 1.5;
+        ctx.lineCap = 'round';
+        ctx.setLineDash([5, 3]);
+        ctx.lineDashOffset = -elapsed / 20;
+        ctx.globalAlpha = alpha * 0.8;
+        ctx.stroke();
+
+        // Draw data flow particles along the beam
+        const numParticles = 4;
+        for (let i = 0; i < numParticles; i++) {
+          const t = ((elapsed / duration + i / numParticles) % 1);
+          const x = quadraticBezierPoint(
+            fromPos.currentX, fromPos.currentY,
+            midX, midY,
+            toPos.currentX, toPos.currentY,
+            t
+          );
+          const y = quadraticBezierPoint(
+            fromPos.currentY, fromPos.currentY,
+            midY, midY,
+            toPos.currentY, toPos.currentY,
+            t
+          );
+
+          // Glowing particle with trail
+          ctx.beginPath();
+          ctx.arc(x, y, 4, 0, Math.PI * 2);
+          ctx.fillStyle = '#fff';
+          ctx.shadowBlur = 10;
+          ctx.shadowColor = beam.color;
+          ctx.globalAlpha = alpha;
+          ctx.fill();
+
+          // Trail effect
+          ctx.beginPath();
+          ctx.arc(x, y, 6, 0, Math.PI * 2);
+          ctx.fillStyle = beam.color;
+          ctx.globalAlpha = alpha * 0.3;
+          ctx.fill();
+        }
+
+        ctx.restore();
+      });
+
       requestAnimationFrame(render);
     };
 
@@ -930,7 +1191,7 @@ export default function FloorPage() {
     return () => {
       // Cleanup not needed for requestAnimationFrame
     };
-  }, [collaborations, agentPositions, particles, waterfallParticles, particleCount]);
+  }, [collaborations, agentPositions, particles, waterfallParticles, particleCount, energyBeams]);
 
   // Helper function for quadratic bezier interpolation
   function quadraticBezierPoint(
@@ -1148,6 +1409,18 @@ export default function FloorPage() {
           0% { offset-distance: 0%; }
           100% { offset-distance: 100%; }
         }
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-4px); }
+        }
+        @keyframes agent-pulse {
+          0%, 100% { box-shadow: 0 0 10px currentColor, 0 0 20px currentColor; }
+          50% { box-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 40px currentColor; }
+        }
+        @keyframes agent-idle {
+          0%, 100% { opacity: 0.6; }
+          50% { opacity: 0.8; }
+        }
       `}</style>
 
       <div className="p-4 max-w-[1200px] mx-auto">
@@ -1202,9 +1475,8 @@ export default function FloorPage() {
                   onChange={(e) => setDemoSpeed(parseFloat(e.target.value))}
                   className="bg-zinc-700 text-xs text-zinc-200 rounded px-2 py-1 border border-zinc-600"
                 >
-                  <option value={0.5}>0.5x</option>
-                  <option value={1}>1x</option>
-                  <option value={2}>2x</option>
+                  <option value={0.5}>0.5x (cinematic)</option>
+                  <option value={1}>1x (realistic)</option>
                 </select>
 
                 <select
@@ -1453,6 +1725,14 @@ export default function FloorPage() {
                     isSelected={isSelected || isChatSelected}
                   />
 
+                  {/* Float animation for idle agents */}
+                  {!isDead && !isErrored && !isWorking && !isSpeaking && !agentState?.buildCelebration && (
+                    <div className="absolute inset-0" style={{
+                      animation: 'float 3s ease-in-out infinite',
+                      animationDelay: `${agent.id.charCodeAt(0) * 100}ms`,
+                    }} />
+                  )}
+
                   {/* Name label */}
                   <div className="text-center mt-2">
                     <span className="text-[10px] font-bold" style={{ color: colors.label, textShadow: "0 1px 2px rgba(0,0,0,0.8)" }}>
@@ -1573,16 +1853,33 @@ export default function FloorPage() {
                     );
                   })
                 ) : chatMessages.length > 0 && !meetingMode ? (
-                  chatMessages.map((msg, i) => {
-                    const colors = AGENT_COLORS[msg.agent] || { label: "#888" };
-                    const agent = agents.find(a => a.id === msg.agent);
-                    return (
-                      <div key={i} className="animate-fade-in">
-                        <span className="text-xs font-bold" style={{ color: colors.label }}>{agent?.name || msg.name}:</span>
-                        <span className="text-xs text-zinc-300 ml-1">{msg.text}</span>
+                  <>
+                    {/* Typing indicator */}
+                    {typingIndicator.agentId && (
+                      <div className="animate-fade-in">
+                        <span className="text-xs font-bold" style={{ color: AGENT_COLORS[typingIndicator.agentId]?.label || '#888' }}>
+                          {agents.find(a => a.id === typingIndicator.agentId)?.name || typingIndicator.agentId}:
+                        </span>
+                        <span className="text-xs text-zinc-400 ml-1">
+                          <span className="inline-flex gap-1">
+                            <span className="w-1 h-1 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                            <span className="w-1 h-1 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                            <span className="w-1 h-1 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                          </span>
+                        </span>
                       </div>
-                    );
-                  })
+                    )}
+                    {chatMessages.map((msg, i) => {
+                      const colors = AGENT_COLORS[msg.agent] || { label: "#888" };
+                      const agent = agents.find(a => a.id === msg.agent);
+                      return (
+                        <div key={i} className="animate-fade-in">
+                          <span className="text-xs font-bold" style={{ color: colors.label }}>{agent?.name || msg.name}:</span>
+                          <span className="text-xs text-zinc-300 ml-1">{msg.text}</span>
+                        </div>
+                      );
+                    })}
+                  </>
                 ) : !meetingMode && handoffMessages.length > 0 ? (
                   handoffMessages.slice(0, 10).map((msg, i) => {
                     const fromColors = AGENT_COLORS[msg.from] || { label: '#888' };
