@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import { fetchCostData } from '@/lib/cost-data-service';
 import { transformCostData, TransformedCostData } from '@/lib/cost-transformer';
 
+function toAESTDateStr(date: Date): string {
+  return date.toLocaleDateString('en-CA', { timeZone: 'Australia/Sydney' });
+  // Returns YYYY-MM-DD format in AEST
+}
+
 export async function GET() {
   try {
     const cliData = await fetchCostData();
@@ -14,7 +19,7 @@ export async function GET() {
       {
         source: 'mock' as const,
         today: {
-          date: new Date().toISOString().split('T')[0],
+          date: toAESTDateStr(new Date()),
           input: 0,
           output: 0,
           cacheRead: 0,
@@ -27,7 +32,7 @@ export async function GET() {
           cacheWriteCost: 0,
         },
         thisWeek: {
-          date: new Date().toISOString().split('T')[0],
+          date: toAESTDateStr(new Date()),
           input: 0,
           output: 0,
           cacheRead: 0,
@@ -40,7 +45,7 @@ export async function GET() {
           cacheWriteCost: 0,
         },
         thisMonth: {
-          date: new Date().toISOString().split('T')[0],
+          date: toAESTDateStr(new Date()),
           input: 0,
           output: 0,
           cacheRead: 0,

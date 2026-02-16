@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   RefreshCw, Clock, CheckCircle, XCircle, PauseCircle,
-  TrendingUp, ExternalLink, Plus, Wrench, FileText, Hammer, Star, AlertTriangle
+  TrendingUp, ExternalLink, Plus, Wrench, Hammer, Star, AlertTriangle
 } from "lucide-react";
 import { ActiveBuilds } from '@/components/builds/ActiveBuilds';
 import { PipelineView } from '@/components/builds/PipelineView';
@@ -46,6 +46,13 @@ interface BriefItem {
   sourceModel?: string;
   sourceDate?: string;
   sourceTitle?: string;
+  description?: string;
+  buildOutcome?: string;
+  category: 'research' | 'think' | 'request' | 'review';
+  keyInsight?: string;
+  proposedBuild?: string[];
+  impact?: string[];
+  oneLiner?: string;
 }
 
 interface ResearchItem {
@@ -155,23 +162,20 @@ export default function HubResearchPage() {
   }
 
   const handleViewSource = async (brief: BriefItem) => {
-    if (!brief.sourceResearchId) {
-      if (brief.sourceUrl) {
-        window.open(brief.sourceUrl, "_blank");
-      }
-      return;
-    }
-
     setLoadingResearch(true);
     try {
-      const res = await fetch(`/api/research?id=${brief.sourceResearchId}`);
+      // The brief id IS the filename. The /api/research/[id] route searches spec-briefs dir.
+      const res = await fetch(`/api/research/${encodeURIComponent(brief.id)}`);
       if (res.ok) {
         const research = await res.json();
         setSelectedResearch(research);
         setSlideOverOpen(true);
+      } else {
+        alert("Source document not found");
       }
     } catch (error) {
       console.error("Failed to load research:", error);
+      alert("Failed to load source document");
     } finally {
       setLoadingResearch(false);
     }
@@ -359,6 +363,19 @@ export default function HubResearchPage() {
     }
   };
 
+  const getCategoryBadge = (category: 'research' | 'think' | 'request' | 'review') => {
+    switch (category) {
+      case 'research':
+        return { icon: '🔬', className: 'bg-blue-900/30 text-blue-400 border border-blue-800' };
+      case 'think':
+        return { icon: '💭', className: 'bg-purple-900/30 text-purple-400 border border-purple-800' };
+      case 'request':
+        return { icon: '📋', className: 'bg-amber-900/30 text-amber-400 border border-amber-800' };
+      case 'review':
+        return { icon: '🔍', className: 'bg-cyan-900/30 text-cyan-400 border border-cyan-800' };
+    }
+  };
+
   const getStatusColor = (status: BriefStatus) => {
     switch (status) {
       case "new":
@@ -473,10 +490,24 @@ export default function HubResearchPage() {
                 className="text-base font-semibold"
               />
             ) : (
-              <CardTitle className="text-base">{brief.title}</CardTitle>
+              <div className="flex items-center gap-2">
+                <CardTitle className="text-base">{brief.title}</CardTitle>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0 text-blue-500 hover:text-blue-700 shrink-0"
+                  onClick={() => onViewSource(brief)}
+                  title="View source research"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                </Button>
+              </div>
             )}
 
             <div className="flex gap-1 shrink-0">
+              <Badge className={getCategoryBadge(brief.category).className}>
+                {getCategoryBadge(brief.category).icon}
+              </Badge>
               <Badge className={getStatusColor(brief.status)}>
                 {brief.status}
               </Badge>
@@ -486,45 +517,18 @@ export default function HubResearchPage() {
             </div>
           </div>
 
-          {/* Source Attribution Row */}
-          {brief.sourceTitle && (
-            <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500 bg-zinc-50 px-2 py-1 rounded">
-              <FileText className="h-3 w-3" />
-              <span className="font-medium text-zinc-700">From:</span>
-              <span className="truncate flex-1">{brief.sourceTitle}</span>
-              {brief.sourceModel && (
-                <>
-                  <span className="text-zinc-300">|</span>
-                  <Badge variant="outline" className="text-xs h-5">
-                    {brief.sourceModel}
-                  </Badge>
-                </>
-              )}
-              {brief.sourceDate && (
-                <>
-                  <span className="text-zinc-300">|</span>
-                  <span>{formatAESTDateTime(brief.sourceDate)}</span>
-                </>
-              )}
-            </div>
-          )}
-
-          <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
+          <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500 flex-wrap">
             <Badge variant="secondary">
               <Clock className="h-3 w-3 mr-1" />
               {new Date(brief.createdAt).toLocaleDateString()}
             </Badge>
             <Badge variant="outline">Complexity: {brief.complexity}</Badge>
-            {(brief.sourceResearchId || brief.sourceUrl) && !isEditing && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => onViewSource(brief)}
-                className="text-xs h-6 bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
-              >
-                <ExternalLink className="h-3 w-3 mr-1" />
-                Source
-              </Button>
+            {(brief.sourceTitle || brief.sourceModel) && (
+              <Badge variant="outline" className="text-zinc-400 border-zinc-700">
+                {brief.sourceModel && <span className="text-zinc-300">{brief.sourceModel}</span>}
+                {brief.sourceModel && brief.sourceTitle && <span className="text-zinc-600 mx-1">·</span>}
+                {brief.sourceTitle && <span>{brief.sourceTitle}</span>}
+              </Badge>
             )}
           </div>
         </CardHeader>
@@ -545,14 +549,52 @@ export default function HubResearchPage() {
               />
             </div>
           ) : (
-            <ul className="space-y-1 text-sm text-zinc-600">
-              {(brief.bullets || []).slice(0, 5).map((bullet, i) => (
-                <li key={i} className="flex gap-1">
-                  <span className="text-zinc-400">•</span>
-                  <span>{bullet}</span>
-                </li>
-              ))}
-            </ul>
+            <div className="space-y-3 text-sm">
+              {brief.keyInsight && (
+                <div>
+                  <span className="font-semibold text-zinc-200">Key Insight</span>
+                  <p className="text-zinc-400 mt-1">{brief.keyInsight}</p>
+                </div>
+              )}
+              {brief.proposedBuild && brief.proposedBuild.length > 0 && (
+                <div>
+                  <span className="font-semibold text-zinc-200">Proposed Build</span>
+                  <ul className="mt-1 space-y-1">
+                    {brief.proposedBuild.map((item, i) => (
+                      <li key={i} className="flex gap-2 text-zinc-400">
+                        <span className="text-zinc-600 shrink-0">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {brief.impact && brief.impact.length > 0 && (
+                <div className="bg-emerald-900/20 px-3 py-2 rounded border border-emerald-800/50">
+                  <span className="font-semibold text-emerald-400">Impact</span>
+                  <ul className="mt-1 space-y-1">
+                    {brief.impact.map((item, i) => (
+                      <li key={i} className="flex gap-2 text-emerald-300/80">
+                        <span className="text-emerald-600 shrink-0">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {(!brief.keyInsight && (!brief.proposedBuild || brief.proposedBuild.length === 0)) && (
+                brief.oneLiner ? (
+                  <p className="text-zinc-400">{brief.oneLiner}</p>
+                ) : (
+                  <p className="text-zinc-500 italic text-xs">Click source to view full brief</p>
+                )
+              )}
+              {brief.buildOutcome && (
+                <div className="bg-blue-900/30 p-2 rounded border border-blue-800">
+                  <p className="text-blue-300 text-xs font-medium">🔨 Could build: {brief.buildOutcome}</p>
+                </div>
+              )}
+            </div>
           )}
 
           {/* Complexity selector in edit mode */}
@@ -618,8 +660,8 @@ export default function HubResearchPage() {
           )}
 
           {/* Action Buttons */}
-          {brief.status === "new" && (
-            <div className="flex gap-2 pt-2 border-t border-zinc-200">
+          {(brief.status === "new" || brief.status === "review") && (
+            <div className="flex gap-2 pt-2 border-t border-zinc-700 justify-center">
               {isEditing ? (
                 <>
                   <Button
@@ -644,7 +686,7 @@ export default function HubResearchPage() {
                   <Button
                     size="sm"
                     variant="default"
-                    className="flex-1"
+                    className="px-6"
                     onClick={() => onApprove(brief.id)}
                   >
                     <CheckCircle className="h-4 w-4 mr-1" />
@@ -653,7 +695,7 @@ export default function HubResearchPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="flex-1"
+                    className="px-6"
                     onClick={() => onPark(brief.id)}
                   >
                     <PauseCircle className="h-4 w-4 mr-1" />
@@ -662,7 +704,7 @@ export default function HubResearchPage() {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="text-red-600 hover:text-red-700"
+                    className="px-6 text-red-500 hover:text-red-400 border-red-800"
                     onClick={() => onReject(brief.id)}
                   >
                     <XCircle className="h-4 w-4 mr-1" />
@@ -809,22 +851,22 @@ export default function HubResearchPage() {
           </div>
 
           {/* Tabs */}
-          <Tabs defaultValue="brief-bank" className="flex-1 overflow-hidden">
+          <Tabs defaultValue="brief-queue" className="flex-1 overflow-hidden">
             <TabsList className="grid w-full max-w-xl grid-cols-4">
-              <TabsTrigger value="brief-bank">Brief Bank</TabsTrigger>
+              <TabsTrigger value="brief-queue">Brief Queue</TabsTrigger>
               <TabsTrigger value="builds">Builds</TabsTrigger>
               <TabsTrigger value="qa">QA</TabsTrigger>
               <TabsTrigger value="fix-log">Fix Log</TabsTrigger>
             </TabsList>
 
-            {/* Brief Bank Tab */}
-            <TabsContent value="brief-bank" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
+            {/* Brief Queue Tab */}
+            <TabsContent value="brief-queue" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
               <div className="flex h-full gap-4">
                 {/* Briefs List */}
                 <div className="flex-1 overflow-hidden flex flex-col">
                   {/* Header with New Brief button */}
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold">Brief Bank</h2>
+                    <h2 className="text-lg font-semibold">Brief Queue</h2>
                     <Button onClick={() => setNewBriefDialogOpen(true)}>
                       <Plus className="h-4 w-4 mr-2" />
                       New Brief
@@ -1268,7 +1310,7 @@ export default function HubResearchPage() {
           <DialogHeader>
             <DialogTitle>Create New Brief</DialogTitle>
             <DialogDescription>
-              Add a new brief to the Brief Bank for tracking and approval
+              Add a new brief to the Brief Queue for tracking and approval
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
@@ -1375,22 +1417,22 @@ export default function HubResearchPage() {
           />
 
           {/* Panel */}
-          <div className="absolute inset-y-0 right-0 w-full max-w-2xl bg-white shadow-xl">
+          <div className="absolute inset-y-0 right-0 w-full max-w-2xl bg-zinc-900 shadow-xl">
             <div className="flex flex-col h-full">
               {/* Header */}
-              <div className="flex items-center justify-between p-4 border-b border-zinc-200">
+              <div className="flex items-center justify-between p-4 border-b border-zinc-700">
                 <div>
-                  <h2 className="text-lg font-semibold text-zinc-900">
+                  <h2 className="text-lg font-semibold text-white">
                     {selectedResearch?.title || "Research"}
                   </h2>
-                  <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
-                    <Badge variant="outline">
+                  <div className="flex items-center gap-2 mt-1 text-xs text-zinc-400">
+                    <Badge variant="outline" className="border-zinc-700 text-zinc-300">
                       {selectedResearch?.type === "deep-focus" ? "Deep Focus" :
                        selectedResearch?.type === "whats-new" ? "What's New" :
                        selectedResearch?.type}
                     </Badge>
                     {selectedResearch?.sourceModel && (
-                      <Badge variant="secondary">{selectedResearch.sourceModel}</Badge>
+                      <Badge variant="secondary" className="bg-zinc-800 text-zinc-300">{selectedResearch.sourceModel}</Badge>
                     )}
                     {selectedResearch?.date && (
                       <span>{formatAESTDateTime(selectedResearch.date)}</span>
@@ -1401,6 +1443,7 @@ export default function HubResearchPage() {
                   variant="ghost"
                   size="icon"
                   onClick={() => setSlideOverOpen(false)}
+                  className="text-zinc-400 hover:text-white"
                 >
                   <XCircle className="h-5 w-5" />
                 </Button>
@@ -1413,11 +1456,11 @@ export default function HubResearchPage() {
                     <RefreshCw className="h-6 w-6 animate-spin text-zinc-400" />
                   </div>
                 ) : selectedResearch?.content ? (
-                  <div className="prose prose-sm max-w-none">
+                  <div className="prose prose-sm prose-invert max-w-none text-zinc-300">
                     <ReactMarkdown>{selectedResearch.content}</ReactMarkdown>
                   </div>
                 ) : (
-                  <p className="text-zinc-500">No content available</p>
+                  <p className="text-zinc-400">No content available</p>
                 )}
               </ScrollArea>
             </div>

@@ -83,10 +83,69 @@ const AGENT_COLORS: Record<string, { body: string; accent: string; label: string
   testing:  { body: "#FF6347", accent: "#DC143C", label: "#FF6347" },   // Red-orange
   events:   { body: "#FF8C00", accent: "#FF4500", label: "#FF8C00" },   // Orange
   support:  { body: "#87CEEB", accent: "#4682B4", label: "#87CEEB" },   // Sky blue
-  luna:     { body: "#C0C0C0", accent: "#808080", label: "#C0C0C0" },   // Silver
-  ella:     { body: "#FFB6C1", accent: "#DB7093", label: "#FFB6C1" },
-  arty:     { body: "#98FB98", accent: "#3CB371", label: "#98FB98" },
 };
+
+function generateDemoMessage(agentId: string, activities: string[]): string {
+  const messages: Record<string, string[]> = {
+    main: [
+      "Coordinating the sprint",
+      "Checking overnight builds",
+      "Reviewing pipeline status",
+      "Syncing with team leads",
+    ],
+    creative: [
+      "Drafting the campaign brief",
+      "Reviewing brand guidelines",
+      "Polishing the creative deck",
+      "Aligning with Ella's vision",
+    ],
+    design: [
+      "Updating the design system",
+      "Creating new components",
+      "Polishing the UI flow",
+      "Reviewing accessibility",
+    ],
+    growth: [
+      "Analysing funnel data",
+      "A/B test results look good",
+      "Engagement metrics rising",
+      "Content performance review",
+    ],
+    research: [
+      "Deep dive on AI trends",
+      "Market intel gathering",
+      "Competitor analysis",
+      "Tech radar scanning",
+    ],
+    dev: [
+      "Shipping the feature",
+      "Code review in progress",
+      "Fixing edge cases",
+      "Refactoring for clarity",
+    ],
+    testing: [
+      "Running test suite",
+      "Found an edge case",
+      "QA pass complete",
+      "Regression testing",
+    ],
+    events: [
+      "Coordinating with venue",
+      "Lineup finalization",
+      "Promo schedule set",
+      "Logistics confirmed",
+    ],
+    support: [
+      "Resolving tickets",
+      "Updating documentation",
+      "User feedback analysis",
+      "Knowledge base refresh",
+    ],
+  };
+
+  const agentMessages = messages[agentId] || activities;
+  return agentMessages[Math.floor(Math.random() * agentMessages.length)];
+}
 
 // Zone centers (targets for agents to drift toward)
 const ZONE_CENTERS: Record<string, { x: number; y: number }> = {
@@ -118,9 +177,6 @@ const ACTIVITIES: Record<string, string[]> = {
   testing: ["Running tests", "Edge case hunt", "Bug hunting"],
   events: ["Event planning", "Lineup coordination", "Venue logistics"],
   support: ["Resolving tickets", "User feedback", "Doc updates"],
-  luna: ["Discord monitoring", "Community chat", "Posting digest"],
-  ella: ["Creating artwork", "Pattern spotting", "Art direction"],
-  arty: ["Ella's schedule", "Brand consistency", "Creative ops"],
 };
 
 function assignAgentToZone(agentId: string, activity: string, status: string): string {
@@ -195,6 +251,13 @@ export default function FloorPage() {
   const [particleCount, setParticleCount] = useState(50);
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [handoffMessages, setHandoffMessages] = useState<Array<{ from: string; to: string; task: string; time: string }>>([]);
+
+  // Demo mode state
+  const [demoMode, setDemoMode] = useState(false);
+  const [demoSpeed, setDemoSpeed] = useState(1); // 0.5, 1, 2
+  const [demoIntensity, setDemoIntensity] = useState<'calm' | 'normal' | 'busy'>('normal');
+  const demoIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
   const arcCanvasRef = useRef<HTMLCanvasElement>(null);
   const agentsRef = useRef<Agent[]>([]);
 
@@ -228,7 +291,7 @@ export default function FloorPage() {
       try {
         const res = await fetch("/api/company/roster");
         const data = await res.json();
-        const agts: Agent[] = data.agents || [];
+        const agts: Agent[] = (data.agents || []).filter((a: Agent) => !['ella', 'arty', 'larina', 'luna'].includes(a.id));
         setAgents(agts);
 
         // Set initial states
@@ -259,8 +322,8 @@ export default function FloorPage() {
           const center = ZONE_CENTERS[zone];
 
           // Start with random offset from zone center
-          const offsetX = (Math.random() - 0.5) * 150;
-          const offsetY = (Math.random() - 0.5) * 100;
+          const offsetX = (Math.random() - 0.5) * 200;
+          const offsetY = (Math.random() - 0.5) * 200;
 
           positions[agent.id] = {
             currentX: center.x + offsetX,
@@ -401,8 +464,8 @@ export default function FloorPage() {
           // Zone changed? Update target
           else if (pos.zone !== zone) {
             const center = ZONE_CENTERS[zone];
-            const offsetX = (Math.random() - 0.5) * 150;
-            const offsetY = (Math.random() - 0.5) * 100;
+            const offsetX = (Math.random() - 0.5) * 200;
+            const offsetY = (Math.random() - 0.5) * 200;
 
             next[agent.id] = {
               ...pos,
@@ -544,12 +607,167 @@ export default function FloorPage() {
     setCollaborations(uniqueCollabs);
   }, [agentStates]);
 
-  // Adjust particle count based on activity
+  // Demo mode: simulate agent activity
+  useEffect(() => {
+    if (!demoMode || agents.length === 0) {
+      if (demoIntervalRef.current) {
+        clearInterval(demoIntervalRef.current);
+        demoIntervalRef.current = null;
+      }
+      return;
+    }
+
+    const intensitySettings = {
+      calm: { interval: 8000, activeRatio: 0.3 },
+      normal: { interval: 4000, activeRatio: 0.5 },
+      busy: { interval: 2000, activeRatio: 0.7 },
+    };
+
+    const settings = intensitySettings[demoIntensity];
+    const interval = settings.interval / demoSpeed;
+
+    const simulateActivity = () => {
+      setAgentStates((prev) => {
+        const next = { ...prev };
+        const agentIds = Object.keys(prev);
+
+        // Pick random agents to activate based on intensity
+        const numActive = Math.floor(agentIds.length * settings.activeRatio);
+        const shuffled = [...agentIds].sort(() => Math.random() - 0.5);
+        const activeAgents = shuffled.slice(0, numActive);
+
+        agentIds.forEach((id) => {
+          const isActive = activeAgents.includes(id);
+          const activities = ACTIVITIES[id] || ["Working..."];
+
+          if (isActive) {
+            // Simulate working state with random activity
+            next[id] = {
+              ...prev[id],
+              state: 'working',
+              status: 'working',
+              activity: activities[Math.floor(Math.random() * activities.length)],
+              lastMessage: generateDemoMessage(id, activities),
+            };
+          } else {
+            // Idle state
+            next[id] = {
+              ...prev[id],
+              state: 'idle',
+              status: 'idle',
+              activity: ACTIVITIES[id]?.[0] || "Idle",
+              lastMessage: '',
+            };
+          }
+        });
+
+        return next;
+      });
+
+      // Occasionally simulate handoffs
+      if (Math.random() < 0.3 * demoSpeed) {
+        const agentIds = Object.keys(agentStates);
+        const from = agentIds[Math.floor(Math.random() * agentIds.length)];
+        let to = agentIds[Math.floor(Math.random() * agentIds.length)];
+        while (to === from) {
+          to = agentIds[Math.floor(Math.random() * agentIds.length)];
+        }
+
+        const tasks = [
+          "Review the new spec",
+          "Handoff for QA",
+          "Needs design review",
+          "Ready for testing",
+          "Client feedback ready",
+          "Content brief complete",
+        ];
+
+        setAgentStates((prev) => ({
+          ...prev,
+          [from]: {
+            ...prev[from],
+            handoff: {
+              from,
+              to,
+              task: tasks[Math.floor(Math.random() * tasks.length)],
+            },
+          },
+        }));
+
+        // Clear handoff after 3 seconds
+        setTimeout(() => {
+          setAgentStates((prev) => ({
+            ...prev,
+            [from]: {
+              ...prev[from],
+              handoff: null,
+            },
+          }));
+        }, 3000 / demoSpeed);
+      }
+
+      // Occasionally trigger build celebrations
+      if (Math.random() < 0.1 * demoSpeed) {
+        const agentIds = Object.keys(agentStates);
+        const agent = agentIds[Math.floor(Math.random() * agentIds.length)];
+        const builds = [
+          "Floor Demo Mode",
+          "Pipeline Update",
+          "Nexus v2.4",
+          "Agent Sync",
+          "Content Flow",
+        ];
+
+        setAgentStates((prev) => ({
+          ...prev,
+          [agent]: {
+            ...prev[agent],
+            buildCelebration: {
+              agentId: agent,
+              buildName: builds[Math.floor(Math.random() * builds.length)],
+            },
+          },
+        }));
+
+        // Clear after 5 seconds
+        setTimeout(() => {
+          setAgentStates((prev) => ({
+            ...prev,
+            [agent]: {
+              ...prev[agent],
+              buildCelebration: null,
+            },
+          }));
+        }, 5000 / demoSpeed);
+      }
+    };
+
+    // Run immediately
+    simulateActivity();
+
+    // Then run on interval
+    demoIntervalRef.current = setInterval(simulateActivity, interval);
+
+    return () => {
+      if (demoIntervalRef.current) {
+        clearInterval(demoIntervalRef.current);
+      }
+    };
+  }, [demoMode, demoSpeed, demoIntensity, agents, agentStates]);
+
+  // Adjust particle count based on activity + demo mode
   useEffect(() => {
     const activeAgents = Object.values(agentStates).filter(s => s.status === 'working').length;
-    const targetCount = 30 + activeAgents * 5;
-    setParticleCount(Math.min(targetCount, 100));
-  }, [agentStates]);
+    let targetCount = 30 + activeAgents * 5;
+
+    // Boost particles in demo mode
+    if (demoMode) {
+      const demoBoost = demoIntensity === 'busy' ? 40 : demoIntensity === 'normal' ? 20 : 10;
+      targetCount += demoBoost;
+    }
+
+    setParticleCount(Math.min(targetCount, 150));
+  }, [agentStates, demoMode, demoIntensity]);
 
   // Save snapshots every 10 minutes
   useEffect(() => {
@@ -957,6 +1175,50 @@ export default function FloorPage() {
                 </>
               )}
             </button>
+
+            {/* Demo Mode Toggle */}
+            <button
+              onClick={() => setDemoMode(!demoMode)}
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
+                demoMode
+                  ? "bg-purple-500 text-white hover:bg-purple-600"
+                  : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
+              }`}
+            >
+              {demoMode ? (
+                <>
+                  <span className="animate-pulse">🎬</span>
+                  Demo On
+                </>
+              ) : (
+                <>🎬 Demo</>
+              )}
+            </button>
+
+            {demoMode && (
+              <div className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-1">
+                <select
+                  value={demoSpeed}
+                  onChange={(e) => setDemoSpeed(parseFloat(e.target.value))}
+                  className="bg-zinc-700 text-xs text-zinc-200 rounded px-2 py-1 border border-zinc-600"
+                >
+                  <option value={0.5}>0.5x</option>
+                  <option value={1}>1x</option>
+                  <option value={2}>2x</option>
+                </select>
+
+                <select
+                  value={demoIntensity}
+                  onChange={(e) => setDemoIntensity(e.target.value as 'calm' | 'normal' | 'busy')}
+                  className="bg-zinc-700 text-xs text-zinc-200 rounded px-2 py-1 border border-zinc-600"
+                >
+                  <option value="calm">Calm</option>
+                  <option value="normal">Normal</option>
+                  <option value="busy">Busy</option>
+                </select>
+              </div>
+            )}
+
             <Link href="/company" className="text-xs text-blue-400 hover:underline">HQ →</Link>
           </div>
         </div>
@@ -1253,6 +1515,18 @@ export default function FloorPage() {
                 {meetingMode ? <><Calendar size={10} /> Standup In Progress</> : timelineMode ? "⏮️ Replay Mode" : "Villanueva Creative HQ"}
               </span>
             </div>
+
+            {/* Demo mode indicator */}
+            {demoMode && (
+              <div className="absolute top-2 left-2 z-40">
+                <div className="bg-purple-500/20 border border-purple-500/40 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-2">
+                  <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
+                  <span className="text-[10px] text-purple-300 font-bold uppercase tracking-wide">
+                    Demo Mode • {demoIntensity} • {demoSpeed}x
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Chat Panel */}

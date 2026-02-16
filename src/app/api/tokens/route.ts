@@ -10,6 +10,15 @@ import { detectAlerts } from '@/lib/tokens/alerts';
 import type { TokenUsageResponse } from '@/lib/tokens/types';
 
 // ============================================================================
+// Helper: Convert Date to AEST date string
+// ============================================================================
+
+function toAESTDateStr(date: Date): string {
+  return date.toLocaleDateString('en-CA', { timeZone: 'Australia/Sydney' });
+  // Returns YYYY-MM-DD format in AEST
+}
+
+// ============================================================================
 // Cache Configuration
 // ============================================================================
 
@@ -103,23 +112,23 @@ export async function GET(request: Request) {
 
     // Date calculations
     const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
+    const todayStr = toAESTDateStr(today);
 
     // Yesterday
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().split('T')[0];
+    const yesterdayStr = toAESTDateStr(yesterday);
 
     // Start of week (Monday)
     const weekStart = new Date(today);
     const dayOfWeek = today.getDay();
     const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
     weekStart.setDate(today.getDate() - diff);
-    const weekStartStr = weekStart.toISOString().split('T')[0];
+    const weekStartStr = toAESTDateStr(weekStart);
 
     // Start of month
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    const monthStartStr = monthStart.toISOString().split('T')[0];
+    const monthStartStr = toAESTDateStr(monthStart);
 
     // Build period summaries
     const todaySummary = aggregated.byDay.get(todayStr) || createEmptyPeriodSummary(todayStr);
@@ -132,7 +141,7 @@ export async function GET(request: Request) {
     for (let i = days - 1; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
+      const dateStr = toAESTDateStr(date);
       const dayData = aggregated.byDay.get(dateStr);
       if (dayData) {
         byDay.push({
@@ -255,7 +264,7 @@ export async function GET(request: Request) {
     return NextResponse.json(response);
   } catch {
     // Return mock data on error (graceful degradation)
-    const todayStr = new Date().toISOString().split('T')[0];
+    const todayStr = toAESTDateStr(new Date());
 
     return NextResponse.json(
       {

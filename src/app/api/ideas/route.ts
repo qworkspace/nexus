@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { readFileSync, writeFileSync, existsSync, readdirSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, readdirSync, statSync } from "fs";
 import { join } from "path";
 
 export const dynamic = "force-dynamic";
@@ -63,6 +63,11 @@ interface BriefItem {
   sourceModel?: string;
   sourceDate?: string;
   sourceTitle?: string;
+  category: 'research' | 'think' | 'request' | 'review';
+  keyInsight?: string;
+  proposedBuild?: string[];
+  impact?: string[];
+  oneLiner?: string;
 }
 
 interface BriefStats {
@@ -209,9 +214,115 @@ function parseSpecBrief(
   const complexityMatch = content.match(/complexity:\s*(LOW|MED|HIGH)/i);
   const complexity = (statusEntry.complexity || complexityMatch?.[1]?.toUpperCase() || "MED") as "LOW" | "MED" | "HIGH";
 
-  // Extract date from filename
+  // Extract source and model from content (BEFORE statusEntry overrides)
+  const sourceMatch = content.match(/\*\*Source:\*\*\s*(.+?)(?:\n|$)/);
+  const modelMatch = content.match(/\*\*Model:\*\*\s*(.+?)(?:\n|$)/);
+  
+  // Clean source: strip dates and descriptions (e.g. "PJ review (2026-02-14) — long description" → "PJ review")
+  let sourceTitle = sourceMatch ? sourceMatch[1].trim()
+    .replace(/\s*[—–-]\s+.*$/, '')         // Strip " — description" or " - description"
+    .replace(/\s*\(?\d{4}-\d{2}-\d{2}(?:-\d{4})?\)?/, '')  // Strip dates
+    .replace(/\s*\(\s*\)$/, '')             // Strip empty parens
+    .trim() : undefined;
+  if (sourceTitle === '') sourceTitle = undefined;
+  const sourceModel = modelMatch ? modelMatch[1].trim() : undefined;
+
+  // Extract date with priority: filename → content → file mtime → now
   const dateMatch = filename.match(/(\d{4}-\d{2}-\d{2})/);
-  const createdAt = dateMatch ? `${dateMatch[1]}T00:00:00Z` : new Date().toISOString();
+  let createdAt: string;
+  if (dateMatch) {
+    createdAt = `${dateMatch[1]}T00:00:00Z`;
+  } else {
+    // Try to extract from content **Created:** field
+    const contentDateMatch = content.match(/\*\*Created:\*\*\s*(\d{4}-\d{2}-\d{2})/);
+    if (contentDateMatch) {
+      createdAt = `${contentDateMatch[1]}T00:00:00Z`;
+    } else {
+      // Fall back to file modification time
+      try {
+        createdAt = statSync(path).mtime.toISOString();
+      } catch {
+        createdAt = new Date().toISOString();
+      }
+    }
+  }
+
+  // Helper to clean markdown formatting
+  const cleanMarkdown = (text: string): string => {
+    return text
+      .replace(/\*{1,2}([^*]+)\*{1,2}/g, '$1') // Remove bold/italic
+      .replace(/^#+\s*/gm, '') // Remove headers
+      .trim();
+  };
+
+  // Helper to validate extracted content
+  const isValidContent = (text: string): boolean => {
+    if (!text || text.length < 30) return false;
+    if (text.startsWith('#') || text.startsWith('**') || text.startsWith('-') || text.startsWith('*')) return false;
+    return true;
+  };
+
+  // STRICT extraction: only extract if proper section headers exist
+  // keyInsight: Match new headers (Key Insight) OR old headers (Problem) for backwards compat
+  let keyInsight = '';
+  const keyInsightSection = content.match(/##\s*(?:Key\s+Insights?|Problem(?:\s+Statement)?)\s*\n([\s\S]+?)(?=##|$)/i);
+  if (keyInsightSection) {
+    const raw = keyInsightSection[1].split('\n').map(l => l.trim()).filter(l => l.length > 0)[0] || '';
+    const cleaned = cleanMarkdown(raw);
+    if (isValidContent(cleaned)) {
+      keyInsight = cleaned;
+    }
+  }
+
+  // Extract proposedBuild lines (up to 5 meaningful lines)
+  // Match new headers (Proposed Build) OR old headers (Solution) for backwards compat
+  const proposedBuildSection = content.match(/##\s*(?:Proposed\s+Build|Proposed\s+Solution|Solution)\s*\n([\s\S]+?)(?=##|$)/i);
+  let proposedBuild: string[] = [];
+  if (proposedBuildSection) {
+    proposedBuild = proposedBuildSection[1]
+      .split('\n')
+      .map(l => l.replace(/^\s*[-*]\s*/, '').replace(/^\d+\.\s*/, '').replace(/\*{1,2}([^*]+)\*{1,2}/g, '$1').trim())
+      .filter(l => l.length > 15 && !l.startsWith('#'))
+      .slice(0, 5);
+  }
+
+  // Extract impact lines (up to 5 meaningful lines)
+  const impactSection = content.match(/##\s*(?:Why This Matters|Impact|Benefits)\s*\n([\s\S]+?)(?=##|$)/i);
+  let impact: string[] = [];
+  if (impactSection) {
+    impact = impactSection[1]
+      .split('\n')
+      .map(l => l.replace(/^\s*[-*]\s*/, '').replace(/^\d+\.\s*/, '').replace(/\*{1,2}([^*]+)\*{1,2}/g, '$1').trim())
+      .filter(l => l.length > 15 && !l.startsWith('#'))
+      .slice(0, 5);
+  }
+
+  // Extract oneLiner: first meaningful paragraph from entire document (fallback)
+  const lines = content.split('\n')
+    .map(l => l.trim())
+    .filter(l => 
+      l.length > 30 && 
+      !l.startsWith('#') && 
+      !l.startsWith('**') && 
+      !l.startsWith('---') && 
+      !l.startsWith('-') && 
+      !l.startsWith('*')
+    );
+  const oneLiner = lines[0] || '';
+
+  // Derive category from sourceTitle
+  const effectiveSourceTitle = (statusEntry.sourceTitle || sourceTitle || '').toLowerCase();
+  let category: 'research' | 'think' | 'request' | 'review' = 'research';
+  
+  if (effectiveSourceTitle.includes('request')) {
+    category = 'request';
+  } else if (effectiveSourceTitle.includes('review') || effectiveSourceTitle.includes('feedback')) {
+    category = 'review';
+  } else if (effectiveSourceTitle.includes('innovation') || effectiveSourceTitle.includes('think') || effectiveSourceTitle.includes('deep')) {
+    category = 'think';
+  } else if (effectiveSourceTitle.includes("what's new") || effectiveSourceTitle.includes('scan')) {
+    category = 'research';
+  }
 
   return {
     id,
@@ -226,9 +337,14 @@ function parseSpecBrief(
     notes: statusEntry.notes,
     summary,
     sourceResearchId: statusEntry.sourceResearchId,
-    sourceModel: statusEntry.sourceModel,
+    sourceModel: statusEntry.sourceModel || sourceModel,
     sourceDate: statusEntry.sourceDate,
-    sourceTitle: statusEntry.sourceTitle,
+    sourceTitle: statusEntry.sourceTitle || sourceTitle,
+    category,
+    keyInsight,
+    proposedBuild,
+    impact,
+    oneLiner,
   };
 }
 

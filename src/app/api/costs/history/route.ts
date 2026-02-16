@@ -3,6 +3,11 @@ import { NextResponse } from "next/server";
 
 export const dynamic = 'force-dynamic';
 
+function toAESTDateStr(date: Date): string {
+  return date.toLocaleDateString('en-CA', { timeZone: 'Australia/Sydney' });
+  // Returns YYYY-MM-DD format in AEST
+}
+
 interface DailyCost {
   date: string;
   total: number;
@@ -99,7 +104,7 @@ export async function GET(request: Request) {
     }>();
 
     for (const activity of activities) {
-      const dateStr = new Date(activity.timestamp).toISOString().split("T")[0];
+      const dateStr = toAESTDateStr(new Date(activity.timestamp));
       const existing = dailyMap.get(dateStr) || {
         total: 0,
         byService: {},
