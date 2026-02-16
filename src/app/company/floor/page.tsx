@@ -291,6 +291,32 @@ function assignAgentToZone(agentId: string, activity: string, status: string): s
   return 'void';
 }
 
+// Helper functions for quadratic bezier interpolation
+function quadraticBezierPoint(
+  x0: number, y0: number,
+  cx: number, cy: number,
+  x1: number, y1: number,
+  t: number,
+  axis: 'x' | 'y' = 'x'
+): number {
+  const mt = 1 - t;
+  if (axis === 'x') {
+    return mt * mt * x0 + 2 * mt * t * cx + t * t * x1;
+  } else {
+    return mt * mt * y0 + 2 * mt * t * cy + t * t * y1;
+  }
+}
+
+// Helper to get bezier x coordinate
+function bezierX(x0: number, y0: number, cx: number, cy: number, x1: number, y1: number, t: number): number {
+  return quadraticBezierPoint(x0, y0, cx, cy, x1, y1, t, 'x');
+}
+
+// Helper to get bezier y coordinate
+function bezierY(x0: number, y0: number, cx: number, cy: number, x1: number, y1: number, t: number): number {
+  return quadraticBezierPoint(x0, y0, cx, cy, x1, y1, t, 'y');
+}
+
 export default function FloorPage() {
   const [agents, setAgents] = useState<Agent[]>([]);
   const [meetingMode, setMeetingMode] = useState(false);
@@ -713,6 +739,27 @@ export default function FloorPage() {
     const settings = intensitySettings[demoIntensity];
     const interval = settings.interval / demoSpeed;
 
+    // On demo start: spread agents across zones using DEMO_AGENT_ZONES
+    setAgentPositions(prev => {
+      const next = { ...prev };
+      Object.keys(prev).forEach(id => {
+        const zone = DEMO_AGENT_ZONES[id] || 'void';
+        const center = ZONE_CENTERS[zone];
+        const jitter = ZONE_JITTER[zone] || 50;
+        const angle = Math.random() * Math.PI * 2;
+        const radius = Math.random() * jitter;
+
+        next[id] = {
+          currentX: center.x + Math.cos(angle) * radius,
+          currentY: center.y + Math.sin(angle) * radius,
+          targetX: center.x + Math.cos(angle) * radius,
+          targetY: center.y + Math.sin(angle) * radius,
+          zone,
+        };
+      });
+      return next;
+    });
+
     const simulateActivity = () => {
       setAgentStates((prev) => {
         const next = { ...prev };
@@ -750,6 +797,35 @@ export default function FloorPage() {
 
         return next;
       });
+
+      // Periodically move agents between zones (5-8 second transitions)
+      if (Math.random() < 0.15) {
+        setAgentPositions(prev => {
+          const next = { ...prev };
+          const agentIds = Object.keys(prev);
+          const randomAgent = agentIds[Math.floor(Math.random() * agentIds.length)];
+
+          // Pick a new zone different from current
+          const zones = ['forge', 'stream', 'pulse', 'void'];
+          const currentZone = prev[randomAgent]?.zone || 'void';
+          const availableZones = zones.filter(z => z !== currentZone);
+          const newZone = availableZones[Math.floor(Math.random() * availableZones.length)];
+
+          const center = ZONE_CENTERS[newZone];
+          const jitter = ZONE_JITTER[newZone] || 50;
+          const angle = Math.random() * Math.PI * 2;
+          const radius = Math.random() * jitter;
+
+          next[randomAgent] = {
+            ...prev[randomAgent],
+            targetX: center.x + Math.cos(angle) * radius,
+            targetY: center.y + Math.sin(angle) * radius,
+            zone: newZone,
+          };
+
+          return next;
+        });
+      }
 
       // Simulate chat messages in demo mode
       const chatInterval = demoIntensity === 'calm' ? 10000 : demoIntensity === 'normal' ? 5000 : 3000;
@@ -1063,16 +1139,16 @@ export default function FloorPage() {
 
         for (let j = 0; j < particleCount; j++) {
           const t = ((time * 0.5 + j / particleCount) % 1);
-          const x = quadraticBezierPoint(
+          const x = bezierX(
             fromPos.currentX, fromPos.currentY,
             midX, midY,
             toPos.currentX, toPos.currentY,
             t
           );
-          const y = quadraticBezierPoint(
-            fromPos.currentY, fromPos.currentY,
-            midY, midY,
-            toPos.currentY, toPos.currentY,
+          const y = bezierY(
+            fromPos.currentX, fromPos.currentY,
+            midX, midY,
+            toPos.currentX, toPos.currentY,
             t
           );
 
@@ -1150,16 +1226,16 @@ export default function FloorPage() {
         const numParticles = 4;
         for (let i = 0; i < numParticles; i++) {
           const t = ((elapsed / duration + i / numParticles) % 1);
-          const x = quadraticBezierPoint(
+          const x = bezierX(
             fromPos.currentX, fromPos.currentY,
             midX, midY,
             toPos.currentX, toPos.currentY,
             t
           );
-          const y = quadraticBezierPoint(
-            fromPos.currentY, fromPos.currentY,
-            midY, midY,
-            toPos.currentY, toPos.currentY,
+          const y = bezierY(
+            fromPos.currentX, fromPos.currentY,
+            midX, midY,
+            toPos.currentX, toPos.currentY,
             t
           );
 
@@ -1192,17 +1268,6 @@ export default function FloorPage() {
       // Cleanup not needed for requestAnimationFrame
     };
   }, [collaborations, agentPositions, particles, waterfallParticles, particleCount, energyBeams]);
-
-  // Helper function for quadratic bezier interpolation
-  function quadraticBezierPoint(
-    x0: number, y0: number,
-    cx: number, cy: number,
-    x1: number, y1: number,
-    t: number
-  ): number {
-    const mt = 1 - t;
-    return mt * mt * (y0 === y0 ? x0 : y0) + 2 * mt * t * (y0 === y0 ? cx : cy) + t * t * (y0 === y0 ? x1 : y1);
-  }
 
   // Meeting dialogue playback
   useEffect(() => {
