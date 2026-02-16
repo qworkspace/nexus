@@ -208,6 +208,19 @@ const ACTIVITIES: Record<string, string[]> = {
   support: ["Resolving tickets", "User feedback", "Doc updates"],
 };
 
+// Agent display names for chat (map from agent ID to display name)
+const AGENT_DISPLAY_NAMES: Record<string, string> = {
+  main: 'Q',
+  research: 'Cipher',
+  creative: 'Aura',
+  dev: 'Spark',
+  testing: 'Flux',
+  growth: 'Surge',
+  events: 'Volt',
+  support: 'Echo',
+  design: 'Prism',
+};
+
 // Demo chat messages for Office Chat simulation
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const DEMO_CHAT_MESSAGES = [
@@ -720,6 +733,34 @@ export default function FloorPage() {
     setCollaborations(uniqueCollabs);
   }, [agentStates]);
 
+  // Demo mode activation: force agents to their assigned zone positions immediately
+  useEffect(() => {
+    if (!demoMode || Object.keys(agentPositions).length === 0) return;
+
+    // Force agents to their zone positions on demo start
+    setAgentPositions(prev => {
+      const next = { ...prev };
+      Object.entries(DEMO_AGENT_ZONES).forEach(([agentId, zone]) => {
+        const center = ZONE_CENTERS[zone];
+        if (center && next[agentId]) {
+          // Jitter within zone (40-60px radius)
+          const jitter = 40 + Math.random() * 20;
+          const angle = Math.random() * Math.PI * 2;
+          next[agentId] = {
+            ...next[agentId],
+            currentX: center.x + Math.cos(angle) * jitter,
+            currentY: center.y + Math.sin(angle) * jitter,
+            targetX: center.x + Math.cos(angle) * jitter,
+            targetY: center.y + Math.sin(angle) * jitter,
+            zone: zone,
+          };
+        }
+      });
+      return next;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [demoMode]); // Only runs when demoMode changes to true
+
   // Demo mode: simulate agent activity
   useEffect(() => {
     if (!demoMode || agents.length === 0) {
@@ -738,27 +779,6 @@ export default function FloorPage() {
 
     const settings = intensitySettings[demoIntensity];
     const interval = settings.interval / demoSpeed;
-
-    // On demo start: spread agents across zones using DEMO_AGENT_ZONES
-    setAgentPositions(prev => {
-      const next = { ...prev };
-      Object.keys(prev).forEach(id => {
-        const zone = DEMO_AGENT_ZONES[id] || 'void';
-        const center = ZONE_CENTERS[zone];
-        const jitter = ZONE_JITTER[zone] || 50;
-        const angle = Math.random() * Math.PI * 2;
-        const radius = Math.random() * jitter;
-
-        next[id] = {
-          currentX: center.x + Math.cos(angle) * radius,
-          currentY: center.y + Math.sin(angle) * radius,
-          targetX: center.x + Math.cos(angle) * radius,
-          targetY: center.y + Math.sin(angle) * radius,
-          zone,
-        };
-      });
-      return next;
-    });
 
     const simulateActivity = () => {
       setAgentStates((prev) => {
@@ -837,7 +857,7 @@ export default function FloorPage() {
         const nextChatIndex = demoChatIndex % DEMO_CHAT_MESSAGES.length;
         const chatMessage = DEMO_CHAT_MESSAGES[nextChatIndex];
 
-        // Show typing indicator first
+        // Show typing indicator first (with display name for later use)
         setTypingIndicator({
           agentId: chatMessage.from,
           targetAgentId: chatMessage.to !== 'all' ? chatMessage.to : null,
@@ -848,13 +868,14 @@ export default function FloorPage() {
         setTimeout(() => {
           if (!demoMode) return;
 
-          const fromAgent = agents.find(a => a.id === chatMessage.from);
+          // Use AGENT_DISPLAY_NAMES mapping for correct display names
+          const displayName = AGENT_DISPLAY_NAMES[chatMessage.from] || chatMessage.from;
 
           setChatMessages(prev => [
             ...prev,
             {
               agent: chatMessage.from,
-              name: fromAgent?.name || chatMessage.from,
+              name: displayName,
               text: chatMessage.text,
             },
           ]);
@@ -1162,7 +1183,7 @@ export default function FloorPage() {
         ctx.globalAlpha = 1;
       });
 
-      // Render energy beams (demo mode handoffs)
+      // Render energy beams (demo mode handoffs) - curved bezier arcs with glow
       energyBeams.forEach((beam) => {
         const fromPos = agentPositions[beam.from];
         const toPos = agentPositions[beam.to];
@@ -1188,26 +1209,37 @@ export default function FloorPage() {
         const pulsePhase = (elapsed / duration) * Math.PI * 6;
         const pulse = 1 + Math.sin(pulsePhase) * 0.3;
 
-        // Draw curved energy beam
+        // Draw curved energy beam - quadratic bezier arc
         const midX = (fromPos.currentX + toPos.currentX) / 2;
-        const midY = (fromPos.currentY + toPos.currentY) / 2 - 50; // Higher arc for beams
+        const midY = (fromPos.currentY + toPos.currentY) / 2 - 80; // Arc upward per spec
 
-        // Outer glow
         ctx.save();
-        ctx.shadowBlur = 15;
-        ctx.shadowColor = beam.color;
-        ctx.globalAlpha = alpha * 0.6;
 
-        // Draw beam path with animated dash
+        // Outer glow layer (wider, softer)
+        ctx.shadowBlur = 20;
+        ctx.shadowColor = beam.color;
+        ctx.globalAlpha = alpha * 0.5;
+
+        ctx.beginPath();
+        ctx.moveTo(fromPos.currentX, fromPos.currentY);
+        ctx.quadraticCurveTo(midX, midY, toPos.currentX, toPos.currentY);
+
+        ctx.strokeStyle = beam.color;
+        ctx.lineWidth = 6 * pulse;
+        ctx.lineCap = 'round';
+        ctx.setLineDash([]); // Solid line, not dotted
+        ctx.stroke();
+
+        // Middle layer (main beam)
+        ctx.shadowBlur = 15;
+        ctx.globalAlpha = alpha * 0.8;
+
         ctx.beginPath();
         ctx.moveTo(fromPos.currentX, fromPos.currentY);
         ctx.quadraticCurveTo(midX, midY, toPos.currentX, toPos.currentY);
 
         ctx.strokeStyle = beam.color;
         ctx.lineWidth = 3 * pulse;
-        ctx.lineCap = 'round';
-        ctx.setLineDash([10, 5]);
-        ctx.lineDashOffset = -elapsed / 20; // Animated flow
         ctx.stroke();
 
         // Inner bright core
@@ -1217,9 +1249,7 @@ export default function FloorPage() {
         ctx.strokeStyle = '#fff';
         ctx.lineWidth = 1.5;
         ctx.lineCap = 'round';
-        ctx.setLineDash([5, 3]);
-        ctx.lineDashOffset = -elapsed / 20;
-        ctx.globalAlpha = alpha * 0.8;
+        ctx.globalAlpha = alpha;
         ctx.stroke();
 
         // Draw data flow particles along the beam
@@ -1923,7 +1953,7 @@ export default function FloorPage() {
                     {typingIndicator.agentId && (
                       <div className="animate-fade-in">
                         <span className="text-xs font-bold" style={{ color: AGENT_COLORS[typingIndicator.agentId]?.label || '#888' }}>
-                          {agents.find(a => a.id === typingIndicator.agentId)?.name || typingIndicator.agentId}:
+                          {AGENT_DISPLAY_NAMES[typingIndicator.agentId] || typingIndicator.agentId}:
                         </span>
                         <span className="text-xs text-zinc-400 ml-1">
                           <span className="inline-flex gap-1">
