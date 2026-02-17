@@ -143,6 +143,12 @@ export default function HubResearchPage() {
   const [selectedResearch, setSelectedResearch] = useState<ResearchItem | null>(null);
   const [loadingResearch, setLoadingResearch] = useState(false);
 
+  // Rating Modal state
+  const [ratingModalOpen, setRatingModalOpen] = useState(false);
+  const [pendingRatingBrief, setPendingRatingBrief] = useState<BriefItem | null>(null);
+  const [pendingAction, setPendingAction] = useState<'approve' | 'park' | 'reject' | null>(null);
+  const [selectedRating, setSelectedRating] = useState<'excellent' | 'good' | 'neutral' | 'poor' | null>(null);
+
   // AEST date formatter
   function formatAESTDateTime(isoString: string): string {
     try {
@@ -294,57 +300,85 @@ export default function HubResearchPage() {
       return;
     }
 
-    // If already editing, submit for approval
-    try {
-      const res = await fetch(`/api/ideas/${briefId}/approve`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: editedBrief.title || brief.title,
-          bullets: editedBrief.bullets || brief.bullets,
-          priority: editedBrief.priority || brief.priority,
-          complexity: editedBrief.complexity || brief.complexity,
-          notes: editedBrief.notes || brief.notes,
-        }),
-      });
-
-      if (res.ok) {
-        setEditingBriefId(null);
-        setEditedBrief({});
-        await fetchData();
-      }
-    } catch (error) {
-      console.error("Failed to approve brief:", error);
-    }
+    // If already editing, open rating modal instead of submitting directly
+    setPendingRatingBrief(brief);
+    setPendingAction('approve');
+    setSelectedRating(null);
+    setRatingModalOpen(true);
   };
 
   const handleBriefPark = async (briefId: string) => {
-    try {
-      const res = await fetch("/api/ideas", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: briefId, action: "park" }),
-      });
-      if (res.ok) {
-        await fetchData();
-      }
-    } catch (error) {
-      console.error("Failed to park brief:", error);
-    }
+    const brief = briefs.find(b => b.id === briefId);
+    if (!brief) return;
+
+    // Open rating modal
+    setPendingRatingBrief(brief);
+    setPendingAction('park');
+    setSelectedRating(null);
+    setRatingModalOpen(true);
   };
 
   const handleBriefReject = async (briefId: string) => {
+    const brief = briefs.find(b => b.id === briefId);
+    if (!brief) return;
+
+    // Open rating modal
+    setPendingRatingBrief(brief);
+    setPendingAction('reject');
+    setSelectedRating(null);
+    setRatingModalOpen(true);
+  };
+
+  const handleRatingSubmit = async (rating: 'excellent' | 'good' | 'neutral' | 'poor' | null) => {
+    if (!pendingRatingBrief || !pendingAction) return;
+
     try {
-      const res = await fetch("/api/ideas", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: briefId, action: "reject" }),
-      });
-      if (res.ok) {
-        await fetchData();
+      // For approve action, use the dedicated approve endpoint with edited data
+      if (pendingAction === 'approve') {
+        const res = await fetch(`/api/ideas/${pendingRatingBrief.id}/approve`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: editedBrief.title || pendingRatingBrief.title,
+            bullets: editedBrief.bullets || pendingRatingBrief.bullets,
+            priority: editedBrief.priority || pendingRatingBrief.priority,
+            complexity: editedBrief.complexity || pendingRatingBrief.complexity,
+            notes: editedBrief.notes || pendingRatingBrief.notes,
+            rating: rating,
+          }),
+        });
+
+        if (res.ok) {
+          setEditingBriefId(null);
+          setEditedBrief({});
+          setRatingModalOpen(false);
+          setPendingRatingBrief(null);
+          setPendingAction(null);
+          setSelectedRating(null);
+          await fetchData();
+        }
+      } else {
+        // For park and reject, use the general ideas endpoint
+        const res = await fetch("/api/ideas", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            id: pendingRatingBrief.id,
+            action: pendingAction,
+            rating: rating
+          }),
+        });
+
+        if (res.ok) {
+          setRatingModalOpen(false);
+          setPendingRatingBrief(null);
+          setPendingAction(null);
+          setSelectedRating(null);
+          await fetchData();
+        }
       }
     } catch (error) {
-      console.error("Failed to reject brief:", error);
+      console.error("Failed to submit rating:", error);
     }
   };
 
@@ -1467,6 +1501,68 @@ export default function HubResearchPage() {
           </div>
         </div>
       )}
+
+      {/* Rating Modal */}
+      <Dialog open={ratingModalOpen} onOpenChange={setRatingModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>How was this brief?</DialogTitle>
+            <DialogDescription>
+              Rate the quality of &quot;{pendingRatingBrief?.title}&quot;
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-2 gap-3 py-4">
+            <Button
+              variant={selectedRating === 'excellent' ? 'default' : 'outline'}
+              className="h-16 flex-col gap-1"
+              onClick={() => setSelectedRating('excellent')}
+            >
+              <span className="text-2xl">⭐</span>
+              <span className="text-xs">Well-captured problem</span>
+            </Button>
+            <Button
+              variant={selectedRating === 'good' ? 'default' : 'outline'}
+              className="h-16 flex-col gap-1"
+              onClick={() => setSelectedRating('good')}
+            >
+              <span className="text-2xl">👍</span>
+              <span className="text-xs">Good enough</span>
+            </Button>
+            <Button
+              variant={selectedRating === 'neutral' ? 'default' : 'outline'}
+              className="h-16 flex-col gap-1"
+              onClick={() => setSelectedRating('neutral')}
+            >
+              <span className="text-2xl">😐</span>
+              <span className="text-xs">Not priority</span>
+            </Button>
+            <Button
+              variant={selectedRating === 'poor' ? 'default' : 'outline'}
+              className="h-16 flex-col gap-1"
+              onClick={() => setSelectedRating('poor')}
+            >
+              <span className="text-2xl">👎</span>
+              <span className="text-xs">Wrong problem</span>
+            </Button>
+          </div>
+          <DialogFooter className="flex-col gap-2">
+            <Button
+              onClick={() => handleRatingSubmit(selectedRating)}
+              disabled={!selectedRating}
+              className="w-full"
+            >
+              Submit Rating &amp; {pendingAction?.charAt(0).toUpperCase()}{pendingAction?.slice(1)}
+            </Button>
+            <Button
+              variant="ghost"
+              onClick={() => handleRatingSubmit(null)}
+              className="w-full text-zinc-500"
+            >
+              Skip
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

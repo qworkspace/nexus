@@ -1,9 +1,9 @@
 #!/bin/zsh
 
 # Nexus Production Launcher
-# Starts Next.js on port 3002 (assumes already built)
+# Starts Next.js on port 3002 with memory watchdog
 
-set -e  # Exit on any error
+set -e
 
 cd "$(dirname "$0")"
 
@@ -13,5 +13,8 @@ if [ ! -d ".next" ]; then
   npm run build
 fi
 
-echo "[$(date)] Starting production server on port 3002..."
+# Set Node.js memory limit (512MB max — prevents runaway bloat)
+export NODE_OPTIONS="--max-old-space-size=512"
+
+echo "[$(date)] Starting production server on port 3002 (512MB limit)..."
 exec npm run start -- -p 3002

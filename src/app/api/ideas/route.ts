@@ -42,6 +42,8 @@ interface BriefStatusEntry {
   sourceModel?: string;
   sourceDate?: string;
   sourceTitle?: string;
+  rating?: 'excellent' | 'good' | 'neutral' | 'poor';
+  ratedAt?: string;
 }
 
 interface BriefItem {
@@ -472,7 +474,7 @@ function saveStatusMap(map: Map<string, BriefStatusEntry>) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { id, action } = body;
+    const { id, action, rating } = body;
 
     if (!id || !action) {
       return NextResponse.json(
@@ -494,12 +496,24 @@ export async function POST(request: Request) {
       case "approve":
         entry.status = "approved";
         entry.approvedAt = new Date().toISOString();
+        if (rating) {
+          entry.rating = rating;
+          entry.ratedAt = new Date().toISOString();
+        }
         break;
       case "park":
         entry.status = "parked";
+        if (rating) {
+          entry.rating = rating;
+          entry.ratedAt = new Date().toISOString();
+        }
         break;
       case "reject":
         entry.status = "rejected";
+        if (rating) {
+          entry.rating = rating;
+          entry.ratedAt = new Date().toISOString();
+        }
         break;
       default:
         return NextResponse.json(
@@ -514,6 +528,8 @@ export async function POST(request: Request) {
       id,
       status: entry.status,
       approvedAt: entry.approvedAt,
+      rating: entry.rating,
+      ratedAt: entry.ratedAt,
     });
   } catch (error) {
     console.error("Error updating brief status:", error);

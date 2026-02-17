@@ -23,6 +23,8 @@ interface BriefStatusEntry {
   reviewNote?: string;
   reviewedAt?: string;
   sourceUrl?: string;
+  rating?: 'excellent' | 'good' | 'neutral' | 'poor';
+  ratedAt?: string;
 }
 
 export async function POST(
@@ -32,7 +34,7 @@ export async function POST(
   try {
     const { id } = params;
     const body = await request.json();
-    const { title, bullets, priority, complexity, notes } = body;
+    const { title, bullets, priority, complexity, notes, rating } = body;
 
     const filename = `${id}.md`;
     const statusMap = loadStatusMap();
@@ -64,6 +66,12 @@ export async function POST(
     entry.status = "approved";
     entry.approvedAt = new Date().toISOString();
 
+    // Save rating if provided
+    if (rating) {
+      entry.rating = rating;
+      entry.ratedAt = new Date().toISOString();
+    }
+
     // Create next status
     if (entry.specPath) {
       entry.buildStatus = "specced";
@@ -82,6 +90,8 @@ export async function POST(
       priority: entry.priority,
       complexity: entry.complexity,
       notes: entry.notes,
+      rating: entry.rating,
+      ratedAt: entry.ratedAt,
     });
   } catch (error) {
     console.error("Error approving brief:", error);

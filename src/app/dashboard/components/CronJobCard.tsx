@@ -3,7 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Play, Power, CheckCircle, XCircle, Clock, AlertTriangle } from "lucide-react";
+import { Play, Power, CheckCircle, XCircle, Clock, AlertTriangle, Bot, Send, Target } from "lucide-react";
 
 export interface CronJob {
   id: string;
@@ -21,6 +21,11 @@ export interface CronJob {
     lastDurationMs?: number;
     lastError?: string;
   };
+  // Dashboard upgrade fields
+  model?: string;
+  deliveryMode?: 'telegram' | 'discord' | 'slack' | 'email' | 'webhook' | 'none';
+  sessionTarget?: string;
+  description?: string;
 }
 
 interface CronJobCardProps {
@@ -93,6 +98,40 @@ export function CronJobCard({
     }
   };
 
+  const getModelBadge = (model?: string) => {
+    if (!model) return null;
+    
+    const colorMap: Record<string, string> = {
+      'Opus 4.6': 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+      'Opus 4.5': 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
+      'Sonnet 4.5': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+      'Sonnet 5': 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
+      'GLM Flash': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+      'GLM 4.7': 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400',
+      'GLM-5': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
+      'GPT-5.3': 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
+    };
+    
+    const badgeClass = colorMap[model] || 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400';
+    
+    return (
+      <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 ${badgeClass}`}>
+        {model}
+      </Badge>
+    );
+  };
+
+  const getDeliveryInfo = (mode?: string) => {
+    switch (mode) {
+      case 'telegram': return { icon: <Send className="h-3 w-3" />, color: 'text-sky-500', label: 'Telegram' };
+      case 'discord': return { icon: <Send className="h-3 w-3" />, color: 'text-indigo-500', label: 'Discord' };
+      case 'slack': return { icon: <Send className="h-3 w-3" />, color: 'text-purple-500', label: 'Slack' };
+      case 'email': return { icon: <Send className="h-3 w-3" />, color: 'text-amber-500', label: 'Email' };
+      case 'webhook': return { icon: <Send className="h-3 w-3" />, color: 'text-pink-500', label: 'Webhook' };
+      default: return null;
+    }
+  };
+
   const handleToggle = async () => {
     if (onToggle) {
       await onToggle(job.id, job.enabled);
@@ -131,6 +170,41 @@ export function CronJobCard({
             </p>
           </div>
           {getStatusIcon(job.state.lastStatus)}
+        </div>
+
+        {/* Model Badge, Delivery Mode, Session Target */}
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          {/* Model Badge */}
+          {job.model && (
+            <div className="flex items-center gap-1">
+              <Bot className="h-3 w-3 text-zinc-400" />
+              {getModelBadge(job.model)}
+            </div>
+          )}
+
+          {/* Delivery Mode */}
+          {job.deliveryMode && job.deliveryMode !== 'none' && (
+            <div className="flex items-center gap-1 text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
+              {getDeliveryInfo(job.deliveryMode)?.icon && (
+                <span className={getDeliveryInfo(job.deliveryMode)?.color}>
+                  {getDeliveryInfo(job.deliveryMode)?.icon}
+                </span>
+              )}
+              <span className="text-zinc-600 dark:text-zinc-400">
+                {getDeliveryInfo(job.deliveryMode)?.label}
+              </span>
+            </div>
+          )}
+
+          {/* Session Target */}
+          {job.sessionTarget && (
+            <div className="flex items-center gap-1 text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded max-w-[150px]">
+              <Target className="h-3 w-3 text-zinc-400" />
+              <span className="text-zinc-600 dark:text-zinc-400 truncate" title={job.sessionTarget}>
+                {job.sessionTarget}
+              </span>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-between text-xs">
