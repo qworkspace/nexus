@@ -30,9 +30,9 @@ interface AgentStatusData {
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
 const statusConfig = {
-  active: { color: "bg-green-500", glow: "status-glow-green", label: "Active" },
+  active: { color: "bg-zinc-800", glow: "status-glow-green", label: "Active" },
   idle: { color: "bg-yellow-500", glow: "status-glow-yellow", label: "Idle" },
-  completed: { color: "bg-blue-500", glow: "status-glow-blue", label: "Done" },
+  completed: { color: "bg-zinc-900", glow: "status-glow-blue", label: "Done" },
   error: { color: "bg-red-500", glow: "status-glow-red", label: "Error" },
 };
 
@@ -92,7 +92,7 @@ export function AgentStatusPanel() {
                   key={agent.id}
                   className={cn(
                     "p-3 rounded-lg border bg-white dark:bg-zinc-900/50 dark:border-zinc-800",
-                    agent.status === 'active' && "border-green-200 dark:border-green-900/50"
+                    agent.status === 'active' && "border-zinc-300 dark:border-zinc-300/50"
                   )}
                 >
                   <div className="flex items-start justify-between mb-2">
@@ -121,7 +121,7 @@ export function AgentStatusPanel() {
                       <div className="flex-1">
                         <div className="h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-green-500 rounded-full transition-all duration-500"
+                            className="h-full bg-zinc-800 rounded-full transition-all duration-500"
                             style={{ width: `${agent.progress}%` }}
                           />
                         </div>
@@ -175,7 +175,7 @@ export function AgentStatusPanel() {
                       href={completion.commitUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-500 hover:text-blue-600 text-xs"
+                      className="text-zinc-600 hover:text-zinc-600 text-xs"
                     >
                       commit →
                     </a>

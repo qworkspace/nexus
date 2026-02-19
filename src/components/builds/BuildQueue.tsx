@@ -34,9 +34,9 @@ export function BuildQueue() {
       case 'P0':
         return 'bg-red-100 text-red-700 border-red-200';
       case 'P1':
-        return 'bg-orange-100 text-orange-700 border-orange-200';
+        return 'bg-zinc-100 text-[#FFE135] border-zinc-300';
       case 'P2':
-        return 'bg-blue-100 text-blue-700 border-blue-200';
+        return 'bg-zinc-100 text-zinc-700 border-zinc-300';
       default:
         return 'bg-zinc-100 text-zinc-700 border-zinc-200';
     }
@@ -76,7 +76,7 @@ export function BuildQueue() {
           <ListTodo className="h-4 w-4" />
           Build Queue
           {queue.length > 0 && (
-            <span className="ml-2 px-2 py-0.5 text-xs bg-blue-100 text-blue-700 rounded-full">
+            <span className="ml-2 px-2 py-0.5 text-xs bg-zinc-100 text-zinc-700 rounded-full">
               {queue.length}
             </span>
           )}

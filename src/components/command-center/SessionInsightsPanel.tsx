@@ -119,7 +119,7 @@ export function SessionInsightsPanel() {
                   </span>
                   <div className="flex-1 h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-blue-500 rounded-full"
+                      className="h-full bg-zinc-900 rounded-full"
                       style={{
                         width: `${Math.min((session.tokensUsed / (data?.today?.totalTokens || 1)) * 100, 100)}%`,
                       }}

@@ -85,7 +85,7 @@ export function CompletedBuilds() {
   const getRatingColor = (rating: string) => {
     switch (rating) {
       case 'great':
-      case 'good': return 'text-green-600 bg-green-50';
+      case 'good': return 'text-zinc-600 bg-zinc-50';
       case 'meh': return 'text-yellow-600 bg-yellow-50';
       case 'bad':
       case 'useless': return 'text-red-600 bg-red-50';
@@ -138,7 +138,7 @@ export function CompletedBuilds() {
                   className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg group hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                 >
                   <div className="flex-shrink-0 mt-0.5">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <CheckCircle className="h-4 w-4 text-zinc-600" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2">
@@ -153,7 +153,7 @@ export function CompletedBuilds() {
                     </div>
                     {build.specName && (
                       <div className="mt-1">
-                        <span className="text-xs text-blue-600 hover:underline cursor-pointer">
+                        <span className="text-xs text-zinc-600 hover:underline cursor-pointer">
                           → {build.specName}
                         </span>
                       </div>
@@ -184,7 +184,7 @@ export function CompletedBuilds() {
                                 detail: { spec: feedbackForBuild.spec }
                               }));
                             }}
-                            className="mt-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                            className="mt-1 text-xs text-zinc-600 hover:text-zinc-800 hover:underline"
                           >
                             → View in Fix Log
                           </button>

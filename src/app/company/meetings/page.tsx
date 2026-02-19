@@ -206,12 +206,12 @@ export default function MeetingsPage() {
                   </div>
                 )}
                 {summary && (
-                  <div className="mb-3 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                    <h3 className="text-xs font-bold text-amber-900 dark:text-amber-400 mb-1.5 flex items-center gap-1">
+                  <div className="mb-3 p-3 bg-zinc-50 dark:bg-[#FFE135]/20 border border-zinc-300 dark:border-zinc-300 rounded-lg">
+                    <h3 className="text-xs font-bold text-[#FFE135] dark:text-[#FFE135] mb-1.5 flex items-center gap-1">
                       <FileText size={12} />
                       TL;DR
                     </h3>
-                    <div className="text-xs text-amber-800 dark:text-amber-200 whitespace-pre-line leading-relaxed">
+                    <div className="text-xs text-[#FFE135] dark:text-zinc-400 whitespace-pre-line leading-relaxed">
                       {summary}
                     </div>
                   </div>
@@ -222,7 +222,7 @@ export default function MeetingsPage() {
                   <div className="mb-3">
                     <div className="flex gap-1 flex-wrap">
                       {meetingTopics[selectedId!].map(t => (
-                        <span key={t} className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-[10px]">
+                        <span key={t} className="px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-900/30 text-zinc-700 dark:text-zinc-500 rounded-full text-[10px]">
                           {t}
                         </span>
                       ))}

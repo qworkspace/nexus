@@ -165,7 +165,7 @@ export default async function Dashboard() {
 
 function StatusDot({ status }: { status: string }) {
   const colors = {
-    success: "bg-green-500",
+    success: "bg-zinc-800",
     error: "bg-red-500",
     pending: "bg-yellow-500",
   };

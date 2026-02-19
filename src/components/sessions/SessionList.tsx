@@ -316,12 +316,12 @@ export function SessionList({ showTitle = true }: SessionListProps) {
               <ScrollText className="w-6 h-6 text-zinc-600" />
               <h1 className="text-2xl font-semibold text-zinc-900">Session Browser</h1>
               {data?.source === 'live' && (
-                <Badge variant="outline" className="text-green-600 border-green-600">
+                <Badge variant="outline" className="text-zinc-600 border-zinc-300">
                   Live
                 </Badge>
               )}
               {data?.source === 'mock' && (
-                <Badge variant="outline" className="text-amber-600 border-amber-600">
+                <Badge variant="outline" className="text-[#FFE135] border-zinc-300">
                   Mock Data
                 </Badge>
               )}
@@ -471,7 +471,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
           )}
         </p>
         {data?.error && (
-          <p className="text-xs text-amber-600">{data.error}</p>
+          <p className="text-xs text-[#FFE135]">{data.error}</p>
         )}
       </div>
 

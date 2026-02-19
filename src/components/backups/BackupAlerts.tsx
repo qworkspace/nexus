@@ -19,11 +19,11 @@ export function BackupAlerts({ critical, warning, info }: BackupAlertsProps) {
   }
 
   return (
-    <Card className="border-orange-200">
+    <Card className="border-zinc-300">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-orange-500" />
+            <AlertCircle className="h-5 w-5 text-[#FFE135]" />
             <span>Backup Alerts</span>
           </div>
           <Badge variant="destructive" className="text-xs">

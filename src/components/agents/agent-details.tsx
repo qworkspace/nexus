@@ -58,17 +58,17 @@ export function AgentDetails({ agent }: AgentDetailsProps) {
         <h4 className="text-sm font-medium text-zinc-700 mb-2">Recent Activity</h4>
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-zinc-600">
-            <Check size={14} className="text-green-500" />
+            <Check size={14} className="text-zinc-600" />
             <span>Completed code review task</span>
             <span className="text-xs text-zinc-400 ml-auto">2m ago</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-600">
-            <Check size={14} className="text-green-500" />
+            <Check size={14} className="text-zinc-600" />
             <span>Updated documentation</span>
             <span className="text-xs text-zinc-400 ml-auto">15m ago</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-zinc-600">
-            <Check size={14} className="text-green-500" />
+            <Check size={14} className="text-zinc-600" />
             <span>Fixed bug in auth module</span>
             <span className="text-xs text-zinc-400 ml-auto">1h ago</span>
           </div>

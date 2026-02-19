@@ -99,7 +99,7 @@ export default function CheckpointsPage() {
       case 'failed':
         return 'text-red-600 bg-red-50 border-red-200';
       case 'success':
-        return 'text-green-600 bg-green-50 border-green-200';
+        return 'text-zinc-600 bg-zinc-50 border-zinc-300';
       default:
         return 'text-zinc-600 bg-zinc-50 border-zinc-200';
     }

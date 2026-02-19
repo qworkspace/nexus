@@ -425,7 +425,7 @@ export default function HubResearchPage() {
       case "specced":
         return "bg-zinc-100 text-zinc-700";
       case "building":
-        return "bg-violet-100 text-violet-700";
+        return "bg-zinc-100 text-zinc-700";
       case "shipped":
         return "bg-zinc-100 text-zinc-800";
       case "review":
@@ -516,7 +516,7 @@ export default function HubResearchPage() {
     const currentBrief = isEditing ? { ...brief, ...editedBrief } : brief;
 
     return (
-      <Card className={`transition-all ${isEditing ? "ring-2 ring-blue-500" : ""}`}>
+      <Card className={`transition-all ${isEditing ? "ring-2 ring-zinc-300" : ""}`}>
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-2">
             {isEditing ? (
@@ -626,7 +626,7 @@ export default function HubResearchPage() {
                 )
               )}
               {brief.buildOutcome && (
-                <div className="bg-blue-900/30 p-2 rounded border border-blue-800">
+                <div className="bg-zinc-900/30 p-2 rounded border border-zinc-300">
                   <p className="text-zinc-400 text-xs font-medium flex items-center gap-1"><Hammer className="h-3 w-3" /> Could build: {brief.buildOutcome}</p>
                 </div>
               )}

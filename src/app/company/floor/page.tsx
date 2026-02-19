@@ -1586,7 +1586,7 @@ export default function FloorPage() {
               </div>
             )}
 
-            <Link href="/company" className="text-xs text-blue-400 hover:underline">HQ →</Link>
+            <Link href="/company" className="text-xs text-zinc-500 hover:underline">HQ →</Link>
           </div>
         </div>
 
@@ -2047,7 +2047,7 @@ export default function FloorPage() {
                         {agentState.tokens.toLocaleString()} tokens
                       </div>
                     )}
-                    <Link href={`/company/agents/${agent.id}`} className="text-[10px] text-blue-400 hover:underline block">Full profile →</Link>
+                    <Link href={`/company/agents/${agent.id}`} className="text-[10px] text-zinc-500 hover:underline block">Full profile →</Link>
                   </div>
                 );
               })() : (

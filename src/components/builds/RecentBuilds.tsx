@@ -17,7 +17,7 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span className="flex items-center gap-2">
-            <CheckCircle size={18} className="text-green-600" />
+            <CheckCircle size={18} className="text-zinc-600" />
             Recent Completions (Today)
           </span>
           <Badge variant="secondary" className="text-xs">{builds.length}</Badge>
@@ -55,7 +55,7 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
 
                 {/* Status and Duration */}
                 <div className="flex items-center gap-4 shrink-0">
-                  <Badge className="bg-green-100 text-green-800 text-xs flex items-center gap-1">
+                  <Badge className="bg-zinc-100 text-zinc-800 text-xs flex items-center gap-1">
                     <Check size={12} />
                     SUCCESS
                   </Badge>

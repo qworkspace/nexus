@@ -12,11 +12,11 @@ interface SlowTask {
 }
 
 const typeColors: Record<string, string> = {
-  task: "bg-blue-100 text-blue-800",
-  message: "bg-purple-100 text-purple-800",
-  cron: "bg-orange-100 text-orange-800",
-  file: "bg-green-100 text-green-800",
-  search: "bg-cyan-100 text-cyan-800",
+  task: "bg-zinc-100 text-zinc-800",
+  message: "bg-zinc-100 text-zinc-700",
+  cron: "bg-zinc-100 text-[#FFE135]",
+  file: "bg-zinc-100 text-zinc-800",
+  search: "bg-zinc-100 text-zinc-700",
   spawn: "bg-pink-100 text-pink-800",
 };
 
@@ -92,7 +92,7 @@ export function SlowTasks({ tasks }: { tasks: SlowTask[] }) {
                   </span>
                 </div>
               </div>
-              <span className="text-sm font-semibold text-orange-600">
+              <span className="text-sm font-semibold text-[#FFE135]">
                 {formatDuration(task.duration)}
               </span>
             </div>

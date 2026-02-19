@@ -113,7 +113,7 @@ export function MemoryPanel() {
             </div>
             <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-2">
               <div
-                className="bg-blue-500 h-2 rounded-full transition-all"
+                className="bg-zinc-900 h-2 rounded-full transition-all"
                 style={{ width: `${contextUsage.percentage}%` }}
               />
             </div>

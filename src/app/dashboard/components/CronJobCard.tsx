@@ -88,7 +88,7 @@ export function CronJobCard({
   const getStatusIcon = (status?: string) => {
     switch (status) {
       case 'ok':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-zinc-600" />;
       case 'error':
         return <XCircle className="h-4 w-4 text-red-500" />;
       case 'timeout':
@@ -102,14 +102,14 @@ export function CronJobCard({
     if (!model) return null;
     
     const colorMap: Record<string, string> = {
-      'Opus 4.6': 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-      'Opus 4.5': 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-400',
-      'Sonnet 4.5': 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-      'Sonnet 5': 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
-      'GLM Flash': 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
-      'GLM 4.7': 'bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400',
-      'GLM-5': 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-      'GPT-5.3': 'bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400',
+      'Opus 4.6': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-500',
+      'Opus 4.5': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-500',
+      'Sonnet 4.5': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-500',
+      'Sonnet 5': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800/30 dark:text-zinc-500',
+      'GLM Flash': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-500',
+      'GLM 4.7': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800/30 dark:text-zinc-500',
+      'GLM-5': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-500',
+      'GPT-5.3': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-500',
     };
     
     const badgeClass = colorMap[model] || 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400';
@@ -123,10 +123,10 @@ export function CronJobCard({
 
   const getDeliveryInfo = (mode?: string) => {
     switch (mode) {
-      case 'telegram': return { icon: <Send className="h-3 w-3" />, color: 'text-sky-500', label: 'Telegram' };
-      case 'discord': return { icon: <Send className="h-3 w-3" />, color: 'text-indigo-500', label: 'Discord' };
-      case 'slack': return { icon: <Send className="h-3 w-3" />, color: 'text-purple-500', label: 'Slack' };
-      case 'email': return { icon: <Send className="h-3 w-3" />, color: 'text-amber-500', label: 'Email' };
+      case 'telegram': return { icon: <Send className="h-3 w-3" />, color: 'text-zinc-700', label: 'Telegram' };
+      case 'discord': return { icon: <Send className="h-3 w-3" />, color: 'text-zinc-700', label: 'Discord' };
+      case 'slack': return { icon: <Send className="h-3 w-3" />, color: 'text-zinc-700', label: 'Slack' };
+      case 'email': return { icon: <Send className="h-3 w-3" />, color: 'text-[#FFE135]', label: 'Email' };
       case 'webhook': return { icon: <Send className="h-3 w-3" />, color: 'text-pink-500', label: 'Webhook' };
       default: return null;
     }
@@ -263,7 +263,7 @@ export function CronJobCard({
                 className={`h-7 px-2 text-xs ${
                   job.enabled
                     ? "text-zinc-500 hover:text-red-600"
-                    : "text-zinc-500 hover:text-green-600"
+                    : "text-zinc-500 hover:text-zinc-600"
                 }`}
                 onClick={handleToggle}
                 title={job.enabled ? "Disable" : "Enable"}

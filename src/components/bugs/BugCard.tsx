@@ -6,16 +6,16 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const SEVERITY_COLORS: Record<Severity, { bg: string; text: string; border: string }> = {
   critical: { bg: 'bg-red-500', text: 'text-red-700 dark:text-red-400', border: 'border-red-300 dark:border-red-700' },
-  high: { bg: 'bg-orange-500', text: 'text-orange-700 dark:text-orange-400', border: 'border-orange-300 dark:border-orange-700' },
+  high: { bg: 'bg-[#FFE135]', text: 'text-[#FFE135] dark:text-[#FFE135]', border: 'border-zinc-300 dark:border-zinc-300' },
   medium: { bg: 'bg-yellow-500', text: 'text-yellow-700 dark:text-yellow-400', border: 'border-yellow-300 dark:border-yellow-700' },
   low: { bg: 'bg-gray-500', text: 'text-gray-700 dark:text-gray-400', border: 'border-gray-300 dark:border-gray-700' },
 };
 
 const STATUS_COLORS: Record<string, string> = {
-  'new': 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400',
-  'investigating': 'bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-400',
+  'new': 'bg-zinc-100 dark:bg-blue-950 text-zinc-700 dark:text-zinc-500',
+  'investigating': 'bg-zinc-100 dark:bg-purple-950 text-zinc-700 dark:text-zinc-500',
   'in-progress': 'bg-yellow-100 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-400',
-  'fixed': 'bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400',
+  'fixed': 'bg-zinc-100 dark:bg-green-950 text-zinc-700 dark:text-zinc-500',
   'wont-fix': 'bg-gray-100 dark:bg-gray-950 text-gray-700 dark:text-gray-400',
   'cannot-reproduce': 'bg-gray-100 dark:bg-gray-950 text-gray-700 dark:text-gray-400',
 };

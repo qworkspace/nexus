@@ -122,7 +122,7 @@ export function LogViewer() {
   };
 
   const LEVEL_COLORS = {
-    info: "bg-blue-500",
+    info: "bg-zinc-900",
     warn: "bg-yellow-500",
     error: "bg-red-500",
     debug: "bg-zinc-500",
@@ -188,7 +188,7 @@ export function LogViewer() {
           >
             <Filter className="h-4 w-4" />
             {activeFiltersCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 w-4 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 h-4 w-4 bg-zinc-900 text-white text-xs rounded-full flex items-center justify-center">
                 {activeFiltersCount}
               </span>
             )}

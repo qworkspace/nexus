@@ -74,7 +74,7 @@ export function TranscriptList({ sessions }: TranscriptListProps) {
             <div className="flex items-start justify-between mb-2">
               <div className="flex items-center gap-2">
                 <span className="flex items-center">{getKindIcon(session.kind)}</span>
-                <h3 className="font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors">
+                <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-600 transition-colors">
                   {session.label}
                 </h3>
                 <Badge variant={getKindBadgeVariant(session.kind)} className="ml-2">

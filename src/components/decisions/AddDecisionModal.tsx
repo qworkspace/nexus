@@ -292,7 +292,7 @@ export function AddDecisionModal({ onClose, onSuccess }: AddDecisionModalProps) 
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
+              <Button type="submit" className="bg-zinc-900 hover:bg-zinc-800">
                 Create Decision
               </Button>
             </div>

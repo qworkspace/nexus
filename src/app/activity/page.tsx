@@ -328,7 +328,7 @@ function TimelineView({ activities, loading }: { activities: Activity[]; loading
                 ? "bg-red-500 border-red-500"
                 : activity.status === "pending"
                 ? "bg-yellow-500 border-yellow-500"
-                : "bg-green-500 border-green-500"
+                : "bg-zinc-800 border-zinc-300"
             }`}
           />
 
