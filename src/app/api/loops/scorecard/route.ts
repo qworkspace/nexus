@@ -30,7 +30,7 @@ export async function GET() {
     const homeDir = process.env.HOME || '';
     const selfImprovementDir = path.join(
       homeDir,
-      'shared',
+      '.openclaw/shared',
       'research',
       'self-improvement'
     );

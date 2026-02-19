@@ -228,7 +228,7 @@ async function getLastMessage(sessionFile: string): Promise<string> {
 }
 
 async function checkHandoffs(): Promise<Array<{ from: string; to: string; task: string }>> {
-  const handoffsDir = path.join(process.env.HOME!, 'shared', 'handoffs');
+  const handoffsDir = path.join(process.env.HOME!, '.openclaw/shared', 'handoffs');
   const handoffs: Array<{ from: string; to: string; task: string }> = [];
 
   try {
@@ -253,7 +253,7 @@ async function checkHandoffs(): Promise<Array<{ from: string; to: string; task: 
 }
 
 async function checkBuilds(): Promise<Array<{ agentId: string; buildName: string }>> {
-  const buildsLog = path.join(process.env.HOME!, 'shared', 'overnight-builds.log');
+  const buildsLog = path.join(process.env.HOME!, '.openclaw/shared', 'overnight-builds.log');
   const builds: Array<{ agentId: string; buildName: string }> = [];
 
   try {
