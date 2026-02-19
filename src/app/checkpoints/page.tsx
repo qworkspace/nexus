@@ -111,7 +111,7 @@ export default function CheckpointsPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900">📋 Agent Checkpoints</h1>
+            <h1 className="text-2xl font-semibold text-zinc-900">Agent Checkpoints</h1>
             <p className="text-muted-foreground text-sm mt-1">
               Session checkpoints for debugging failed builds
             </p>

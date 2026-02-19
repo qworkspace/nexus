@@ -55,7 +55,7 @@ export function PermissionMatrix({ permissions, onPermissionChange }: Permission
                         onClick={() => onPermissionChange(agentId, tool, !granted)}
                         className={`
                           w-6 h-6 rounded transition-colors
-                          ${granted ? "bg-zinc-500 text-foreground" : "bg-zinc-200 text-muted-foreground"}
+                          ${granted ? "bg-[#A8B5A0] text-white" : "bg-[#8E99A4]/30 text-[#555D66]"}
                         `}
                       >
                         {granted ? "✓" : "✗"}

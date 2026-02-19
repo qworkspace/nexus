@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Calendar, FileText, Square, CheckSquare, Inbox, CheckCircle, XCircle, HelpCircle, Check } from "lucide-react";
+import { FileText, Square, CheckSquare, Inbox, CheckCircle, XCircle, HelpCircle, Check } from "lucide-react";
 import { MeetingIcon } from "@/lib/ui-icons";
 import { AgentIcon } from "@/lib/agent-icons";
 
@@ -126,8 +126,7 @@ export default function MeetingsPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <Link href="/company" className="text-xs text-foreground hover:underline mb-2 inline-block">← The Core</Link>
-          <h1 className="text-xl font-bold text-zinc-900 flex items-center gap-2">
-            <Calendar size={20} />
+          <h1 className="text-xl font-bold text-zinc-900">
             Meetings
           </h1>
           <p className="text-muted-foreground text-xs">{meetings.length} meetings · {actionItems.length} action items</p>

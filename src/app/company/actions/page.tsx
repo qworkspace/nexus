@@ -33,9 +33,9 @@ const COLUMNS = [
 ];
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "bg-zinc-500",
-  medium: "bg-[#F5D547]",
-  low: "bg-[#F5D547]",
+  high: "bg-[#3D3D3D]",
+  medium: "bg-[#D4C5A9]",
+  low: "bg-zinc-300",
 };
 
 export default function ActionsPage() {
@@ -72,8 +72,7 @@ export default function ActionsPage() {
       <Link href="/company" className="text-sm text-foreground hover:underline mb-2 inline-block">← The Core</Link>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
-            <Inbox size={24} />
+          <h1 className="text-2xl font-bold text-zinc-900">
             Action Items Board
           </h1>
           <p className="text-muted-foreground text-sm">{items.length} total items</p>

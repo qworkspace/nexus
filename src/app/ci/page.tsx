@@ -40,7 +40,7 @@ export default function CIPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900">🔄 CI Pipeline Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-zinc-900">CI Pipeline Dashboard</h1>
             <p className="text-muted-foreground text-sm mt-1">Live CI pipeline visibility</p>
           </div>
           <div className="flex items-center gap-3">
@@ -286,7 +286,7 @@ function BuildRow({ build }: { build: CIBuild }) {
           {build.testStatus && (
             <>
               <span>•</span>
-              <span className={build.testStatus === 'pass' ? 'text-zinc-900' : 'text-zinc-500'}>
+              <span className={build.testStatus === 'pass' ? 'text-[#5C6B56] font-medium' : 'text-[#555D66] font-medium'}>
                 TEST: {build.testStatus.toUpperCase()}
               </span>
             </>

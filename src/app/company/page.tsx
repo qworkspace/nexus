@@ -6,7 +6,7 @@ import { AgentIcon } from "@/lib/agent-icons";
 import {
   LayoutGrid, GitBranch, Calendar, Inbox,
   Activity, LinkIcon, TrendingUp, TrendingDown, AlertTriangle,
-  Repeat, BookOpen, Zap, HeartPulse
+  Repeat, BookOpen, Zap
 } from "lucide-react";
 import ScorecardPanel from "@/components/ScorecardPanel";
 import { MetricTooltip } from "@/components/ui/tooltip";
@@ -159,16 +159,16 @@ export default function CompanyPage() {
 
   // Agent colour mapping for visual distinction
   const agentColours: Record<string, { border: string; glow: string }> = {
-    q: { border: "border-l-[#F5D547]", glow: "" },
-    aura: { border: "border-l-zinc-400", glow: "" },
-    surge: { border: "border-l-zinc-500", glow: "" },
-    spark: { border: "border-l-zinc-400", glow: "" },
-    cipher: { border: "border-l-zinc-500", glow: "" },
-    volt: { border: "border-l-zinc-400", glow: "" },
-    echo: { border: "border-l-zinc-500", glow: "" },
-    flux: { border: "border-l-zinc-400", glow: "" },
-    prism: { border: "border-l-zinc-300", glow: "" },
-    luna: { border: "border-l-zinc-400", glow: "" },
+    q: { border: "border-l-[#F5D547] border-b-2 border-b-[#F5D547]", glow: "" },
+    aura: { border: "border-l-[#A8B5A0] border-b-2 border-b-[#A8B5A0]", glow: "" },
+    surge: { border: "border-l-[#B8B0C8] border-b-2 border-b-[#B8B0C8]", glow: "" },
+    spark: { border: "border-l-[#D4C5A9] border-b-2 border-b-[#D4C5A9]", glow: "" },
+    cipher: { border: "border-l-[#8E99A4] border-b-2 border-b-[#8E99A4]", glow: "" },
+    volt: { border: "border-l-[#F5D547] border-b-2 border-b-[#F5D547]", glow: "" },
+    echo: { border: "border-l-[#A8B5A0] border-b-2 border-b-[#A8B5A0]", glow: "" },
+    flux: { border: "border-l-[#B8B0C8] border-b-2 border-b-[#B8B0C8]", glow: "" },
+    prism: { border: "border-l-[#D4C5A9] border-b-2 border-b-[#D4C5A9]", glow: "" },
+    luna: { border: "border-l-[#8E99A4] border-b-2 border-b-[#8E99A4]", glow: "" },
   };
 
   // Calculate sparkline data for each agent (last 7 days of task completions)
@@ -208,8 +208,7 @@ export default function CompanyPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
-            <HeartPulse size={24} className="text-[#F5D547]" />
+          <h1 className="text-2xl font-bold text-zinc-900">
             The Core
           </h1>
           <p className="text-muted-foreground text-sm">Villanueva Creative — {agents.length} team members</p>
@@ -355,7 +354,7 @@ export default function CompanyPage() {
 
         {/* Right column — Activity Feed */}
         <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <div className="bg-white rounded-xl border border-zinc-200 border-l-2 border-l-[#D4C5A9] p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
                 <Activity size={14} />
@@ -394,7 +393,7 @@ export default function CompanyPage() {
           </div>
 
           {/* Quick Links */}
-          <div className="bg-white rounded-xl border border-zinc-200 p-4 space-y-2">
+          <div className="bg-white rounded-xl border border-zinc-200 border-l-2 border-l-[#8E99A4] p-4 space-y-2">
             <h3 className="text-sm font-semibold text-zinc-900 mb-2">Quick Links</h3>
             <Link href="/company/floor" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 text-xs text-muted-foreground">
               <LayoutGrid size={14} className="shrink-0" />
@@ -422,7 +421,7 @@ export default function CompanyPage() {
           <ScorecardPanel />
 
           {/* Loop Status Panel */}
-          <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <div className="bg-white rounded-xl border border-zinc-200 border-l-2 border-l-[#D4C5A9] p-4">
             <h3 className="text-sm font-semibold text-zinc-900 mb-3 flex items-center gap-1.5">
               <Repeat size={14} />
               Loop Status
@@ -589,11 +588,16 @@ function TooltipStatCard({ label, value, suffix, sub, color }: { label: string; 
 }
 
 function TooltipHealthBar({ label, value }: { label: string; value: number }) {
-  const color = value >= 70 ? "bg-[#F5D547]" : value >= 40 ? "bg-[#F5D547]" : "bg-[#F5D547]";
+  const colorMap: Record<string, string> = {
+    "Action Items": "bg-[#F5D547]",
+    "Meeting Cadence": "bg-[#A8B5A0]",
+    "Team Trust": "bg-[#B8B0C8]",
+  };
+  const color = colorMap[label] || "bg-[#F5D547]";
   return (
     <div className="flex items-center gap-3 text-xs cursor-help">
       <span className="text-muted-foreground w-28 text-right shrink-0">{label}</span>
-      <div className="flex-1 h-2 rounded-full bg-zinc-100 overflow-hidden">
+      <div className="flex-1 h-2 rounded-full bg-zinc-200 overflow-hidden">
         <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${value}%` }} />
       </div>
       <span className="text-muted-foreground w-8">{value}</span>
@@ -604,9 +608,9 @@ function TooltipHealthBar({ label, value }: { label: string; value: number }) {
 function StatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
     todo: "bg-zinc-400",
-    "in-progress": "bg-foreground",
+    "in-progress": "bg-[#B8B0C8]",
     blocked: "bg-zinc-600",
-    done: "bg-[#F5D547]",
+    done: "bg-[#A8B5A0]",
   };
   return <div className={`w-2 h-2 rounded-full shrink-0 ${colors[status] || "bg-zinc-400"}`} />;
 }

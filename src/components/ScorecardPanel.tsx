@@ -52,7 +52,7 @@ export default function ScorecardPanel() {
 
   if (loading) {
     return (
-      <div className="bg-white rounded-xl border border-zinc-200 p-4">
+      <div className="bg-white rounded-xl border border-zinc-200 border-l-2 border-l-[#B8B0C8] p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-zinc-900">
             Loop 0 Scorecard
@@ -70,7 +70,7 @@ export default function ScorecardPanel() {
 
   if (error) {
     return (
-      <div className="bg-white rounded-xl border border-zinc-200 p-4">
+      <div className="bg-white rounded-xl border border-zinc-200 border-l-2 border-l-[#B8B0C8] p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-zinc-900">
             Loop 0 Scorecard
@@ -83,7 +83,7 @@ export default function ScorecardPanel() {
 
   if (!data?.current) {
     return (
-      <div className="bg-white rounded-xl border border-zinc-200 p-4">
+      <div className="bg-white rounded-xl border border-zinc-200 border-l-2 border-l-[#B8B0C8] p-4">
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-semibold text-zinc-900">
             Loop 0 Scorecard

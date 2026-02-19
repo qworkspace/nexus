@@ -62,9 +62,9 @@ const SOURCE_BADGES: Record<string, { label: string; className: string }> = {
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
-  HIGH: 'bg-zinc-100 text-zinc-700 border-zinc-200',
-  MED:  'bg-zinc-100 text-zinc-700 border-zinc-200',
-  LOW:  'bg-zinc-100 text-zinc-700 border-zinc-200',
+  HIGH: 'bg-[#3D3D3D] text-white border-[#3D3D3D]',
+  MED:  'bg-[#8E99A4]/20 text-[#555D66] border-[#8E99A4]/30',
+  LOW:  'bg-zinc-100 text-zinc-500 border-zinc-200',
 };
 
 const PIPELINE_STAGES = ['queued', 'speccing', 'building', 'qa'] as const;
@@ -246,8 +246,8 @@ export default function HubResearchPage() {
           <div key={stage} className="flex items-center">
             <div className={`flex flex-col items-center ${i <= idx ? '' : 'opacity-40'}`}>
               <div className={`w-3 h-3 rounded-full border-2 transition-all ${
-                i < idx ? 'bg-[#F5D547] border-[#F5D547]' :
-                i === idx ? 'bg-foreground border-zinc-400 animate-pulse' :
+                i < idx ? 'bg-[#A8B5A0] border-[#A8B5A0]' :
+                i === idx ? 'bg-[#B8B0C8] border-[#B8B0C8] animate-pulse' :
                 'bg-muted border-border'
               }`} />
               <span className={`text-[10px] mt-0.5 ${i === idx ? 'text-foreground font-semibold' : 'text-muted-foreground'}`}>
@@ -270,7 +270,7 @@ export default function HubResearchPage() {
     const src = SOURCE_BADGES[item.source] || SOURCE_BADGES.manual;
 
     return (
-      <Card className="">
+      <Card className="hover:border-[#D4C5A9] transition-colors">
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-2">
             <CardTitle className="text-base">{item.title}</CardTitle>

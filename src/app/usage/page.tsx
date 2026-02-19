@@ -12,7 +12,7 @@ import { CostBreakdown } from "@/components/costs/cost-breakdown";
 import { ExpensiveActivities } from "@/components/costs/expensive-activities";
 import useSWR from "swr";
 import type { TokenUsageResponse } from "@/lib/tokens/types";
-import { RefreshCw, DollarSign } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { db } from "@/lib/db";
 
 async function fetcher(url: string): Promise<TokenUsageResponse> {
@@ -42,8 +42,7 @@ export default function UsageAndCostsPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
-            <DollarSign className="h-6 w-6" />
+          <h1 className="text-2xl font-bold text-zinc-900">
             Usage & Costs
           </h1>
           <p className="text-zinc-500 text-sm">

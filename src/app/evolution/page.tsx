@@ -3,7 +3,6 @@ import { PillarCard } from "@/components/evolution/pillar-card";
 import { LessonsCard } from "@/components/evolution/lessons-card";
 import { EvolutionLog } from "@/components/evolution/evolution-log";
 import { GoalsCard } from "@/components/evolution/goals-card";
-import { Bot } from "lucide-react";
 
 async function getEvolutionData() {
   try {
@@ -47,8 +46,7 @@ export default async function EvolutionPage() {
     <div className="p-6 max-w-7xl">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-zinc-900 flex items-center gap-2">
-          <Bot size={24} />
+        <h1 className="text-2xl font-semibold text-zinc-900">
           Q Evolution
         </h1>
         <p className="text-muted-foreground text-sm">

@@ -10,7 +10,7 @@ import { TopConsumersList } from "@/components/tokens/top-consumers-list";
 import { TokenAlertsPanel } from "@/components/tokens/token-alerts-panel";
 import useSWR from "swr";
 import type { TokenUsageResponse } from "@/lib/tokens/types";
-import { RefreshCw, Activity } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 
 async function fetcher(url: string): Promise<TokenUsageResponse> {
   const response = await fetch(url);
@@ -40,8 +40,7 @@ export default function TokenUsagePage() {
       <div className="border-b border-zinc-200 bg-white px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900 flex items-center gap-2">
-              <Activity className="h-6 w-6" />
+            <h1 className="text-2xl font-semibold text-zinc-900">
               Token Usage
             </h1>
             <p className="text-muted-foreground text-sm">

@@ -2057,19 +2057,19 @@ export default function FloorPage() {
                   <span className="text-[10px] text-muted-foreground">The Forge (Building)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#F5D547] animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-[#B8B0C8] animate-pulse" />
                   <span className="text-[10px] text-muted-foreground">The Stream (Research)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#F5D547] animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-[#A8B5A0] animate-pulse" />
                   <span className="text-[10px] text-muted-foreground">The Pulse (Comms)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-zinc-400" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-300" />
                   <span className="text-[10px] text-muted-foreground">The Void (Idle)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                  <div className="w-2 h-2 rounded-full bg-[#8E99A4]" />
                   <span className="text-[10px] text-muted-foreground">Error</span>
                 </div>
               </div>
