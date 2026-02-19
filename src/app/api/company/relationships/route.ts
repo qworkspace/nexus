@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import { readdirSync, readFileSync } from 'fs';
+import { readdirSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
 const REL_DIR = join(process.env.HOME || '', '.openclaw/shared/relationships');
 
 export async function GET() {
   try {
+    if (!existsSync(REL_DIR)) return NextResponse.json({ relationships: {} });
     const files = readdirSync(REL_DIR).filter(f => f.endsWith('.json') && f !== 'graph.json');
     const relationships: Record<string, unknown> = {};
 

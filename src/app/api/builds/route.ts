@@ -18,7 +18,7 @@ export async function GET(request: Request) {
   const limit = parseInt(searchParams.get('limit') || '20');
 
   try {
-    const projectDir = path.join(process.env.HOME || '', 'projects/mission-control');
+    const projectDir = path.join(process.env.HOME || '', '.openclaw/projects/nexus');
 
     // Get commits with feat/fix prefix (build commits)
     const gitLog = execSync(

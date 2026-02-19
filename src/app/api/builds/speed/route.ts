@@ -4,7 +4,7 @@ import path from 'path';
 
 export async function GET() {
   try {
-    const projectDir = path.join(process.env.HOME || '', 'projects/mission-control');
+    const projectDir = path.join(process.env.HOME || '', '.openclaw/projects/nexus');
 
     // Get builds with timestamps
     const gitLog = execSync(
