@@ -4,6 +4,7 @@ import { join } from "path";
 
 const SHARED = process.env.HOME ? join(process.env.HOME, ".openclaw/shared") : "/Users/paulvillanueva/.openclaw/shared";
 const MEETINGS_DIR = join(SHARED, "meetings");
+const RETROS_DIR = join(SHARED, "retros");
 const ACTIONS_FILE = join(SHARED, "action-items/index.json");
 const RELATIONSHIPS_DIR = join(SHARED, "relationships");
 const ACTIVITY_FILE = join(SHARED, "activity-feed.json");
@@ -25,13 +26,14 @@ export async function GET() {
     return new Date(a.deadline) < new Date();
   });
 
-  // Meetings
+  // Meetings (scan both meetings/ and retros/ dirs)
   let meetingCount = 0;
   let lastMeeting: string | null = null;
   try {
-    const files = readdirSync(MEETINGS_DIR).filter(f => f.endsWith(".md")).sort().reverse();
-    meetingCount = files.length;
-    if (files[0]) lastMeeting = files[0].replace(".md", "");
+    const getMdFiles = (dir: string) => { try { return readdirSync(dir).filter(f => f.endsWith(".md")); } catch { return []; } };
+    const allFiles = [...getMdFiles(MEETINGS_DIR), ...getMdFiles(RETROS_DIR)].sort().reverse();
+    meetingCount = allFiles.length;
+    if (allFiles[0]) lastMeeting = allFiles[0].replace(".md", "");
   } catch { /* no meetings */ }
 
   // Relationships — avg trust
