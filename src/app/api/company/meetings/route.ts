@@ -1,30 +1,28 @@
 import { NextResponse } from 'next/server';
-import { readdirSync, statSync } from 'fs';
+import { readdirSync, statSync, existsSync } from 'fs';
 import { join } from 'path';
 
 const MEETINGS_DIR = join(process.env.HOME || '', '.openclaw/shared/meetings');
+const RETROS_DIR = join(process.env.HOME || '', '.openclaw/shared/retros');
 
-export async function GET() {
-  try {
-    const files = readdirSync(MEETINGS_DIR)
-      .filter(f => f.endsWith('.md'))
-      .sort()
-      .reverse();
+const typeLabels: Record<string, string> = {
+  'standup': 'Morning Standup',
+  'sync-content': 'Content Team Sync',
+  'sync-engineering': 'Engineering Sync',
+  'allhands': 'All-Hands',
+  'retro': 'Retrospective',
+};
 
-    const meetings = files.map(f => {
-      const stats = statSync(join(MEETINGS_DIR, f));
+function scanDir(dir: string) {
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter(f => f.endsWith('.md'))
+    .map(f => {
+      const stats = statSync(join(dir, f));
       const name = f.replace('.md', '');
       const parts = name.split('-');
       const date = parts.slice(0, 3).join('-');
       const type = parts.slice(3).join('-');
-
-      const typeLabels: Record<string, string> = {
-        'standup': 'Morning Standup',
-        'sync-content': 'Content Team Sync',
-        'sync-engineering': 'Engineering Sync',
-        'allhands': 'All-Hands',
-      };
-
       return {
         id: name,
         filename: f,
@@ -35,6 +33,14 @@ export async function GET() {
         modified: stats.mtime.toISOString(),
       };
     });
+}
+
+export async function GET() {
+  try {
+    const meetings = [
+      ...scanDir(MEETINGS_DIR),
+      ...scanDir(RETROS_DIR),
+    ].sort((a, b) => b.date.localeCompare(a.date));
 
     return NextResponse.json({ meetings });
   } catch (error) {
