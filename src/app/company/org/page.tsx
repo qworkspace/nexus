@@ -390,7 +390,8 @@ function ConnectorLines({ lines, containerRef, agents, collapsed }: {
         const fy = fRect.top - containerRect.top + fRect.height;
         const tx = tRect.left - containerRect.left + tRect.width / 2;
         const ty = tRect.top - containerRect.top;
-        const midY = (fy + ty) / 2;
+        const dist = Math.abs(ty - fy);
+        const offset = Math.max(dist * 0.4, 30);
 
         const isDashed = (from === "ella-node" && to === "arty") ||
           (from === "pj" && to === "luna") ||
@@ -398,7 +399,7 @@ function ConnectorLines({ lines, containerRef, agents, collapsed }: {
           from === "luna";
 
         newPaths.push({
-          d: `M ${fx} ${fy} C ${fx} ${midY}, ${tx} ${midY}, ${tx} ${ty}`,
+          d: `M ${fx} ${fy} C ${fx} ${fy + offset}, ${tx} ${ty - offset}, ${tx} ${ty}`,
           isDashed,
           key: `${from}-${to}`,
         });
@@ -423,10 +424,11 @@ function ConnectorLines({ lines, containerRef, agents, collapsed }: {
           <path
             d={d}
             fill="none"
-            stroke={isDashed ? "#a1a1aa" : "#d4d4d8"}
-            strokeWidth="2"
+            stroke="#D4C5A9"
+            strokeWidth="1.5"
             strokeDasharray={isDashed ? "6 4" : undefined}
-            opacity={isDashed ? 0.5 : 0.7}
+            opacity={isDashed ? 0.45 : 0.7}
+            strokeLinecap="round"
           />
         </g>
       ))}

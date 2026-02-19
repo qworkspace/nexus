@@ -28,7 +28,7 @@ export default function RootLayout({
         <KeyboardShortcutsProvider>
           <div className="flex h-screen bg-background weavy-grid">
             <Sidebar />
-            <main className="flex-1 overflow-auto md:ml-0">
+            <main className="flex-1 overflow-auto md:ml-0 relative z-10">
               {children}
             </main>
           </div>
