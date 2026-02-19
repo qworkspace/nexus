@@ -78,13 +78,13 @@ export function AgentStatusPanel() {
       <CardContent className="space-y-4">
         {/* Active Agents */}
         {isLoading ? (
-          <div className="space-y-3">
+          <div className="space-y-3 max-h-[240px] overflow-y-auto">
             {[1, 2].map(i => (
               <div key={i} className="h-20 rounded-lg bg-zinc-100 shimmer" />
             ))}
           </div>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 max-h-[240px] overflow-y-auto">
             {data?.agents.map(agent => {
               const status = statusConfig[agent.status];
               return (

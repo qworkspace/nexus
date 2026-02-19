@@ -91,25 +91,15 @@ export default function CommandCenterPage() {
         <div className="space-y-4">
           {/* Top Row: 3 Columns - Live Agents | Crons | Session Insights */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            <div className="max-h-[340px] overflow-hidden">
-              <AgentStatusPanel />
-            </div>
-            <div className="max-h-[340px] overflow-hidden">
-              <CronMonitorPanel />
-            </div>
-            <div className="max-h-[340px] overflow-hidden">
-              <SessionInsightsPanel />
-            </div>
+            <AgentStatusPanel />
+            <CronMonitorPanel />
+            <SessionInsightsPanel />
           </div>
 
           {/* Bottom Row: 2 Columns - Memory | Model Intelligence */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div className="max-h-[340px] overflow-hidden">
-              <MemoryContextPanel />
-            </div>
-            <div className="max-h-[340px] overflow-hidden">
-              <ModelIntelligencePanel />
-            </div>
+            <MemoryContextPanel />
+            <ModelIntelligencePanel />
           </div>
         </div>
       </div>
