@@ -1529,7 +1529,7 @@ export default function FloorPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={meetingMode ? endMeeting : startMeeting}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${meetingMode ? "bg-red-500 text-white hover:bg-red-600" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${meetingMode ? "bg-red-500 text-white hover:bg-red-600" : "bg-zinc-900 text-white hover:bg-zinc-700"}`}
             >
               {meetingMode ? (
                 <>
@@ -1549,7 +1549,7 @@ export default function FloorPage() {
               onClick={() => setDemoMode(!demoMode)}
               className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
                 demoMode
-                  ? "bg-purple-500 text-white hover:bg-purple-600"
+                  ? "bg-zinc-800 text-white hover:bg-zinc-700"
                   : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
               }`}
             >
@@ -1753,7 +1753,7 @@ export default function FloorPage() {
                   {agentState?.buildCelebration && (
                     <>
                       <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-50">
-                        <div className="bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap animate-bounce">
+                        <div className="bg-zinc-900 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap animate-bounce">
                           ✅ {agentState.buildCelebration.buildName}
                         </div>
                       </div>
@@ -1894,9 +1894,9 @@ export default function FloorPage() {
             {/* Demo mode indicator */}
             {demoMode && (
               <div className="absolute top-2 left-2 z-40">
-                <div className="bg-purple-500/20 border border-purple-500/40 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-2">
-                  <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-                  <span className="text-[10px] text-purple-300 font-bold uppercase tracking-wide">
+                <div className="bg-[#FFE135]/20 border border-[#FFE135]/40 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-2">
+                  <span className="w-2 h-2 bg-zinc-700 rounded-full animate-pulse" />
+                  <span className="text-[10px] text-zinc-800 font-bold uppercase tracking-wide">
                     Demo Mode • {demoIntensity} • {demoSpeed}x
                   </span>
                 </div>
@@ -2043,7 +2043,7 @@ export default function FloorPage() {
                     <p className="text-[10px] text-zinc-600">Model: {agent.model.primary.split("/").pop()}</p>
                     {/* Token counter */}
                     {agentState && agentState.tokens && agentState.tokens > 0 && (
-                      <div className="text-[10px] text-green-400">
+                      <div className="text-[10px] text-zinc-600">
                         {agentState.tokens.toLocaleString()} tokens
                       </div>
                     )}
@@ -2060,15 +2060,15 @@ export default function FloorPage() {
               <h4 className="text-xs font-bold text-zinc-300 mb-2">Ecosystem Status</h4>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-700 animate-pulse" />
                   <span className="text-[10px] text-zinc-400">The Forge (Building)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-700 animate-pulse" />
                   <span className="text-[10px] text-zinc-400">The Stream (Research)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-700 animate-pulse" />
                   <span className="text-[10px] text-zinc-400">The Pulse (Comms)</span>
                 </div>
                 <div className="flex items-center gap-2">

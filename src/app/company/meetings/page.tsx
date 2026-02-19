@@ -39,8 +39,8 @@ interface Agent {
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "bg-red-500",
-  medium: "bg-amber-500",
+  high: "bg-red-600",
+  medium: "bg-[#FFE135]",
   low: "bg-emerald-500",
 };
 
@@ -363,7 +363,7 @@ function MeetingContent({ content }: { content: string }) {
           );
         }
         if (line.startsWith("- [ ] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><Square size={11} className="text-zinc-400" /><span className="text-zinc-700 dark:text-zinc-300">{line.slice(6)}</span></div>;
-        if (line.startsWith("- [x] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><CheckSquare size={11} className="text-green-600" /><span className="text-zinc-500 line-through">{line.slice(6)}</span></div>;
+        if (line.startsWith("- [x] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><CheckSquare size={11} className="text-zinc-600" /><span className="text-zinc-500 line-through">{line.slice(6)}</span></div>;
         if (line.startsWith("- ")) return <div key={i} className="text-xs text-zinc-700 dark:text-zinc-300 pl-3">• {line.slice(2)}</div>;
         if (line.startsWith("---")) return <hr key={i} className="border-zinc-200 dark:border-zinc-800 my-3" />;
         if (line.trim() === "") return <div key={i} className="h-1" />;

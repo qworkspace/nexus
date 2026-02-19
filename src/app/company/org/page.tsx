@@ -225,7 +225,7 @@ export default function OrgChartPage() {
             <div ref={(el) => registerNode("company", el)}>
               <div className="px-8 py-4 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 border-2 border-amber-300 dark:border-amber-700 text-center shadow-lg">
                 <p className="text-sm font-bold text-amber-700 dark:text-amber-300">Villanueva Creative Pty Ltd</p>
-                <p className="text-[10px] text-amber-500 mt-0.5">Est. Sydney, Australia</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">Est. Sydney, Australia</p>
               </div>
             </div>
 
@@ -510,8 +510,8 @@ function OrgCard({
 
 function DeptBadge({ name, color, members }: { name: string; color: string; members: string[] }) {
   const dotColors: Record<string, string> = {
-    amber: "bg-amber-400", pink: "bg-pink-400", emerald: "bg-emerald-400",
-    cyan: "bg-cyan-400", blue: "bg-blue-400", orange: "bg-orange-400",
+    amber: "bg-[#FFE135]", pink: "bg-zinc-300", emerald: "bg-zinc-800",
+    cyan: "bg-zinc-500", blue: "bg-zinc-600", orange: "bg-[#FFE135]",
     sky: "bg-sky-400", zinc: "bg-zinc-400",
   };
   return (

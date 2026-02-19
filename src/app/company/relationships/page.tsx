@@ -322,7 +322,7 @@ export default function RelationshipsPage() {
           <button onClick={() => setView("timeline")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "timeline" ? "bg-blue-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
             Timeline
           </button>
-          <Link href="/company" className="text-xs text-blue-500 hover:underline ml-4">← HQ</Link>
+          <Link href="/company" className="text-xs text-zinc-500 hover:text-foreground hover:underline ml-4">← HQ</Link>
         </div>
       </div>
 

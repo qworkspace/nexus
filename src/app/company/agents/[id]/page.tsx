@@ -62,7 +62,7 @@ export default function AgentProfilePage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <Link href="/company" className="text-sm text-blue-500 hover:underline mb-4 inline-block">← Back to The Core</Link>
+      <Link href="/company" className="text-sm text-zinc-500 hover:text-foreground hover:underline mb-4 inline-block">← Back to The Core</Link>
 
       {/* Header */}
       <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 mb-6">
@@ -143,7 +143,7 @@ export default function AgentProfilePage() {
                   {agent.directReports.map(rid => {
                     const r = agentMap[rid];
                     return r ? (
-                      <Link key={rid} href={`/company/agents/${rid}`} className="flex items-center gap-1.5 text-sm text-blue-500 hover:underline">
+                      <Link key={rid} href={`/company/agents/${rid}`} className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-foreground hover:underline">
                         <AgentIcon emoji={r.emoji} size={16} className="text-blue-500" />
                         {r.name}
                       </Link>
