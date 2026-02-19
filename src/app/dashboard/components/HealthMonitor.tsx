@@ -156,10 +156,10 @@ export function HealthMonitor() {
 
           {/* All healthy message */}
           {alerts.length === 0 && (
-            <div className="mb-4 p-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg">
+            <div className="mb-4 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-zinc-500" />
-                <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <span className="text-sm font-medium text-zinc-800">
                   All systems healthy
                 </span>
               </div>
@@ -186,23 +186,23 @@ function AlertBadge({ alert }: AlertBadgeProps) {
     switch (type) {
       case "critical":
         return {
-          bg: "bg-zinc-50 dark:bg-zinc-950",
-          border: "border-zinc-200 dark:border-zinc-800",
-          text: "text-zinc-800 dark:text-zinc-200",
+          bg: "bg-zinc-50",
+          border: "border-zinc-200",
+          text: "text-zinc-800",
           icon: "text-zinc-500",
         };
       case "warning":
         return {
-          bg: "bg-zinc-50 dark:bg-zinc-950",
-          border: "border-zinc-200 dark:border-zinc-800",
-          text: "text-zinc-800 dark:text-yellow-200",
+          bg: "bg-zinc-50",
+          border: "border-zinc-200",
+          text: "text-zinc-800",
           icon: "text-zinc-400",
         };
       default:
         return {
-          bg: "bg-zinc-50 dark:bg-zinc-950",
-          border: "border-zinc-200 dark:border-zinc-800",
-          text: "text-zinc-800 dark:text-zinc-200",
+          bg: "bg-zinc-50",
+          border: "border-zinc-200",
+          text: "text-zinc-800",
           icon: "text-zinc-500",
         };
     }

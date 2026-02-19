@@ -83,15 +83,15 @@ export function NotificationCenter() {
   const getBgColor = (type: string) => {
     switch (type) {
       case 'info':
-        return "bg-zinc-50 dark:bg-zinc-950";
+        return "bg-zinc-50";
       case 'warning':
-        return "bg-zinc-50 dark:bg-zinc-950";
+        return "bg-zinc-50";
       case 'error':
-        return "bg-zinc-50 dark:bg-zinc-950";
+        return "bg-zinc-50";
       case 'success':
-        return "bg-zinc-50 dark:bg-zinc-950";
+        return "bg-zinc-50";
       default:
-        return "bg-zinc-50 dark:bg-zinc-900";
+        return "bg-zinc-50";
     }
   };
 
@@ -139,7 +139,7 @@ export function NotificationCenter() {
           <Card className="absolute right-0 top-full z-50 w-80 mt-2 shadow-xl">
             <CardContent className="p-0">
               {/* Header */}
-              <div className="flex items-center justify-between p-3 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="flex items-center justify-between p-3 border-b border-zinc-200">
                 <h3 className="text-sm font-semibold">Notifications</h3>
                 <Button
                   variant="ghost"
@@ -162,7 +162,7 @@ export function NotificationCenter() {
                     No notifications
                   </div>
                 ) : (
-                  <div className="divide-y divide-zinc-200 dark:divide-zinc-800">
+                  <div className="divide-y divide-zinc-200">
                     {/* Unread */}
                     {unread.map((notification) => (
                       <div
@@ -174,10 +174,10 @@ export function NotificationCenter() {
                             {getIcon(notification.type)}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                            <p className="text-sm font-medium text-zinc-900">
                               {notification.title}
                             </p>
-                            <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-0.5">
+                            <p className="text-xs text-zinc-600 mt-0.5">
                               {notification.message}
                             </p>
                             <div className="flex items-center gap-2 mt-1">
@@ -206,17 +206,17 @@ export function NotificationCenter() {
                     {history.slice(0, 5).map((notification) => (
                       <div
                         key={notification.id}
-                        className="p-3 bg-zinc-50 dark:bg-zinc-900/50 opacity-75"
+                        className="p-3 bg-zinc-50 opacity-75"
                       >
                         <div className="flex items-start gap-2">
                           <div className={`mt-0.5 ${getIconColor(notification.type)}`}>
                             {getIcon(notification.type)}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                            <p className="text-sm font-medium text-zinc-700">
                               {notification.title}
                             </p>
-                            <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-0.5">
+                            <p className="text-xs text-zinc-500 mt-0.5">
                               {notification.message}
                             </p>
                             <span className="text-xs text-zinc-400">
@@ -231,7 +231,7 @@ export function NotificationCenter() {
               </div>
 
               {/* Footer */}
-              <div className="p-2 border-t border-zinc-200 dark:border-zinc-800">
+              <div className="p-2 border-t border-zinc-200">
                 <Button
                   variant="ghost"
                   size="sm"

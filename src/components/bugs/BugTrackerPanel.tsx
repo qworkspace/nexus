@@ -106,7 +106,7 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
                 <div className="space-y-4">
                   {/* Search */}
                   <div>
-                    <label className="block text-sm font-medium text-zinc-700 dark:text-foreground mb-1">
+                    <label className="block text-sm font-medium text-zinc-700 mb-1">
                       Search
                     </label>
                     <div className="relative">
@@ -123,13 +123,13 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
                   {/* Filters Grid */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                     <div>
-                      <label className="block text-xs font-medium text-zinc-700 dark:text-foreground mb-1">
+                      <label className="block text-xs font-medium text-zinc-700 mb-1">
                         Project
                       </label>
                       <select
                         value={projectFilter}
                         onChange={(e) => setProjectFilter(e.target.value as Project | 'all')}
-                        className="w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
+                        className="w-full px-3 py-2 text-sm border rounded-md bg-white text-zinc-900 focus:ring-2 focus:ring-zinc-500"
                       >
                         <option value="all">All Projects</option>
                         {projects.map(project => (
@@ -141,13 +141,13 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-zinc-700 dark:text-foreground mb-1">
+                      <label className="block text-xs font-medium text-zinc-700 mb-1">
                         Severity
                       </label>
                       <select
                         value={severityFilter}
                         onChange={(e) => setSeverityFilter(e.target.value as Severity | 'all')}
-                        className="w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
+                        className="w-full px-3 py-2 text-sm border rounded-md bg-white text-zinc-900 focus:ring-2 focus:ring-zinc-500"
                       >
                         <option value="all">All Severities</option>
                         {severities.map(severity => (
@@ -159,13 +159,13 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-zinc-700 dark:text-foreground mb-1">
+                      <label className="block text-xs font-medium text-zinc-700 mb-1">
                         Status
                       </label>
                       <select
                         value={statusFilter}
                         onChange={(e) => setStatusFilter(e.target.value as BugStatus | 'all')}
-                        className="w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
+                        className="w-full px-3 py-2 text-sm border rounded-md bg-white text-zinc-900 focus:ring-2 focus:ring-zinc-500"
                       >
                         <option value="all">All Statuses</option>
                         {statuses.map(status => (
@@ -177,13 +177,13 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
                     </div>
 
                     <div>
-                      <label className="block text-xs font-medium text-zinc-700 dark:text-foreground mb-1">
+                      <label className="block text-xs font-medium text-zinc-700 mb-1">
                         Source
                       </label>
                       <select
                         value={sourceFilter}
                         onChange={(e) => setSourceFilter(e.target.value as BugSource | 'all')}
-                        className="w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
+                        className="w-full px-3 py-2 text-sm border rounded-md bg-white text-zinc-900 focus:ring-2 focus:ring-zinc-500"
                       >
                         <option value="all">All Sources</option>
                         {sources.map(source => (
@@ -217,7 +217,7 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
             <div className="space-y-4">
               {/* Search */}
               <div>
-                <label className="block text-sm font-medium text-zinc-700 dark:text-foreground mb-1">
+                <label className="block text-sm font-medium text-zinc-700 mb-1">
                   Search
                 </label>
                 <div className="relative">
@@ -234,13 +234,13 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
               {/* Filters Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 dark:text-foreground mb-1">
+                  <label className="block text-xs font-medium text-zinc-700 mb-1">
                     Project
                   </label>
                   <select
                     value={projectFilter}
                     onChange={(e) => setProjectFilter(e.target.value as Project | 'all')}
-                    className="w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
+                    className="w-full px-3 py-2 text-sm border rounded-md bg-white text-zinc-900 focus:ring-2 focus:ring-zinc-500"
                   >
                     <option value="all">All Projects</option>
                     {projects.map(project => (
@@ -252,13 +252,13 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 dark:text-foreground mb-1">
+                  <label className="block text-xs font-medium text-zinc-700 mb-1">
                     Severity
                   </label>
                   <select
                     value={severityFilter}
                     onChange={(e) => setSeverityFilter(e.target.value as Severity | 'all')}
-                    className="w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
+                    className="w-full px-3 py-2 text-sm border rounded-md bg-white text-zinc-900 focus:ring-2 focus:ring-zinc-500"
                   >
                     <option value="all">All Severities</option>
                     {severities.map(severity => (
@@ -270,13 +270,13 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 dark:text-foreground mb-1">
+                  <label className="block text-xs font-medium text-zinc-700 mb-1">
                     Status
                   </label>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value as BugStatus | 'all')}
-                    className="w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
+                    className="w-full px-3 py-2 text-sm border rounded-md bg-white text-zinc-900 focus:ring-2 focus:ring-zinc-500"
                   >
                     <option value="all">All Statuses</option>
                     {statuses.map(status => (
@@ -288,13 +288,13 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 dark:text-foreground mb-1">
+                  <label className="block text-xs font-medium text-zinc-700 mb-1">
                     Source
                   </label>
                   <select
                     value={sourceFilter}
                     onChange={(e) => setSourceFilter(e.target.value as BugSource | 'all')}
-                    className="w-full px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
+                    className="w-full px-3 py-2 text-sm border rounded-md bg-white text-zinc-900 focus:ring-2 focus:ring-zinc-500"
                   >
                     <option value="all">All Sources</option>
                     {sources.map(source => (
@@ -314,8 +314,8 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <Bug className="h-5 w-5 text-muted-foreground dark:text-muted-foreground" />
-            <span className="text-sm font-medium text-zinc-700 dark:text-foreground">
+            <Bug className="h-5 w-5 text-muted-foreground" />
+            <span className="text-sm font-medium text-zinc-700">
               {filteredBugs.length} Bug{filteredBugs.length !== 1 ? 's' : ''}
             </span>
           </div>
@@ -323,7 +323,7 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
           {hasActiveFilters && (
             <button
               onClick={handleClearFilters}
-              className="text-xs text-zinc-900 dark:text-foreground hover:underline"
+              className="text-xs text-zinc-900 hover:underline"
             >
               Clear filters
             </button>
@@ -338,7 +338,7 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
             </Button>
           )}
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground dark:text-muted-foreground">Severity:</span>
+            <span className="text-xs text-muted-foreground">Severity:</span>
             {severities.map(severity => (
               <div
                 key={severity}
@@ -357,14 +357,14 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
         <Card>
           <CardContent className="py-12">
             <div className="text-center">
-              <Bug className="h-12 w-12 mx-auto mb-4 text-foreground dark:text-muted-foreground" />
-              <p className="text-sm text-muted-foreground dark:text-muted-foreground">
+              <Bug className="h-12 w-12 mx-auto mb-4 text-foreground" />
+              <p className="text-sm text-muted-foreground">
                 No bugs found matching your filters
               </p>
               {hasActiveFilters && (
                 <button
                   onClick={handleClearFilters}
-                  className="mt-2 text-sm text-zinc-900 dark:text-foreground hover:underline"
+                  className="mt-2 text-sm text-zinc-900 hover:underline"
                 >
                   Clear all filters
                 </button>

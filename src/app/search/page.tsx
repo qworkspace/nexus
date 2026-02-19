@@ -105,10 +105,10 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="p-6 max-w-4xl">
+    <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-zinc-900">Global Search</h1>
-        <p className="text-muted-foreground text-sm">
+        <h1 className="text-2xl font-bold text-zinc-900">Global Search</h1>
+        <p className="text-zinc-500 text-sm">
           Search across memory, docs, projects, and activity
         </p>
       </div>

@@ -208,18 +208,18 @@ export default function CompanyPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
             <HeartPulse size={24} className="text-[#F5D547]" />
             The Core
           </h1>
           <p className="text-muted-foreground text-sm">Villanueva Creative — {agents.length} team members</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/company/floor" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-secondary text-xs hover:bg-zinc-200 dark:hover:bg-muted transition flex items-center gap-1.5">
+          <Link href="/company/floor" className="px-3 py-1.5 rounded-lg bg-zinc-100 text-xs hover:bg-zinc-200 transition flex items-center gap-1.5">
             <LayoutGrid size={14} />
             The Floor
           </Link>
-          <Link href="/company/org" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-secondary text-xs hover:bg-zinc-200 dark:hover:bg-muted transition flex items-center gap-1.5">
+          <Link href="/company/org" className="px-3 py-1.5 rounded-lg bg-zinc-100 text-xs hover:bg-zinc-200 transition flex items-center gap-1.5">
             <GitBranch size={14} />
             Org Chart
           </Link>
@@ -231,9 +231,9 @@ export default function CompanyPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Health Score */}
           {status && (
-            <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-6">
+            <div className="bg-white rounded-xl border border-zinc-200 p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-zinc-900 dark:text-foreground">Company Health</h2>
+                <h2 className="text-lg font-semibold text-zinc-900">Company Health</h2>
                 <HealthBadge score={status.health.score} />
               </div>
               <div className="grid grid-cols-4 gap-4">
@@ -267,8 +267,8 @@ export default function CompanyPage() {
           )}
 
           {/* Agent Grid */}
-          <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-6">
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-foreground mb-4">Team</h2>
+          <div className="bg-white rounded-xl border border-zinc-200 p-6">
+            <h2 className="text-lg font-semibold text-zinc-900 mb-4">Team</h2>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {localAgents.map(agent => {
                 const sparkline = agentSparklines[agent.id] || [];
@@ -280,12 +280,12 @@ export default function CompanyPage() {
                   <Link
                     key={agent.id}
                     href={`/company/agents/${agent.id}`}
-                    className={`p-3 rounded-lg border border-zinc-100 dark:border-border hover:bg-zinc-50 dark:hover:bg-secondary transition text-center group border-l-4 ${colours.border} ${colours.glow}`}
+                    className={`p-3 rounded-lg border border-zinc-100 hover:bg-zinc-50 transition text-center group border-l-4 ${colours.border} ${colours.glow}`}
                   >
                     <div className="flex items-center justify-center mb-1">
-                      <AgentIcon emoji={agent.emoji} size={28} className="text-muted-foreground dark:text-foreground" />
+                      <AgentIcon emoji={agent.emoji} size={28} className="text-muted-foreground" />
                     </div>
-                    <p className="text-xs font-bold text-zinc-900 dark:text-foreground mt-1">{agent.name}</p>
+                    <p className="text-xs font-bold text-zinc-900 mt-1">{agent.name}</p>
                     <p className="text-[10px] text-muted-foreground truncate">{agent.role}</p>
                     <p className="text-[9px] text-muted-foreground font-mono mt-0.5">{modelDisplay}</p>
                     {/* Sparkline */}
@@ -308,9 +308,9 @@ export default function CompanyPage() {
           {/* Quick Stats Row */}
           <div className="grid grid-cols-2 gap-4">
             {/* Recent Meetings */}
-            <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+            <div className="bg-white rounded-xl border border-zinc-200 p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
+                <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
                   <Calendar size={14} />
                   Recent Meetings
                 </h3>
@@ -318,8 +318,8 @@ export default function CompanyPage() {
               </div>
               <div className="space-y-2">
                 {meetings.slice(0, 5).map(m => (
-                  <Link key={m.id} href={`/company/meetings?selected=${m.id}`} className="flex items-center justify-between p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs">
-                    <span className="text-zinc-700 dark:text-foreground truncate">{m.title}</span>
+                  <Link key={m.id} href={`/company/meetings?selected=${m.id}`} className="flex items-center justify-between p-2 rounded hover:bg-zinc-50 text-xs">
+                    <span className="text-zinc-700 truncate">{m.title}</span>
                     <span className="text-[10px] text-muted-foreground ml-2 shrink-0">{m.date}</span>
                   </Link>
                 ))}
@@ -328,9 +328,9 @@ export default function CompanyPage() {
             </div>
 
             {/* Action Items */}
-            <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+            <div className="bg-white rounded-xl border border-zinc-200 p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
+                <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
                   <Inbox size={14} />
                   Action Items
                 </h3>
@@ -338,9 +338,9 @@ export default function CompanyPage() {
               </div>
               <div className="space-y-2">
                 {openActions.slice(0, 5).map(a => (
-                  <div key={a.id} className="flex items-center gap-2 p-2 rounded bg-zinc-50 dark:bg-secondary text-xs">
+                  <div key={a.id} className="flex items-center gap-2 p-2 rounded bg-zinc-50 text-xs">
                     <StatusDot status={a.status} />
-                    <span className="text-zinc-700 dark:text-foreground truncate flex-1">{a.task}</span>
+                    <span className="text-zinc-700 truncate flex-1">{a.task}</span>
                     <span className="text-[10px] text-muted-foreground">{a.assignee}</span>
                   </div>
                 ))}
@@ -355,9 +355,9 @@ export default function CompanyPage() {
 
         {/* Right column — Activity Feed */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+          <div className="bg-white rounded-xl border border-zinc-200 p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
+              <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
                 <Activity size={14} />
                 Activity Feed
               </h3>
@@ -377,9 +377,9 @@ export default function CompanyPage() {
             >
               {(status?.recentActivity || activity).slice(0, 20).map((entry, i) => (
                 <div key={entry.id || i} className="flex gap-2 text-xs">
-                  <AgentIcon emoji={entry.emoji} size={16} className="text-muted-foreground dark:text-foreground shrink-0 mt-0.5" />
+                  <AgentIcon emoji={entry.emoji} size={16} className="text-muted-foreground shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-medium text-zinc-700 dark:text-foreground">{entry.agentName}</span>
+                    <span className="font-medium text-zinc-700">{entry.agentName}</span>
                     <span className="text-muted-foreground ml-1">{entry.message}</span>
                     {entry.timestamp && (
                       <p className="text-[9px] text-muted-foreground mt-0.5">{formatRelativeTime(entry.timestamp)}</p>
@@ -394,25 +394,25 @@ export default function CompanyPage() {
           </div>
 
           {/* Quick Links */}
-          <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4 space-y-2">
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2">Quick Links</h3>
-            <Link href="/company/floor" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
+          <div className="bg-white rounded-xl border border-zinc-200 p-4 space-y-2">
+            <h3 className="text-sm font-semibold text-zinc-900 mb-2">Quick Links</h3>
+            <Link href="/company/floor" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 text-xs text-muted-foreground">
               <LayoutGrid size={14} className="shrink-0" />
               The Floor — Watch agents work
             </Link>
-            <Link href="/company/org" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
+            <Link href="/company/org" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 text-xs text-muted-foreground">
               <GitBranch size={14} className="shrink-0" />
               Org Chart — Company structure
             </Link>
-            <Link href="/company/relationships" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
+            <Link href="/company/relationships" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 text-xs text-muted-foreground">
               <LinkIcon size={14} className="shrink-0" />
               Relationships — Trust matrix
             </Link>
-            <Link href="/company/meetings" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
+            <Link href="/company/meetings" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 text-xs text-muted-foreground">
               <Calendar size={14} className="shrink-0" />
               Meetings — Transcripts & history
             </Link>
-            <Link href="/company/actions" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
+            <Link href="/company/actions" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 text-xs text-muted-foreground">
               <Inbox size={14} className="shrink-0" />
               Actions — Task board
             </Link>
@@ -422,8 +422,8 @@ export default function CompanyPage() {
           <ScorecardPanel />
 
           {/* Loop Status Panel */}
-          <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-3 flex items-center gap-1.5">
+          <div className="bg-white rounded-xl border border-zinc-200 p-4">
+            <h3 className="text-sm font-semibold text-zinc-900 mb-3 flex items-center gap-1.5">
               <Repeat size={14} />
               Loop Status
             </h3>
@@ -466,7 +466,7 @@ export default function CompanyPage() {
 
                 {/* Skill Proficiency */}
                 {loopStatus.skills.total > 0 && (
-                  <div className="pt-2 border-t border-zinc-100 dark:border-border">
+                  <div className="pt-2 border-t border-zinc-100">
                     <div className="flex items-center justify-between text-[10px] mb-1">
                       <span className="text-muted-foreground">Avg Proficiency</span>
                       <span className="text-muted-foreground">{loopStatus.skills.proficiency_avg.toFixed(1)}/5</span>
@@ -478,7 +478,7 @@ export default function CompanyPage() {
                           className={`h-1.5 flex-1 rounded-full ${
                             level <= Math.round(loopStatus.skills.proficiency_avg)
                               ? "bg-[#F5D547]"
-                              : "bg-zinc-200 dark:bg-muted"
+                              : "bg-zinc-200"
                           }`}
                         />
                       ))}
@@ -488,13 +488,13 @@ export default function CompanyPage() {
 
                 {/* Skill Categories */}
                 {Object.keys(loopStatus.skills.by_category).length > 0 && (
-                  <div className="pt-2 border-t border-zinc-100 dark:border-border">
+                  <div className="pt-2 border-t border-zinc-100">
                     <p className="text-[10px] text-muted-foreground mb-2">Skills by Category</p>
                     <div className="grid grid-cols-2 gap-1">
                       {Object.entries(loopStatus.skills.by_category).map(([cat, count]) => (
-                        <div key={cat} className="flex items-center justify-between text-[10px] px-1.5 py-1 rounded bg-zinc-50 dark:bg-secondary">
+                        <div key={cat} className="flex items-center justify-between text-[10px] px-1.5 py-1 rounded bg-zinc-50">
                           <span className="text-muted-foreground capitalize">{cat}</span>
-                          <span className="font-mono text-zinc-700 dark:text-foreground">{count}</span>
+                          <span className="font-mono text-zinc-700">{count}</span>
                         </div>
                       ))}
                     </div>
@@ -503,9 +503,9 @@ export default function CompanyPage() {
 
                 {/* Regression Alerts */}
                 {loopStatus.regressions && loopStatus.regressions.length > 0 && (
-                  <div className="pt-2 border-t border-zinc-100 dark:border-border">
-                    <div className="bg-zinc-100 dark:bg-zinc-800/30 border border-zinc-200 dark:border-zinc-700 rounded-lg p-2">
-                      <p className="text-[10px] font-bold text-zinc-900 dark:text-zinc-400 mb-1 flex items-center gap-1">
+                  <div className="pt-2 border-t border-zinc-100">
+                    <div className="bg-zinc-100 border border-zinc-200 rounded-lg p-2">
+                      <p className="text-[10px] font-bold text-zinc-900 mb-1 flex items-center gap-1">
                         <AlertTriangle size={10} />
                         Regressions Detected
                       </p>
@@ -515,7 +515,7 @@ export default function CompanyPage() {
                             <span className={reg.severity === "high" ? "text-zinc-600" : "text-[#F5D547]"}>
                               {reg.severity === "high" ? "🔴" : "🟡"}
                             </span>
-                            <span className="text-muted-foreground dark:text-muted-foreground truncate flex-1">
+                            <span className="text-muted-foreground truncate flex-1">
                               {reg.pattern.slice(0, 40)}...
                             </span>
                             <span className="text-muted-foreground shrink-0">×{reg.count}</span>
@@ -528,7 +528,7 @@ export default function CompanyPage() {
 
                 {/* Core Scorecard (if available) */}
                 {loopStatus.scorecard && Object.keys(loopStatus.scorecard).length > 0 && (
-                  <div className="pt-2 border-t border-zinc-100 dark:border-border">
+                  <div className="pt-2 border-t border-zinc-100">
                     <p className="text-[10px] text-muted-foreground mb-2">Weekly Scorecard</p>
                     <div className="grid grid-cols-5 gap-1">
                       {["autonomy", "quality", "speed", "alignment", "energy"].map(metric => (
@@ -572,14 +572,14 @@ function HealthBadge({ score }: { score: number }) {
 
 function TooltipStatCard({ label, value, suffix, sub, color }: { label: string; value: string; suffix?: string; sub?: string; color: string }) {
   const textColors: Record<string, string> = {
-    emerald: "text-zinc-900 dark:text-[#F5D547]",
-    amber: "text-zinc-900 dark:text-[#F5D547]",
-    red: "text-zinc-900 dark:text-zinc-400",
-    blue: "text-zinc-900 dark:text-foreground",
+    emerald: "text-zinc-900",
+    amber: "text-zinc-900",
+    red: "text-zinc-900",
+    blue: "text-zinc-900",
   };
   return (
-    <div className="p-3 rounded-lg bg-zinc-50 dark:bg-secondary text-center cursor-help">
-      <p className={`text-2xl font-bold ${textColors[color] || "text-zinc-900 dark:text-foreground"}`}>
+    <div className="p-3 rounded-lg bg-zinc-50 text-center cursor-help">
+      <p className={`text-2xl font-bold ${textColors[color] || "text-zinc-900"}`}>
         {value}<span className="text-sm font-normal text-muted-foreground">{suffix}</span>
       </p>
       <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
@@ -593,7 +593,7 @@ function TooltipHealthBar({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex items-center gap-3 text-xs cursor-help">
       <span className="text-muted-foreground w-28 text-right shrink-0">{label}</span>
-      <div className="flex-1 h-2 rounded-full bg-zinc-100 dark:bg-secondary overflow-hidden">
+      <div className="flex-1 h-2 rounded-full bg-zinc-100 overflow-hidden">
         <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${value}%` }} />
       </div>
       <span className="text-muted-foreground w-8">{value}</span>
@@ -684,11 +684,11 @@ function TooltipLoopMetricBar({
     purple: "bg-[#F5D547]",
   };
   const textColors: Record<string, string> = {
-    emerald: "text-zinc-900 dark:text-[#F5D547]",
-    amber: "text-zinc-900 dark:text-[#F5D547]",
-    red: "text-zinc-900 dark:text-zinc-400",
-    blue: "text-zinc-900 dark:text-foreground",
-    purple: "text-zinc-900 dark:text-muted-foreground",
+    emerald: "text-zinc-900",
+    amber: "text-zinc-900",
+    red: "text-zinc-900",
+    blue: "text-zinc-900",
+    purple: "text-zinc-900",
   };
 
   return (
@@ -702,7 +702,7 @@ function TooltipLoopMetricBar({
           {typeof value === "number" && value % 1 !== 0 ? value.toFixed(1) : value} {unit}
         </span>
       </div>
-      <div className="h-1.5 bg-zinc-100 dark:bg-secondary rounded-full overflow-hidden">
+      <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full ${colorClasses[color]} transition-all duration-500`}
           style={{ width: `${percentage}%` }}

@@ -89,10 +89,10 @@ export function QuickActionsBar() {
   }, [showShortcuts]);
 
   return (
-    <div className="bg-zinc-50 dark:bg-zinc-900 border-y border-zinc-200 dark:border-zinc-800 px-6 py-3">
+    <div className="bg-zinc-50 border-y border-zinc-200 px-6 py-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+          <span className="text-xs font-medium text-zinc-500">
             Quick Actions:
           </span>
           <div className="flex items-center gap-1">
@@ -101,14 +101,14 @@ export function QuickActionsBar() {
                 key={action.label}
                 variant="ghost"
                 size="sm"
-                className="h-8 px-2 text-xs gap-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+                className="h-8 px-2 text-xs gap-1.5 hover:bg-zinc-200"
                 onClick={action.action}
                 title={`${action.label} (${action.shortcut})`}
               >
                 <action.icon className="h-3.5 w-3.5" />
                 <span className="hidden sm:inline">{action.label}</span>
                 {action.shortcut && (
-                  <kbd className="hidden md:inline-flex items-center rounded border border-zinc-300 dark:border-zinc-700 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 dark:text-zinc-400 font-mono">
+                  <kbd className="hidden md:inline-flex items-center rounded border border-zinc-300 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 font-mono">
                     {action.shortcut}
                   </kbd>
                 )}
@@ -121,7 +121,7 @@ export function QuickActionsBar() {
           <Button
             variant="ghost"
             size="sm"
-            className="h-8 px-2 text-xs gap-1.5 hover:bg-zinc-200 dark:hover:bg-zinc-800"
+            className="h-8 px-2 text-xs gap-1.5 hover:bg-zinc-200"
             onClick={() => window.location.href = "/crons"}
           >
             <Terminal className="h-3.5 w-3.5" />
@@ -129,8 +129,8 @@ export function QuickActionsBar() {
           </Button>
 
           {showShortcuts && (
-            <div className="bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 shadow-lg">
-              <p className="text-xs font-semibold mb-2 text-zinc-700 dark:text-zinc-300">
+            <div className="bg-white border border-zinc-200 rounded-lg p-3 shadow-lg">
+              <p className="text-xs font-semibold mb-2 text-zinc-700">
                 Keyboard Shortcuts
               </p>
               <div className="space-y-1">
@@ -139,19 +139,19 @@ export function QuickActionsBar() {
                     key={action.label}
                     className="flex items-center justify-between text-xs"
                   >
-                    <span className="text-zinc-600 dark:text-zinc-400">
+                    <span className="text-zinc-600">
                       {action.label}
                     </span>
-                    <kbd className="inline-flex items-center rounded border border-zinc-300 dark:border-zinc-700 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 dark:text-zinc-400 font-mono">
+                    <kbd className="inline-flex items-center rounded border border-zinc-300 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 font-mono">
                       {action.shortcut}
                     </kbd>
                   </div>
                 ))}
                 <div className="flex items-center justify-between text-xs pt-1">
-                  <span className="text-zinc-600 dark:text-zinc-400">
+                  <span className="text-zinc-600">
                     Toggle shortcuts
                   </span>
-                  <kbd className="inline-flex items-center rounded border border-zinc-300 dark:border-zinc-700 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 dark:text-zinc-400 font-mono">
+                  <kbd className="inline-flex items-center rounded border border-zinc-300 px-1.5 py-0.5 text-[10px] font-medium text-zinc-500 font-mono">
                     ?
                   </kbd>
                 </div>

@@ -83,7 +83,7 @@ export function QuickActionsBar({ onRefresh }: QuickActionsBarProps) {
   ];
 
   return (
-    <div className="flex items-center gap-2 p-3 rounded-xl bg-zinc-100/80 dark:bg-card/80 backdrop-blur-sm border border-zinc-200/50 dark:border-border/50">
+    <div className="flex items-center gap-2 p-3 rounded-xl bg-zinc-100/80 backdrop-blur-sm border border-zinc-200/50">
       <span className="text-xs text-muted-foreground mr-2">Quick Actions:</span>
       {actions.map(action => (
         <Button
@@ -93,13 +93,13 @@ export function QuickActionsBar({ onRefresh }: QuickActionsBarProps) {
           onClick={action.action}
           className={cn(
             "h-8 px-3 gap-2 text-sm",
-            "hover:bg-zinc-200/80 dark:hover:bg-secondary/80",
+            "hover:bg-zinc-200/80",
             "transition-all duration-150"
           )}
         >
           {actionIcons[action.icon]}
           <span className="hidden sm:inline">{action.label}</span>
-          <kbd className="hidden md:inline ml-1 text-xs text-muted-foreground px-1.5 py-0.5 bg-zinc-200/50 dark:bg-muted/50 rounded">
+          <kbd className="hidden md:inline ml-1 text-xs text-muted-foreground px-1.5 py-0.5 bg-zinc-200/50 rounded">
             {action.shortcut}
           </kbd>
         </Button>

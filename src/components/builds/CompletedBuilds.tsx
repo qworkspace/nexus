@@ -135,13 +135,13 @@ export function CompletedBuilds() {
               return (
                 <div
                   key={build.hash}
-                  className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-card rounded-lg group hover:bg-zinc-100 dark:hover:bg-secondary transition-colors"
+                  className="flex items-start gap-3 p-3 bg-zinc-50 rounded-lg group hover:bg-zinc-100 transition-colors"
                 >
                   <div className="flex-shrink-0 mt-0.5">
                     <CheckCircle className="h-4 w-4 text-zinc-500" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-zinc-900 dark:text-foreground line-clamp-2">
+                    <p className="text-sm font-medium text-zinc-900 line-clamp-2">
                       {build.message}
                     </p>
                     <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">

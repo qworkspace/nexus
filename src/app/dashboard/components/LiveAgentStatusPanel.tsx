@@ -193,16 +193,16 @@ export function LiveAgentStatusPanel() {
               {activeAgents.map((agent) => (
                 <div
                   key={agent.id}
-                  className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                  className="border border-zinc-200 rounded-lg p-3 hover:border-zinc-300 transition-colors"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <span className={`w-2 h-2 rounded-full ${getStatusColor(agent.status)}`} />
                       <div>
-                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                        <p className="text-sm font-medium text-zinc-900">
                           {agent.label}
                         </p>
-                        <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                        <p className="text-xs text-zinc-500">
                           {getModelLabel(agent.model)} · Tokens: {formatTokens(agent.tokensUsed)} · {formatDuration(agent.startedAt)}
                         </p>
                       </div>
@@ -215,11 +215,11 @@ export function LiveAgentStatusPanel() {
                   </div>
 
                   {agent.currentTask && (
-                    <div className="text-xs text-zinc-600 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-900 rounded p-2 mb-2">
-                      <p className="font-medium text-zinc-700 dark:text-zinc-300 mb-0.5">Task:</p>
+                    <div className="text-xs text-zinc-600 bg-zinc-50 rounded p-2 mb-2">
+                      <p className="font-medium text-zinc-700 mb-0.5">Task:</p>
                       <p>{agent.currentTask}</p>
                       {agent.progress !== undefined && (
-                        <div className="mt-2 w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-1.5">
+                        <div className="mt-2 w-full bg-zinc-200 rounded-full h-1.5">
                           <div
                             className="bg-zinc-500 h-1.5 rounded-full transition-all"
                             style={{ width: `${agent.progress}%` }}
@@ -242,7 +242,7 @@ export function LiveAgentStatusPanel() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 px-2 text-xs text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-950"
+                      className="h-7 px-2 text-xs text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50"
                       onClick={() => handleKillAgent(agent.id)}
                     >
                       <X className="h-3 w-3 mr-1" />
@@ -254,18 +254,18 @@ export function LiveAgentStatusPanel() {
 
               {/* Queued Tasks */}
               {queue.length > 0 && (
-                <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
-                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-2">
+                <div className="pt-3 border-t border-zinc-200">
+                  <p className="text-xs font-medium text-zinc-500 mb-2">
                     Queue ({queue.length})
                   </p>
                   <div className="space-y-1.5">
                     {queue.map((task) => (
                       <div
                         key={task.id}
-                        className="flex items-center gap-2 text-sm py-1 px-2 bg-zinc-50 dark:bg-zinc-900 rounded"
+                        className="flex items-center gap-2 text-sm py-1 px-2 bg-zinc-50 rounded"
                       >
                         <Play className="h-3 w-3 text-zinc-400" />
-                        <span className="text-zinc-600 dark:text-zinc-400 flex-1">
+                        <span className="text-zinc-600 flex-1">
                           {task.spec}
                         </span>
                         <Badge variant="outline" className="text-xs">
@@ -279,8 +279,8 @@ export function LiveAgentStatusPanel() {
 
               {/* Recent Completions */}
               {recentCompletions.length > 0 && (
-                <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
-                  <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-2">
+                <div className="pt-3 border-t border-zinc-200">
+                  <p className="text-xs font-medium text-zinc-500 mb-2">
                     Recent Completions
                   </p>
                   <div className="space-y-1">
@@ -289,7 +289,7 @@ export function LiveAgentStatusPanel() {
                         key={completion.id}
                         className="flex items-center justify-between text-sm py-1"
                       >
-                        <span className="text-zinc-600 dark:text-zinc-400">
+                        <span className="text-zinc-600">
                           {completion.label}
                         </span>
                         {completion.commitUrl && (

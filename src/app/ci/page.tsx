@@ -202,12 +202,12 @@ function QueueItem({ item }: { item: CIQueueItem }) {
   };
 
   return (
-    <div className="flex items-center gap-3 p-3 bg-zinc-50 dark:bg-card rounded-lg border border-zinc-200 dark:border-border">
+    <div className="flex items-center gap-3 p-3 bg-zinc-50 rounded-lg border border-zinc-200">
       <span className={cn('px-2 py-1 text-xs font-medium rounded border', priorityColors[item.priority])}>
         {item.priority}
       </span>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-zinc-900 dark:text-foreground truncate">
+        <p className="text-sm font-medium text-zinc-900 truncate">
           {item.title}
         </p>
         <p className="text-xs text-muted-foreground">
@@ -235,7 +235,7 @@ function ActiveBuildSection({ build }: { build: CIBuild | null }) {
   return (
     <Card>
       <CardContent className="p-4">
-        <div className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-zinc-950/30 rounded-lg border border-zinc-200 dark:border-zinc-900">
+        <div className="flex items-start gap-3 p-3 bg-zinc-50 rounded-lg border border-zinc-200">
           <div className="flex-shrink-0 mt-0.5">
             <div className="h-2 w-2 rounded-full bg-foreground animate-pulse" />
           </div>
@@ -248,7 +248,7 @@ function ActiveBuildSection({ build }: { build: CIBuild | null }) {
                 {build.agent || 'dev'}
               </span>
             </div>
-            <p className="text-sm font-medium text-zinc-900 dark:text-foreground truncate">
+            <p className="text-sm font-medium text-zinc-900 truncate">
               {build.spec}
             </p>
             <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
@@ -267,7 +267,7 @@ function BuildRow({ build }: { build: CIBuild }) {
   const isFailed = build.status === 'failed';
 
   return (
-    <div className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-card rounded-lg">
+    <div className="flex items-start gap-3 p-3 bg-zinc-50 rounded-lg">
       <div className="flex-shrink-0 mt-0.5">
         {isSuccess ? (
           <span className="text-zinc-500">✓</span>
@@ -278,7 +278,7 @@ function BuildRow({ build }: { build: CIBuild }) {
         )}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-zinc-900 dark:text-foreground truncate">
+        <p className="text-sm font-medium text-zinc-900 truncate">
           {build.spec}
         </p>
         <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">

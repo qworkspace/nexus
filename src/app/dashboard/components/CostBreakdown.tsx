@@ -94,24 +94,24 @@ function CostBar({ label, value, total, colorClass, subtitle }: CostBarProps) {
   return (
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-xs">
-        <span className="text-zinc-600 dark:text-zinc-400">{label}</span>
+        <span className="text-zinc-600">{label}</span>
         <div className="text-right">
-          <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+          <span className="font-semibold text-zinc-900">
             ${value.toFixed(2)}
           </span>
-          <span className="text-zinc-500 dark:text-zinc-400 ml-1">
+          <span className="text-zinc-500 ml-1">
             ({formatPercentage(value, total)})
           </span>
         </div>
       </div>
-      <div className="h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+      <div className="h-2 bg-zinc-200 rounded-full overflow-hidden">
         <div
           className={`h-full ${colorClass} transition-all duration-500`}
           style={{ width: `${percentage}%` }}
         />
       </div>
       {subtitle && (
-        <p className="text-xs text-zinc-500 dark:text-zinc-500">{subtitle}</p>
+        <p className="text-xs text-zinc-500">{subtitle}</p>
       )}
     </div>
   );
@@ -154,7 +154,7 @@ export function CostBreakdown() {
           <div className="space-y-6">
             {/* By Service */}
             <div>
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-3">
+              <p className="text-xs font-medium text-zinc-500 mb-3">
                 By Service (Today)
               </p>
               <div className="space-y-3">
@@ -177,8 +177,8 @@ export function CostBreakdown() {
 
             {/* By Model */}
             {byModel.length > 0 && (
-              <div className="pt-4 border-t border-zinc-200 dark:border-zinc-800">
-                <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-3">
+              <div className="pt-4 border-t border-zinc-200">
+                <p className="text-xs font-medium text-zinc-500 mb-3">
                   By Model (Top 5)
                 </p>
                 <div className="space-y-3">

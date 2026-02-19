@@ -67,9 +67,9 @@ const formatUptime = (seconds: number): string => {
 };
 
 const getUsageColor = (usage: number): string => {
-  if (usage >= 90) return "text-zinc-500 dark:text-zinc-400";
-  if (usage >= 70) return "text-zinc-500 dark:text-zinc-400";
-  return "text-zinc-900 dark:text-zinc-400";
+  if (usage >= 90) return "text-zinc-500";
+  if (usage >= 70) return "text-zinc-500";
+  return "text-zinc-900";
 };
 
 const getUsageBg = (usage: number): string => {
@@ -137,13 +137,13 @@ export function SystemMetrics() {
             />
 
             {/* Uptime */}
-            <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
+            <div className="pt-3 border-t border-zinc-200">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+                <div className="flex items-center gap-2 text-sm text-zinc-500">
                   <Clock className="h-4 w-4" />
                   <span>Uptime</span>
                 </div>
-                <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                <span className="text-sm font-medium text-zinc-900">
                   {formatUptime(metrics.uptime)}
                 </span>
               </div>
@@ -168,25 +168,25 @@ function MetricCard({ title, value, subtitle, usage, icon }: MetricCardProps) {
     <div className="space-y-2">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 bg-zinc-100 dark:bg-zinc-900 rounded-lg flex items-center justify-center text-zinc-600 dark:text-zinc-400">
+          <div className="h-8 w-8 bg-zinc-100 rounded-lg flex items-center justify-center text-zinc-600">
             {icon}
           </div>
-          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <span className="text-sm font-medium text-zinc-700">
             {title}
           </span>
         </div>
         <div className="text-right">
-          <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+          <p className="text-lg font-semibold text-zinc-900">
             {value}
           </p>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="text-xs text-zinc-500">
             {subtitle}
           </p>
         </div>
       </div>
 
       {/* Progress bar */}
-      <div className="h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-zinc-200 rounded-full overflow-hidden">
         <div
           className={`h-full ${getUsageBg(usage)} transition-all duration-500`}
           style={{ width: `${Math.min(usage, 100)}%` }}

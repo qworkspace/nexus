@@ -39,13 +39,13 @@ const formatTimestamp = (timestamp: string): string => {
 const getSessionTypeColor = (type: string): string => {
   switch (type) {
     case "main":
-      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-muted-foreground";
+      return "bg-zinc-100 text-zinc-700";
     case "cron":
-      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-foreground";
+      return "bg-zinc-100 text-zinc-700";
     case "subagent":
-      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400";
+      return "bg-zinc-100 text-zinc-700";
     default:
-      return "bg-zinc-100 text-zinc-700 dark:bg-card/30 dark:text-muted-foreground";
+      return "bg-zinc-100 text-zinc-700";
   }
 };
 
@@ -57,7 +57,7 @@ export function TopConsumersList({ consumers }: TopConsumersListProps) {
       </CardHeader>
       <CardContent>
         {consumers.length === 0 ? (
-          <div className="text-center py-8 text-sm text-muted-foreground dark:text-muted-foreground">
+          <div className="text-center py-8 text-sm text-muted-foreground">
             No token usage data yet
           </div>
         ) : (
@@ -65,11 +65,11 @@ export function TopConsumersList({ consumers }: TopConsumersListProps) {
             {consumers.slice(0, 10).map((consumer, index) => (
               <div
                 key={consumer.sessionId}
-                className="flex items-center justify-between p-3 rounded-lg border border-zinc-200 dark:border-border hover:bg-zinc-50 dark:hover:bg-card/80 transition-colors"
+                className="flex items-center justify-between p-3 rounded-lg border border-zinc-200 hover:bg-zinc-50 transition-colors"
               >
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-xs font-semibold text-muted-foreground dark:text-muted-foreground">
+                    <span className="text-xs font-semibold text-muted-foreground">
                       #{index + 1}
                     </span>
                     <span
@@ -80,18 +80,18 @@ export function TopConsumersList({ consumers }: TopConsumersListProps) {
                       {consumer.sessionType}
                     </span>
                   </div>
-                  <p className="text-sm font-medium text-zinc-900 dark:text-foreground truncate">
+                  <p className="text-sm font-medium text-zinc-900 truncate">
                     {consumer.label}
                   </p>
-                  <p className="text-xs text-muted-foreground dark:text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     {formatTimestamp(consumer.timestamp)}
                   </p>
                 </div>
                 <div className="text-right ml-4">
-                  <p className="text-sm font-semibold text-zinc-900 dark:text-foreground">
+                  <p className="text-sm font-semibold text-zinc-900">
                     {formatTokens(consumer.totalTokens)}
                   </p>
-                  <p className="text-xs text-muted-foreground dark:text-muted-foreground">
+                  <p className="text-xs text-muted-foreground">
                     {formatCost(consumer.totalCost)}
                   </p>
                 </div>

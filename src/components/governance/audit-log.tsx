@@ -25,8 +25,8 @@ export function AuditLog({ logs, selectedAgent, onAgentFilter }: AuditLogProps) 
 
   if (!logs) {
     return (
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-foreground flex items-center gap-2">
+      <div className="bg-white rounded-xl border border-zinc-200 p-4">
+        <h3 className="text-lg font-semibold text-zinc-900 flex items-center gap-2">
           <Clock size={18} />
           Audit Log
         </h3>
@@ -37,8 +37,8 @@ export function AuditLog({ logs, selectedAgent, onAgentFilter }: AuditLogProps) 
 
   if (logs.length === 0) {
     return (
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-foreground flex items-center gap-2">
+      <div className="bg-white rounded-xl border border-zinc-200 p-4">
+        <h3 className="text-lg font-semibold text-zinc-900 flex items-center gap-2">
           <Clock size={18} />
           Audit Log
         </h3>
@@ -48,8 +48,8 @@ export function AuditLog({ logs, selectedAgent, onAgentFilter }: AuditLogProps) 
   }
 
   return (
-    <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-      <h3 className="text-lg font-semibold text-zinc-900 dark:text-foreground flex items-center gap-2 mb-4">
+    <div className="bg-white rounded-xl border border-zinc-200 p-4">
+      <h3 className="text-lg font-semibold text-zinc-900 flex items-center gap-2 mb-4">
         <Clock size={18} />
         Audit Log
       </h3>
@@ -82,14 +82,14 @@ export function AuditLog({ logs, selectedAgent, onAgentFilter }: AuditLogProps) 
           return (
             <div
               key={log.id}
-              className="flex items-start gap-3 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary border border-zinc-100 dark:border-border"
+              className="flex items-start gap-3 p-2 rounded hover:bg-zinc-50 border border-zinc-100"
             >
               <Icon size={14} className={`${iconColor} mt-0.5`} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="font-medium text-zinc-900 dark:text-foreground">{log.agentId}</span>
+                  <span className="font-medium text-zinc-900">{log.agentId}</span>
                   <span className="text-muted-foreground">→</span>
-                  <span className="text-zinc-700 dark:text-foreground">{log.tool}</span>
+                  <span className="text-zinc-700">{log.tool}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">{log.action}</p>
                 <div className="flex items-center gap-3 text-xs text-muted-foreground mt-1">

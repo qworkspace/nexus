@@ -65,13 +65,13 @@ export default function AgentProfilePage() {
       <Link href="/company" className="text-sm text-foreground hover:underline mb-4 inline-block">← Back to The Core</Link>
 
       {/* Header */}
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-6 mb-6">
+      <div className="bg-white rounded-xl border border-zinc-200 p-6 mb-6">
         <div className="flex items-center gap-4">
           <div className="flex items-center justify-center w-16 h-16">
-            <AgentIcon emoji={agent.emoji} size={48} className="text-muted-foreground dark:text-foreground" />
+            <AgentIcon emoji={agent.emoji} size={48} className="text-muted-foreground" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground">{agent.name}</h1>
+            <h1 className="text-2xl font-bold text-zinc-900">{agent.name}</h1>
             <p className="text-muted-foreground">{agent.role}</p>
             {agent.nameReason && (
               <p className="text-sm text-muted-foreground italic mt-1">
@@ -79,10 +79,10 @@ export default function AgentProfilePage() {
               </p>
             )}
             <div className="flex items-center gap-2 mt-2">
-              <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground">
+              <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 text-muted-foreground">
                 {agent.department}
               </span>
-              <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-zinc-900/30 text-zinc-900 dark:text-foreground">
+              <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 text-zinc-900">
                 {agent.model.primary.split('/').pop()}
               </span>
             </div>
@@ -92,23 +92,23 @@ export default function AgentProfilePage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Identity Card */}
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-6">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-foreground mb-4">Identity</h2>
+        <div className="bg-white rounded-xl border border-zinc-200 p-6">
+          <h2 className="text-lg font-semibold text-zinc-900 mb-4">Identity</h2>
 
           <div className="space-y-4">
             <div>
               <p className="text-xs font-medium text-muted-foreground uppercase mb-1">Personality</p>
-              <p className="text-sm text-zinc-700 dark:text-foreground">{agent.personality}</p>
+              <p className="text-sm text-zinc-700">{agent.personality}</p>
             </div>
             <div>
               <p className="text-xs font-medium text-muted-foreground uppercase mb-1">Communication Style</p>
-              <p className="text-sm text-zinc-700 dark:text-foreground">{agent.style}</p>
+              <p className="text-sm text-zinc-700">{agent.style}</p>
             </div>
             <div>
               <p className="text-xs font-medium text-muted-foreground uppercase mb-1">Expertise</p>
               <div className="flex flex-wrap gap-1">
                 {agent.expertise.map(e => (
-                  <span key={e} className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground">
+                  <span key={e} className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 text-muted-foreground">
                     {e}
                   </span>
                 ))}
@@ -118,7 +118,7 @@ export default function AgentProfilePage() {
               <p className="text-xs font-medium text-muted-foreground uppercase mb-1">KPIs</p>
               <div className="flex flex-wrap gap-1">
                 {agent.kpis.map(k => (
-                  <span key={k} className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-zinc-900/30 text-zinc-900 dark:text-[#F5D547]">
+                  <span key={k} className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 text-zinc-900">
                     {k}
                   </span>
                 ))}
@@ -129,11 +129,11 @@ export default function AgentProfilePage() {
               <div className="flex items-center gap-2">
                 {agentMap[agent.reportsTo] && (
                   <>
-                    <AgentIcon emoji={agentMap[agent.reportsTo].emoji} size={20} className="text-muted-foreground dark:text-foreground" />
-                    <span className="text-sm text-zinc-700 dark:text-foreground">{agentMap[agent.reportsTo].name}</span>
+                    <AgentIcon emoji={agentMap[agent.reportsTo].emoji} size={20} className="text-muted-foreground" />
+                    <span className="text-sm text-zinc-700">{agentMap[agent.reportsTo].name}</span>
                   </>
                 )}
-                {!agentMap[agent.reportsTo] && <span className="text-sm text-zinc-700 dark:text-foreground">{agent.reportsTo}</span>}
+                {!agentMap[agent.reportsTo] && <span className="text-sm text-zinc-700">{agent.reportsTo}</span>}
               </div>
             </div>
             {agent.directReports.length > 0 && (
@@ -156,8 +156,8 @@ export default function AgentProfilePage() {
         </div>
 
         {/* Relationships */}
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-6">
-          <h2 className="text-lg font-semibold text-zinc-900 dark:text-foreground mb-4">Relationships</h2>
+        <div className="bg-white rounded-xl border border-zinc-200 p-6">
+          <h2 className="text-lg font-semibold text-zinc-900 mb-4">Relationships</h2>
 
           <div className="space-y-3">
             {Object.entries(relationships)
@@ -172,8 +172,8 @@ export default function AgentProfilePage() {
                   <div key={otherId} className="space-y-1">
                     <div className="flex items-center justify-between">
                       <Link href={`/company/agents/${otherId}`} className="flex items-center gap-2 hover:underline">
-                        <AgentIcon emoji={other.emoji} size={20} className="text-muted-foreground dark:text-foreground" />
-                        <span className="text-sm font-medium text-zinc-700 dark:text-foreground">{other.name}</span>
+                        <AgentIcon emoji={other.emoji} size={20} className="text-muted-foreground" />
+                        <span className="text-sm font-medium text-zinc-700">{other.name}</span>
                       </Link>
                       <div className="flex items-center gap-2">
                         <TrendIcon 
@@ -181,11 +181,11 @@ export default function AgentProfilePage() {
                           size={14}
                           className="text-muted-foreground"
                         />
-                        <span className="text-sm font-mono text-muted-foreground dark:text-muted-foreground">{rel.trust}</span>
+                        <span className="text-sm font-mono text-muted-foreground">{rel.trust}</span>
                       </div>
                     </div>
                     {/* Trust bar */}
-                    <div className="w-full h-2 bg-zinc-100 dark:bg-secondary rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-zinc-100 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all ${trustColor}`}
                         style={{ width: `${Math.max(0, (rel.trust + 100) / 200 * 100)}%` }}

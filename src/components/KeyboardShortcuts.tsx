@@ -54,7 +54,7 @@ export function KeyboardShortcuts() {
       <div className="flex items-center gap-1">
         {keyParts.map((part, idx) => (
           <span key={idx} className="inline-flex items-center gap-1">
-            <kbd className="px-2 py-1 text-xs font-medium bg-zinc-100 dark:bg-secondary text-zinc-700 dark:text-foreground rounded border border-zinc-200 dark:border-border shadow-sm min-w-[1.5rem] text-center">
+            <kbd className="px-2 py-1 text-xs font-medium bg-zinc-100 text-zinc-700 rounded border border-zinc-200 shadow-sm min-w-[1.5rem] text-center">
               {part}
             </kbd>
             {idx < keyParts.length - 1 && <span className="text-muted-foreground">then</span>}
@@ -99,8 +99,8 @@ export function KeyboardShortcuts() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap transition-colors ${
                   selectedCategory === cat
-                    ? 'bg-card text-foreground dark:bg-zinc-100 dark:text-zinc-900'
-                    : 'bg-zinc-100 text-muted-foreground hover:bg-zinc-200 dark:bg-secondary dark:text-muted-foreground dark:hover:bg-muted'
+                    ? 'bg-card text-foreground'
+                    : 'bg-zinc-100 text-muted-foreground hover:bg-zinc-200'
                 }`}
               >
                 {cat === 'all' ? 'All' : categoryLabels[cat]}
@@ -120,24 +120,24 @@ export function KeyboardShortcuts() {
 
                 return (
                   <div key={cat}>
-                    <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2">
+                    <h3 className="text-sm font-semibold text-zinc-900 mb-2">
                       {categoryLabels[cat]}
                     </h3>
-                    <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-3">
+                    <p className="text-xs text-muted-foreground mb-3">
                       {categoryDescriptions[cat]}
                     </p>
                     <div className="space-y-2">
                       {catShortcuts.map((shortcut, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-50 dark:hover:bg-card/80 transition-colors"
+                          className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-50 transition-colors"
                         >
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-zinc-700 dark:text-foreground">
+                            <p className="text-sm font-medium text-zinc-700">
                               {shortcut.description}
                             </p>
                             {shortcut.context && (
-                              <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-0.5">
+                              <p className="text-xs text-muted-foreground mt-0.5">
                                 {shortcut.context}
                               </p>
                             )}
@@ -153,24 +153,24 @@ export function KeyboardShortcuts() {
             ) : (
               // Show single category
               <div>
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-2">
                   {categoryLabels[selectedCategory]}
                 </h3>
-                <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-3">
+                <p className="text-xs text-muted-foreground mb-3">
                   {categoryDescriptions[selectedCategory]}
                 </p>
                 <div className="space-y-2">
                   {getShortcutsByCategory(selectedCategory).map((shortcut, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-50 dark:hover:bg-card/80 transition-colors"
+                      className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-50 transition-colors"
                     >
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-zinc-700 dark:text-foreground">
+                        <p className="text-sm font-medium text-zinc-700">
                           {shortcut.description}
                         </p>
                         {shortcut.context && (
-                          <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-0.5">
+                          <p className="text-xs text-muted-foreground mt-0.5">
                             {shortcut.context}
                           </p>
                         )}
@@ -184,9 +184,9 @@ export function KeyboardShortcuts() {
           </div>
 
           {/* Footer hint */}
-          <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-border">
-            <p className="text-xs text-center text-muted-foreground dark:text-muted-foreground">
-              Press <kbd className="px-1.5 py-0.5 bg-zinc-100 dark:bg-secondary rounded text-muted-foreground dark:text-foreground">ESC</kbd> or click outside to close
+          <div className="mt-6 pt-4 border-t border-zinc-200">
+            <p className="text-xs text-center text-muted-foreground">
+              Press <kbd className="px-1.5 py-0.5 bg-zinc-100 rounded text-muted-foreground">ESC</kbd> or click outside to close
             </p>
           </div>
         </ScrollArea>

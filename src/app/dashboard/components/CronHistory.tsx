@@ -144,13 +144,13 @@ export function CronHistory({ jobId, jobName, onClose }: CronHistoryProps) {
         <div className="flex items-center gap-4 mb-4 text-xs">
           <div>
             <span className="text-zinc-500">Avg Duration:</span>{' '}
-            <span className="text-zinc-900 dark:text-zinc-100 font-mono">
+            <span className="text-zinc-900 font-mono">
               {(avgDuration / 1000).toFixed(1)}s
             </span>
           </div>
           <div>
             <span className="text-zinc-500">Success Rate:</span>{' '}
-            <span className="text-zinc-900 dark:text-zinc-100 font-mono">
+            <span className="text-zinc-900 font-mono">
               {entries.length > 0 ? ((successCount / entries.length) * 100).toFixed(0) : 0}%
             </span>
           </div>
@@ -170,13 +170,13 @@ export function CronHistory({ jobId, jobName, onClose }: CronHistoryProps) {
             entries.map((entry) => (
               <div
                 key={entry.id}
-                className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                className="border border-zinc-200 rounded-lg p-3 hover:border-zinc-300 transition-colors"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
                     {getStatusIcon(entry.status)}
                     <div>
-                      <div className="text-xs font-medium text-zinc-900 dark:text-zinc-100">
+                      <div className="text-xs font-medium text-zinc-900">
                         {getTimeAgo(entry.startedAtMs)}
                       </div>
                       <div className="text-xs text-zinc-500">
@@ -188,14 +188,14 @@ export function CronHistory({ jobId, jobName, onClose }: CronHistoryProps) {
                 </div>
 
                 {entry.durationMs !== undefined && (
-                  <div className="text-xs text-zinc-600 dark:text-zinc-400">
+                  <div className="text-xs text-zinc-600">
                     Duration:{' '}
                     <span className="font-mono">{(entry.durationMs / 1000).toFixed(2)}s</span>
                   </div>
                 )}
 
                 {entry.error && (
-                  <div className="mt-2 text-xs text-zinc-500 bg-zinc-50 dark:bg-zinc-950/20 rounded p-2">
+                  <div className="mt-2 text-xs text-zinc-500 bg-zinc-50 rounded p-2">
                     {entry.error}
                   </div>
                 )}

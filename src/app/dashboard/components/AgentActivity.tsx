@@ -66,10 +66,10 @@ export function AgentActivity() {
             {/* Left Column: Stats Overview */}
             <div className="space-y-3">
               <div>
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-2">
                   Session Stats
                 </h3>
-                <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 space-y-3">
+                <div className="border border-zinc-200 rounded-lg p-3 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <Users className="h-4 w-4 text-zinc-500" />
@@ -84,7 +84,7 @@ export function AgentActivity() {
                       <Bot className="h-4 w-4 text-zinc-500" />
                       <span className="text-sm text-zinc-600">Total Sessions</span>
                     </div>
-                    <span className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                    <span className="text-xl font-bold text-zinc-900">
                       {data.stats.totalAgents}
                     </span>
                   </div>
@@ -93,7 +93,7 @@ export function AgentActivity() {
                       <Zap className="h-4 w-4 text-zinc-500" />
                       <span className="text-sm text-zinc-600">Total Tokens</span>
                     </div>
-                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    <span className="text-sm font-medium text-zinc-900">
                       {formatTokens(data.stats.totalTokens)}
                     </span>
                   </div>
@@ -102,7 +102,7 @@ export function AgentActivity() {
                       <Clock className="h-4 w-4 text-zinc-500" />
                       <span className="text-sm text-zinc-600">Longest Run</span>
                     </div>
-                    <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    <span className="text-sm font-medium text-zinc-900">
                       {data.stats.longestRunningSession} min
                     </span>
                   </div>
@@ -112,10 +112,10 @@ export function AgentActivity() {
 
             {/* Right Column: Session List (2 cols) */}
             <div className="lg:col-span-2">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+              <h3 className="text-sm font-semibold text-zinc-900 mb-2">
                 Active Sessions ({data.sessions.length})
               </h3>
-              <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
+              <div className="border border-zinc-200 rounded-lg overflow-hidden">
                 {data.sessions.map((session) => (
                   <SessionRow key={session.id} session={session} />
                 ))}
@@ -126,10 +126,10 @@ export function AgentActivity() {
 
         {/* Footer */}
         {data && data.sessions.length > 0 && (
-          <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="mt-4 pt-3 border-t border-zinc-200">
             <div className="flex items-center justify-center gap-4 text-xs text-zinc-500">
               <span>Last updated: {new Date(data.lastUpdated).toLocaleTimeString()}</span>
-              <span className="text-zinc-300 dark:text-zinc-700">|</span>
+              <span className="text-zinc-300">|</span>
               <span>Auto-refresh: 30s</span>
             </div>
           </div>
@@ -150,7 +150,7 @@ function SessionRow({ session }: { session: AgentSession }) {
     : 'bg-zinc-100 text-zinc-700 border-zinc-200';
 
   return (
-    <div className="px-3 py-3 border-b border-zinc-200 dark:border-zinc-800 last:border-b-0 hover:bg-zinc-50 dark:hover:bg-zinc-900">
+    <div className="px-3 py-3 border-b border-zinc-200 last:border-b-0 hover:bg-zinc-50">
       <div className="flex items-start gap-3">
         {/* Agent Emoji */}
         <div className="flex-shrink-0 text-2xl">
@@ -160,7 +160,7 @@ function SessionRow({ session }: { session: AgentSession }) {
         {/* Agent Info */}
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+            <p className="text-sm font-medium text-zinc-900">
               {session.label}
             </p>
             <Badge variant="outline" className={`text-xs ${statusColors}`}>
@@ -171,7 +171,7 @@ function SessionRow({ session }: { session: AgentSession }) {
           {/* Task & Role */}
           <div className="flex items-center gap-2 mb-1">
             {session.currentTask && (
-              <p className="text-xs text-zinc-600 dark:text-zinc-400 truncate">
+              <p className="text-xs text-zinc-600 truncate">
                 {session.currentTask}
               </p>
             )}

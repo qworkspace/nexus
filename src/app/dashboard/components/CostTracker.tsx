@@ -116,11 +116,11 @@ export function CostTracker() {
         ) : (
           <div className="space-y-5">
             {/* Main Total */}
-            <div className="flex items-center justify-between pb-4 border-b border-zinc-200 dark:border-zinc-800">
+            <div className="flex items-center justify-between pb-4 border-b border-zinc-200">
               <div>
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">Today&apos;s Total</p>
+                <p className="text-sm text-zinc-500">Today&apos;s Total</p>
                 <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+                  <p className="text-3xl font-bold text-zinc-900">
                     {formatCurrency(total)}
                   </p>
                   {summary.trend !== 0 && (
@@ -137,14 +137,14 @@ export function CostTracker() {
                   )}
                 </div>
               </div>
-              <div className="h-12 w-12 bg-zinc-100 dark:bg-zinc-900 rounded-full flex items-center justify-center">
-                <DollarSign className="h-6 w-6 text-zinc-600 dark:text-zinc-400" />
+              <div className="h-12 w-12 bg-zinc-100 rounded-full flex items-center justify-center">
+                <DollarSign className="h-6 w-6 text-zinc-600" />
               </div>
             </div>
 
             {/* Budget Alerts */}
             <div className="space-y-3">
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs font-medium text-zinc-500">
                 Budget Status
               </p>
 
@@ -174,22 +174,22 @@ export function CostTracker() {
             </div>
 
             {/* Quick Stats */}
-            <div className="grid grid-cols-3 gap-2 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+            <div className="grid grid-cols-3 gap-2 pt-4 border-t border-zinc-200">
               <div className="text-center">
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">Yesterday&apos;s</p>
-                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                <p className="text-xs text-zinc-500">Yesterday&apos;s</p>
+                <p className="text-sm font-semibold text-zinc-900">
                   {formatCurrency(summary.previousPeriodTotal)}
                 </p>
               </div>
-              <div className="text-center border-l border-zinc-200 dark:border-zinc-800">
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">API Calls</p>
-                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              <div className="text-center border-l border-zinc-200">
+                <p className="text-xs text-zinc-500">API Calls</p>
+                <p className="text-sm font-semibold text-zinc-900">
                   {summary.byService.reduce((sum, s) => sum + s.count, 0)}
                 </p>
               </div>
-              <div className="text-center border-l border-zinc-200 dark:border-zinc-800">
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">Services</p>
-                <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              <div className="text-center border-l border-zinc-200">
+                <p className="text-xs text-zinc-500">Services</p>
+                <p className="text-sm font-semibold text-zinc-900">
                   {summary.byService.length}
                 </p>
               </div>
@@ -229,11 +229,11 @@ function BudgetProgressBar({ label, current, budget, alert }: BudgetProgressBarP
   const getStatusBg = (level: string): string => {
     switch (level) {
       case "critical":
-        return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
+        return "bg-zinc-50 border-zinc-200";
       case "warning":
-        return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
+        return "bg-zinc-50 border-zinc-200";
       default:
-        return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
+        return "bg-zinc-50 border-zinc-200";
     }
   };
 
@@ -253,24 +253,24 @@ function BudgetProgressBar({ label, current, budget, alert }: BudgetProgressBarP
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-1.5">
           {getStatusIcon(alert.level)}
-          <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+          <span className="text-xs font-medium text-zinc-700">
             {label}
           </span>
         </div>
-        <span className="text-xs text-zinc-600 dark:text-zinc-400">
+        <span className="text-xs text-zinc-600">
           {formatCurrency(current)} / {formatCurrency(budget)}
         </span>
       </div>
-      <div className="h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-zinc-200 rounded-full overflow-hidden">
         <div
           className={`h-full ${getStatusColor(alert.level)} transition-all duration-500`}
           style={{ width: `${clampedPercentage}%` }}
         />
       </div>
       <p className={`text-[10px] mt-1 ${
-        alert.level === "critical" ? "text-zinc-500 dark:text-zinc-400" :
-        alert.level === "warning" ? "text-zinc-500 dark:text-zinc-400" :
-        "text-zinc-900 dark:text-zinc-400"
+        alert.level === "critical" ? "text-zinc-500" :
+        alert.level === "warning" ? "text-zinc-500" :
+        "text-zinc-900"
       }`}>
         {alert.message} ({alert.percentage.toFixed(0)}%)
       </p>

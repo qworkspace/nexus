@@ -14,8 +14,8 @@ export function PermissionMatrix({ permissions, onPermissionChange }: Permission
 
   if (!permissions || Object.keys(permissions).length === 0) {
     return (
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-foreground flex items-center gap-2 mb-2">
+      <div className="bg-white rounded-xl border border-zinc-200 p-4">
+        <h3 className="text-lg font-semibold text-zinc-900 flex items-center gap-2 mb-2">
           <Shield size={18} />
           Agent Permissions
         </h3>
@@ -25,8 +25,8 @@ export function PermissionMatrix({ permissions, onPermissionChange }: Permission
   }
 
   return (
-    <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-      <h3 className="text-lg font-semibold text-zinc-900 dark:text-foreground flex items-center gap-2 mb-2">
+    <div className="bg-white rounded-xl border border-zinc-200 p-4">
+      <h3 className="text-lg font-semibold text-zinc-900 flex items-center gap-2 mb-2">
         <Shield size={18} />
         Agent Permissions
       </h3>
@@ -35,9 +35,9 @@ export function PermissionMatrix({ permissions, onPermissionChange }: Permission
         <table className="w-full text-sm">
           <thead>
             <tr>
-              <th className="text-left py-2 px-2 font-medium text-muted-foreground dark:text-muted-foreground">Agent</th>
+              <th className="text-left py-2 px-2 font-medium text-muted-foreground">Agent</th>
               {ALL_TOOLS.map((tool) => (
-                <th key={tool} className="text-center py-2 px-2 font-medium text-muted-foreground dark:text-muted-foreground">
+                <th key={tool} className="text-center py-2 px-2 font-medium text-muted-foreground">
                   {tool}
                 </th>
               ))}
@@ -45,8 +45,8 @@ export function PermissionMatrix({ permissions, onPermissionChange }: Permission
           </thead>
           <tbody>
             {agents.map((agentId) => (
-              <tr key={agentId} className="border-t border-zinc-100 dark:border-border">
-                <td className="py-2 px-2 font-medium text-zinc-900 dark:text-foreground">{agentId}</td>
+              <tr key={agentId} className="border-t border-zinc-100">
+                <td className="py-2 px-2 font-medium text-zinc-900">{agentId}</td>
                 {ALL_TOOLS.map((tool) => {
                   const granted = permissions[agentId]?.[tool] ?? true;
                   return (
@@ -55,7 +55,7 @@ export function PermissionMatrix({ permissions, onPermissionChange }: Permission
                         onClick={() => onPermissionChange(agentId, tool, !granted)}
                         className={`
                           w-6 h-6 rounded transition-colors
-                          ${granted ? "bg-zinc-500 text-foreground" : "bg-zinc-200 dark:bg-muted text-muted-foreground dark:text-muted-foreground"}
+                          ${granted ? "bg-zinc-500 text-foreground" : "bg-zinc-200 text-muted-foreground"}
                         `}
                       >
                         {granted ? "✓" : "✗"}

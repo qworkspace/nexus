@@ -128,12 +128,12 @@ export function MemorySearch({ initialQuery = "" }: MemorySearchProps) {
       {searched && !loading && (
         <div className="space-y-3">
           {results.length === 0 ? (
-            <div className="text-center py-8 text-zinc-500 dark:text-zinc-400">
+            <div className="text-center py-8 text-zinc-500">
               No results found for &quot;{query}&quot;
             </div>
           ) : (
             <div className="space-y-3">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs text-zinc-500">
                 Found {results.length} result{results.length !== 1 ? "s" : ""}
               </p>
               {results.map((result) => (
@@ -143,25 +143,25 @@ export function MemorySearch({ initialQuery = "" }: MemorySearchProps) {
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-2">
                         <FileText className="h-4 w-4 text-zinc-400" />
-                        <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                        <span className="text-sm font-medium text-zinc-900">
                           {getSourceName(result.metadata.source)}
                         </span>
                       </div>
-                      <span className="text-xs px-2 py-1 bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 rounded-full font-medium">
+                      <span className="text-xs px-2 py-1 bg-zinc-100 text-zinc-700 rounded-full font-medium">
                         {formatSimilarity(result.similarity)}
                       </span>
                     </div>
 
                     {/* Content */}
-                    <div className="bg-zinc-50 dark:bg-zinc-900 rounded p-3">
-                      <pre className="text-xs text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap font-mono">
+                    <div className="bg-zinc-50 rounded p-3">
+                      <pre className="text-xs text-zinc-700 whitespace-pre-wrap font-mono">
                         {result.content.slice(0, 500)}
                         {result.content.length > 500 && "\n..."}
                       </pre>
                     </div>
 
                     {/* Metadata */}
-                    <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
+                    <div className="flex items-center gap-4 text-xs text-zinc-500">
                       <span>
                         Chunk {result.metadata.chunk_index + 1} of {result.metadata.total_chunks}
                       </span>
@@ -178,7 +178,7 @@ export function MemorySearch({ initialQuery = "" }: MemorySearchProps) {
       )}
 
       {loading && (
-        <div className="text-center py-8 text-zinc-500 dark:text-zinc-400">
+        <div className="text-center py-8 text-zinc-500">
           Searching memory...
         </div>
       )}

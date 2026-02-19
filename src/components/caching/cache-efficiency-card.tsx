@@ -36,8 +36,8 @@ export function CacheEfficiencyCard({
   const offset = circumference - (hitRate / 100) * circumference;
 
   return (
-    <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-      <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Cache Hit Rate ({period})</p>
+    <div className="bg-white rounded-xl border border-zinc-200 p-4">
+      <p className="text-sm font-medium text-muted-foreground">Cache Hit Rate ({period})</p>
       <div className="flex items-center justify-center mt-4">
         <svg width={100} height={100} className="transform -rotate-90">
           <circle
@@ -47,7 +47,7 @@ export function CacheEfficiencyCard({
             stroke="currentColor"
             strokeWidth={strokeWidth}
             fill="none"
-            className="text-zinc-200 dark:text-zinc-700"
+            className="text-zinc-200"
           />
           <circle
             cx={50}

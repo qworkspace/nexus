@@ -10,10 +10,10 @@ interface BugStatsProps {
 
 export function BugStats({ stats }: BugStatsProps) {
   const SEVERITY_COLORS = {
-    critical: 'text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/50',
-    high: 'text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/50',
-    medium: 'text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-950/50',
-    low: 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-950/50',
+    critical: 'text-zinc-500 bg-zinc-50',
+    high: 'text-zinc-500 bg-zinc-50',
+    medium: 'text-zinc-600 bg-zinc-100',
+    low: 'text-gray-600 bg-gray-50',
   };
 
   return (
@@ -28,28 +28,28 @@ export function BugStats({ stats }: BugStatsProps) {
         {/* Total bugs */}
         <div className="mb-6">
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl font-bold text-zinc-900 dark:text-foreground">
+            <span className="text-3xl font-bold text-zinc-900">
               {stats.open}
             </span>
-            <span className="text-sm text-muted-foreground dark:text-muted-foreground">
+            <span className="text-sm text-muted-foreground">
               / {stats.total} total
             </span>
           </div>
-          <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Open bugs
           </p>
         </div>
 
         {/* Severity breakdown */}
         <div className="space-y-3">
-          <p className="text-xs font-medium text-zinc-700 dark:text-foreground uppercase tracking-wide">
+          <p className="text-xs font-medium text-zinc-700 uppercase tracking-wide">
             By Severity
           </p>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <AlertTriangle className="h-4 w-4 text-zinc-500" />
-                <span className="text-sm text-zinc-700 dark:text-foreground">Critical</span>
+                <span className="text-sm text-zinc-700">Critical</span>
               </div>
               <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${SEVERITY_COLORS.critical}`}>
                 {stats.critical}
@@ -58,7 +58,7 @@ export function BugStats({ stats }: BugStatsProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <AlertCircle className="h-4 w-4 text-zinc-500" />
-                <span className="text-sm text-zinc-700 dark:text-foreground">High</span>
+                <span className="text-sm text-zinc-700">High</span>
               </div>
               <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${SEVERITY_COLORS.high}`}>
                 {stats.high}
@@ -67,7 +67,7 @@ export function BugStats({ stats }: BugStatsProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Info className="h-4 w-4 text-zinc-400" />
-                <span className="text-sm text-zinc-700 dark:text-foreground">Medium</span>
+                <span className="text-sm text-zinc-700">Medium</span>
               </div>
               <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${SEVERITY_COLORS.medium}`}>
                 {stats.medium}
@@ -76,7 +76,7 @@ export function BugStats({ stats }: BugStatsProps) {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Bug className="h-4 w-4 text-gray-500" />
-                <span className="text-sm text-zinc-700 dark:text-foreground">Low</span>
+                <span className="text-sm text-zinc-700">Low</span>
               </div>
               <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${SEVERITY_COLORS.low}`}>
                 {stats.low}
@@ -87,12 +87,12 @@ export function BugStats({ stats }: BugStatsProps) {
 
         {/* Fixed this week */}
         {stats.fixedThisWeek > 0 && (
-          <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-border">
+          <div className="mt-6 pt-4 border-t border-zinc-200">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground dark:text-muted-foreground">
+              <span className="text-xs text-muted-foreground">
                 Fixed this week
               </span>
-              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-400">
+              <span className="text-sm font-semibold text-zinc-900">
                 {stats.fixedThisWeek}
               </span>
             </div>

@@ -57,22 +57,22 @@ const getStatusIcon = (status: string): React.ReactNode => {
 const getStatusColor = (status: string): string => {
   switch (status) {
     case "running":
-      return "text-zinc-900 dark:text-zinc-400";
+      return "text-zinc-900";
     case "stopped":
-      return "text-zinc-500 dark:text-zinc-400";
+      return "text-zinc-500";
     default:
-      return "text-zinc-500 dark:text-zinc-400";
+      return "text-zinc-500";
   }
 };
 
 const getStatusBg = (status: string): string => {
   switch (status) {
     case "running":
-      return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
+      return "bg-zinc-50 border-zinc-200";
     case "stopped":
-      return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
+      return "bg-zinc-50 border-zinc-200";
     default:
-      return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
+      return "bg-zinc-50 border-zinc-200";
   }
 };
 
@@ -118,7 +118,7 @@ export function ServiceStatus() {
             ))}
 
             {/* Overall Status */}
-            <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
+            <div className="pt-3 border-t border-zinc-200">
               <div className={`flex items-center justify-between p-2 rounded-lg border ${getStatusBg(allRunning ? "running" : "stopped")}`}>
                 <div className="flex items-center gap-2">
                   {allRunning ? (
@@ -126,7 +126,7 @@ export function ServiceStatus() {
                   ) : (
                     <AlertCircle className="h-4 w-4 text-zinc-400" />
                   )}
-                  <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                  <span className="text-xs font-medium text-zinc-700">
                     Overall Status
                   </span>
                 </div>
@@ -138,7 +138,7 @@ export function ServiceStatus() {
 
             {/* Last Check */}
             <div className="pt-2">
-              <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 dark:text-zinc-400">
+              <div className="flex items-center justify-center gap-2 text-xs text-zinc-500">
                 <Clock className="h-3 w-3" />
                 <span>
                   Last check: {data?.data ? new Date(data.data.timestamp).toLocaleTimeString() : "Unknown"}
@@ -177,7 +177,7 @@ function ServiceItem({ service }: ServiceItemProps) {
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           {getStatusIcon(service.status)}
-          <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <span className="text-sm font-medium text-zinc-700">
             {service.name}
           </span>
         </div>
@@ -188,10 +188,10 @@ function ServiceItem({ service }: ServiceItemProps) {
 
       {service.uptime !== undefined && service.status === "running" && (
         <div className="flex items-center justify-between">
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="text-xs text-zinc-500">
             Uptime
           </span>
-          <span className="text-xs font-medium text-zinc-900 dark:text-zinc-100">
+          <span className="text-xs font-medium text-zinc-900">
             {formatUptime(service.uptime)}
           </span>
         </div>

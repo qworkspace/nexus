@@ -72,7 +72,7 @@ export function ModelIntelligencePanel() {
   const maxTokens = Math.max(...(data?.usage.map(u => u.tokensIn + u.tokensOut) || [1]));
 
   return (
-    <Card className="dark:glass-panel">
+    <Card className="">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Zap size={16} />
@@ -89,16 +89,16 @@ export function ModelIntelligencePanel() {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Current Model */}
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-50 dark:bg-card/80 border dark:border-border">
-          <span className="text-muted-foreground dark:text-muted-foreground">
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-50 border">
+          <span className="text-muted-foreground">
             {modelIcons[data?.currentModel || ''] || <Bot size={20} />}
           </span>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-zinc-900 dark:text-foreground">
+              <span className="font-semibold text-zinc-900">
                 {formatModelName(data?.currentModel || 'Loading...')}
               </span>
-              <Badge variant="secondary" className="text-xs bg-zinc-100 dark:bg-zinc-900/30 text-zinc-700 dark:text-zinc-400">
+              <Badge variant="secondary" className="text-xs bg-zinc-100 text-zinc-700">
                 Active
               </Badge>
             </div>
@@ -112,7 +112,7 @@ export function ModelIntelligencePanel() {
             <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Today&apos;s Usage
             </h4>
-            <span className="text-sm font-semibold text-zinc-900 dark:text-foreground">
+            <span className="text-sm font-semibold text-zinc-900">
               ${data?.totalCost.toFixed(2) || '0.00'}
             </span>
           </div>
@@ -120,7 +120,7 @@ export function ModelIntelligencePanel() {
           {isLoading ? (
             <div className="space-y-2">
               {[1, 2, 3].map(i => (
-                <div key={i} className="h-12 rounded-lg bg-zinc-100 dark:bg-secondary shimmer" />
+                <div key={i} className="h-12 rounded-lg bg-zinc-100 shimmer" />
               ))}
             </div>
           ) : (
@@ -135,7 +135,7 @@ export function ModelIntelligencePanel() {
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2">
                         <span className="text-muted-foreground">{modelIcons[model.model] || <Bot size={16} />}</span>
-                        <span className="text-zinc-700 dark:text-foreground">
+                        <span className="text-zinc-700">
                           {formatModelName(model.model)}
                         </span>
                       </div>
@@ -147,7 +147,7 @@ export function ModelIntelligencePanel() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 bg-zinc-200 dark:bg-secondary rounded-full overflow-hidden">
+                      <div className="flex-1 h-2 bg-zinc-200 rounded-full overflow-hidden">
                         <div
                           className={cn("h-full rounded-full transition-all duration-500", color)}
                           style={{ width: `${percentage}%` }}
@@ -166,7 +166,7 @@ export function ModelIntelligencePanel() {
 
         {/* Recommendations */}
         {data?.recommendations && data?.recommendations?.length > 0 && (
-          <div className="space-y-2 pt-2 border-t dark:border-border">
+          <div className="space-y-2 pt-2 border-t">
             <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Recommendations
             </h4>
@@ -176,13 +176,13 @@ export function ModelIntelligencePanel() {
                 className={cn(
                   "p-2 rounded-lg text-sm",
                   rec.model
-                    ? "bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-100 dark:border-zinc-900/30"
-                    : "bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-100 dark:border-zinc-900/30"
+                    ? "bg-zinc-50 border border-zinc-100"
+                    : "bg-zinc-50 border border-zinc-100"
                 )}
               >
                 <p className={cn(
                   "font-medium",
-                  rec.model ? "text-zinc-700 dark:text-foreground" : "text-zinc-700 dark:text-zinc-400"
+                  rec.model ? "text-zinc-700" : "text-zinc-700"
                 )}>
                   {rec.message}
                 </p>

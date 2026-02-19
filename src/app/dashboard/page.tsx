@@ -23,15 +23,15 @@ import { AgentActivity } from "./components/AgentActivity";
 
 export default function MissionControlDashboard() {
   return (
-    <div className="min-h-screen bg-white dark:bg-background">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="border-b border-zinc-200 dark:border-border bg-white dark:bg-background px-6 py-4">
+      <div className="border-b border-zinc-200 bg-white px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">
+            <h1 className="text-2xl font-semibold text-zinc-900">
               MISSION CONTROL
             </h1>
-            <p className="text-muted-foreground dark:text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm">
               Q&apos;s Command Center
             </p>
           </div>
@@ -119,13 +119,13 @@ export default function MissionControlDashboard() {
         </div>
 
         {/* Footer Session Stats */}
-        <div className="mt-6 border-t border-zinc-200 dark:border-border pt-4">
-          <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground dark:text-muted-foreground">
+        <div className="mt-6 border-t border-zinc-200 pt-4">
+          <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground">
             <span>Real-time updates enabled</span>
-            <span className="text-foreground dark:text-zinc-700">|</span>
+            <span className="text-foreground">|</span>
             <span>Auto-refresh: 10-30s</span>
-            <span className="text-foreground dark:text-zinc-700">|</span>
-            <span>Press <kbd className="px-1.5 py-0.5 bg-zinc-100 dark:bg-secondary rounded text-muted-foreground dark:text-foreground font-mono">?</kbd> for shortcuts</span>
+            <span className="text-foreground">|</span>
+            <span>Press <kbd className="px-1.5 py-0.5 bg-zinc-100 rounded text-muted-foreground font-mono">?</kbd> for shortcuts</span>
           </div>
         </div>
       </div>

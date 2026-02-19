@@ -270,26 +270,26 @@ export default function HubResearchPage() {
     const src = SOURCE_BADGES[item.source] || SOURCE_BADGES.manual;
 
     return (
-      <Card className="dark:bg-card dark:border-border">
+      <Card className="">
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-2">
-            <CardTitle className="text-base dark:text-foreground">{item.title}</CardTitle>
+            <CardTitle className="text-base">{item.title}</CardTitle>
             <Badge className={`border ${PRIORITY_COLORS[item.priority]}`}>{item.priority}</Badge>
           </div>
           <div className="flex items-center gap-2 mt-1 text-xs flex-wrap">
-            <span className="text-muted-foreground dark:text-muted-foreground">{formatDate(item.createdAt)}</span>
+            <span className="text-muted-foreground">{formatDate(item.createdAt)}</span>
             <Badge variant="outline" className={`text-xs ${src.className}`}>{src.label}</Badge>
-            <Badge variant="outline" className="text-xs text-muted-foreground dark:text-muted-foreground border-border">Complexity: {item.complexity}</Badge>
+            <Badge variant="outline" className="text-xs text-muted-foreground border-border">Complexity: {item.complexity}</Badge>
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground dark:text-muted-foreground mb-1">Problem</p>
-            <p className="text-sm dark:text-foreground">{item.problem || item.description || '—'}</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Problem</p>
+            <p className="text-sm">{item.problem || item.description || '—'}</p>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground dark:text-muted-foreground mb-1">Solution</p>
-            <p className="text-sm dark:text-foreground">{item.solution || '—'}</p>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Solution</p>
+            <p className="text-sm">{item.solution || '—'}</p>
           </div>
           {item.impact && (
             <div className="bg-zinc-100 px-3 py-2 rounded border border-zinc-200">
@@ -297,8 +297,8 @@ export default function HubResearchPage() {
               <p className="text-sm text-zinc-700">{item.impact}</p>
             </div>
           )}
-          <div className="flex gap-2 pt-2 border-t border-zinc-200 dark:border-border justify-between items-center">
-            <Button size="sm" variant="outline" className="text-muted-foreground hover:text-zinc-200 dark:border-border dark:hover:bg-secondary" disabled={acting} onClick={() => openEditDialog(item)}>
+          <div className="flex gap-2 pt-2 border-t border-zinc-200 justify-between items-center">
+            <Button size="sm" variant="outline" className="text-muted-foreground hover:text-zinc-200" disabled={acting} onClick={() => openEditDialog(item)}>
               <Pencil className="h-3.5 w-3.5 mr-1.5" />Edit
             </Button>
             <div className="flex gap-2">
@@ -333,41 +333,41 @@ export default function HubResearchPage() {
 
     return (
       <div className="space-y-4">
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">Pending Review</CardTitle></CardHeader>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">Pending Review</CardTitle></CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold dark:text-foreground">{pendingReview.length}</p>
+            <p className="text-3xl font-bold">{pendingReview.length}</p>
           </CardContent>
         </Card>
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">By Source</CardTitle></CardHeader>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">By Source</CardTitle></CardHeader>
           <CardContent className="space-y-1">
             {Object.entries(bySource).map(([src, n]) => (
-              <div key={src} className="flex justify-between text-sm dark:text-foreground">
+              <div key={src} className="flex justify-between text-sm">
                 <span>{SOURCE_BADGES[src]?.label || src}</span><span className="font-medium">{n}</span>
               </div>
             ))}
             {Object.keys(bySource).length === 0 && <p className="text-xs text-muted-foreground">None</p>}
           </CardContent>
         </Card>
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">By Priority</CardTitle></CardHeader>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">By Priority</CardTitle></CardHeader>
           <CardContent className="space-y-1">
             {Object.entries(byPriority).map(([p, n]) => (
-              <div key={p} className="flex justify-between text-sm dark:text-foreground"><span>{p}</span><span className="font-medium">{n}</span></div>
+              <div key={p} className="flex justify-between text-sm"><span>{p}</span><span className="font-medium">{n}</span></div>
             ))}
           </CardContent>
         </Card>
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">Approval Rate</CardTitle></CardHeader>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">Approval Rate</CardTitle></CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold dark:text-foreground">{approvalRate}%</p>
+            <p className="text-2xl font-bold">{approvalRate}%</p>
             <p className="text-xs text-muted-foreground">{totalApproved} / {totalAll} all-time</p>
           </CardContent>
         </Card>
         {parked.length > 0 && (
-          <Card className="dark:bg-card dark:border-border">
-            <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">Parked</CardTitle></CardHeader>
+          <Card className="">
+            <CardHeader className="pb-2"><CardTitle className="text-sm">Parked</CardTitle></CardHeader>
             <CardContent>
               <p className="text-lg font-bold text-[#F5D547]">{parked.length}</p>
             </CardContent>
@@ -387,27 +387,27 @@ export default function HubResearchPage() {
 
     return (
       <div className="space-y-4">
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">In Pipeline</CardTitle></CardHeader>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">In Pipeline</CardTitle></CardHeader>
           <CardContent>
-            <p className="text-3xl font-bold dark:text-foreground">{inProgress.length}</p>
+            <p className="text-3xl font-bold">{inProgress.length}</p>
           </CardContent>
         </Card>
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">By Stage</CardTitle></CardHeader>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">By Stage</CardTitle></CardHeader>
           <CardContent className="space-y-1">
             {Object.entries(bySt).map(([s, n]) => (
-              <div key={s} className="flex justify-between text-sm dark:text-foreground">
+              <div key={s} className="flex justify-between text-sm">
                 <span className="capitalize">{STAGE_LABELS[s] || s}</span><span className="font-medium">{n}</span>
               </div>
             ))}
           </CardContent>
         </Card>
         {avgDays !== null && (
-          <Card className="dark:bg-card dark:border-border">
-            <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">Avg Time to Ship</CardTitle></CardHeader>
+          <Card className="">
+            <CardHeader className="pb-2"><CardTitle className="text-sm">Avg Time to Ship</CardTitle></CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold dark:text-foreground">{formatDuration(avgDays)}</p>
+              <p className="text-2xl font-bold">{formatDuration(avgDays)}</p>
             </CardContent>
           </Card>
         )}
@@ -427,26 +427,26 @@ export default function HubResearchPage() {
 
     return (
       <div className="space-y-4">
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">Total Shipped</CardTitle></CardHeader>
-          <CardContent><p className="text-3xl font-bold dark:text-foreground">{shipped.length}</p></CardContent>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">Total Shipped</CardTitle></CardHeader>
+          <CardContent><p className="text-3xl font-bold">{shipped.length}</p></CardContent>
         </Card>
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">👍 Rate</CardTitle></CardHeader>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">👍 Rate</CardTitle></CardHeader>
           <CardContent><p className="text-2xl font-bold text-zinc-900">{rated.length > 0 ? Math.round((good / rated.length) * 100) : 0}%</p></CardContent>
         </Card>
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">👎 Rate</CardTitle></CardHeader>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">👎 Rate</CardTitle></CardHeader>
           <CardContent><p className="text-2xl font-bold text-zinc-900">{rated.length > 0 ? Math.round((bad / rated.length) * 100) : 0}%</p></CardContent>
         </Card>
         {avgDays !== null && (
-          <Card className="dark:bg-card dark:border-border">
-            <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">Avg Brief → Ship</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold dark:text-foreground">{formatDuration(avgDays)}</p></CardContent>
+          <Card className="">
+            <CardHeader className="pb-2"><CardTitle className="text-sm">Avg Brief → Ship</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold">{formatDuration(avgDays)}</p></CardContent>
           </Card>
         )}
-        <Card className="dark:bg-card dark:border-border">
-          <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">Feedback Pending</CardTitle></CardHeader>
+        <Card className="">
+          <CardHeader className="pb-2"><CardTitle className="text-sm">Feedback Pending</CardTitle></CardHeader>
           <CardContent><p className="text-2xl font-bold text-[#F5D547]">{pending}</p></CardContent>
         </Card>
       </div>
@@ -456,25 +456,23 @@ export default function HubResearchPage() {
   // ── Render ──
 
   return (
-    <div className="flex h-screen dark:bg-background">
-      <div className="flex-1 overflow-hidden">
-        <div className="h-full flex flex-col p-6">
+    <div className="p-6 max-w-7xl mx-auto">
+      <div>
+        <div className="flex flex-col">
           {/* Header */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-3xl font-semibold dark:text-foreground mb-1">Pipeline</h1>
-                <p className="text-muted-foreground dark:text-muted-foreground">Brief management, specs, builds, and deployment tracking</p>
-              </div>
-              <Button variant="outline" size="icon" onClick={refresh} disabled={isLoading} title="Refresh" className="dark:border-border">
-                <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
-              </Button>
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-zinc-900">Pipeline</h1>
+              <p className="text-zinc-500 text-sm">Brief management, specs, builds, and deployment tracking</p>
             </div>
+            <Button variant="outline" size="icon" onClick={refresh} disabled={isLoading} title="Refresh">
+              <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+            </Button>
           </div>
 
           {/* Tabs */}
           <Tabs defaultValue="briefs" className="flex-1 overflow-hidden">
-            <TabsList className="grid w-full max-w-2xl grid-cols-4 dark:bg-card">
+            <TabsList className="grid w-full max-w-2xl grid-cols-4">
               <TabsTrigger value="briefs">Briefs {pendingReview.length > 0 && <Badge className="ml-1.5 h-5 px-1.5 text-xs bg-zinc-900 text-white">{pendingReview.length}</Badge>}</TabsTrigger>
               <TabsTrigger value="in-progress">In Progress {inProgress.length > 0 && <Badge className="ml-1.5 h-5 px-1.5 text-xs bg-zinc-100 text-zinc-700 border border-zinc-200">{inProgress.length}</Badge>}</TabsTrigger>
               <TabsTrigger value="shipped">Shipped</TabsTrigger>
@@ -486,9 +484,9 @@ export default function HubResearchPage() {
               <div className="flex h-full gap-4">
                 <div className="flex-1 overflow-hidden flex flex-col">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold dark:text-zinc-200">Pending Review</h2>
+                    <h2 className="text-lg font-semibold">Pending Review</h2>
                     <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={ingest} disabled={ingesting} className="dark:border-border">
+                      <Button variant="outline" size="sm" onClick={ingest} disabled={ingesting} className="">
                         <Download className="h-4 w-4 mr-1" />{ingesting ? 'Scanning…' : 'Ingest New'}
                       </Button>
                       <Button size="sm" onClick={() => setNewBriefOpen(true)}>
@@ -499,7 +497,7 @@ export default function HubResearchPage() {
                   <ScrollArea className="flex-1">
                     <div className="space-y-3 pr-4">
                       {isLoading ? (
-                        <div className="space-y-3">{[1,2,3].map(i => <Card key={i} className="h-40 animate-pulse dark:bg-card" />)}</div>
+                        <div className="space-y-3">{[1,2,3].map(i => <Card key={i} className="h-40 animate-pulse" />)}</div>
                       ) : pendingReview.length === 0 ? (
                         <div className="text-center py-16 text-muted-foreground">
                           <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-30" />
@@ -512,7 +510,7 @@ export default function HubResearchPage() {
                     </div>
                   </ScrollArea>
                 </div>
-                <div className="w-72 border-l border-zinc-200 dark:border-border pl-4 overflow-hidden">
+                <div className="w-72 border-l border-zinc-200 pl-4 overflow-hidden">
                   <ScrollArea className="h-full"><BriefsSidebar /></ScrollArea>
                 </div>
               </div>
@@ -522,7 +520,7 @@ export default function HubResearchPage() {
             <TabsContent value="in-progress" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
               <div className="flex h-full gap-4">
                 <div className="flex-1 overflow-hidden flex flex-col">
-                  <h2 className="text-lg font-semibold dark:text-zinc-200 mb-4">In Progress</h2>
+                  <h2 className="text-lg font-semibold mb-4">In Progress</h2>
                   <ScrollArea className="flex-1">
                     <div className="space-y-3 pr-4">
                       {inProgress.length === 0 ? (
@@ -533,13 +531,13 @@ export default function HubResearchPage() {
                         </div>
                       ) : (
                         inProgress.map(item => (
-                          <Card key={item.id} className="dark:bg-card dark:border-border">
+                          <Card key={item.id} className="">
                             <CardHeader className="pb-1">
                               <div className="flex items-start justify-between gap-2">
-                                <CardTitle className="text-base dark:text-foreground">{item.title}</CardTitle>
+                                <CardTitle className="text-base">{item.title}</CardTitle>
                                 <Badge className={`border ${PRIORITY_COLORS[item.priority]}`}>{item.priority}</Badge>
                               </div>
-                              <div className="flex items-center gap-2 text-xs text-muted-foreground dark:text-muted-foreground">
+                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                 <Clock className="h-3 w-3" />
                                 <span>Approved {item.approvedAt ? formatDate(item.approvedAt) : '—'}</span>
                                 {item.assignee && <span>· {item.assignee}</span>}
@@ -547,7 +545,7 @@ export default function HubResearchPage() {
                             </CardHeader>
                             <CardContent>
                               <StageDots current={item.status} />
-                              <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1 capitalize">
+                              <p className="text-xs text-muted-foreground mt-1 capitalize">
                                 Status: <span className="text-foreground font-medium">{item.status}</span>
                               </p>
                             </CardContent>
@@ -557,7 +555,7 @@ export default function HubResearchPage() {
                     </div>
                   </ScrollArea>
                 </div>
-                <div className="w-72 border-l border-zinc-200 dark:border-border pl-4 overflow-hidden">
+                <div className="w-72 border-l border-zinc-200 pl-4 overflow-hidden">
                   <ScrollArea className="h-full"><InProgressSidebar /></ScrollArea>
                 </div>
               </div>
@@ -568,7 +566,7 @@ export default function HubResearchPage() {
               <ScrollArea className="h-full">
                 <div className="space-y-3 pr-4">
                   <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-lg font-semibold dark:text-zinc-200 flex items-center gap-2">
+                    <h2 className="text-lg font-semibold flex items-center gap-2">
                       <Rocket className="h-5 w-5 text-zinc-900" />Shipped
                     </h2>
                     <Badge className="bg-zinc-100 text-zinc-700 border border-zinc-200">{shipped.length} shipped</Badge>
@@ -581,13 +579,13 @@ export default function HubResearchPage() {
                     </div>
                   ) : (
                     shipped.map(item => (
-                      <Card key={item.id} className="border-l-4 border-l-[#F5D547] dark:bg-card dark:border-border">
+                      <Card key={item.id} className="border-l-4 border-l-[#F5D547]">
                         <CardHeader className="pb-2">
                           <div className="flex items-start justify-between gap-2">
-                            <CardTitle className="text-base dark:text-foreground">{item.title}</CardTitle>
+                            <CardTitle className="text-base">{item.title}</CardTitle>
                             <Badge className={`border ${PRIORITY_COLORS[item.priority]}`}>{item.priority}</Badge>
                           </div>
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground dark:text-muted-foreground">
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
                             <span>Shipped {item.shippedAt ? formatDate(item.shippedAt) : '—'}</span>
                             {item.assignee && <span>· Built by {item.assignee}</span>}
                             {item.approvedAt && item.shippedAt && (
@@ -596,7 +594,7 @@ export default function HubResearchPage() {
                           </div>
                         </CardHeader>
                         <CardContent>
-                          <p className="text-sm text-muted-foreground dark:text-muted-foreground line-clamp-2">{item.description}</p>
+                          <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
                           {item.feedback && (
                             <div className="mt-2">
                               <Badge className="bg-zinc-100 text-zinc-700 border border-zinc-200">
@@ -621,7 +619,7 @@ export default function HubResearchPage() {
                     <div className="space-y-6 pr-4">
                       {/* Pending Feedback */}
                       <div>
-                        <h2 className="text-lg font-semibold dark:text-zinc-200 mb-3 flex items-center gap-2">
+                        <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
                           <BarChart3 className="h-5 w-5" />Pending Feedback
                         </h2>
                         {shipped.filter(b => !b.feedback).length === 0 ? (
@@ -629,15 +627,15 @@ export default function HubResearchPage() {
                         ) : (
                           <div className="space-y-3">
                             {shipped.filter(b => !b.feedback).map(item => (
-                              <Card key={item.id} className="dark:bg-card dark:border-border">
+                              <Card key={item.id} className="">
                                 <CardHeader className="pb-2">
                                   <div className="flex items-start justify-between">
-                                    <CardTitle className="text-base dark:text-foreground">{item.title}</CardTitle>
+                                    <CardTitle className="text-base">{item.title}</CardTitle>
                                     <span className="text-xs text-muted-foreground">Shipped {item.shippedAt ? formatDate(item.shippedAt) : '—'}</span>
                                   </div>
                                 </CardHeader>
                                 <CardContent>
-                                  <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-3 line-clamp-2">{item.description}</p>
+                                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{item.description}</p>
                                   <div className="flex gap-2">
                                     <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200"
                                       disabled={actioningIds.has(item.id)} onClick={() => submitFeedback(item.id, 'good')}>
@@ -647,7 +645,7 @@ export default function HubResearchPage() {
                                       disabled={actioningIds.has(item.id)} onClick={() => submitFeedback(item.id, 'bad')}>
                                       <ThumbsDown className="h-3.5 w-3.5 mr-1" />Needs work
                                     </Button>
-                                    <Button size="sm" variant="outline" className="dark:border-border dark:text-muted-foreground"
+                                    <Button size="sm" variant="outline" className=""
                                       disabled={actioningIds.has(item.id)} onClick={() => setCommentDialogId(item.id)}>
                                       <MessageSquare className="h-3.5 w-3.5 mr-1" />Comment
                                     </Button>
@@ -661,16 +659,16 @@ export default function HubResearchPage() {
 
                       {/* Rated */}
                       <div>
-                        <h2 className="text-lg font-semibold dark:text-zinc-200 mb-3">Rated</h2>
+                        <h2 className="text-lg font-semibold mb-3">Rated</h2>
                         {shipped.filter(b => b.feedback).length === 0 ? (
                           <p className="text-muted-foreground text-sm py-4">No ratings yet</p>
                         ) : (
                           <div className="space-y-3">
                             {shipped.filter(b => b.feedback).map(item => (
-                              <Card key={item.id} className="dark:bg-card dark:border-border">
+                              <Card key={item.id} className="">
                                 <CardHeader className="pb-2">
                                   <div className="flex items-start justify-between">
-                                    <CardTitle className="text-sm dark:text-foreground">
+                                    <CardTitle className="text-sm">
                                       {item.title}
                                     </CardTitle>
                                     <span className="text-xs text-muted-foreground">Shipped {item.shippedAt ? formatDate(item.shippedAt) : '—'}</span>
@@ -690,7 +688,7 @@ export default function HubResearchPage() {
                     </div>
                   </ScrollArea>
                 </div>
-                <div className="w-72 border-l border-zinc-200 dark:border-border pl-4 overflow-hidden">
+                <div className="w-72 border-l border-zinc-200 pl-4 overflow-hidden">
                   <ScrollArea className="h-full"><PerformanceSidebar /></ScrollArea>
                 </div>
               </div>
@@ -701,7 +699,7 @@ export default function HubResearchPage() {
 
       {/* New Brief Dialog */}
       <Dialog open={newBriefOpen} onOpenChange={setNewBriefOpen}>
-        <DialogContent className="sm:max-w-lg dark:bg-card">
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Create New Brief</DialogTitle>
             <DialogDescription>Manually add a brief to the pipeline</DialogDescription>
@@ -757,7 +755,7 @@ export default function HubResearchPage() {
 
       {/* Reject with Reason Dialog */}
       <Dialog open={!!rejectDialogId} onOpenChange={() => setRejectDialogId(null)}>
-        <DialogContent className="sm:max-w-md dark:bg-card">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Reject Brief</DialogTitle>
             <DialogDescription>Why doesn&apos;t this fit? Your reason helps us stop generating similar ideas.</DialogDescription>
@@ -768,7 +766,7 @@ export default function HubResearchPage() {
               value={rejectReason}
               onChange={e => setRejectReason(e.target.value)}
               rows={3}
-              className="dark:bg-secondary dark:border-border"
+              className=""
             />
             <p className="text-xs text-muted-foreground mt-2">Optional but recommended — logged to brief-log.md for pattern tracking.</p>
           </div>
@@ -781,7 +779,7 @@ export default function HubResearchPage() {
 
       {/* Edit Brief Dialog */}
       <Dialog open={!!editItem} onOpenChange={() => setEditItem(null)}>
-        <DialogContent className="sm:max-w-lg dark:bg-card">
+        <DialogContent className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>Edit Brief</DialogTitle>
             <DialogDescription>Refine before approving. Changes are saved to the pipeline queue.</DialogDescription>
@@ -789,25 +787,25 @@ export default function HubResearchPage() {
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label>Title</Label>
-              <Input value={ebTitle} onChange={e => setEbTitle(e.target.value)} className="dark:bg-secondary dark:border-border" />
+              <Input value={ebTitle} onChange={e => setEbTitle(e.target.value)} className="" />
             </div>
             <div className="space-y-2">
               <Label>Problem</Label>
-              <Textarea value={ebProblem} onChange={e => setEbProblem(e.target.value)} rows={2} placeholder="What's broken or missing?" className="dark:bg-secondary dark:border-border" />
+              <Textarea value={ebProblem} onChange={e => setEbProblem(e.target.value)} rows={2} placeholder="What's broken or missing?" className="" />
             </div>
             <div className="space-y-2">
               <Label>Solution</Label>
-              <Textarea value={ebSolution} onChange={e => setEbSolution(e.target.value)} rows={2} placeholder="What would we build?" className="dark:bg-secondary dark:border-border" />
+              <Textarea value={ebSolution} onChange={e => setEbSolution(e.target.value)} rows={2} placeholder="What would we build?" className="" />
             </div>
             <div className="space-y-2">
               <Label>Impact</Label>
-              <Textarea value={ebImpact} onChange={e => setEbImpact(e.target.value)} rows={2} placeholder="Why should PJ care?" className="dark:bg-secondary dark:border-border" />
+              <Textarea value={ebImpact} onChange={e => setEbImpact(e.target.value)} rows={2} placeholder="Why should PJ care?" className="" />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label>Priority</Label>
                 <Select value={ebPriority} onValueChange={v => setEbPriority(v as 'HIGH' | 'MED' | 'LOW')}>
-                  <SelectTrigger className="dark:bg-secondary dark:border-border"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className=""><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="HIGH">High</SelectItem>
                     <SelectItem value="MED">Medium</SelectItem>
@@ -818,7 +816,7 @@ export default function HubResearchPage() {
               <div className="space-y-2">
                 <Label>Complexity</Label>
                 <Select value={ebComplexity} onValueChange={v => setEbComplexity(v as 'HIGH' | 'MED' | 'LOW')}>
-                  <SelectTrigger className="dark:bg-secondary dark:border-border"><SelectValue /></SelectTrigger>
+                  <SelectTrigger className=""><SelectValue /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="LOW">Low</SelectItem>
                     <SelectItem value="MED">Medium</SelectItem>
@@ -837,7 +835,7 @@ export default function HubResearchPage() {
 
       {/* Comment Dialog */}
       <Dialog open={!!commentDialogId} onOpenChange={() => setCommentDialogId(null)}>
-        <DialogContent className="sm:max-w-md dark:bg-card">
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Add Comment</DialogTitle>
           </DialogHeader>

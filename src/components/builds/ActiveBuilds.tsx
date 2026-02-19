@@ -71,13 +71,13 @@ export function ActiveBuilds() {
             {builds.map((build) => (
               <div
                 key={build.id}
-                className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-card rounded-lg"
+                className="flex items-start gap-3 p-3 bg-zinc-50 rounded-lg"
               >
                 <div className="flex-shrink-0 mt-0.5">
                   <div className="h-2 w-2 rounded-full bg-zinc-500 animate-pulse" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-zinc-900 dark:text-foreground line-clamp-2">
+                  <p className="text-sm font-medium text-zinc-900 line-clamp-2">
                     {build.task}
                   </p>
                   <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">

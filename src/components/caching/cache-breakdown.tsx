@@ -46,20 +46,20 @@ export function CacheBreakdown({ tokens, costs }: CacheBreakdownProps) {
 
   const BreakdownSection = ({ title, items, total, isCost }: { title: string; items: { label: string; value: number; color: string }[]; total: number; isCost: boolean }) => {
     return (
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-        <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-4">{title}</h3>
+      <div className="bg-white rounded-xl border border-zinc-200 p-4">
+        <h3 className="text-sm font-semibold text-zinc-900 mb-4">{title}</h3>
         <div className="space-y-3">
           {items.map((item, i) => {
             const percentage = total > 0 ? (item.value / total) * 100 : 0;
             return (
               <div key={i}>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-muted-foreground dark:text-muted-foreground">{item.label}</span>
-                  <span className="font-medium text-zinc-900 dark:text-foreground">
+                  <span className="text-muted-foreground">{item.label}</span>
+                  <span className="font-medium text-zinc-900">
                     {isCost ? `$${item.value.toFixed(2)}` : formatTokens(item.value)}
                   </span>
                 </div>
-                <div className="h-2 bg-zinc-100 dark:bg-secondary rounded-full overflow-hidden">
+                <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
                   <div
                     className={`h-full ${item.color} transition-all duration-500`}
                     style={{ width: `${percentage}%` }}
@@ -69,10 +69,10 @@ export function CacheBreakdown({ tokens, costs }: CacheBreakdownProps) {
             );
           })}
         </div>
-        <div className="border-t border-zinc-100 dark:border-border mt-4 pt-3">
+        <div className="border-t border-zinc-100 mt-4 pt-3">
           <div className="flex justify-between text-xs font-medium">
-            <span className="text-zinc-900 dark:text-foreground">Total</span>
-            <span className="text-zinc-900 dark:text-foreground">
+            <span className="text-zinc-900">Total</span>
+            <span className="text-zinc-900">
               {isCost ? `$${total.toFixed(2)}` : formatTokens(total)}
             </span>
           </div>

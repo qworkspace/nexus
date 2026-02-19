@@ -91,8 +91,8 @@ export function BuildStats() {
                 onClick={() => setPeriod(p)}
                 className={`px-2 py-1 text-xs rounded ${
                   period === p
-                    ? 'bg-card text-foreground dark:bg-white dark:text-zinc-900'
-                    : 'bg-zinc-100 text-muted-foreground dark:bg-secondary dark:text-muted-foreground'
+                    ? 'bg-card text-foreground'
+                    : 'bg-zinc-100 text-muted-foreground'
                 }`}
               >
                 {p}
@@ -108,7 +108,7 @@ export function BuildStats() {
               <BarChart3 className="h-3 w-3" />
               <span>Builds</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
+            <div className="text-xl font-bold text-zinc-900">
               {stats.totalToday}
             </div>
           </div>
@@ -119,7 +119,7 @@ export function BuildStats() {
               <TrendingUp className="h-3 w-3" />
               <span>Success</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
+            <div className="text-xl font-bold text-zinc-900">
               {stats.successRate.toFixed(0)}%
             </div>
           </div>
@@ -130,7 +130,7 @@ export function BuildStats() {
               <Clock className="h-3 w-3" />
               <span>Avg Time</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
+            <div className="text-xl font-bold text-zinc-900">
               {formatDuration(stats.avgDuration)}
             </div>
           </div>
@@ -141,7 +141,7 @@ export function BuildStats() {
               <DollarSign className="h-3 w-3" />
               <span>Cost</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
+            <div className="text-xl font-bold text-zinc-900">
               ${formatCost(stats.totalCost)}
             </div>
           </div>
@@ -152,7 +152,7 @@ export function BuildStats() {
               <BarChart3 className="h-3 w-3" />
               <span>Lines</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
+            <div className="text-xl font-bold text-zinc-900">
               {stats.totalLinesChanged.toLocaleString()}
             </div>
           </div>

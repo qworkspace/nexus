@@ -72,7 +72,7 @@ export default function ActionsPage() {
       <Link href="/company" className="text-sm text-foreground hover:underline mb-2 inline-block">← The Core</Link>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
             <Inbox size={24} />
             Action Items Board
           </h1>
@@ -82,7 +82,7 @@ export default function ActionsPage() {
           <select
             value={agentFilter}
             onChange={e => setAgentFilter(e.target.value)}
-            className="px-3 py-1 rounded-lg text-xs bg-zinc-100 dark:bg-secondary text-zinc-700 dark:text-foreground border border-zinc-200 dark:border-border"
+            className="px-3 py-1 rounded-lg text-xs bg-zinc-100 text-zinc-700 border border-zinc-200"
           >
             <option value="all">All Agents</option>
             {agents.map(a => (
@@ -96,13 +96,13 @@ export default function ActionsPage() {
         {COLUMNS.map(col => {
           const colItems = filtered.filter(i => i.status === col.key);
           return (
-            <div key={col.key} className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+            <div key={col.key} className="bg-white rounded-xl border border-zinc-200 p-4">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
+                <h3 className="font-semibold text-zinc-900 flex items-center gap-1.5">
                   <col.icon size={16} />
                   {col.label}
                 </h3>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-secondary text-muted-foreground">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-100 text-muted-foreground">
                   {colItems.length}
                 </span>
               </div>
@@ -111,19 +111,19 @@ export default function ActionsPage() {
                 {colItems.map(item => {
                   const agent = agentMap[item.assignee] || agentMap[item.assignee.toLowerCase()];
                   return (
-                    <div key={item.id} className="p-3 rounded-lg border border-zinc-200 dark:border-border bg-zinc-50 dark:bg-secondary/50">
+                    <div key={item.id} className="p-3 rounded-lg border border-zinc-200 bg-zinc-50">
                       <div className="flex items-center gap-2 mb-2">
                         {agent?.emoji ? (
                           <AgentIcon emoji={agent.emoji} size={14} />
                         ) : (
                           <HelpCircle size={14} className="text-muted-foreground" />
                         )}
-                        <span className="text-xs font-medium text-zinc-700 dark:text-foreground">
+                        <span className="text-xs font-medium text-zinc-700">
                           @{agent?.name || item.assignee}
                         </span>
                         <span className={`w-2 h-2 rounded-full ${PRIORITY_COLORS[item.priority] || "bg-zinc-400"}`} />
                       </div>
-                      <p className="text-sm text-zinc-700 dark:text-foreground mb-2">{item.task}</p>
+                      <p className="text-sm text-zinc-700 mb-2">{item.task}</p>
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">
                           {item.source?.meeting} • {item.source?.date}

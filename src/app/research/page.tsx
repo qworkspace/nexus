@@ -17,12 +17,12 @@ interface ResearchItem {
 }
 
 const SOURCE_CONFIG: Record<string, { label: string; color: string; bgColor: string }> = {
-  'think_session': { label: 'Think Session', color: 'text-zinc-700 dark:text-zinc-400', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
-  'research_scan': { label: 'Research Scan', color: 'text-zinc-700 dark:text-foreground', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
-  'ai_intel': { label: 'AI Intel', color: 'text-zinc-700 dark:text-[#F5D547]', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
-  'memo': { label: 'Memo', color: 'text-zinc-700 dark:text-[#F5D547]', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
-  'morning_brief': { label: 'Morning Brief', color: 'text-sky-700 dark:text-sky-400', bgColor: 'bg-sky-100 dark:bg-sky-900/30' },
-  'evening_brief': { label: 'Evening Brief', color: 'text-zinc-700 dark:text-muted-foreground', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
+  'think_session': { label: 'Think Session', color: 'text-zinc-700', bgColor: 'bg-zinc-100' },
+  'research_scan': { label: 'Research Scan', color: 'text-zinc-700', bgColor: 'bg-zinc-100' },
+  'ai_intel': { label: 'AI Intel', color: 'text-zinc-700', bgColor: 'bg-zinc-100' },
+  'memo': { label: 'Memo', color: 'text-zinc-700', bgColor: 'bg-zinc-100' },
+  'morning_brief': { label: 'Morning Brief', color: 'text-sky-700', bgColor: 'bg-sky-100' },
+  'evening_brief': { label: 'Evening Brief', color: 'text-zinc-700', bgColor: 'bg-zinc-100' },
 };
 
 export default function ResearchPage() {
@@ -92,7 +92,7 @@ export default function ResearchPage() {
   };
 
   const getSourceConfig = (source: string) => {
-    return SOURCE_CONFIG[source] || { label: source, color: 'text-zinc-700 dark:text-muted-foreground', bgColor: 'bg-zinc-100 dark:bg-secondary' };
+    return SOURCE_CONFIG[source] || { label: source, color: 'text-zinc-700', bgColor: 'bg-zinc-100' };
   };
 
   return (
@@ -102,10 +102,10 @@ export default function ResearchPage() {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-semibold text-zinc-900 dark:text-foreground mb-2">
+              <h1 className="text-3xl font-semibold text-zinc-900 mb-2">
                 Research Feed
               </h1>
-              <p className="text-muted-foreground dark:text-muted-foreground">
+              <p className="text-muted-foreground">
                 Daily research findings, AI insights, and action items
               </p>
             </div>
@@ -119,10 +119,10 @@ export default function ResearchPage() {
               <button
                 onClick={fetchResearch}
                 disabled={loading}
-                className="p-2 hover:bg-zinc-100 dark:hover:bg-secondary rounded-md transition-colors"
+                className="p-2 hover:bg-zinc-100 rounded-md transition-colors"
                 title="Refresh"
               >
-                <Download className={`h-4 w-4 text-muted-foreground dark:text-muted-foreground ${loading ? 'animate-spin' : ''}`} />
+                <Download className={`h-4 w-4 text-muted-foreground ${loading ? 'animate-spin' : ''}`} />
               </button>
             </div>
           </div>
@@ -136,21 +136,21 @@ export default function ResearchPage() {
             placeholder="Search research items..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 border border-zinc-200 dark:border-border rounded-md bg-white dark:bg-card text-sm text-zinc-900 dark:text-foreground"
+            className="w-full pl-9 pr-4 py-2 border border-zinc-200 rounded-md bg-white text-sm text-zinc-900"
           />
         </div>
 
         {/* Source Filter - Made More Visible */}
         <div className="mb-6 flex flex-wrap gap-2">
           <button
-            className="px-3 py-1.5 text-sm font-medium rounded-lg transition-all bg-card dark:bg-zinc-100 text-foreground dark:text-zinc-900 shadow"
+            className="px-3 py-1.5 text-sm font-medium rounded-lg transition-all bg-card text-foreground shadow"
           >
             All Sources
           </button>
           {Object.entries(SOURCE_CONFIG).slice(0, 4).map(([key, config]) => (
             <button
               key={key}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all border border-zinc-200 dark:border-border hover:bg-zinc-100 dark:hover:bg-secondary ${config.color}`}
+              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all border border-zinc-200 hover:bg-zinc-100 ${config.color}`}
             >
               {config.label}
             </button>
@@ -165,7 +165,7 @@ export default function ResearchPage() {
             <Card className="h-48 animate-pulse" />
           </div>
         ) : filteredResearch.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground dark:text-muted-foreground">
+          <div className="text-center py-12 text-muted-foreground">
             <p className="text-lg mb-2">No research found</p>
             <p className="text-sm">
               Research Intel will appear here as it&apos;s generated.
@@ -197,21 +197,21 @@ export default function ResearchPage() {
       {/* Panel */}
       <div
         ref={panelRef}
-        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white dark:bg-card border-l border-zinc-200 dark:border-border z-50 transform transition-transform duration-300 ease-out ${
+        className={`fixed top-0 right-0 h-full w-full max-w-md bg-white border-l border-zinc-200 z-50 transform transition-transform duration-300 ease-out ${
           isPanelOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
         {selectedItem && (
           <div className="h-full flex flex-col">
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-border">
+            <div className="flex items-center justify-between p-4 border-b border-zinc-200">
               <div className="flex items-center gap-2">
                 <ExternalLink className="w-5 h-5 text-foreground" />
-                <h2 className="text-lg font-semibold text-zinc-900 dark:text-foreground">Research Details</h2>
+                <h2 className="text-lg font-semibold text-zinc-900">Research Details</h2>
               </div>
               <button
                 onClick={closeSlideOver}
-                className="p-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-secondary text-muted-foreground hover:text-zinc-900 dark:hover:text-foreground transition-colors"
+                className="p-1.5 rounded-lg hover:bg-zinc-100 text-muted-foreground hover:text-zinc-900 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -221,13 +221,13 @@ export default function ResearchPage() {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {/* Title */}
               <div>
-                <h3 className="text-xl font-semibold text-zinc-900 dark:text-foreground">{selectedItem.title}</h3>
+                <h3 className="text-xl font-semibold text-zinc-900">{selectedItem.title}</h3>
               </div>
 
               {/* Meta Info */}
               <div className="flex flex-wrap gap-3">
                 {/* Date */}
-                <div className="flex items-center gap-1 text-muted-foreground dark:text-muted-foreground">
+                <div className="flex items-center gap-1 text-muted-foreground">
                   <Calendar className="w-4 h-4" />
                   <span className="text-sm">{selectedItem.date}</span>
                 </div>
@@ -246,13 +246,13 @@ export default function ResearchPage() {
               {/* Critical Items - Raw content, no bullet transform */}
               {selectedItem.critical.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-500 font-medium text-sm mb-2">
                     <AlertTriangle className="h-4 w-4" />
                     <span>Critical</span>
                   </div>
-                  <div className="bg-zinc-50 dark:bg-zinc-950/20 rounded-lg p-3 space-y-1">
+                  <div className="bg-zinc-50 rounded-lg p-3 space-y-1">
                     {selectedItem.critical.map((item, i) => (
-                      <p key={i} className="text-sm text-zinc-700 dark:text-foreground">{item}</p>
+                      <p key={i} className="text-sm text-zinc-700">{item}</p>
                     ))}
                   </div>
                 </div>
@@ -261,13 +261,13 @@ export default function ResearchPage() {
               {/* Notable Items */}
               {selectedItem.notable.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-zinc-500 dark:text-[#F5D547] font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-500 font-medium text-sm mb-2">
                     <Lightbulb className="h-4 w-4" />
                     <span>Notable</span>
                   </div>
-                  <div className="bg-zinc-50 dark:bg-zinc-950/20 rounded-lg p-3 space-y-1">
+                  <div className="bg-zinc-50 rounded-lg p-3 space-y-1">
                     {selectedItem.notable.map((item, i) => (
-                      <p key={i} className="text-sm text-zinc-700 dark:text-foreground">{item}</p>
+                      <p key={i} className="text-sm text-zinc-700">{item}</p>
                     ))}
                   </div>
                 </div>
@@ -276,13 +276,13 @@ export default function ResearchPage() {
               {/* Highlights */}
               {selectedItem.highlights.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-zinc-900 dark:text-foreground font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-900 font-medium text-sm mb-2">
                     <CheckCircle className="h-4 w-4" />
                     <span>Highlights</span>
                   </div>
-                  <div className="bg-zinc-50 dark:bg-zinc-950/20 rounded-lg p-3 space-y-1">
+                  <div className="bg-zinc-50 rounded-lg p-3 space-y-1">
                     {selectedItem.highlights.map((item, i) => (
-                      <p key={i} className="text-sm text-zinc-700 dark:text-foreground">{item}</p>
+                      <p key={i} className="text-sm text-zinc-700">{item}</p>
                     ))}
                   </div>
                 </div>
@@ -291,13 +291,13 @@ export default function ResearchPage() {
               {/* Actions */}
               {selectedItem.actions.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-zinc-900 dark:text-[#F5D547] font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-900 font-medium text-sm mb-2">
                     <CheckCircle className="h-4 w-4" />
                     <span>Actions</span>
                   </div>
-                  <div className="bg-zinc-50 dark:bg-zinc-950/20 rounded-lg p-3 space-y-1">
+                  <div className="bg-zinc-50 rounded-lg p-3 space-y-1">
                     {selectedItem.actions.map((item, i) => (
-                      <p key={i} className="text-sm text-zinc-700 dark:text-foreground">{item}</p>
+                      <p key={i} className="text-sm text-zinc-700">{item}</p>
                     ))}
                   </div>
                 </div>
@@ -305,10 +305,10 @@ export default function ResearchPage() {
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t border-zinc-200 dark:border-border">
+            <div className="p-4 border-t border-zinc-200">
               <button
                 onClick={closeSlideOver}
-                className="w-full py-2 px-4 bg-zinc-100 dark:bg-secondary hover:bg-zinc-200 dark:hover:bg-muted rounded-lg text-sm font-medium text-zinc-700 dark:text-foreground transition-colors"
+                className="w-full py-2 px-4 bg-zinc-100 hover:bg-zinc-200 rounded-lg text-sm font-medium text-zinc-700 transition-colors"
               >
                 Close
               </button>
@@ -330,11 +330,11 @@ function ResearchCard({
   getSourceConfig: (source: string) => { label: string; color: string; bgColor: string };
 }) {
   return (
-    <Card className="hover:shadow-md transition-all cursor-pointer group hover:border-zinc-300 dark:hover:border-border" onClick={onClick}>
+    <Card className="hover:shadow-md transition-all cursor-pointer group hover:border-zinc-300" onClick={onClick}>
       <CardHeader>
         <div className="flex items-start justify-between">
           <div>
-            <CardTitle className="text-lg text-zinc-900 dark:text-foreground">{item.title}</CardTitle>
+            <CardTitle className="text-lg text-zinc-900">{item.title}</CardTitle>
             <div className="flex items-center gap-2 mt-2">
               <Badge variant="secondary" className="text-xs">
                 {item.date}
@@ -371,13 +371,13 @@ function ResearchCard({
         {/* Critical Items - Raw content, no bullet transform */}
         {item.critical.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 font-medium text-sm">
+            <div className="flex items-center gap-2 text-zinc-500 font-medium text-sm">
               <AlertTriangle className="h-4 w-4" />
               <span>Critical</span>
             </div>
             <div className="space-y-1">
               {item.critical.slice(0, 3).map((item, i) => (
-                <p key={i} className="text-sm text-zinc-700 dark:text-foreground line-clamp-1">
+                <p key={i} className="text-sm text-zinc-700 line-clamp-1">
                   {item}
                 </p>
               ))}
@@ -388,13 +388,13 @@ function ResearchCard({
         {/* Notable Items */}
         {item.notable.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-zinc-500 dark:text-[#F5D547] font-medium text-sm">
+            <div className="flex items-center gap-2 text-zinc-500 font-medium text-sm">
               <Lightbulb className="h-4 w-4" />
               <span>Notable</span>
             </div>
             <div className="space-y-1">
               {item.notable.slice(0, 3).map((item, i) => (
-                <p key={i} className="text-sm text-zinc-700 dark:text-foreground line-clamp-1">
+                <p key={i} className="text-sm text-zinc-700 line-clamp-1">
                   {item}
                 </p>
               ))}
@@ -405,13 +405,13 @@ function ResearchCard({
         {/* Highlights */}
         {item.highlights.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-zinc-900 dark:text-foreground font-medium text-sm">
+            <div className="flex items-center gap-2 text-zinc-900 font-medium text-sm">
               <CheckCircle className="h-4 w-4" />
               <span>Highlights</span>
             </div>
             <div className="space-y-1">
               {item.highlights.slice(0, 3).map((item, i) => (
-                <p key={i} className="text-sm text-zinc-700 dark:text-foreground line-clamp-1">
+                <p key={i} className="text-sm text-zinc-700 line-clamp-1">
                   {item}
                 </p>
               ))}
@@ -421,14 +421,14 @@ function ResearchCard({
 
         {/* Actions */}
         {item.actions.length > 0 && (
-          <div className="pt-2 border-t border-zinc-200 dark:border-border">
-            <div className="flex items-center gap-2 text-zinc-900 dark:text-[#F5D547] font-medium text-sm mb-2">
+          <div className="pt-2 border-t border-zinc-200">
+            <div className="flex items-center gap-2 text-zinc-900 font-medium text-sm mb-2">
               <CheckCircle className="h-4 w-4" />
               <span>Actions</span>
             </div>
             <div className="space-y-1">
               {item.actions.slice(0, 3).map((item, i) => (
-                <p key={i} className="text-sm text-zinc-700 dark:text-foreground line-clamp-1">
+                <p key={i} className="text-sm text-zinc-700 line-clamp-1">
                   {item}
                 </p>
               ))}

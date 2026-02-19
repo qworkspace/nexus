@@ -85,13 +85,13 @@ export function ModelSwitchDialog() {
                 className={cn(
                   "w-full p-4 rounded-lg border text-left transition-all",
                   selectedModel === model.id
-                    ? "border-zinc-500 bg-zinc-50 dark:bg-zinc-900/20"
-                    : "border-zinc-200 dark:border-border hover:border-zinc-300 dark:hover:border-border"
+                    ? "border-zinc-500 bg-zinc-50"
+                    : "border-zinc-200 hover:border-zinc-300"
                 )}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Icon size={24} className="text-muted-foreground dark:text-muted-foreground" />
+                    <Icon size={24} className="text-muted-foreground" />
                     <div>
                       <div className="font-medium">{model.name}</div>
                       <p className="text-sm text-muted-foreground">{model.desc}</p>

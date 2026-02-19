@@ -72,7 +72,7 @@ export function AgentFleet() {
               key={agent.id}
               className="flex items-center gap-3 p-3 border border-zinc-200 rounded-lg hover:border-zinc-300 transition-colors"
             >
-              <AgentIcon emoji={agent.emoji} size={24} className="text-zinc-600 dark:text-zinc-300" />
+              <AgentIcon emoji={agent.emoji} size={24} className="text-zinc-600" />
               <div className="flex-1">
                 <p className="text-sm font-medium text-zinc-900">{agent.name}</p>
                 <div className="flex items-center gap-1.5 mt-0.5">

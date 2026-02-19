@@ -265,23 +265,23 @@ export function BuildMonitor() {
               activeBuilds.map((build) => (
                 <div
                   key={build.id}
-                  className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                  className="border border-zinc-200 rounded-lg p-4 hover:border-zinc-300 transition-colors"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                        <p className="text-sm font-medium text-zinc-900">
                           {build.label}
                         </p>
                         {getStatusBadge(build.status)}
                       </div>
-                      <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2">
+                      <p className="text-xs text-zinc-600 line-clamp-2">
                         {build.task}
                       </p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 text-xs text-zinc-500 dark:text-zinc-400">
+                  <div className="flex items-center gap-4 text-xs text-zinc-500">
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {formatDuration(build.runtime)}
@@ -312,13 +312,13 @@ export function BuildMonitor() {
               queueSpecs.map((spec) => (
                 <div
                   key={spec.id}
-                  className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                  className="border border-zinc-200 rounded-lg p-3 hover:border-zinc-300 transition-colors"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-xs font-mono text-zinc-500">#{spec.id}</span>
-                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                        <p className="text-sm font-medium text-zinc-900">
                           {spec.title}
                         </p>
                       </div>
@@ -331,7 +331,7 @@ export function BuildMonitor() {
                       </div>
                     </div>
                   </div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="text-xs text-zinc-500">
                     Created: {spec.created}
                   </p>
                 </div>
@@ -351,12 +351,12 @@ export function BuildMonitor() {
               recentBuilds.map((build) => (
                 <div
                   key={build.id}
-                  className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                  className="border border-zinc-200 rounded-lg p-3 hover:border-zinc-300 transition-colors"
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                        <p className="text-sm font-medium text-zinc-900">
                           {build.label}
                         </p>
                         {getStatusBadge(build.status)}
@@ -369,7 +369,7 @@ export function BuildMonitor() {
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                  <div className="flex items-center justify-between text-xs text-zinc-500">
                     <div className="flex items-center gap-3">
                       <span className="flex items-center gap-1">
                         <FileCode className="h-3 w-3" />
@@ -397,32 +397,32 @@ export function BuildMonitor() {
             ) : (
               <>
                 {/* Today's Stats */}
-                <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+                <div className="border border-zinc-200 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-zinc-900 mb-3">
                     Today
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">Lines Shipped</p>
-                      <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                      <p className="text-xs text-zinc-500">Lines Shipped</p>
+                      <p className="text-2xl font-semibold text-zinc-900">
                         {formatLines(stats.today.lines_shipped)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">Builds</p>
-                      <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                      <p className="text-xs text-zinc-500">Builds</p>
+                      <p className="text-2xl font-semibold text-zinc-900">
                         {stats.today.builds_completed}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">Success Rate</p>
-                      <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                      <p className="text-xs text-zinc-500">Success Rate</p>
+                      <p className="text-2xl font-semibold text-zinc-900">
                         {(stats.today.success_rate * 100).toFixed(0)}%
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">Avg Duration</p>
-                      <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                      <p className="text-xs text-zinc-500">Avg Duration</p>
+                      <p className="text-2xl font-semibold text-zinc-900">
                         {formatDuration(stats.today.avg_duration)}
                       </p>
                     </div>
@@ -430,20 +430,20 @@ export function BuildMonitor() {
                 </div>
 
                 {/* Week Stats */}
-                <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+                <div className="border border-zinc-200 rounded-lg p-4">
+                  <h3 className="text-sm font-semibold text-zinc-900 mb-3">
                     This Week
                   </h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">Lines Shipped</p>
-                      <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                      <p className="text-xs text-zinc-500">Lines Shipped</p>
+                      <p className="text-2xl font-semibold text-zinc-900">
                         {formatLines(stats.week.lines_shipped)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">Builds</p>
-                      <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                      <p className="text-xs text-zinc-500">Builds</p>
+                      <p className="text-2xl font-semibold text-zinc-900">
                         {stats.week.builds_completed}
                       </p>
                     </div>
@@ -452,15 +452,15 @@ export function BuildMonitor() {
 
                 {/* Model Usage */}
                 {Object.keys(stats.models).length > 0 && (
-                  <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4">
-                    <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+                  <div className="border border-zinc-200 rounded-lg p-4">
+                    <h3 className="text-sm font-semibold text-zinc-900 mb-3">
                       Model Usage
                     </h3>
                     <div className="space-y-2">
                       {Object.entries(stats.models).map(([model, data]) => (
                         <div key={model} className="flex items-center justify-between text-sm">
                           <div className="flex items-center gap-2">
-                            <span className="text-zinc-900 dark:text-zinc-100 font-medium">
+                            <span className="text-zinc-900 font-medium">
                               {getModelLabel(model)}
                             </span>
                             <span className="text-xs text-zinc-500">

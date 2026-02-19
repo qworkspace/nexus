@@ -41,15 +41,15 @@ interface CronListData {
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
 const modelColors: Record<string, string> = {
-  zai: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-foreground',
-  anthropic: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-muted-foreground',
-  ollama: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
-  openai: 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
+  zai: 'bg-zinc-100 text-zinc-700',
+  anthropic: 'bg-zinc-100 text-zinc-700',
+  ollama: 'bg-zinc-100 text-zinc-700',
+  openai: 'bg-zinc-100 text-zinc-700',
 };
 
 function getModelBadgeClass(model: string): string {
   const provider = model.split('/')[0]?.toLowerCase() || 'unknown';
-  return modelColors[provider] || 'bg-zinc-100 text-zinc-700 dark:bg-secondary dark:text-muted-foreground';
+  return modelColors[provider] || 'bg-zinc-100 text-zinc-700';
 }
 
 function formatModelName(model: string): string {
@@ -73,8 +73,8 @@ function SessionBadge({ target }: { target: 'main' | 'isolated' }) {
     <span className={cn(
       "text-[9px] px-1 py-0.5 rounded font-mono",
       target === 'main'
-        ? "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-[#F5D547]"
-        : "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-muted-foreground"
+        ? "bg-zinc-100 text-zinc-700"
+        : "bg-zinc-100 text-zinc-700"
     )}>
       {target === 'main' ? 'MAIN' : 'ISO'}
     </span>
@@ -82,9 +82,9 @@ function SessionBadge({ target }: { target: 'main' | 'isolated' }) {
 }
 
 const statusConfig = {
-  ok: { color: "bg-zinc-500", badge: "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400" },
-  error: { color: "bg-zinc-500", badge: "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400" },
-  timeout: { color: "bg-zinc-400", badge: "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400" },
+  ok: { color: "bg-zinc-500", badge: "bg-zinc-100 text-zinc-700" },
+  error: { color: "bg-zinc-500", badge: "bg-zinc-100 text-zinc-700" },
+  timeout: { color: "bg-zinc-400", badge: "bg-zinc-100 text-zinc-700" },
 };
 
 function formatNextRun(ms: number): string {
@@ -137,9 +137,9 @@ function CronStatsHeader({ jobs }: { jobs: CronJob[] }) {
   return (
     <div className="flex flex-wrap gap-2 text-[10px] mb-2">
       <span className="text-muted-foreground">
-        <span className="font-semibold text-zinc-700 dark:text-foreground">{jobs.length}</span> total
+        <span className="font-semibold text-zinc-700">{jobs.length}</span> total
       </span>
-      <span className="text-zinc-900 dark:text-zinc-400">
+      <span className="text-zinc-900">
         <span className="font-semibold">{enabled}</span> active
       </span>
       {disabled > 0 && (
@@ -148,7 +148,7 @@ function CronStatsHeader({ jobs }: { jobs: CronJob[] }) {
         </span>
       )}
       {errored > 0 && (
-        <span className="text-zinc-500 dark:text-zinc-400">
+        <span className="text-zinc-500">
           <span className="font-semibold">{errored}</span> errors
         </span>
       )}
@@ -184,7 +184,7 @@ export function CronMonitorPanel() {
   );
 
   return (
-    <Card className="dark:glass-panel">
+    <Card className="">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <span className="text-lg">⏰</span>
@@ -196,7 +196,7 @@ export function CronMonitorPanel() {
         {isLoading ? (
           <div className="space-y-2">
             {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-12 rounded-lg bg-zinc-100 dark:bg-secondary shimmer" />
+              <div key={i} className="h-12 rounded-lg bg-zinc-100 shimmer" />
             ))}
           </div>
         ) : (
@@ -209,9 +209,9 @@ export function CronMonitorPanel() {
                 <div
                   key={job.id}
                   className={cn(
-                    "p-2 rounded-lg border bg-white dark:bg-card/80 dark:border-border",
+                    "p-2 rounded-lg border bg-white",
                     !job.enabled && "opacity-50",
-                    job.state.lastStatus === 'error' && "border-zinc-200 dark:border-zinc-900/50 bg-zinc-50/50 dark:bg-zinc-950/20"
+                    job.state.lastStatus === 'error' && "border-zinc-200 bg-zinc-50/50"
                   )}
                 >
                   <div className="flex items-center justify-between mb-1">
@@ -220,7 +220,7 @@ export function CronMonitorPanel() {
                         "w-1.5 h-1.5 rounded-full shrink-0",
                         job.enabled ? (status?.color || "bg-zinc-400") : "bg-zinc-300"
                       )} />
-                      <span className="font-medium text-sm text-zinc-900 dark:text-foreground truncate">
+                      <span className="font-medium text-sm text-zinc-900 truncate">
                         {job.name}
                       </span>
 
@@ -233,7 +233,7 @@ export function CronMonitorPanel() {
                       <SessionBadge target={job.sessionTarget} />
 
                       {job.state.lastStatus === 'error' && (
-                        <Badge variant="secondary" className="text-[9px] px-1 bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400">
+                        <Badge variant="secondary" className="text-[9px] px-1 bg-zinc-100 text-zinc-700">
                           {job.state.consecutiveErrors || 1}x ERR
                         </Badge>
                       )}
@@ -250,10 +250,10 @@ export function CronMonitorPanel() {
                   </div>
 
                   <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
-                    <span className="font-mono bg-zinc-100 dark:bg-secondary px-1 py-0.5 rounded">
+                    <span className="font-mono bg-zinc-100 px-1 py-0.5 rounded">
                       {job.schedule.expr}
                     </span>
-                    <span className="text-zinc-900 dark:text-zinc-400 shrink-0">
+                    <span className="text-zinc-900 shrink-0">
                       {formatNextRun(job.state.nextRunAtMs)}
                     </span>
                     <span className="text-muted-foreground shrink-0">

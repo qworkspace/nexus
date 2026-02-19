@@ -83,12 +83,12 @@ export default function CachingPage() {
     return (
       <div className="p-6 max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">Prompt Caching</h1>
+          <h1 className="text-2xl font-semibold text-zinc-900">Prompt Caching</h1>
           <p className="text-muted-foreground text-sm">Cache efficiency and cost savings visualization</p>
         </div>
         <div className="grid grid-cols-3 gap-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-zinc-100 dark:bg-secondary rounded-xl h-40 animate-pulse" />
+            <div key={i} className="bg-zinc-100 rounded-xl h-40 animate-pulse" />
           ))}
         </div>
       </div>
@@ -99,11 +99,11 @@ export default function CachingPage() {
     return (
       <div className="p-6 max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">Prompt Caching</h1>
+          <h1 className="text-2xl font-semibold text-zinc-900">Prompt Caching</h1>
           <p className="text-muted-foreground text-sm">Cache efficiency and cost savings visualization</p>
         </div>
-        <div className="bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6">
-          <p className="text-zinc-700 dark:text-zinc-400 flex items-center gap-2">
+        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-6">
+          <p className="text-zinc-700 flex items-center gap-2">
             <AlertTriangle size={16} />
             Unable to load cache data: {error}
           </p>
@@ -116,12 +116,12 @@ export default function CachingPage() {
     return (
       <div className="p-6 max-w-7xl">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">Prompt Caching</h1>
+          <h1 className="text-2xl font-semibold text-zinc-900">Prompt Caching</h1>
           <p className="text-muted-foreground text-sm">Cache efficiency and cost savings visualization</p>
         </div>
-        <div className="bg-zinc-50 dark:bg-card border border-zinc-200 dark:border-border rounded-xl p-12 text-center">
+        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-12 text-center">
           <Database size={48} className="mx-auto mb-4 text-muted-foreground" />
-          <h3 className="text-lg font-medium text-zinc-900 dark:text-foreground mb-2">No Cache Data Available</h3>
+          <h3 className="text-lg font-medium text-zinc-900 mb-2">No Cache Data Available</h3>
           <p className="text-muted-foreground">Cache metrics will appear after first Q session completes.</p>
         </div>
       </div>
@@ -131,7 +131,7 @@ export default function CachingPage() {
   return (
     <div className="p-6 max-w-7xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">Prompt Caching</h1>
+        <h1 className="text-2xl font-semibold text-zinc-900">Prompt Caching</h1>
         <p className="text-muted-foreground text-sm">Cache efficiency and cost savings visualization</p>
       </div>
 
@@ -144,17 +144,17 @@ export default function CachingPage() {
           period="7d"
         />
 
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Cache Savings (7 days)</p>
-          <p className="text-3xl font-bold text-zinc-900 dark:text-foreground mt-2">
+        <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <p className="text-sm font-medium text-muted-foreground">Cache Savings (7 days)</p>
+          <p className="text-3xl font-bold text-zinc-900 mt-2">
             ${stats.cacheReadCost.toFixed(2)}
           </p>
           <p className="text-xs text-muted-foreground mt-1">90% cheaper than fresh tokens</p>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Tokens Served (7 days)</p>
-          <p className="text-3xl font-bold text-zinc-900 dark:text-foreground mt-2">
+        <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <p className="text-sm font-medium text-muted-foreground">Tokens Served (7 days)</p>
+          <p className="text-3xl font-bold text-zinc-900 mt-2">
             {(stats.cacheReadTokens / 1000000).toFixed(1)}M
           </p>
           <p className="text-xs text-muted-foreground mt-1">
@@ -163,16 +163,16 @@ export default function CachingPage() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4 mb-8">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-foreground mb-4">
+      <div className="bg-white rounded-xl border border-zinc-200 p-4 mb-8">
+        <h3 className="text-lg font-semibold text-zinc-900 mb-4">
           Token Distribution (Last 14 Days)
         </h3>
         <CacheChart data={data.byDay.slice(0, 14)} />
       </div>
 
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-foreground mb-4">
+        <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <h3 className="text-lg font-semibold text-zinc-900 mb-4">
             Cache Hit Rate Trend (7 Days)
           </h3>
           <CacheTrend data={data.byDay.slice(0, 7)} />

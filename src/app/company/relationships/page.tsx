@@ -306,20 +306,20 @@ export default function RelationshipsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-900 flex items-center gap-2">
             <LinkIcon size={24} />
             Relationships
           </h1>
           <p className="text-muted-foreground text-sm">Trust scores and interaction patterns</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setView("graph")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "graph" ? "bg-foreground text-foreground" : "bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground"}`}>
+          <button onClick={() => setView("graph")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "graph" ? "bg-foreground text-foreground" : "bg-zinc-100 text-muted-foreground"}`}>
             Graph
           </button>
-          <button onClick={() => setView("matrix")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "matrix" ? "bg-foreground text-foreground" : "bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground"}`}>
+          <button onClick={() => setView("matrix")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "matrix" ? "bg-foreground text-foreground" : "bg-zinc-100 text-muted-foreground"}`}>
             Matrix
           </button>
-          <button onClick={() => setView("timeline")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "timeline" ? "bg-foreground text-foreground" : "bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground"}`}>
+          <button onClick={() => setView("timeline")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "timeline" ? "bg-foreground text-foreground" : "bg-zinc-100 text-muted-foreground"}`}>
             Timeline
           </button>
           <Link href="/company" className="text-xs text-foreground hover:underline ml-4">← HQ</Link>
@@ -341,8 +341,8 @@ export default function RelationshipsPage() {
             />
           </div>
           <div className="space-y-4">
-            <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-3">Legend</h3>
+            <div className="bg-white rounded-xl border border-zinc-200 p-4">
+              <h3 className="text-sm font-semibold text-zinc-900 mb-3">Legend</h3>
               <div className="space-y-2 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#F5D547]" /> High trust (60+)</div>
                 <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#F5D547]" /> Neutral (40-59)</div>
@@ -351,8 +351,8 @@ export default function RelationshipsPage() {
               </div>
             </div>
             {hoveredNode && (
-              <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2 flex items-center gap-1.5">
+              <div className="bg-white rounded-xl border border-zinc-200 p-4">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-2 flex items-center gap-1.5">
                   <AgentIcon emoji={AGENT_EMOJIS[hoveredNode]} size={14} />
                   {relData.find(a => a.agentId === hoveredNode)?.agentName}
                 </h3>
@@ -376,7 +376,7 @@ export default function RelationshipsPage() {
         </div>
       ) : view === "matrix" ? (
         /* Matrix View */
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4 overflow-x-auto">
+        <div className="bg-white rounded-xl border border-zinc-200 p-4 overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
               <tr>
@@ -393,20 +393,20 @@ export default function RelationshipsPage() {
             </thead>
             <tbody>
               {localAgents.map(agent => (
-                <tr key={agent.agentId} className="border-t border-zinc-100 dark:border-border">
-                  <td className="p-2 font-medium text-zinc-700 dark:text-foreground flex items-center gap-1.5">
+                <tr key={agent.agentId} className="border-t border-zinc-100">
+                  <td className="p-2 font-medium text-zinc-700 flex items-center gap-1.5">
                     <AgentIcon emoji={AGENT_EMOJIS[agent.agentId]} size={14} />
                     {agent.agentName}
                   </td>
                   {agentIds.map(otherId => {
                     if (agent.agentId === otherId) {
-                      return <td key={otherId} className="p-2 text-center text-foreground dark:text-zinc-700">—</td>;
+                      return <td key={otherId} className="p-2 text-center text-foreground">—</td>;
                     }
                     const rel = getRelation(agent.agentId, otherId);
                     return (
                       <td
                         key={otherId}
-                        className="p-2 text-center cursor-pointer hover:bg-zinc-50 dark:hover:bg-secondary transition"
+                        className="p-2 text-center cursor-pointer hover:bg-zinc-50 transition"
                         onClick={() => setSelectedPair({ from: agent.agentId, to: otherId })}
                       >
                         <div className="flex flex-col items-center gap-1">
@@ -440,9 +440,9 @@ export default function RelationshipsPage() {
             const fromName = relData.find(a => a.agentId === selectedPair.from)?.agentName;
             const toName = relData.find(a => a.agentId === selectedPair.to)?.agentName;
             return (
-              <div className="mt-4 p-4 rounded-lg bg-zinc-50 dark:bg-secondary border border-zinc-200 dark:border-border">
+              <div className="mt-4 p-4 rounded-lg bg-zinc-50 border border-zinc-200">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-sm font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
+                  <h4 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
                     <AgentIcon emoji={AGENT_EMOJIS[selectedPair.from]} size={14} />
                     {fromName} →
                     <AgentIcon emoji={AGENT_EMOJIS[selectedPair.to]} size={14} />
@@ -455,11 +455,11 @@ export default function RelationshipsPage() {
                 <div className="grid grid-cols-3 gap-4 text-xs">
                   <div>
                     <p className="text-muted-foreground">Trust</p>
-                    <p className="font-bold text-lg text-zinc-900 dark:text-foreground">{rel.trust}/100</p>
+                    <p className="font-bold text-lg text-zinc-900">{rel.trust}/100</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Interactions</p>
-                    <p className="font-bold text-lg text-zinc-900 dark:text-foreground">{rel.interactionCount}</p>
+                    <p className="font-bold text-lg text-zinc-900">{rel.interactionCount}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Trend</p>
@@ -533,8 +533,8 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
   };
 
   return (
-    <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-      <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-4">
+    <div className="bg-white rounded-xl border border-zinc-200 p-4">
+      <h3 className="text-sm font-semibold text-zinc-900 mb-4">
         Recent Interactions
       </h3>
       {sorted.length === 0 ? (
@@ -546,17 +546,17 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
           {sorted.slice(0, 20).map((evt, i) => (
             <div
               key={i}
-              className="p-3 rounded-lg bg-zinc-50 dark:bg-secondary border border-zinc-200 dark:border-border"
+              className="p-3 rounded-lg bg-zinc-50 border border-zinc-200"
             >
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2 text-xs">
                   <AgentIcon emoji={AGENT_EMOJIS[evt.fromAgent]} size={14} />
-                  <span className="text-zinc-700 dark:text-foreground">
+                  <span className="text-zinc-700">
                     {evt.fromName}
                   </span>
                   <span className="text-muted-foreground">→</span>
                   <AgentIcon emoji={AGENT_EMOJIS[evt.toAgent]} size={14} />
-                  <span className="text-zinc-700 dark:text-foreground">
+                  <span className="text-zinc-700">
                     {evt.toName}
                   </span>
                 </div>
@@ -578,7 +578,7 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
                   </span>
                 </div>
               </div>
-              <p className="text-xs text-muted-foreground dark:text-muted-foreground">
+              <p className="text-xs text-muted-foreground">
                 {evt.event}
               </p>
             </div>
@@ -590,8 +590,8 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
 }
 
 function TrustBadge({ trust }: { trust: number }) {
-  const color = trust >= 60 ? "text-zinc-900 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#F5D547]"
-    : trust >= 40 ? "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#F5D547]"
-    : "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400";
+  const color = trust >= 60 ? "text-zinc-900 bg-zinc-100"
+    : trust >= 40 ? "text-zinc-500 bg-zinc-100"
+    : "text-zinc-500 bg-zinc-100";
   return <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${color}`}>{trust}</span>;
 }

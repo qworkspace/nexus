@@ -26,8 +26,8 @@ export function KeyHint({ keys, className, showOnHover = false }: KeyHintProps) 
     <kbd
       className={cn(
         'inline-flex items-center px-1.5 py-0.5 text-xs font-medium rounded border',
-        'bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground',
-        'border-zinc-200 dark:border-border',
+        'bg-zinc-100 text-muted-foreground',
+        'border-zinc-200',
         'shadow-sm transition-opacity',
         showOnHover && 'opacity-0 group-hover:opacity-100',
         className

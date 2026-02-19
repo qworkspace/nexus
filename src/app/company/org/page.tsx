@@ -115,7 +115,7 @@ export default function OrgChartPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground">Organisational Chart</h1>
+          <h1 className="text-2xl font-bold text-zinc-900">Organisational Chart</h1>
           <p className="text-muted-foreground text-sm mt-1">Villanueva Creative Pty Ltd — {agents.length} team members</p>
         </div>
         <Link href="/company" className="text-sm text-foreground hover:underline">← The Core</Link>
@@ -135,8 +135,8 @@ export default function OrgChartPage() {
           <div className="relative flex flex-col items-center gap-6" style={{ zIndex: 2 }}>
             {/* Company */}
             <div data-node-id="company">
-              <div className="px-8 py-4 rounded-xl bg-gradient-to-r from-zinc-50 to-zinc-100 dark:from-zinc-900/20 dark:to-zinc-800/20 border-2 border-zinc-300 dark:border-zinc-700 text-center shadow-lg">
-                <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Villanueva Creative Pty Ltd</p>
+              <div className="px-8 py-4 rounded-xl bg-gradient-to-r from-zinc-50 to-zinc-100 border-2 border-zinc-300 text-center shadow-lg">
+                <p className="text-sm font-bold text-zinc-700">Villanueva Creative Pty Ltd</p>
                 <p className="text-[10px] text-[#F5D547] mt-0.5">Est. Sydney, Australia</p>
               </div>
             </div>
@@ -232,7 +232,7 @@ export default function OrgChartPage() {
                   </div>
                 </div>
                 
-                <div className="px-4 py-2 rounded-lg border border-dashed border-zinc-300 dark:border-border bg-zinc-50 dark:bg-card/80">
+                <div className="px-4 py-2 rounded-lg border border-dashed border-zinc-300 bg-zinc-50">
                   <p className="text-[10px] text-muted-foreground text-center">Separate OpenClaw instance</p>
                   <p className="text-[9px] text-muted-foreground text-center mt-0.5">Artemis • VPS</p>
                 </div>
@@ -241,8 +241,8 @@ export default function OrgChartPage() {
           </div>
 
           {/* Department Legend */}
-          <div className="mt-16 bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-6">
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-4">Departments</h3>
+          <div className="mt-16 bg-white rounded-xl border border-zinc-200 p-6">
+            <h3 className="text-sm font-semibold text-zinc-900 mb-4">Departments</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <DeptBadge name="Core" color="amber" members={["PJ (Co-Founder)", "Ella (Co-Founder)", "Q (COO)", "Larina (Lead Developer & AI Manager)", "Arty (COO — Ella's instance)"]} />
               <DeptBadge name="Engineering" color="emerald" members={["Spark (Builder)", "Flux (QA)"]} />
@@ -251,15 +251,15 @@ export default function OrgChartPage() {
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-6 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900/30 text-zinc-900 dark:text-[#F5D547] text-[10px] font-medium">Mac Mini</span>
+                <span className="px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-900 text-[10px] font-medium">Mac Mini</span>
                 <span>M4 32GB — Primary</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900/30 text-zinc-500 dark:text-zinc-400 text-[10px] font-medium">VPS</span>
+                <span className="px-1.5 py-0.5 rounded bg-zinc-100 text-zinc-500 text-[10px] font-medium">VPS</span>
                 <span>Ella&apos;s instance</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#F5D547] border-2 border-white dark:border-zinc-900" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#F5D547] border-2 border-white" />
                 <span>Human</span>
               </div>
               <div className="flex items-center gap-2">
@@ -271,8 +271,8 @@ export default function OrgChartPage() {
 
           {/* Relationships Matrix */}
           {relData.length > 0 && (
-            <div className="mt-6 bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-              <h3 className="text-xs font-semibold text-zinc-900 dark:text-foreground mb-3 flex items-center gap-1.5">
+            <div className="mt-6 bg-white rounded-xl border border-zinc-200 p-4">
+              <h3 className="text-xs font-semibold text-zinc-900 mb-3 flex items-center gap-1.5">
                 <LinkIcon size={12} />
                 Relationships
               </h3>
@@ -290,23 +290,23 @@ export default function OrgChartPage() {
                   </thead>
                   <tbody>
                     {relData.filter(a => !["ella", "arty"].includes(a.agentId)).map(agent => (
-                      <tr key={agent.agentId} className="border-t border-zinc-100 dark:border-border">
-                        <td className="p-1 font-medium text-muted-foreground dark:text-muted-foreground text-[10px]">
+                      <tr key={agent.agentId} className="border-t border-zinc-100">
+                        <td className="p-1 font-medium text-muted-foreground text-[10px]">
                           {agent.agentName}
                         </td>
                         {relData.filter(a => !["ella", "arty"].includes(a.agentId)).map(other => {
                           if (agent.agentId === other.agentId) {
-                            return <td key={other.agentId} className="p-1 text-center text-foreground dark:text-zinc-700">—</td>;
+                            return <td key={other.agentId} className="p-1 text-center text-foreground">—</td>;
                           }
                           const rel = agent.relationships?.[other.agentId];
                           const trust = rel?.trust ?? 50;
-                          const color = trust >= 60 ? "text-zinc-900 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#F5D547]"
-                            : trust >= 40 ? "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#F5D547]"
-                            : "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400";
+                          const color = trust >= 60 ? "text-zinc-900 bg-zinc-100"
+                            : trust >= 40 ? "text-zinc-500 bg-zinc-100"
+                            : "text-zinc-500 bg-zinc-100";
                           return (
                             <td
                               key={other.agentId}
-                              className="p-1 text-center cursor-pointer hover:bg-zinc-50 dark:hover:bg-secondary transition"
+                              className="p-1 text-center cursor-pointer hover:bg-zinc-50 transition"
                               onClick={() => setSelectedPair({ from: agent.agentId, to: other.agentId })}
                             >
                               <span className={`px-1 py-0.5 rounded text-[9px] font-bold ${color}`}>{trust}</span>
@@ -326,9 +326,9 @@ export default function OrgChartPage() {
                 if (!rel) return null;
                 const toName = relData.find(a => a.agentId === selectedPair.to)?.agentName;
                 return (
-                  <div className="mt-3 p-3 rounded-lg bg-zinc-50 dark:bg-secondary border border-zinc-200 dark:border-border">
+                  <div className="mt-3 p-3 rounded-lg bg-zinc-50 border border-zinc-200">
                     <div className="flex items-center justify-between mb-1.5">
-                      <h4 className="text-[11px] font-semibold text-zinc-900 dark:text-foreground">
+                      <h4 className="text-[11px] font-semibold text-zinc-900">
                         {agent?.agentName} → {toName}
                       </h4>
                       <button onClick={() => setSelectedPair(null)} className="text-muted-foreground hover:text-muted-foreground text-[10px]">✕</button>
@@ -336,11 +336,11 @@ export default function OrgChartPage() {
                     <div className="grid grid-cols-3 gap-3 text-[10px]">
                       <div>
                         <p className="text-muted-foreground">Trust</p>
-                        <p className="font-bold text-sm text-zinc-900 dark:text-foreground">{rel.trust}/100</p>
+                        <p className="font-bold text-sm text-zinc-900">{rel.trust}/100</p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">Interactions</p>
-                        <p className="font-bold text-sm text-zinc-900 dark:text-foreground">{rel.interactionCount}</p>
+                        <p className="font-bold text-sm text-zinc-900">{rel.interactionCount}</p>
                       </div>
                       <div>
                         <p className="text-muted-foreground">Trend</p>
@@ -445,32 +445,32 @@ function OrgCard({
   const textSize = size === "lg" ? "text-sm" : size === "sm" ? "text-xs" : "text-xs";
 
   const colorClasses: Record<string, string> = {
-    amber: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
-    gold: "border-yellow-400 dark:border-yellow-600 bg-white dark:bg-card",
-    pink: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
-    mint: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
-    emerald: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
-    cyan: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
-    blue: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
-    orange: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
-    sky: "border-sky-300 dark:border-sky-600 bg-white dark:bg-card",
-    zinc: "border-zinc-300 dark:border-border bg-white dark:bg-card",
+    amber: "border-zinc-300 bg-white",
+    gold: "border-yellow-400 bg-white",
+    pink: "border-zinc-300 bg-white",
+    mint: "border-zinc-300 bg-white",
+    emerald: "border-zinc-300 bg-white",
+    cyan: "border-zinc-300 bg-white",
+    blue: "border-zinc-300 bg-white",
+    orange: "border-zinc-300 bg-white",
+    sky: "border-sky-300 bg-white",
+    zinc: "border-zinc-300 bg-white",
   };
 
   const inner = (
     <div className={`relative rounded-xl border-2 shadow-md hover:shadow-lg transition-all ${colorClasses[color] || colorClasses.zinc} ${sizeClass} text-center`}>
       {isHuman && (
-        <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#F5D547] border-2 border-white dark:border-zinc-900" title="Human" />
+        <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#F5D547] border-2 border-white" title="Human" />
       )}
       {badge && (
         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
-          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold shadow-sm ${badge === "VPS" ? "bg-zinc-100 dark:bg-zinc-900/40 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800" : "bg-zinc-100 dark:bg-zinc-900/40 text-zinc-900 dark:text-[#F5D547] border border-zinc-200 dark:border-zinc-800"}`}>
+          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold shadow-sm ${badge === "VPS" ? "bg-zinc-100 text-zinc-500 border border-zinc-200" : "bg-zinc-100 text-zinc-900 border border-zinc-200"}`}>
             {badge}
           </span>
         </div>
       )}
-      {emoji && <AgentIcon emoji={emoji} size={size === "lg" ? 32 : size === "sm" ? 18 : 24} className="mx-auto text-muted-foreground dark:text-foreground" />}
-      <p className={`font-bold text-zinc-900 dark:text-foreground ${textSize}`}>{name}</p>
+      {emoji && <AgentIcon emoji={emoji} size={size === "lg" ? 32 : size === "sm" ? 18 : 24} className="mx-auto text-muted-foreground" />}
+      <p className={`font-bold text-zinc-900 ${textSize}`}>{name}</p>
       {subtitle && <p className="text-[10px] text-muted-foreground">{subtitle}</p>}
       <p className="text-[11px] text-muted-foreground">{role}</p>
       {model && <p className="text-[9px] text-muted-foreground font-mono mt-0.5">{model}</p>}
@@ -497,7 +497,7 @@ function DeptBadge({ name, color, members }: { name: string; color: string; memb
     <div className="space-y-1">
       <div className="flex items-center gap-1.5">
         <div className={`w-2.5 h-2.5 rounded-full ${dotColors[color] || "bg-zinc-400"}`} />
-        <span className="text-xs font-semibold text-zinc-700 dark:text-foreground">{name}</span>
+        <span className="text-xs font-semibold text-zinc-700">{name}</span>
       </div>
       {members.map(m => (
         <p key={m} className="text-[10px] text-muted-foreground pl-4">{m}</p>

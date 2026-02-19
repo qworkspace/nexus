@@ -95,10 +95,10 @@ export function LessonsSummary() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mb-4">
           <div className="text-center">
-            <p className="text-2xl font-semibold text-zinc-900 dark:text-foreground">
+            <p className="text-2xl font-semibold text-zinc-900">
               {stats.total}
             </p>
-            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Total
             </p>
           </div>
@@ -106,7 +106,7 @@ export function LessonsSummary() {
             <p className={`text-2xl font-semibold ${getEffectivenessColor(stats.avgEffectiveness)}`}>
               {stats.avgEffectiveness}%
             </p>
-            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Success
             </p>
           </div>
@@ -114,7 +114,7 @@ export function LessonsSummary() {
             <p className="text-2xl font-semibold text-zinc-500">
               {stats.needsReview}
             </p>
-            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
+            <p className="text-xs text-muted-foreground">
               Review
             </p>
           </div>
@@ -123,7 +123,7 @@ export function LessonsSummary() {
         {/* Top Lessons */}
         {topLessons.length > 0 && (
           <div>
-            <h3 className="text-xs font-semibold text-muted-foreground dark:text-muted-foreground mb-2 flex items-center gap-1">
+            <h3 className="text-xs font-semibold text-muted-foreground mb-2 flex items-center gap-1">
               <TrendingUp className="h-3 w-3" />
               Priority Review
             </h3>
@@ -131,10 +131,10 @@ export function LessonsSummary() {
               {topLessons.slice(0, 3).map((lesson) => (
                 <div
                   key={lesson.id}
-                  className="text-xs bg-zinc-50 dark:bg-card rounded p-2"
+                  className="text-xs bg-zinc-50 rounded p-2"
                 >
                   <div className="flex items-center gap-1 mb-1">
-                    <span className="font-medium text-zinc-700 dark:text-foreground">
+                    <span className="font-medium text-zinc-700">
                       {lesson.category}
                     </span>
                     {lesson.effectiveness !== null && (
@@ -145,7 +145,7 @@ export function LessonsSummary() {
                       </span>
                     )}
                   </div>
-                  <p className="text-muted-foreground dark:text-muted-foreground line-clamp-2">
+                  <p className="text-muted-foreground line-clamp-2">
                     {lesson.pattern}
                   </p>
                 </div>
@@ -156,13 +156,13 @@ export function LessonsSummary() {
 
         {/* Needs Review Alert */}
         {stats.needsReview > 0 && (
-          <div className="mt-4 flex items-start gap-2 text-xs bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded p-2">
+          <div className="mt-4 flex items-start gap-2 text-xs bg-zinc-50 border border-zinc-200 rounded p-2">
             <AlertTriangle className="h-3 w-3 text-zinc-500 mt-0.5 flex-shrink-0" />
             <div>
-              <p className="font-medium text-zinc-800 dark:text-zinc-200">
+              <p className="font-medium text-zinc-800">
                 {stats.needsReview} lesson{stats.needsReview > 1 ? "s" : ""} need review
               </p>
-              <p className="text-zinc-700 dark:text-zinc-300">
+              <p className="text-zinc-700">
                 Effectiveness below 80%
               </p>
             </div>

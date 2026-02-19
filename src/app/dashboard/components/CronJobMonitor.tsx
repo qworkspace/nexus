@@ -183,12 +183,12 @@ export function CronJobMonitor() {
             jobs.slice(0, 6).map((job) => (
               <div
                 key={job.id}
-                className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+                className="border border-zinc-200 rounded-lg p-3 hover:border-zinc-300 transition-colors"
               >
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                      <p className="text-sm font-medium text-zinc-900">
                         {job.name}
                       </p>
                       {!job.enabled && (
@@ -197,7 +197,7 @@ export function CronJobMonitor() {
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">
+                    <p className="text-xs text-zinc-500 mt-0.5">
                       {formatSchedule(job.schedule.expr)}
                     </p>
                   </div>
@@ -207,23 +207,23 @@ export function CronJobMonitor() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="text-xs">
-                      <span className="text-zinc-500 dark:text-zinc-400">Next:</span>{' '}
-                      <span className={job.enabled ? "text-zinc-900 dark:text-zinc-100" : "text-zinc-400"}>
+                      <span className="text-zinc-500">Next:</span>{' '}
+                      <span className={job.enabled ? "text-zinc-900" : "text-zinc-400"}>
                         {getTimeUntil(job.state.nextRunAtMs)}
                       </span>
                     </div>
                     {job.state.lastRunAtMs && (
                       <div className="text-xs">
-                        <span className="text-zinc-500 dark:text-zinc-400">Last:</span>{' '}
-                        <span className="text-zinc-900 dark:text-zinc-100">
+                        <span className="text-zinc-500">Last:</span>{' '}
+                        <span className="text-zinc-900">
                           {getTimeAgo(job.state.lastRunAtMs)}
                         </span>
                       </div>
                     )}
                     {job.state.lastDurationMs !== undefined && (
                       <div className="text-xs">
-                        <span className="text-zinc-500 dark:text-zinc-400">Duration:</span>{' '}
-                        <span className="text-zinc-900 dark:text-zinc-100">
+                        <span className="text-zinc-500">Duration:</span>{' '}
+                        <span className="text-zinc-900">
                           {(job.state.lastDurationMs / 1000).toFixed(1)}s
                         </span>
                       </div>
@@ -259,7 +259,7 @@ export function CronJobMonitor() {
                 </div>
 
                 {job.state.lastStatus === 'error' && job.state.lastError && (
-                  <div className="mt-2 text-xs text-zinc-500 bg-zinc-50 dark:bg-zinc-950/20 rounded p-2">
+                  <div className="mt-2 text-xs text-zinc-500 bg-zinc-50 rounded p-2">
                     {job.state.lastError}
                   </div>
                 )}
@@ -269,8 +269,8 @@ export function CronJobMonitor() {
         </div>
 
         {/* Summary Stats */}
-        <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-zinc-800">
-          <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-400">
+        <div className="mt-4 pt-3 border-t border-zinc-200">
+          <div className="flex items-center justify-between text-xs text-zinc-600">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <CheckCircle className="h-3 w-3 text-zinc-500" />

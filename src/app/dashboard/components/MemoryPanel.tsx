@@ -103,36 +103,36 @@ export function MemoryPanel() {
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center gap-1">
                 <Database className="h-3 w-3 text-zinc-400" />
-                <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                <p className="text-xs font-medium text-zinc-500">
                   Context Usage
                 </p>
               </div>
-              <span className="text-xs text-zinc-600 dark:text-zinc-400">
+              <span className="text-xs text-zinc-600">
                 {(contextUsage.current / 1000).toFixed(0)}k / {(contextUsage.max / 1000).toFixed(0)}k tokens
               </span>
             </div>
-            <div className="w-full bg-zinc-200 dark:bg-zinc-800 rounded-full h-2">
+            <div className="w-full bg-zinc-200 rounded-full h-2">
               <div
                 className="bg-zinc-500 h-2 rounded-full transition-all"
                 style={{ width: `${contextUsage.percentage}%` }}
               />
             </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+            <p className="text-xs text-zinc-500 mt-1">
               {contextUsage.percentage.toFixed(1)}% used
             </p>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-zinc-50 dark:bg-zinc-900 rounded p-3">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">Total Memories</p>
-              <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            <div className="bg-zinc-50 rounded p-3">
+              <p className="text-xs text-zinc-500">Total Memories</p>
+              <p className="text-lg font-semibold text-zinc-900">
                 {totalMemories}
               </p>
             </div>
-            <div className="bg-zinc-50 dark:bg-zinc-900 rounded p-3">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">Sources</p>
-              <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            <div className="bg-zinc-50 rounded p-3">
+              <p className="text-xs text-zinc-500">Sources</p>
+              <p className="text-lg font-semibold text-zinc-900">
                 {totalFiles}
               </p>
             </div>
@@ -142,7 +142,7 @@ export function MemoryPanel() {
           <div>
             <div className="flex items-center gap-1 mb-2">
               <Tag className="h-3 w-3 text-zinc-400" />
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs font-medium text-zinc-500">
                 Top Topics
               </p>
             </div>
@@ -150,10 +150,10 @@ export function MemoryPanel() {
               {mockTopics.map((topic) => (
                 <span
                   key={topic.term}
-                  className="inline-flex items-center bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded text-xs"
+                  className="inline-flex items-center bg-zinc-100 px-2 py-1 rounded text-xs"
                 >
                   {topic.term}
-                  <span className="ml-1 text-zinc-500 dark:text-zinc-400">({topic.count})</span>
+                  <span className="ml-1 text-zinc-500">({topic.count})</span>
                 </span>
               ))}
             </div>
@@ -164,7 +164,7 @@ export function MemoryPanel() {
             <div>
               <div className="flex items-center gap-1 mb-2">
                 <TrendingUp className="h-3 w-3 text-zinc-400" />
-                <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                <p className="text-xs font-medium text-zinc-500">
                   Top Sources
                 </p>
               </div>
@@ -174,10 +174,10 @@ export function MemoryPanel() {
                     key={source.name}
                     className="flex items-center justify-between text-xs"
                   >
-                    <span className="text-zinc-600 dark:text-zinc-400 truncate">
+                    <span className="text-zinc-600 truncate">
                       {source.name}
                     </span>
-                    <span className="text-zinc-500 dark:text-zinc-500">
+                    <span className="text-zinc-500">
                       {source.count} memories
                     </span>
                   </div>
@@ -187,10 +187,10 @@ export function MemoryPanel() {
           )}
 
           {/* Quick Search */}
-          <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="pt-3 border-t border-zinc-200">
             <div className="flex items-center gap-1 mb-2">
               <Search className="h-3 w-3 text-zinc-400" />
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs font-medium text-zinc-500">
                 Quick Search
               </p>
             </div>

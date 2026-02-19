@@ -38,25 +38,25 @@ export function TokenSummaryCards({ today, yesterday, thisWeek }: TokenSummaryCa
       {/* Today Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             Today
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-bold text-zinc-900 dark:text-foreground">
+            <p className="text-3xl font-bold text-zinc-900">
               {formatTokens(today.totalTokens)}
             </p>
-            <p className="text-sm text-muted-foreground dark:text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               tokens
             </p>
           </div>
-          <p className="text-lg text-muted-foreground dark:text-muted-foreground mt-1">
+          <p className="text-lg text-muted-foreground mt-1">
             {formatCost(today.totalCost)}
           </p>
           {yesterday.totalTokens > 0 && (
             <div className={`flex items-center text-xs mt-2 ${
-              tokenChange >= 0 ? "text-zinc-500 dark:text-zinc-400" : "text-zinc-900 dark:text-zinc-400"
+              tokenChange >= 0 ? "text-zinc-500" : "text-zinc-900"
             }`}>
               {tokenChange >= 0 ? (
                 <TrendingUp className="h-3 w-3 mr-1" />
@@ -72,20 +72,20 @@ export function TokenSummaryCards({ today, yesterday, thisWeek }: TokenSummaryCa
       {/* Yesterday Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             Yesterday
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-bold text-zinc-900 dark:text-foreground">
+            <p className="text-3xl font-bold text-zinc-900">
               {formatTokens(yesterday.totalTokens)}
             </p>
-            <p className="text-sm text-muted-foreground dark:text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               tokens
             </p>
           </div>
-          <p className="text-lg text-muted-foreground dark:text-muted-foreground mt-1">
+          <p className="text-lg text-muted-foreground mt-1">
             {formatCost(yesterday.totalCost)}
           </p>
         </CardContent>
@@ -94,20 +94,20 @@ export function TokenSummaryCards({ today, yesterday, thisWeek }: TokenSummaryCa
       {/* This Week Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             This Week
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex items-baseline gap-2">
-            <p className="text-3xl font-bold text-zinc-900 dark:text-foreground">
+            <p className="text-3xl font-bold text-zinc-900">
               {formatTokens(thisWeek.totalTokens)}
             </p>
-            <p className="text-sm text-muted-foreground dark:text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               tokens
             </p>
           </div>
-          <p className="text-lg text-muted-foreground dark:text-muted-foreground mt-1">
+          <p className="text-lg text-muted-foreground mt-1">
             {formatCost(thisWeek.totalCost)}
           </p>
         </CardContent>

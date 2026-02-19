@@ -59,15 +59,15 @@ export default function CommandCenterPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-zinc-50 to-zinc-100 dark:from-zinc-950 dark:to-zinc-900 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
+    <div className="p-6 max-w-7xl mx-auto">
+      <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-foreground">
+            <h1 className="text-2xl font-bold text-zinc-900">
               Command Center
             </h1>
-            <p className="text-muted-foreground dark:text-muted-foreground mt-1">
+            <p className="text-zinc-500 text-sm">
               Q&apos;s mission control dashboard
             </p>
           </div>
@@ -80,7 +80,7 @@ export default function CommandCenterPage() {
               })}
             </span>
             <div className="w-2 h-2 rounded-full bg-zinc-500 animate-pulse-soft" />
-            <span className="text-xs text-zinc-900 dark:text-zinc-400">Live</span>
+            <span className="text-xs text-zinc-900">Live</span>
           </div>
         </div>
 

@@ -102,17 +102,17 @@ export function CronJobCard({
     if (!model) return null;
     
     const colorMap: Record<string, string> = {
-      'Opus 4.6': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
-      'Opus 4.5': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
-      'Sonnet 4.5': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
-      'Sonnet 5': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
-      'GLM Flash': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
-      'GLM 4.7': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
-      'GLM-5': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
-      'GPT-5.3': 'bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400',
+      'Opus 4.6': 'bg-zinc-100 text-zinc-700',
+      'Opus 4.5': 'bg-zinc-100 text-zinc-700',
+      'Sonnet 4.5': 'bg-zinc-100 text-zinc-700',
+      'Sonnet 5': 'bg-zinc-100 text-zinc-700',
+      'GLM Flash': 'bg-zinc-100 text-zinc-700',
+      'GLM 4.7': 'bg-zinc-100 text-zinc-700',
+      'GLM-5': 'bg-zinc-100 text-zinc-700',
+      'GPT-5.3': 'bg-zinc-100 text-zinc-700',
     };
     
-    const badgeClass = colorMap[model] || 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-400';
+    const badgeClass = colorMap[model] || 'bg-zinc-100 text-zinc-700';
     
     return (
       <Badge variant="secondary" className={`text-[10px] px-1.5 py-0 ${badgeClass}`}>
@@ -151,12 +151,12 @@ export function CronJobCard({
   };
 
   return (
-    <Card className="hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors">
+    <Card className="hover:border-zinc-300 transition-colors">
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+              <h3 className="text-sm font-medium text-zinc-900">
                 {job.name}
               </h3>
               {!job.enabled && (
@@ -165,7 +165,7 @@ export function CronJobCard({
                 </Badge>
               )}
             </div>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+            <p className="text-xs text-zinc-500 mt-1">
               {formatSchedule(job.schedule.expr)}
             </p>
           </div>
@@ -184,13 +184,13 @@ export function CronJobCard({
 
           {/* Delivery Mode */}
           {job.deliveryMode && job.deliveryMode !== 'none' && (
-            <div className="flex items-center gap-1 text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded">
+            <div className="flex items-center gap-1 text-xs bg-zinc-100 px-1.5 py-0.5 rounded">
               {getDeliveryInfo(job.deliveryMode)?.icon && (
                 <span className={getDeliveryInfo(job.deliveryMode)?.color}>
                   {getDeliveryInfo(job.deliveryMode)?.icon}
                 </span>
               )}
-              <span className="text-zinc-600 dark:text-zinc-400">
+              <span className="text-zinc-600">
                 {getDeliveryInfo(job.deliveryMode)?.label}
               </span>
             </div>
@@ -198,9 +198,9 @@ export function CronJobCard({
 
           {/* Session Target */}
           {job.sessionTarget && (
-            <div className="flex items-center gap-1 text-xs bg-zinc-100 dark:bg-zinc-800 px-1.5 py-0.5 rounded max-w-[150px]">
+            <div className="flex items-center gap-1 text-xs bg-zinc-100 px-1.5 py-0.5 rounded max-w-[150px]">
               <Target className="h-3 w-3 text-zinc-400" />
-              <span className="text-zinc-600 dark:text-zinc-400 truncate" title={job.sessionTarget}>
+              <span className="text-zinc-600 truncate" title={job.sessionTarget}>
                 {job.sessionTarget}
               </span>
             </div>
@@ -210,23 +210,23 @@ export function CronJobCard({
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-3">
             <div>
-              <span className="text-zinc-500 dark:text-zinc-400">Next:</span>{' '}
-              <span className={job.enabled ? "text-zinc-900 dark:text-zinc-100" : "text-zinc-400"}>
+              <span className="text-zinc-500">Next:</span>{' '}
+              <span className={job.enabled ? "text-zinc-900" : "text-zinc-400"}>
                 {getTimeUntil(job.state.nextRunAtMs)}
               </span>
             </div>
             {job.state.lastRunAtMs && (
               <div>
-                <span className="text-zinc-500 dark:text-zinc-400">Last:</span>{' '}
-                <span className="text-zinc-900 dark:text-zinc-100">
+                <span className="text-zinc-500">Last:</span>{' '}
+                <span className="text-zinc-900">
                   {getTimeAgo(job.state.lastRunAtMs)}
                 </span>
               </div>
             )}
             {job.state.lastDurationMs !== undefined && (
               <div>
-                <span className="text-zinc-500 dark:text-zinc-400">Duration:</span>{' '}
-                <span className="text-zinc-900 dark:text-zinc-100">
+                <span className="text-zinc-500">Duration:</span>{' '}
+                <span className="text-zinc-900">
                   {(job.state.lastDurationMs / 1000).toFixed(1)}s
                 </span>
               </div>
@@ -275,7 +275,7 @@ export function CronJobCard({
         </div>
 
         {job.state.lastStatus === 'error' && job.state.lastError && (
-          <div className="mt-3 text-xs text-zinc-500 bg-zinc-50 dark:bg-zinc-950/20 rounded p-2">
+          <div className="mt-3 text-xs text-zinc-500 bg-zinc-50 rounded p-2">
             {job.state.lastError}
           </div>
         )}

@@ -52,7 +52,7 @@ export function AgentCard({ agent }: AgentCardProps) {
         <div className="flex items-center gap-3 mb-3">
           {/* Icon */}
           <div className="flex items-center justify-center">
-            <AgentIcon emoji={agent.emoji} size={32} className="text-muted-foreground dark:text-foreground" />
+            <AgentIcon emoji={agent.emoji} size={32} className="text-muted-foreground" />
           </div>
 
           {/* Name and Model */}

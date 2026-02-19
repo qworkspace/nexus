@@ -93,7 +93,7 @@ export function BuildQueue() {
             {queue.map((spec) => (
               <div
                 key={spec.id}
-                className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-card rounded-lg"
+                className="flex items-start gap-3 p-3 bg-zinc-50 rounded-lg"
               >
                 <div className="flex-shrink-0 mt-0.5">
                   <span
@@ -104,7 +104,7 @@ export function BuildQueue() {
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-zinc-900 dark:text-foreground line-clamp-2">
+                  <p className="text-sm font-medium text-zinc-900 line-clamp-2">
                     {spec.title}
                   </p>
                   {spec.estTime && (

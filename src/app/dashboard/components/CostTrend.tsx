@@ -91,29 +91,29 @@ export function CostTrend() {
           <div className="space-y-4">
             {/* Summary Stats */}
             {summary && (
-              <div className="grid grid-cols-2 gap-3 pb-4 border-b border-zinc-200 dark:border-zinc-800">
+              <div className="grid grid-cols-2 gap-3 pb-4 border-b border-zinc-200">
                 <div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="text-xs text-zinc-500">
                     14-Day Total
                   </p>
-                  <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                  <p className="text-lg font-semibold text-zinc-900">
                     ${summary.total.toFixed(2)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="text-xs text-zinc-500">
                     Avg Daily
                   </p>
-                  <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                  <p className="text-lg font-semibold text-zinc-900">
                     ${summary.avgDaily.toFixed(2)}
                   </p>
                 </div>
                 {summary.highestDay && (
                   <div>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                    <p className="text-xs text-zinc-500">
                       Highest Day
                     </p>
-                    <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                    <p className="text-sm font-semibold text-zinc-900">
                       ${summary.highestDay.cost.toFixed(2)}
                     </p>
                     <p className="text-xs text-zinc-500">
@@ -122,10 +122,10 @@ export function CostTrend() {
                   </div>
                 )}
                 <div>
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  <p className="text-xs text-zinc-500">
                     Total Tokens
                   </p>
-                  <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                  <p className="text-sm font-semibold text-zinc-900">
                     {((summary.totalTokensIn + summary.totalTokensOut) / 1000).toFixed(0)}k
                   </p>
                   <p className="text-xs text-zinc-500">
@@ -137,7 +137,7 @@ export function CostTrend() {
 
             {/* Bar Chart */}
             <div>
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-3">
+              <p className="text-xs font-medium text-zinc-500 mb-3">
                 Daily Costs (Last 14 Days)
               </p>
               <div className="relative h-[160px] flex items-end gap-1">
@@ -156,7 +156,7 @@ export function CostTrend() {
                         <div
                           className={`
                             w-full rounded-t transition-all duration-300
-                            ${isToday ? 'bg-zinc-500' : isWeekend ? 'bg-zinc-400 dark:bg-zinc-600' : 'bg-zinc-500 dark:bg-zinc-500'}
+                            ${isToday ? 'bg-zinc-500' : isWeekend ? 'bg-zinc-400' : 'bg-zinc-500'}
                             hover:opacity-80
                           `}
                           style={{ height: `${Math.max(height, 2)}%` }}
@@ -169,7 +169,7 @@ export function CostTrend() {
                       </div>
                       {/* Date label for first, last, and today */}
                       {day.date === daily[0].date || day.date === daily[daily.length - 1].date || isToday ? (
-                        <span className={`text-[10px] mt-1 ${isToday ? 'font-semibold text-zinc-500 dark:text-zinc-400' : 'text-zinc-400'}`}>
+                        <span className={`text-[10px] mt-1 ${isToday ? 'font-semibold text-zinc-500' : 'text-zinc-400'}`}>
                           {formatDate(day.date)}
                         </span>
                       ) : null}

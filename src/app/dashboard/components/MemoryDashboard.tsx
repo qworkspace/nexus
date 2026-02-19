@@ -145,27 +145,27 @@ export function MemoryDashboard() {
           <div className="space-y-6">
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4">
-              <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4">
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+              <div className="bg-zinc-50 rounded-lg p-4">
+                <p className="text-xs text-zinc-500 mb-1">
                   Total Memories
                 </p>
-                <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                <p className="text-2xl font-semibold text-zinc-900">
                   {data.stats.totalFiles}
                 </p>
               </div>
-              <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4">
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+              <div className="bg-zinc-50 rounded-lg p-4">
+                <p className="text-xs text-zinc-500 mb-1">
                   Total Size
                 </p>
-                <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+                <p className="text-2xl font-semibold text-zinc-900">
                   {formatBytes(data.stats.totalSize)}
                 </p>
               </div>
-              <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4">
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+              <div className="bg-zinc-50 rounded-lg p-4">
+                <p className="text-xs text-zinc-500 mb-1">
                   Last Updated
                 </p>
-                <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                <p className="text-sm font-medium text-zinc-900">
                   {formatDate(data.stats.lastModified)}
                 </p>
               </div>
@@ -173,11 +173,11 @@ export function MemoryDashboard() {
 
             {/* MEMORY.md Preview */}
             <div>
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+              <h3 className="text-sm font-semibold text-zinc-900 mb-3">
                 Long-Term Memory (MEMORY.md)
               </h3>
-              <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4 max-h-64 overflow-y-auto">
-                <pre className="text-xs text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap font-mono">
+              <div className="bg-zinc-50 rounded-lg p-4 max-h-64 overflow-y-auto">
+                <pre className="text-xs text-zinc-700 whitespace-pre-wrap font-mono">
                   {data?.memoryMd?.slice(0, 2000) || ''}
                   {data?.memoryMd?.length && data.memoryMd.length > 2000 && "\n\n... (truncated)"}
                 </pre>
@@ -186,24 +186,24 @@ export function MemoryDashboard() {
 
             {/* Recent Daily Files */}
             <div>
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">
+              <h3 className="text-sm font-semibold text-zinc-900 mb-3">
                 Recent Daily Memories
               </h3>
               <div className="space-y-2">
                 {(data?.dailyFiles || []).slice(0, 10).map((file) => (
                   <div
                     key={file.name}
-                    className="flex items-center justify-between bg-zinc-50 dark:bg-zinc-900 rounded-lg p-3"
+                    className="flex items-center justify-between bg-zinc-50 rounded-lg p-3"
                   >
                     <div>
-                      <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                      <p className="text-sm font-medium text-zinc-900">
                         {file.name}
                       </p>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                      <p className="text-xs text-zinc-500">
                         {formatDate(file.modified)}
                       </p>
                     </div>
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                    <span className="text-xs text-zinc-500">
                       {formatBytes(file.size)}
                     </span>
                   </div>

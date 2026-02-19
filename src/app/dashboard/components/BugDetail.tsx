@@ -19,18 +19,18 @@ interface BugDetailProps {
 }
 
 const PRIORITY_COLORS: Record<BugPriority, string> = {
-  critical: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
-  high: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
-  medium: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
-  low: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
+  critical: "bg-zinc-100 text-zinc-700 border-zinc-200",
+  high: "bg-zinc-100 text-zinc-700 border-zinc-200",
+  medium: "bg-zinc-100 text-zinc-700 border-zinc-200",
+  low: "bg-zinc-100 text-zinc-700 border-zinc-200",
 };
 
 const STATUS_COLORS: Record<BugStatus, string> = {
-  open: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
-  "in-progress": "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
-  testing: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
-  resolved: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400 border-zinc-200 dark:border-zinc-800",
-  closed: "bg-gray-100 dark:bg-gray-950 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-800",
+  open: "bg-zinc-100 text-zinc-700 border-zinc-200",
+  "in-progress": "bg-zinc-100 text-zinc-700 border-zinc-200",
+  testing: "bg-zinc-100 text-zinc-700 border-zinc-200",
+  resolved: "bg-zinc-100 text-zinc-700 border-zinc-200",
+  closed: "bg-gray-100 text-gray-700 border-gray-200",
 };
 
 const STATUS_OPTIONS: { value: BugStatus; label: string }[] = [
@@ -103,7 +103,7 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+            className="text-zinc-500 hover:text-zinc-900"
           >
             ×
           </Button>
@@ -115,7 +115,7 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
           {/* Status & Priority */}
           <div className="flex items-center gap-3">
             <div className="flex-1">
-              <label className="text-xs text-zinc-500 dark:text-zinc-400 block mb-1">
+              <label className="text-xs text-zinc-500 block mb-1">
                 Status
               </label>
               <select
@@ -131,7 +131,7 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
               </select>
             </div>
             <div className="flex-1">
-              <label className="text-xs text-zinc-500 dark:text-zinc-400 block mb-1">
+              <label className="text-xs text-zinc-500 block mb-1">
                 Priority
               </label>
               <div className={`px-2 py-1 text-xs rounded border font-medium capitalize ${PRIORITY_COLORS[bug.priority]}`}>
@@ -145,21 +145,21 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
             <div className="flex items-center gap-2">
               <Tag className="h-3.5 w-3.5 text-zinc-500" />
               <span className="text-zinc-500">Category:</span>
-              <span className="font-medium capitalize text-zinc-700 dark:text-zinc-300">
+              <span className="font-medium capitalize text-zinc-700">
                 {bug.category}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <User className="h-3.5 w-3.5 text-zinc-500" />
               <span className="text-zinc-500">Assignee:</span>
-              <span className="font-medium text-zinc-700 dark:text-zinc-300">
+              <span className="font-medium text-zinc-700">
                 {bug.assignee || 'Unassigned'}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-3.5 w-3.5 text-zinc-500" />
               <span className="text-zinc-500">Created:</span>
-              <span className="font-medium text-zinc-700 dark:text-zinc-300">
+              <span className="font-medium text-zinc-700">
                 {formatRelativeTime(bug.createdAt)}
               </span>
             </div>
@@ -167,7 +167,7 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-3.5 w-3.5 text-zinc-500" />
                 <span className="text-zinc-500">Resolved:</span>
-                <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                <span className="font-medium text-zinc-700">
                   {formatRelativeTime(bug.resolvedAt)}
                 </span>
               </div>
@@ -180,7 +180,7 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
               {bug.labels.map((label) => (
                 <span
                   key={label}
-                  className="px-2 py-0.5 text-xs bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-300 rounded-full"
+                  className="px-2 py-0.5 text-xs bg-zinc-100 text-zinc-700 rounded-full"
                 >
                   {label}
                 </span>
@@ -190,10 +190,10 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
 
           {/* Description */}
           <div>
-            <h4 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-2">
+            <h4 className="text-xs font-medium text-zinc-500 mb-2">
               Description
             </h4>
-            <p className="text-sm text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap">
+            <p className="text-sm text-zinc-700 whitespace-pre-wrap">
               {bug.description}
             </p>
           </div>
@@ -201,7 +201,7 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
           {/* History */}
           {bug.history.length > 1 && (
             <div>
-              <h4 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-2 flex items-center gap-1.5">
+              <h4 className="text-xs font-medium text-zinc-500 mb-2 flex items-center gap-1.5">
                 <History className="h-3.5 w-3.5" />
                 History
               </h4>
@@ -209,17 +209,17 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
                 {bug.history.slice(1).reverse().map((entry) => (
                   <div
                     key={entry.id}
-                    className="text-xs p-2 bg-zinc-50 dark:bg-zinc-900 rounded border border-zinc-200 dark:border-zinc-800"
+                    className="text-xs p-2 bg-zinc-50 rounded border border-zinc-200"
                   >
                     <div className="flex justify-between mb-1">
-                      <span className="font-medium capitalize text-zinc-700 dark:text-zinc-300">
+                      <span className="font-medium capitalize text-zinc-700">
                         {entry.field}
                       </span>
                       <span className="text-zinc-500">
                         {formatRelativeTime(entry.timestamp)}
                       </span>
                     </div>
-                    <div className="text-zinc-600 dark:text-zinc-400">
+                    <div className="text-zinc-600">
                       {entry.changedBy} changed it
                     </div>
                   </div>
@@ -230,7 +230,7 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
 
           {/* Comments */}
           <div>
-            <h4 className="text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-3 flex items-center gap-1.5">
+            <h4 className="text-xs font-medium text-zinc-500 mb-3 flex items-center gap-1.5">
               <MessageSquare className="h-3.5 w-3.5" />
               Comments ({bug.comments.length})
             </h4>
@@ -241,7 +241,7 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment..."
-                className="w-full px-3 py-2 text-sm border border-zinc-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500 resize-none"
+                className="w-full px-3 py-2 text-sm border border-zinc-300 rounded-lg bg-white text-zinc-900 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500 resize-none"
                 rows={3}
               />
               <div className="flex justify-end mt-2">
@@ -279,16 +279,16 @@ interface CommentProps {
 
 function Comment({ comment }: CommentProps) {
   return (
-    <div className="p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg border border-zinc-200 dark:border-zinc-800">
+    <div className="p-3 bg-zinc-50 rounded-lg border border-zinc-200">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+        <span className="text-xs font-medium text-zinc-700">
           {comment.author}
         </span>
         <span className="text-[10px] text-zinc-500">
           {formatRelativeTime(comment.timestamp)}
         </span>
       </div>
-      <p className="text-sm text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap">
+      <p className="text-sm text-zinc-700 whitespace-pre-wrap">
         {comment.content}
       </p>
     </div>

@@ -66,43 +66,43 @@ export function BugStats() {
           <div className="space-y-5">
             {/* Summary Stats */}
             <div className="grid grid-cols-3 gap-3">
-              <div className="text-center p-3 bg-zinc-50 dark:bg-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800">
-                <p className="text-2xl font-bold text-zinc-500 dark:text-zinc-400">
+              <div className="text-center p-3 bg-zinc-50 rounded-lg border border-zinc-200">
+                <p className="text-2xl font-bold text-zinc-500">
                   {stats.open}
                 </p>
-                <p className="text-xs text-zinc-700 dark:text-zinc-400 font-medium">
+                <p className="text-xs text-zinc-700 font-medium">
                   Open
                 </p>
               </div>
-              <div className="text-center p-3 bg-zinc-50 dark:bg-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800">
-                <p className="text-2xl font-bold text-zinc-900 dark:text-zinc-400">
+              <div className="text-center p-3 bg-zinc-50 rounded-lg border border-zinc-200">
+                <p className="text-2xl font-bold text-zinc-900">
                   {stats.resolved}
                 </p>
-                <p className="text-xs text-zinc-700 dark:text-zinc-400 font-medium">
+                <p className="text-xs text-zinc-700 font-medium">
                   Resolved
                 </p>
               </div>
-              <div className="text-center p-3 bg-gray-50 dark:bg-gray-950 rounded-lg border border-gray-200 dark:border-gray-800">
-                <p className="text-2xl font-bold text-gray-600 dark:text-gray-400">
+              <div className="text-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <p className="text-2xl font-bold text-gray-600">
                   {stats.closed}
                 </p>
-                <p className="text-xs text-gray-700 dark:text-gray-400 font-medium">
+                <p className="text-xs text-gray-700 font-medium">
                   Closed
                 </p>
               </div>
             </div>
 
             {/* Total Bugs */}
-            <div className="flex items-center justify-between pb-3 border-b border-zinc-200 dark:border-zinc-800">
-              <span className="text-sm text-zinc-600 dark:text-zinc-400">Total Bugs</span>
-              <span className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-200">
+              <span className="text-sm text-zinc-600">Total Bugs</span>
+              <span className="text-xl font-bold text-zinc-900">
                 {stats.total}
               </span>
             </div>
 
             {/* By Priority */}
             <div className="space-y-2">
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs font-medium text-zinc-500">
                 By Priority
               </p>
               {['critical', 'high', 'medium', 'low'].map((priority) => {
@@ -112,10 +112,10 @@ export function BugStats() {
                   <div key={priority} className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${PRIORITY_COLORS[priority]}`} />
                     <span className="text-xs capitalize flex-1">{priority}</span>
-                    <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+                    <span className="text-xs font-medium text-zinc-600">
                       {count}
                     </span>
-                    <div className="w-16 h-1.5 bg-zinc-200 dark:bg-zinc-700 rounded-full overflow-hidden">
+                    <div className="w-16 h-1.5 bg-zinc-200 rounded-full overflow-hidden">
                       <div
                         className={`h-full ${PRIORITY_COLORS[priority]}`}
                         style={{ width: `${percentage}%` }}
@@ -128,15 +128,15 @@ export function BugStats() {
 
             {/* Average Resolution Time */}
             {stats.averageResolutionTime > 0 && (
-              <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
+              <div className="pt-3 border-t border-zinc-200">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Clock className="h-4 w-4 text-zinc-500" />
-                    <span className="text-xs text-zinc-600 dark:text-zinc-400">
+                    <span className="text-xs text-zinc-600">
                       Avg. Resolution Time
                     </span>
                   </div>
-                  <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                  <span className="text-sm font-semibold text-zinc-900">
                     {stats.averageResolutionTime < 24
                       ? `${Math.round(stats.averageResolutionTime * 10) / 10}h`
                       : `${Math.round(stats.averageResolutionTime / 24 * 10) / 10}d`}

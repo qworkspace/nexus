@@ -119,7 +119,7 @@ export function ModelIntelligenceDashboard() {
           {/* Current Model */}
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">Current Model</p>
+              <p className="text-xs text-zinc-500 mb-1">Current Model</p>
               <Badge className={getModelBadgeColor(currentModel)}>
                 {getModelLabel(currentModel)}
               </Badge>
@@ -137,7 +137,7 @@ export function ModelIntelligenceDashboard() {
           {/* Today's Usage */}
           <div>
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+              <p className="text-xs font-medium text-zinc-500">
                 Today&apos;s Usage
               </p>
               <Badge variant="outline" className="text-xs">
@@ -156,10 +156,10 @@ export function ModelIntelligenceDashboard() {
                     </Badge>
                   </div>
                   <div className="text-right">
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400">
+                    <p className="text-xs text-zinc-600">
                       {formatTokens(model.tokensIn + model.tokensOut)} tokens
                     </p>
-                    <p className="text-xs font-semibold text-zinc-900 dark:text-zinc-100">
+                    <p className="text-xs font-semibold text-zinc-900">
                       {formatCost(model.cost)}
                     </p>
                   </div>
@@ -170,10 +170,10 @@ export function ModelIntelligenceDashboard() {
 
           {/* Recommendations */}
           {recommendations.length > 0 && (
-            <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
+            <div className="pt-3 border-t border-zinc-200">
               <div className="flex items-center gap-1 mb-2">
                 <Zap className="h-3 w-3 text-zinc-400" />
-                <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                <p className="text-xs font-medium text-zinc-500">
                   Recommendations
                 </p>
               </div>
@@ -181,17 +181,17 @@ export function ModelIntelligenceDashboard() {
                 {recommendations.slice(0, 2).map((rec, idx) => (
                   <div
                     key={idx}
-                    className="bg-zinc-50 dark:bg-zinc-950/20 border border-zinc-200 dark:border-zinc-800 rounded p-2"
+                    className="bg-zinc-50 border border-zinc-200 rounded p-2"
                   >
                     <div className="flex items-start gap-2">
-                      <div className="mt-0.5 text-zinc-500 dark:text-zinc-400">
+                      <div className="mt-0.5 text-zinc-500">
                         {getRecommendationIcon(rec.message)}
                       </div>
                       <div className="flex-1">
-                        <p className="text-xs font-medium text-zinc-900 dark:text-zinc-100">
+                        <p className="text-xs font-medium text-zinc-900">
                           {rec.message}
                         </p>
-                        <p className="text-xs text-zinc-600 dark:text-zinc-400 mt-0.5">
+                        <p className="text-xs text-zinc-600 mt-0.5">
                           {rec.reason}
                         </p>
                       </div>

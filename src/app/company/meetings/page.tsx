@@ -126,7 +126,7 @@ export default function MeetingsPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <Link href="/company" className="text-xs text-foreground hover:underline mb-2 inline-block">← The Core</Link>
-          <h1 className="text-xl font-bold text-zinc-900 dark:text-foreground flex items-center gap-2">
+          <h1 className="text-xl font-bold text-zinc-900 flex items-center gap-2">
             <Calendar size={20} />
             Meetings
           </h1>
@@ -135,7 +135,7 @@ export default function MeetingsPage() {
         <div className="flex gap-2 flex-wrap">
           <button
             onClick={() => setTypeFilter("all")}
-            className={`px-2 py-1 rounded-lg text-[11px] font-medium transition-colors ${typeFilter === "all" ? "bg-card text-foreground" : "bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground"}`}
+            className={`px-2 py-1 rounded-lg text-[11px] font-medium transition-colors ${typeFilter === "all" ? "bg-card text-foreground" : "bg-zinc-100 text-muted-foreground"}`}
           >
             All
           </button>
@@ -143,7 +143,7 @@ export default function MeetingsPage() {
             <button
               key={t}
               onClick={() => setTypeFilter(t)}
-              className={`px-2 py-1 rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1 ${typeFilter === t ? "bg-card text-foreground" : "bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground"}`}
+              className={`px-2 py-1 rounded-lg text-[11px] font-medium transition-colors flex items-center gap-1 ${typeFilter === t ? "bg-card text-foreground" : "bg-zinc-100 text-muted-foreground"}`}
             >
               <MeetingIcon type={t} size={12} />
               {t}
@@ -154,7 +154,7 @@ export default function MeetingsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         {/* Meeting List */}
-        <div className="lg:col-span-1 bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-3 max-h-[80vh] overflow-y-auto">
+        <div className="lg:col-span-1 bg-white rounded-xl border border-zinc-200 p-3 max-h-[80vh] overflow-y-auto">
           <div className="space-y-1">
             {topicFiltered.map(m => {
               const topics = meetingTopics[m.id] || [];
@@ -162,11 +162,11 @@ export default function MeetingsPage() {
                 <button
                   key={m.id}
                   onClick={() => setSelectedId(m.id)}
-                  className={`w-full text-left p-2.5 rounded-lg transition-colors ${selectedId === m.id ? "bg-card text-foreground" : "hover:bg-zinc-50 dark:hover:bg-secondary"}`}
+                  className={`w-full text-left p-2.5 rounded-lg transition-colors ${selectedId === m.id ? "bg-card text-foreground" : "hover:bg-zinc-50"}`}
                 >
                   <div className="flex items-center gap-1.5">
                     <MeetingIcon type={m.type} size={14} />
-                    <span className={`text-xs font-medium ${selectedId === m.id ? "text-foreground" : "text-zinc-700 dark:text-foreground"}`}>
+                    <span className={`text-xs font-medium ${selectedId === m.id ? "text-foreground" : "text-zinc-700"}`}>
                       {m.title}
                     </span>
                   </div>
@@ -176,7 +176,7 @@ export default function MeetingsPage() {
                   {topics.length > 0 && (
                     <div className="flex gap-1 flex-wrap mt-1.5">
                       {topics.slice(0, 3).map(t => (
-                        <span key={t} className={`px-1 py-0.5 rounded text-[8px] font-medium ${selectedId === m.id ? "bg-muted text-zinc-200" : "bg-zinc-100 dark:bg-secondary text-muted-foreground"}`}>
+                        <span key={t} className={`px-1 py-0.5 rounded text-[8px] font-medium ${selectedId === m.id ? "bg-muted text-zinc-200" : "bg-zinc-100 text-muted-foreground"}`}>
                           {t}
                         </span>
                       ))}
@@ -199,22 +199,22 @@ export default function MeetingsPage() {
         {/* Content Panel */}
         <div className="lg:col-span-3 space-y-4 max-h-[80vh] overflow-y-auto">
           {/* Transcript */}
-          <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-5">
+          <div className="bg-white rounded-xl border border-zinc-200 p-5">
             {content ? (
               <div>
                 {/* Summary */}
                 {summaryLoading && (
-                  <div className="mb-3 p-3 bg-zinc-50 dark:bg-secondary rounded-lg">
+                  <div className="mb-3 p-3 bg-zinc-50 rounded-lg">
                     <p className="text-[10px] text-muted-foreground animate-pulse">Generating summary...</p>
                   </div>
                 )}
                 {summary && (
-                  <div className="mb-3 p-3 bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-200 dark:border-zinc-800 rounded-lg">
-                    <h3 className="text-xs font-bold text-zinc-900 dark:text-[#F5D547] mb-1.5 flex items-center gap-1">
+                  <div className="mb-3 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
+                    <h3 className="text-xs font-bold text-zinc-900 mb-1.5 flex items-center gap-1">
                       <FileText size={12} />
                       TL;DR
                     </h3>
-                    <div className="text-xs text-zinc-800 dark:text-zinc-200 whitespace-pre-line leading-relaxed">
+                    <div className="text-xs text-zinc-800 whitespace-pre-line leading-relaxed">
                       {summary}
                     </div>
                   </div>
@@ -225,7 +225,7 @@ export default function MeetingsPage() {
                   <div className="mb-3">
                     <div className="flex gap-1 flex-wrap">
                       {meetingTopics[selectedId!].map(t => (
-                        <span key={t} className="px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-900/30 text-zinc-700 dark:text-foreground rounded-full text-[10px]">
+                        <span key={t} className="px-1.5 py-0.5 bg-zinc-100 text-zinc-700 rounded-full text-[10px]">
                           {t}
                         </span>
                       ))}
@@ -234,7 +234,7 @@ export default function MeetingsPage() {
                 )}
 
                 {/* Content */}
-                <div className="prose prose-zinc dark:prose-invert prose-xs max-w-none">
+                <div className="prose prose-zinc prose-xs max-w-none">
                   <MeetingContent content={content} />
                 </div>
               </div>
@@ -245,12 +245,12 @@ export default function MeetingsPage() {
 
           {/* Action Items from this meeting */}
           {selectedId && (
-            <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-5">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5 mb-3">
+            <div className="bg-white rounded-xl border border-zinc-200 p-5">
+              <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5 mb-3">
                 <Inbox size={14} />
                 Action Items
                 {meetingActions.length > 0 && (
-                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-zinc-100 dark:bg-secondary text-muted-foreground font-normal">
+                  <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-zinc-100 text-muted-foreground font-normal">
                     {meetingActions.length} from this meeting
                   </span>
                 )}
@@ -269,7 +269,7 @@ export default function MeetingsPage() {
               {/* All other action items collapsed */}
               {otherActions.length > 0 && (
                 <details className="group">
-                  <summary className="text-[11px] text-muted-foreground cursor-pointer hover:text-zinc-700 dark:hover:text-foreground">
+                  <summary className="text-[11px] text-muted-foreground cursor-pointer hover:text-zinc-700">
                     {otherActions.length} other action items →
                   </summary>
                   <div className="space-y-2 mt-2">
@@ -301,7 +301,7 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
   };
 
   return (
-    <div className={`p-2.5 rounded-lg border border-zinc-200 dark:border-border border-l-2 ${statusColors[item.status] || "border-l-zinc-400"} bg-zinc-50 dark:bg-secondary/50`}>
+    <div className={`p-2.5 rounded-lg border border-zinc-200 border-l-2 ${statusColors[item.status] || "border-l-zinc-400"} bg-zinc-50`}>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1.5">
           {agent?.emoji ? (
@@ -309,7 +309,7 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
           ) : (
             <HelpCircle size={12} className="text-muted-foreground" />
           )}
-          <span className="text-[10px] font-medium text-muted-foreground dark:text-muted-foreground">
+          <span className="text-[10px] font-medium text-muted-foreground">
             @{agent?.name || item.assignee}
           </span>
           <span className={`w-1.5 h-1.5 rounded-full ${PRIORITY_COLORS[item.priority] || "bg-zinc-400"}`} />
@@ -332,7 +332,7 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
           )}
         </div>
       </div>
-      <p className="text-[11px] text-zinc-700 dark:text-foreground mt-1">{item.task}</p>
+      <p className="text-[11px] text-zinc-700 mt-1">{item.task}</p>
       {item.outcome && (
         <p className="text-[10px] text-foreground mt-1 flex items-center gap-0.5">
           <CheckCircle size={10} /> {item.outcome}
@@ -353,24 +353,24 @@ function MeetingContent({ content }: { content: string }) {
   return (
     <div className="space-y-1.5">
       {lines.map((line, i) => {
-        if (line.startsWith("# ")) return <h1 key={i} className="text-sm font-bold text-zinc-900 dark:text-foreground">{line.slice(2)}</h1>;
-        if (line.startsWith("## ")) return <h2 key={i} className="text-xs font-semibold text-zinc-900 dark:text-foreground mt-3">{line.slice(3)}</h2>;
-        if (line.startsWith("### ")) return <h3 key={i} className="text-xs font-semibold text-zinc-900 dark:text-foreground mt-2">{line.slice(4)}</h3>;
+        if (line.startsWith("# ")) return <h1 key={i} className="text-sm font-bold text-zinc-900">{line.slice(2)}</h1>;
+        if (line.startsWith("## ")) return <h2 key={i} className="text-xs font-semibold text-zinc-900 mt-3">{line.slice(3)}</h2>;
+        if (line.startsWith("### ")) return <h3 key={i} className="text-xs font-semibold text-zinc-900 mt-2">{line.slice(4)}</h3>;
         if (line.startsWith("**") && line.includes(":**")) {
           const [speaker, ...rest] = line.split(":**");
           return (
             <div key={i} className="mt-2">
-              <span className="font-semibold text-zinc-900 dark:text-foreground text-xs">{speaker.replace(/\*\*/g, "")}:</span>
-              <span className="text-zinc-700 dark:text-foreground text-xs"> {rest.join(":**")}</span>
+              <span className="font-semibold text-zinc-900 text-xs">{speaker.replace(/\*\*/g, "")}:</span>
+              <span className="text-zinc-700 text-xs"> {rest.join(":**")}</span>
             </div>
           );
         }
-        if (line.startsWith("- [ ] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><Square size={11} className="text-muted-foreground" /><span className="text-zinc-700 dark:text-foreground">{line.slice(6)}</span></div>;
+        if (line.startsWith("- [ ] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><Square size={11} className="text-muted-foreground" /><span className="text-zinc-700">{line.slice(6)}</span></div>;
         if (line.startsWith("- [x] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><CheckSquare size={11} className="text-zinc-900" /><span className="text-muted-foreground line-through">{line.slice(6)}</span></div>;
-        if (line.startsWith("- ")) return <div key={i} className="text-xs text-zinc-700 dark:text-foreground pl-3">• {line.slice(2)}</div>;
-        if (line.startsWith("---")) return <hr key={i} className="border-zinc-200 dark:border-border my-3" />;
+        if (line.startsWith("- ")) return <div key={i} className="text-xs text-zinc-700 pl-3">• {line.slice(2)}</div>;
+        if (line.startsWith("---")) return <hr key={i} className="border-zinc-200 my-3" />;
         if (line.trim() === "") return <div key={i} className="h-1" />;
-        return <p key={i} className="text-xs text-zinc-700 dark:text-foreground">{line}</p>;
+        return <p key={i} className="text-xs text-zinc-700">{line}</p>;
       })}
     </div>
   );

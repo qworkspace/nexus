@@ -35,22 +35,22 @@ export default function TokenUsagePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-background">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="border-b border-zinc-200 dark:border-border bg-white dark:bg-background px-6 py-4">
+      <div className="border-b border-zinc-200 bg-white px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground flex items-center gap-2">
+            <h1 className="text-2xl font-semibold text-zinc-900 flex items-center gap-2">
               <Activity className="h-6 w-6" />
               Token Usage
             </h1>
-            <p className="text-muted-foreground dark:text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm">
               Track token consumption across all sessions
             </p>
           </div>
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground dark:text-muted-foreground hover:text-zinc-900 dark:hover:text-foreground hover:bg-zinc-100 dark:hover:bg-card rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition-colors"
           >
             <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
             Refresh
@@ -62,13 +62,13 @@ export default function TokenUsagePage() {
       <div className="p-6 max-w-[1600px] mx-auto">
         {isLoading ? (
           <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-500 dark:border-zinc-400 mx-auto mb-4" />
-            <p className="text-muted-foreground dark:text-muted-foreground">Loading token data...</p>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-500 mx-auto mb-4" />
+            <p className="text-muted-foreground">Loading token data...</p>
           </div>
         ) : error || !data ? (
           <div className="text-center py-12">
-            <p className="text-zinc-500 dark:text-zinc-400 mb-2">Error loading token data</p>
-            <p className="text-muted-foreground dark:text-muted-foreground text-sm">Please try refreshing the page</p>
+            <p className="text-zinc-500 mb-2">Error loading token data</p>
+            <p className="text-muted-foreground text-sm">Please try refreshing the page</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -103,7 +103,7 @@ export default function TokenUsagePage() {
                   {data.byModel.length > 0 ? (
                     <ModelBreakdownChart data={data.byModel} />
                   ) : (
-                    <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground dark:text-muted-foreground">
+                    <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">
                       No model data yet
                     </div>
                   )}
@@ -119,7 +119,7 @@ export default function TokenUsagePage() {
                   {data.bySessionType.length > 0 ? (
                     <SessionTypeBreakdownChart data={data.bySessionType} />
                   ) : (
-                    <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground dark:text-muted-foreground">
+                    <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground">
                       No session type data yet
                     </div>
                   )}
@@ -144,7 +144,7 @@ export default function TokenUsagePage() {
             </div>
 
             {/* Cache Status Footer */}
-            <div className="text-center text-xs text-muted-foreground dark:text-muted-foreground">
+            <div className="text-center text-xs text-muted-foreground">
               {data.cached ? (
                 <span>Cached at {new Date(data.cacheTime || "").toLocaleTimeString()}</span>
               ) : (

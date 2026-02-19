@@ -62,11 +62,11 @@ export function CIDashboard() {
             <div className="space-y-4">
               {/* Active Build */}
               <div>
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-2">
                   Active Build
                 </h3>
                 {data.activeBuild ? (
-                  <div className="border border-zinc-200 bg-zinc-50 dark:bg-zinc-950/30 dark:border-zinc-900 rounded-lg p-3">
+                  <div className="border border-zinc-200 bg-zinc-50 rounded-lg p-3">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="h-2 w-2 rounded-full bg-zinc-500 animate-pulse" />
                       <Badge variant="outline" className="text-xs text-zinc-900 border-zinc-200">
@@ -78,7 +78,7 @@ export function CIDashboard() {
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                    <p className="text-sm font-medium text-zinc-900 truncate">
                       {data.activeBuild.spec}
                     </p>
                     <div className="flex items-center gap-2 mt-2 text-xs text-zinc-500">
@@ -87,7 +87,7 @@ export function CIDashboard() {
                     </div>
                   </div>
                 ) : (
-                  <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 text-center">
+                  <div className="border border-zinc-200 rounded-lg p-4 text-center">
                     <Cpu className="h-8 w-8 text-zinc-300 mx-auto mb-2" />
                     <p className="text-sm text-zinc-500">No active builds</p>
                   </div>
@@ -96,20 +96,20 @@ export function CIDashboard() {
 
               {/* Build Queue */}
               <div>
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-2">
                   Build Queue ({data.queue.length} pending)
                 </h3>
                 {data.queue.length === 0 ? (
-                  <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 text-center">
+                  <div className="border border-zinc-200 rounded-lg p-4 text-center">
                     <p className="text-sm text-zinc-500">Queue is empty</p>
                   </div>
                 ) : (
-                  <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
+                  <div className="border border-zinc-200 rounded-lg overflow-hidden">
                     {data.queue.slice(0, 5).map((item) => (
                       <QueueItem key={item.id} item={item} />
                     ))}
                     {data.queue.length > 5 && (
-                      <div className="px-3 py-2 text-xs text-zinc-500 text-center border-t border-zinc-200 dark:border-zinc-800">
+                      <div className="px-3 py-2 text-xs text-zinc-500 text-center border-t border-zinc-200">
                         +{data.queue.length - 5} more specs
                       </div>
                     )}
@@ -122,16 +122,16 @@ export function CIDashboard() {
             <div className="space-y-4">
               {/* Pipeline Health */}
               <div>
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-2">
                   Pipeline Health
                 </h3>
-                <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-3 space-y-3">
+                <div className="border border-zinc-200 rounded-lg p-3 space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <TrendingUp className="h-4 w-4 text-zinc-500" />
                       <span className="text-sm text-zinc-600">Success Rate</span>
                     </div>
-                    <span className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                    <span className="text-xl font-bold text-zinc-900">
                       {data.health.successRate}%
                     </span>
                   </div>
@@ -146,7 +146,7 @@ export function CIDashboard() {
                     </div>
                   </div>
                   {Object.keys(data.health.failuresByProject).length > 0 && (
-                    <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800">
+                    <div className="pt-2 border-t border-zinc-200">
                       <p className="text-xs text-zinc-500 mb-1">Failures by Project</p>
                       <div className="space-y-1">
                         {Object.entries(data.health.failuresByProject).map(([project, count]) => (
@@ -163,20 +163,20 @@ export function CIDashboard() {
 
               {/* Recent Builds */}
               <div>
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                <h3 className="text-sm font-semibold text-zinc-900 mb-2">
                   Recent Builds
                 </h3>
                 {data.recentBuilds.length === 0 ? (
-                  <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 text-center">
+                  <div className="border border-zinc-200 rounded-lg p-4 text-center">
                     <p className="text-sm text-zinc-500">No recent builds</p>
                   </div>
                 ) : (
-                  <div className="border border-zinc-200 dark:border-zinc-800 rounded-lg overflow-hidden">
+                  <div className="border border-zinc-200 rounded-lg overflow-hidden">
                     {data.recentBuilds.slice(0, 5).map((build) => (
                       <BuildRow key={build.id} build={build} />
                     ))}
                     {data.recentBuilds.length > 5 && (
-                      <div className="px-3 py-2 text-xs text-zinc-500 text-center border-t border-zinc-200 dark:border-zinc-800">
+                      <div className="px-3 py-2 text-xs text-zinc-500 text-center border-t border-zinc-200">
                         +{data.recentBuilds.length - 5} more builds
                       </div>
                     )}
@@ -189,10 +189,10 @@ export function CIDashboard() {
 
         {/* Footer */}
         {data && (
-          <div className="mt-4 pt-3 border-t border-zinc-200 dark:border-zinc-800">
+          <div className="mt-4 pt-3 border-t border-zinc-200">
             <div className="flex items-center justify-center gap-4 text-xs text-zinc-500">
               <span>Last updated: {new Date(data.lastUpdated).toLocaleTimeString()}</span>
-              <span className="text-zinc-300 dark:text-zinc-700">|</span>
+              <span className="text-zinc-300">|</span>
               <span>Auto-refresh: 30s</span>
             </div>
           </div>
@@ -216,12 +216,12 @@ function QueueItem({ item }: { item: CIQueueItem }) {
   };
 
   return (
-    <div className="px-3 py-2 border-b border-zinc-200 dark:border-zinc-800 last:border-b-0 hover:bg-zinc-50 dark:hover:bg-zinc-900">
+    <div className="px-3 py-2 border-b border-zinc-200 last:border-b-0 hover:bg-zinc-50">
       <div className="flex items-center gap-2">
         <Badge variant="outline" className={`text-xs ${priorityColors[item.priority]}`}>
           {item.priority}
         </Badge>
-        <p className="flex-1 text-sm text-zinc-900 dark:text-zinc-100 truncate">
+        <p className="flex-1 text-sm text-zinc-900 truncate">
           {item.title}
         </p>
       </div>
@@ -240,7 +240,7 @@ function BuildRow({ build }: { build: CIBuild }) {
   const isFailed = build.status === 'failed';
 
   return (
-    <div className="px-3 py-2 border-b border-zinc-200 dark:border-zinc-800 last:border-b-0 hover:bg-zinc-50 dark:hover:bg-zinc-900">
+    <div className="px-3 py-2 border-b border-zinc-200 last:border-b-0 hover:bg-zinc-50">
       <div className="flex items-start gap-2">
         <div className="flex-shrink-0 mt-0.5">
           {isSuccess ? (
@@ -252,7 +252,7 @@ function BuildRow({ build }: { build: CIBuild }) {
           )}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm text-zinc-900 dark:text-zinc-100 truncate">
+          <p className="text-sm text-zinc-900 truncate">
             {build.spec}
           </p>
           <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">

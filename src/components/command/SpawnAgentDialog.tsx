@@ -110,12 +110,12 @@ export function SpawnAgentDialog() {
                     className={cn(
                       "p-3 rounded-lg border text-left transition-all",
                       model === m.id
-                        ? "border-zinc-500 bg-zinc-50 dark:bg-zinc-900/20"
-                        : "border-zinc-200 dark:border-border hover:border-zinc-300 dark:hover:border-border"
+                        ? "border-zinc-500 bg-zinc-50"
+                        : "border-zinc-200 hover:border-zinc-300"
                     )}
                   >
                     <div className="flex items-center gap-2">
-                      <Icon size={16} className="text-muted-foreground dark:text-muted-foreground" />
+                      <Icon size={16} className="text-muted-foreground" />
                       <span className="font-medium text-sm">{m.name}</span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">{m.desc}</p>
@@ -139,7 +139,7 @@ export function SpawnAgentDialog() {
 
           {/* Error */}
           {error && (
-            <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-200 dark:border-zinc-900/30 text-zinc-700 dark:text-zinc-400 text-sm">
+            <div className="p-3 rounded-lg bg-zinc-50 border border-zinc-200 text-zinc-700 text-sm">
               {error}
             </div>
           )}

@@ -59,14 +59,14 @@ export default function GovernancePage() {
 
   if (loading) {
     return (
-      <div className="p-6 max-w-7xl">
+      <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">Governance</h1>
-          <p className="text-muted-foreground text-sm">Enterprise agent oversight and control</p>
+          <h1 className="text-2xl font-bold text-zinc-900">Governance</h1>
+          <p className="text-zinc-500 text-sm">Enterprise agent oversight and control</p>
         </div>
         <div className="grid grid-cols-4 gap-4">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="bg-zinc-100 dark:bg-secondary rounded-xl h-32 animate-pulse" />
+            <div key={i} className="bg-zinc-100 rounded-xl h-32 animate-pulse" />
           ))}
         </div>
       </div>
@@ -75,13 +75,13 @@ export default function GovernancePage() {
 
   if (error) {
     return (
-      <div className="p-6 max-w-7xl">
+      <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">Governance</h1>
-          <p className="text-muted-foreground text-sm">Enterprise agent oversight and control</p>
+          <h1 className="text-2xl font-bold text-zinc-900">Governance</h1>
+          <p className="text-zinc-500 text-sm">Enterprise agent oversight and control</p>
         </div>
-        <div className="bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6">
-          <p className="text-zinc-700 dark:text-zinc-400 flex items-center gap-2">
+        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-6">
+          <p className="text-zinc-700 flex items-center gap-2">
             <AlertTriangle size={16} />
             Failed to load governance data: {error}
           </p>
@@ -92,14 +92,14 @@ export default function GovernancePage() {
 
   if (!data || data.agents.length === 0) {
     return (
-      <div className="p-6 max-w-7xl">
+      <div className="p-6 max-w-7xl mx-auto">
         <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">Governance</h1>
-          <p className="text-muted-foreground text-sm">Enterprise agent oversight and control</p>
+          <h1 className="text-2xl font-bold text-zinc-900">Governance</h1>
+          <p className="text-zinc-500 text-sm">Enterprise agent oversight and control</p>
         </div>
-        <div className="bg-zinc-50 dark:bg-card border border-zinc-200 dark:border-border rounded-xl p-12 text-center">
+        <div className="bg-zinc-50 border border-zinc-200 rounded-xl p-12 text-center">
           <Shield size={48} className="mx-auto mb-4 text-muted-foreground" />
-          <h3 className="text-lg font-medium text-zinc-900 dark:text-foreground mb-2">No governance data available</h3>
+          <h3 className="text-lg font-medium text-zinc-900 mb-2">No governance data available</h3>
           <p className="text-muted-foreground">Agent activity will appear here once actions are logged.</p>
         </div>
       </div>
@@ -107,44 +107,44 @@ export default function GovernancePage() {
   }
 
   return (
-    <div className="p-6 max-w-7xl">
+    <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">Governance</h1>
-        <p className="text-muted-foreground text-sm">Enterprise agent oversight and control</p>
+        <h1 className="text-2xl font-bold text-zinc-900">Governance</h1>
+        <p className="text-zinc-500 text-sm">Enterprise agent oversight and control</p>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Active Agents</p>
+        <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <p className="text-sm font-medium text-muted-foreground">Active Agents</p>
           <div className="flex items-center gap-2 mt-2">
             <Shield size={16} className="text-muted-foreground" />
-            <span className="text-3xl font-bold text-zinc-900 dark:text-foreground">
+            <span className="text-3xl font-bold text-zinc-900">
               {data.summary.totalAgents}
             </span>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Runs Today</p>
+        <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <p className="text-sm font-medium text-muted-foreground">Runs Today</p>
           <div className="flex items-center gap-2 mt-2">
             <Activity size={16} className="text-muted-foreground" />
-            <span className="text-3xl font-bold text-zinc-900 dark:text-foreground">
+            <span className="text-3xl font-bold text-zinc-900">
               {data.summary.totalRunsToday}
             </span>
           </div>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Avg Success Rate</p>
-          <span className="text-3xl font-bold text-zinc-900 dark:text-foreground mt-2 inline-block">
+        <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <p className="text-sm font-medium text-muted-foreground">Avg Success Rate</p>
+          <span className="text-3xl font-bold text-zinc-900 mt-2 inline-block">
             {(data.summary.avgSuccessRate * 100).toFixed(1)}%
           </span>
         </div>
 
-        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
-          <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Cost Today</p>
-          <span className="text-3xl font-bold text-zinc-900 dark:text-foreground mt-2 inline-block">
+        <div className="bg-white rounded-xl border border-zinc-200 p-4">
+          <p className="text-sm font-medium text-muted-foreground">Cost Today</p>
+          <span className="text-3xl font-bold text-zinc-900 mt-2 inline-block">
             ${data.summary.totalCostToday.toFixed(2)}
           </span>
         </div>
@@ -163,8 +163,8 @@ export default function GovernancePage() {
       </div>
 
       {/* Success Rate Chart */}
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4 mb-8">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-foreground mb-4">Agent Success Rates (7 Days)</h3>
+      <div className="bg-white rounded-xl border border-zinc-200 p-4 mb-8">
+        <h3 className="text-lg font-semibold text-zinc-900 mb-4">Agent Success Rates (7 Days)</h3>
         <AgentSuccessChart agents={data.agents} />
       </div>
 

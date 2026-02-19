@@ -52,17 +52,17 @@ export default function ScorecardPanel() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+      <div className="bg-white rounded-xl border border-zinc-200 p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground">
+          <h3 className="text-sm font-semibold text-zinc-900">
             Loop 0 Scorecard
           </h3>
         </div>
         <div className="animate-pulse space-y-3">
-          <div className="h-4 bg-zinc-100 dark:bg-secondary rounded w-3/4" />
-          <div className="h-2 bg-zinc-100 dark:bg-secondary rounded w-full" />
-          <div className="h-2 bg-zinc-100 dark:bg-secondary rounded w-full" />
-          <div className="h-2 bg-zinc-100 dark:bg-secondary rounded w-full" />
+          <div className="h-4 bg-zinc-100 rounded w-3/4" />
+          <div className="h-2 bg-zinc-100 rounded w-full" />
+          <div className="h-2 bg-zinc-100 rounded w-full" />
+          <div className="h-2 bg-zinc-100 rounded w-full" />
         </div>
       </div>
     );
@@ -70,9 +70,9 @@ export default function ScorecardPanel() {
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+      <div className="bg-white rounded-xl border border-zinc-200 p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground">
+          <h3 className="text-sm font-semibold text-zinc-900">
             Loop 0 Scorecard
           </h3>
         </div>
@@ -83,9 +83,9 @@ export default function ScorecardPanel() {
 
   if (!data?.current) {
     return (
-      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+      <div className="bg-white rounded-xl border border-zinc-200 p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground">
+          <h3 className="text-sm font-semibold text-zinc-900">
             Loop 0 Scorecard
           </h3>
         </div>
@@ -97,7 +97,7 @@ export default function ScorecardPanel() {
   const { current, previous } = data;
 
   return (
-    <Card className="border-zinc-200 dark:border-border">
+    <Card className="border-zinc-200">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">Loop 0 Scorecard</CardTitle>
@@ -105,7 +105,7 @@ export default function ScorecardPanel() {
             href={`file:///Users/paulvillanueva/.openclaw/shared/research/self-improvement/${current.assessmentFile}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-muted-foreground hover:text-zinc-700 dark:hover:text-foreground flex items-center gap-1"
+            className="text-[10px] text-muted-foreground hover:text-zinc-700 flex items-center gap-1"
           >
             <FileText size={10} />
             View Full
@@ -117,8 +117,8 @@ export default function ScorecardPanel() {
       </CardHeader>
       <CardContent className="space-y-3">
         {/* Overall Score */}
-        <div className="text-center pb-3 border-b border-zinc-100 dark:border-border">
-          <div className="text-3xl font-bold text-zinc-900 dark:text-[#F5D547]">
+        <div className="text-center pb-3 border-b border-zinc-100">
+          <div className="text-3xl font-bold text-zinc-900">
             {current.overall.toFixed(1)}
           </div>
           <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Overall</div>
@@ -132,14 +132,14 @@ export default function ScorecardPanel() {
               <MetricTooltip key={metric.name} content={tooltipContent}>
                 <div className="space-y-1 cursor-help">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-zinc-700 dark:text-foreground">
+                    <span className="text-xs font-medium text-zinc-700">
                       {metric.name}
                     </span>
                     <div className="flex items-center gap-1">
                       {metric.delta !== undefined && (
                         <DeltaIndicator delta={metric.delta} />
                       )}
-                      <span className="text-xs font-mono font-bold text-zinc-900 dark:text-foreground">
+                      <span className="text-xs font-mono font-bold text-zinc-900">
                         {metric.score}/10
                       </span>
                     </div>
@@ -152,7 +152,7 @@ export default function ScorecardPanel() {
         </div>
       </CardContent>
       {previous && (
-        <CardFooter className="pt-3 border-t border-zinc-100 dark:border-border">
+        <CardFooter className="pt-3 border-t border-zinc-100">
           <p className="text-[10px] text-muted-foreground text-center w-full">
             Previous: {formatDate(previous.date)} — {previous.overall.toFixed(1)}/10
           </p>
@@ -172,7 +172,7 @@ function ProgressBar({ value, max }: { value: number; max: number }) {
   else colorClass = "bg-zinc-500";
 
   return (
-    <div className="h-1.5 bg-zinc-100 dark:bg-secondary rounded-full overflow-hidden">
+    <div className="h-1.5 bg-zinc-100 rounded-full overflow-hidden">
       <div
         className={`h-full rounded-full ${colorClass} transition-all duration-500`}
         style={{ width: `${percentage}%` }}

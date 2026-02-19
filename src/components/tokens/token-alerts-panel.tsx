@@ -12,11 +12,11 @@ interface TokenAlertsPanelProps {
 const getSeverityColor = (severity: "warning" | "critical"): string => {
   switch (severity) {
     case "critical":
-      return "text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-zinc-800";
+      return "text-zinc-500 bg-zinc-50 border-zinc-200";
     case "warning":
-      return "text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-zinc-800";
+      return "text-zinc-500 bg-zinc-50 border-zinc-200";
     default:
-      return "text-muted-foreground dark:text-muted-foreground bg-zinc-50 dark:bg-background/30 border-zinc-200 dark:border-border";
+      return "text-muted-foreground bg-zinc-50 border-zinc-200";
   }
 };
 
@@ -80,7 +80,7 @@ export function TokenAlertsPanel({ alerts }: TokenAlertsPanelProps) {
             return (
               <div
                 key={alertKey}
-                className="flex items-start justify-between gap-3 p-2 rounded bg-white/50 dark:bg-black/20"
+                className="flex items-start justify-between gap-3 p-2 rounded bg-white/50"
               >
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium">{alert.message}</p>

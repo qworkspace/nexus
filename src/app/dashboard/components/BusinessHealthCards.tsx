@@ -122,17 +122,17 @@ export function BusinessHealthCards() {
           {BUSINESSES.map((business) => (
             <div
               key={business.name}
-              className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 hover:border-zinc-300 dark:hover:border-zinc-700 transition-colors"
+              className="border border-zinc-200 rounded-lg p-4 hover:border-zinc-300 transition-colors"
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center gap-2">
                   <span className={`w-2 h-2 rounded-full ${getStatusColor(business.status)}`} />
-                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                  <h3 className="text-sm font-semibold text-zinc-900">
                     {business.name}
                   </h3>
                 </div>
-                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                <span className="text-xs text-zinc-500">
                   {getStatusDot(business.status)}
                 </span>
               </div>
@@ -141,7 +141,7 @@ export function BusinessHealthCards() {
               <div className="grid grid-cols-3 gap-2 mb-3">
                 {business.metrics.map((metric) => (
                   <div key={metric.label} className="text-center">
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">{metric.label}</p>
+                    <p className="text-xs text-zinc-500">{metric.label}</p>
                     <p className={`text-sm font-semibold ${getTrendColor(metric.trend)}`}>
                       {metric.value}
                     </p>
@@ -150,13 +150,13 @@ export function BusinessHealthCards() {
               </div>
 
               {/* Next Actions */}
-              <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800">
-                <p className="text-xs font-medium text-zinc-600 dark:text-zinc-400 mb-1">
+              <div className="pt-2 border-t border-zinc-200">
+                <p className="text-xs font-medium text-zinc-600 mb-1">
                   Next Actions:
                 </p>
                 <ul className="space-y-0.5">
                   {business.nextActions.slice(0, 2).map((action) => (
-                    <li key={action} className="text-xs text-zinc-600 dark:text-zinc-400 flex items-start gap-1">
+                    <li key={action} className="text-xs text-zinc-600 flex items-start gap-1">
                       <span className="mt-0.5">•</span>
                       <span>{action}</span>
                     </li>

@@ -120,10 +120,10 @@ export function BackupMonitor() {
 
           {/* All healthy message */}
           {!alertMessage && backup && !isStale && (
-            <div className="mb-4 p-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg">
+            <div className="mb-4 p-3 bg-zinc-50 border border-zinc-200 rounded-lg">
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-4 w-4 text-zinc-500" />
-                <span className="text-sm font-medium text-zinc-800 dark:text-zinc-200">
+                <span className="text-sm font-medium text-zinc-800">
                   Backup current: {formatTimeAgo(backup.lastBackupTime)}
                 </span>
               </div>
@@ -135,48 +135,48 @@ export function BackupMonitor() {
             <div className="space-y-3">
               {/* Last Backup Time */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <div className="flex items-center gap-2 text-sm text-zinc-600">
                   <Clock className="h-4 w-4" />
                   <span>Last Backup</span>
                 </div>
-                <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                <div className="text-sm font-medium text-zinc-900">
                   {formatDateTime(backup.lastBackupTime)}
                 </div>
               </div>
 
               {/* Backup Size */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <div className="flex items-center gap-2 text-sm text-zinc-600">
                   <HardDrive className="h-4 w-4" />
                   <span>Size</span>
                 </div>
-                <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                <div className="text-sm font-medium text-zinc-900">
                   {backup.sizeFormatted}
                 </div>
               </div>
 
               {/* File Count */}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <div className="flex items-center gap-2 text-sm text-zinc-600">
                   <Database className="h-4 w-4" />
                   <span>Files</span>
                 </div>
-                <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                <div className="text-sm font-medium text-zinc-900">
                   {backup.fileCount.toLocaleString()}
                 </div>
               </div>
 
               {/* Storage Location */}
               <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+                <div className="flex items-center gap-2 text-sm text-zinc-600">
                   <Database className="h-4 w-4" />
                   <span>Location</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  <div className="text-sm font-medium text-zinc-900">
                     {backup.storageLocation.split('/').pop()}
                   </div>
-                  <div className="text-xs text-zinc-500 dark:text-zinc-500 max-w-[200px] truncate">
+                  <div className="text-xs text-zinc-500 max-w-[200px] truncate">
                     {backup.storageLocation}
                   </div>
                 </div>
@@ -184,13 +184,13 @@ export function BackupMonitor() {
 
               {/* Source indicator */}
               {data?.source && (
-                <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800">
-                  <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-500">
+                <div className="pt-2 border-t border-zinc-200">
+                  <div className="flex items-center justify-between text-xs text-zinc-500">
                     <span>Source</span>
                     <span className={`font-medium ${
-                      data.source === 'live' ? 'text-zinc-900 dark:text-zinc-400' :
-                      data.source === 'mock' ? 'text-zinc-500 dark:text-zinc-400' :
-                      'text-zinc-500 dark:text-zinc-400'
+                      data.source === 'live' ? 'text-zinc-900' :
+                      data.source === 'mock' ? 'text-zinc-500' :
+                      'text-zinc-500'
                     }`}>
                       {data.source === 'live' ? 'Live' :
                        data.source === 'mock' ? 'Demo' :
@@ -204,12 +204,12 @@ export function BackupMonitor() {
 
           {/* Last commit message */}
           {backup && backup.lastBackupMessage && (
-            <div className="mt-4 p-3 bg-zinc-50 dark:bg-zinc-900/50 rounded-lg border border-zinc-200 dark:border-zinc-800">
-              <div className="text-xs text-zinc-500 dark:text-zinc-500 mb-1">Last Commit</div>
-              <div className="text-sm text-zinc-700 dark:text-zinc-300">
+            <div className="mt-4 p-3 bg-zinc-50 rounded-lg border border-zinc-200">
+              <div className="text-xs text-zinc-500 mb-1">Last Commit</div>
+              <div className="text-sm text-zinc-700">
                 {backup.lastBackupMessage}
               </div>
-              <div className="text-xs text-zinc-500 dark:text-zinc-500 mt-1 font-mono">
+              <div className="text-xs text-zinc-500 mt-1 font-mono">
                 {backup.lastBackupCommit.substring(0, 7)}
               </div>
             </div>
@@ -230,30 +230,30 @@ function AlertMessage({ type, message }: AlertMessageProps) {
     switch (type) {
       case 'critical':
         return {
-          bg: 'bg-zinc-50 dark:bg-zinc-950',
-          border: 'border-zinc-200 dark:border-zinc-800',
-          text: 'text-zinc-800 dark:text-zinc-200',
+          bg: 'bg-zinc-50',
+          border: 'border-zinc-200',
+          text: 'text-zinc-800',
           icon: 'text-zinc-500',
         };
       case 'warning':
         return {
-          bg: 'bg-zinc-50 dark:bg-zinc-950',
-          border: 'border-zinc-200 dark:border-zinc-800',
-          text: 'text-zinc-800 dark:text-yellow-200',
+          bg: 'bg-zinc-50',
+          border: 'border-zinc-200',
+          text: 'text-zinc-800',
           icon: 'text-zinc-400',
         };
       case 'error':
         return {
-          bg: 'bg-zinc-50 dark:bg-zinc-950',
-          border: 'border-zinc-200 dark:border-zinc-800',
-          text: 'text-zinc-800 dark:text-zinc-200',
+          bg: 'bg-zinc-50',
+          border: 'border-zinc-200',
+          text: 'text-zinc-800',
           icon: 'text-zinc-500',
         };
       default:
         return {
-          bg: 'bg-zinc-50 dark:bg-zinc-950',
-          border: 'border-zinc-200 dark:border-zinc-800',
-          text: 'text-zinc-800 dark:text-zinc-200',
+          bg: 'bg-zinc-50',
+          border: 'border-zinc-200',
+          text: 'text-zinc-800',
           icon: 'text-zinc-500',
         };
     }

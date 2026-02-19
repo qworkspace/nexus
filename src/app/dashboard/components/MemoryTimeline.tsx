@@ -68,11 +68,11 @@ export function MemoryTimeline() {
       {data && (
         <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-4">
-            <span className="text-zinc-500 dark:text-zinc-400">
+            <span className="text-zinc-500">
               <Calendar className="inline h-4 w-4 mr-1" />
               {data?.stats?.totalEvents || 0} events
             </span>
-            <span className="text-zinc-500 dark:text-zinc-400">
+            <span className="text-zinc-500">
               <Clock className="inline h-4 w-4 mr-1" />
               {formatDate(data?.stats?.dateRange?.start || '')} - {formatDate(data?.stats?.dateRange?.end || '')}
             </span>
@@ -89,7 +89,7 @@ export function MemoryTimeline() {
         )}
 
         {!data && !error && (
-          <div className="text-center py-8 text-zinc-500 dark:text-zinc-400">
+          <div className="text-center py-8 text-zinc-500">
             Loading timeline...
           </div>
         )}
@@ -98,7 +98,7 @@ export function MemoryTimeline() {
           <div key={`${event.date}-${index}`} className="relative">
             {/* Timeline Line */}
             {index !== (data?.events?.length || 0) - 1 && (
-              <div className="absolute left-4 top-8 w-0.5 h-full bg-zinc-200 dark:bg-zinc-800" />
+              <div className="absolute left-4 top-8 w-0.5 h-full bg-zinc-200" />
             )}
 
             {/* Event Card */}
@@ -111,10 +111,10 @@ export function MemoryTimeline() {
                       {new Date(event.date).getDate()}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+                      <p className="text-sm font-semibold text-zinc-900">
                         {event.title}
                       </p>
-                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                      <p className="text-xs text-zinc-500">
                         {formatFullDate(event.date)}
                       </p>
                     </div>
@@ -123,7 +123,7 @@ export function MemoryTimeline() {
 
                 {/* Summary */}
                 {event.summary && (
-                  <p className="text-sm text-zinc-700 dark:text-zinc-300">
+                  <p className="text-sm text-zinc-700">
                     {event.summary}
                   </p>
                 )}
@@ -134,7 +134,7 @@ export function MemoryTimeline() {
                     {event.keyPoints.map((point, idx) => (
                       <div
                         key={idx}
-                        className="flex items-start gap-2 text-xs text-zinc-600 dark:text-zinc-400"
+                        className="flex items-start gap-2 text-xs text-zinc-600"
                       >
                         <span className="text-zinc-400 mt-0.5">•</span>
                         <span>{point}</span>
@@ -145,11 +145,11 @@ export function MemoryTimeline() {
 
                 {/* Tags */}
                 {event.tags && event.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                  <div className="flex flex-wrap gap-2 pt-2 border-t border-zinc-100">
                     {event.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="inline-flex items-center text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 px-2 py-1 rounded-full"
+                        className="inline-flex items-center text-xs bg-zinc-100 text-zinc-600 px-2 py-1 rounded-full"
                       >
                         <Tag className="h-3 w-3 mr-1" />
                         {tag}

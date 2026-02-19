@@ -50,7 +50,7 @@ export function MemoryContextPanel() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <Card className="dark:glass-panel">
+    <Card className="">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Brain size={16} />
@@ -60,15 +60,15 @@ export function MemoryContextPanel() {
       <CardContent className="space-y-3">
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-card/80">
+          <div className="p-2 rounded-lg bg-zinc-50">
             <p className="text-[10px] text-muted-foreground uppercase">Files</p>
-            <p className="text-lg font-bold text-zinc-900 dark:text-foreground">
+            <p className="text-lg font-bold text-zinc-900">
               {data?.totalFiles || 0}
             </p>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-card/80">
+          <div className="p-2 rounded-lg bg-zinc-50">
             <p className="text-[10px] text-muted-foreground uppercase">Total Size</p>
-            <p className="text-lg font-bold text-zinc-900 dark:text-foreground">
+            <p className="text-lg font-bold text-zinc-900">
               {formatSize(data?.totalSize || 0)}
             </p>
           </div>
@@ -78,11 +78,11 @@ export function MemoryContextPanel() {
         <div className="space-y-1">
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground">Context</span>
-            <span className="font-mono text-muted-foreground dark:text-muted-foreground">
+            <span className="font-mono text-muted-foreground">
               {isLoading ? "..." : `${data?.currentContext?.percentage}%`}
             </span>
           </div>
-          <div className="h-2 bg-zinc-200 dark:bg-secondary rounded-full overflow-hidden">
+          <div className="h-2 bg-zinc-200 rounded-full overflow-hidden">
             {isLoading ? (
               <div className="h-full w-1/4 shimmer" />
             ) : (
@@ -103,10 +103,10 @@ export function MemoryContextPanel() {
             placeholder="Search memory..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 text-sm h-8 dark:bg-card/80 dark:border-border"
+            className="pl-8 text-sm h-8"
           />
           <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground px-1 py-0.5 bg-zinc-100 dark:bg-secondary rounded">
+          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground px-1 py-0.5 bg-zinc-100 rounded">
             /
           </kbd>
         </div>
@@ -118,7 +118,7 @@ export function MemoryContextPanel() {
               <button
                 key={topic}
                 onClick={() => setSearchQuery(topic)}
-                className="px-2 py-0.5 rounded-full text-[10px] bg-zinc-100 dark:bg-secondary hover:bg-zinc-200 dark:hover:bg-muted text-muted-foreground dark:text-muted-foreground transition-colors"
+                className="px-2 py-0.5 rounded-full text-[10px] bg-zinc-100 hover:bg-zinc-200 text-muted-foreground transition-colors"
               >
                 #{topic}
               </button>

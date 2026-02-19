@@ -38,11 +38,11 @@ const PRIORITY_COLORS: Record<BugPriority, string> = {
 };
 
 const STATUS_COLORS: Record<BugStatus, string> = {
-  open: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400",
-  "in-progress": "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400",
-  testing: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400",
-  resolved: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400",
-  closed: "bg-gray-100 dark:bg-gray-950 text-gray-700 dark:text-gray-400",
+  open: "bg-zinc-100 text-zinc-700",
+  "in-progress": "bg-zinc-100 text-zinc-700",
+  testing: "bg-zinc-100 text-zinc-700",
+  resolved: "bg-zinc-100 text-zinc-700",
+  closed: "bg-gray-100 text-gray-700",
 };
 
 const formatRelativeTime = (dateString: string): string => {
@@ -166,7 +166,7 @@ export function BugList({ onBugClick }: BugListProps) {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as BugStatus | 'all')}
-                  className="flex-1 px-2 py-1.5 text-xs border rounded-md bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100"
+                  className="flex-1 px-2 py-1.5 text-xs border rounded-md bg-white text-zinc-900"
                 >
                   <option value="all">All Statuses</option>
                   <option value="open">Open</option>
@@ -179,7 +179,7 @@ export function BugList({ onBugClick }: BugListProps) {
                 <select
                   value={priorityFilter}
                   onChange={(e) => setPriorityFilter(e.target.value as BugPriority | 'all')}
-                  className="flex-1 px-2 py-1.5 text-xs border rounded-md bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100"
+                  className="flex-1 px-2 py-1.5 text-xs border rounded-md bg-white text-zinc-900"
                 >
                   <option value="all">All Priorities</option>
                   <option value="critical">Critical</option>
@@ -211,7 +211,7 @@ export function BugList({ onBugClick }: BugListProps) {
                   <button
                     key={bug.id}
                     onClick={() => handleBugClick(bug)}
-                    className="w-full text-left p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-950/30 transition-colors"
+                    className="w-full text-left p-3 rounded-lg border border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 transition-colors"
                   >
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className={`flex-1 min-w-0`}>
@@ -219,7 +219,7 @@ export function BugList({ onBugClick }: BugListProps) {
                           <div className={`w-2 h-2 rounded-full ${PRIORITY_COLORS[bug.priority]}`} />
                           <span className="text-xs font-mono text-zinc-500">{bug.id}</span>
                         </div>
-                        <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                        <h4 className="text-sm font-medium text-zinc-900 truncate">
                           {bug.title}
                         </h4>
                       </div>
@@ -227,7 +227,7 @@ export function BugList({ onBugClick }: BugListProps) {
                         {bug.status.replace('-', ' ')}
                       </span>
                     </div>
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 mb-2">
+                    <p className="text-xs text-zinc-600 line-clamp-2 mb-2">
                       {bug.description}
                     </p>
                     <div className="flex items-center justify-between text-[10px] text-zinc-500">
@@ -241,7 +241,7 @@ export function BugList({ onBugClick }: BugListProps) {
 
             {/* Count */}
             {bugs.length > 0 && (
-              <div className="pt-3 mt-3 border-t border-zinc-200 dark:border-zinc-800 text-center">
+              <div className="pt-3 mt-3 border-t border-zinc-200 text-center">
                 <span className="text-xs text-zinc-500">
                   Showing {bugs.length} bug{bugs.length !== 1 ? 's' : ''}
                 </span>
