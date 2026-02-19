@@ -259,11 +259,12 @@ export default function RelationshipsPage() {
       ctx.lineWidth = isHovered ? 3 : 2;
       ctx.stroke();
 
-      // Emoji
-      ctx.font = `${isHovered ? 18 : 14}px serif`;
+      // Agent initial
+      ctx.font = `bold ${isHovered ? 16 : 12}px sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(node.emoji, node.x, node.y);
+      ctx.fillStyle = color;
+      ctx.fillText(node.name.charAt(0).toUpperCase(), node.x, node.y);
 
       // Name
       ctx.fillStyle = color;
