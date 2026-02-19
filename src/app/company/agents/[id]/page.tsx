@@ -118,7 +118,7 @@ export default function AgentProfilePage() {
               <p className="text-xs font-medium text-muted-foreground uppercase mb-1">KPIs</p>
               <div className="flex flex-wrap gap-1">
                 {agent.kpis.map(k => (
-                  <span key={k} className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-zinc-900/30 text-zinc-900 dark:text-[#FFE135]">
+                  <span key={k} className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-zinc-900/30 text-zinc-900 dark:text-[#F5D547]">
                     {k}
                   </span>
                 ))}
@@ -166,7 +166,7 @@ export default function AgentProfilePage() {
                 const other = agentMap[otherId];
                 if (!other) return null;
 
-                const trustColor = rel.trust >= 60 ? "bg-[#FFE135]" : rel.trust >= 40 ? "bg-zinc-400" : rel.trust >= 20 ? "bg-[#FFE135]" : "bg-zinc-500";
+                const trustColor = rel.trust >= 60 ? "bg-[#F5D547]" : rel.trust >= 40 ? "bg-zinc-400" : rel.trust >= 20 ? "bg-[#F5D547]" : "bg-zinc-500";
 
                 return (
                   <div key={otherId} className="space-y-1">

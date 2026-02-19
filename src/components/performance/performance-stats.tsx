@@ -37,7 +37,7 @@ export function PerformanceStats({
               successRate >= 95
                 ? "text-zinc-900"
                 : successRate >= 80
-                ? "text-yellow-600"
+                ? "text-zinc-500"
                 : "text-zinc-500"
             )}
           >

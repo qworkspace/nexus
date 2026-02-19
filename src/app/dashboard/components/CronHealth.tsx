@@ -52,7 +52,7 @@ export function CronHealth() {
       case "success":
         return "text-zinc-900";
       case "slow":
-        return "text-yellow-600";
+        return "text-zinc-500";
       case "error":
         return "text-zinc-500";
       case "pending":
@@ -67,7 +67,7 @@ export function CronHealth() {
       return <span className="text-zinc-500 font-semibold">{failures} failure{failures > 1 ? 's' : ''}</span>;
     }
     if (healthStatus === "warning") {
-      return <span className="text-yellow-600 font-semibold">Warning</span>;
+      return <span className="text-zinc-500 font-semibold">Warning</span>;
     }
     return <span className="text-zinc-900 font-semibold">OK</span>;
   };

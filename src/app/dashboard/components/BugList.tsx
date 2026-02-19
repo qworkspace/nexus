@@ -33,7 +33,7 @@ async function fetcher(url: string): Promise<BugsResponse> {
 const PRIORITY_COLORS: Record<BugPriority, string> = {
   critical: "bg-zinc-500",
   high: "bg-zinc-500",
-  medium: "bg-yellow-500",
+  medium: "bg-zinc-500",
   low: "bg-zinc-500",
 };
 

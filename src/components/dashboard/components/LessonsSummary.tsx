@@ -50,7 +50,7 @@ export function LessonsSummary() {
 
   const getEffectivenessColor = (effectiveness: number) => {
     if (effectiveness >= 90) return "text-zinc-900";
-    if (effectiveness >= 80) return "text-yellow-600";
+    if (effectiveness >= 80) return "text-zinc-500";
     return "text-zinc-500";
   };
 

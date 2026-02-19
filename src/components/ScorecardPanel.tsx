@@ -166,9 +166,9 @@ function ProgressBar({ value, max }: { value: number; max: number }) {
   const percentage = (value / max) * 100;
   let colorClass = "bg-foreground";
   
-  if (value >= 8) colorClass = "bg-[#FFE135]";
+  if (value >= 8) colorClass = "bg-[#F5D547]";
   else if (value >= 6) colorClass = "bg-foreground";
-  else if (value >= 4) colorClass = "bg-[#FFE135]";
+  else if (value >= 4) colorClass = "bg-[#F5D547]";
   else colorClass = "bg-zinc-500";
 
   return (

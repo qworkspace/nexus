@@ -49,7 +49,7 @@ export function AgentStatsCard({ agent, onSelect, isSelected }: AgentStatsCardPr
           </div>
           <span className={`font-medium ${
             agent.successRate >= 0.8 ? "text-zinc-900" :
-            agent.successRate >= 0.5 ? "text-yellow-600" : "text-zinc-500"
+            agent.successRate >= 0.5 ? "text-zinc-500" : "text-zinc-500"
           }`}>
             {(agent.successRate * 100).toFixed(1)}%
           </span>

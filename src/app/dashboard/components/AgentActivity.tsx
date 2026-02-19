@@ -146,7 +146,7 @@ function SessionRow({ session }: { session: AgentSession }) {
   const statusColors = isActive
     ? 'bg-zinc-100 text-zinc-700 border-zinc-200'
     : isIdle
-    ? 'bg-yellow-100 text-yellow-700 border-yellow-200'
+    ? 'bg-zinc-100 text-zinc-700 border-zinc-200'
     : 'bg-zinc-100 text-zinc-700 border-zinc-200';
 
   return (
@@ -213,7 +213,7 @@ function SessionRow({ session }: { session: AgentSession }) {
           {isActive ? (
             <div className="h-2.5 w-2.5 rounded-full bg-zinc-500 animate-pulse" />
           ) : isIdle ? (
-            <div className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
+            <div className="h-2.5 w-2.5 rounded-full bg-zinc-500" />
           ) : (
             <div className="h-2.5 w-2.5 rounded-full bg-zinc-500" />
           )}

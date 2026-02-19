@@ -33,11 +33,11 @@ export function BackupStats({
             <span className="text-sm font-medium text-zinc-700">Overall Health</span>
             <div className="flex items-center gap-2">
               {hasIssues ? (
-                <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                <AlertTriangle className="h-4 w-4 text-zinc-400" />
               ) : (
                 <CheckCircle className="h-4 w-4 text-zinc-500" />
               )}
-              <span className={`text-sm font-semibold ${hasIssues ? 'text-yellow-600' : 'text-zinc-900'}`}>
+              <span className={`text-sm font-semibold ${hasIssues ? 'text-zinc-500' : 'text-zinc-900'}`}>
                 {hasIssues ? 'Attention Needed' : 'All Good'}
               </span>
             </div>
@@ -48,7 +48,7 @@ export function BackupStats({
             <div
               className={`h-full transition-all duration-500 ${
                 healthPercentage === 100 ? 'bg-zinc-500' :
-                healthPercentage >= 50 ? 'bg-yellow-500' : 'bg-zinc-500'
+                healthPercentage >= 50 ? 'bg-zinc-500' : 'bg-zinc-500'
               }`}
               style={{ width: `${healthPercentage}%` }}
             />

@@ -86,7 +86,7 @@ export function CompletedBuilds() {
     switch (rating) {
       case 'great':
       case 'good': return 'text-zinc-900 bg-zinc-50';
-      case 'meh': return 'text-yellow-600 bg-yellow-50';
+      case 'meh': return 'text-zinc-500 bg-zinc-50';
       case 'bad':
       case 'useless': return 'text-zinc-500 bg-zinc-50';
       default: return 'text-muted-foreground';

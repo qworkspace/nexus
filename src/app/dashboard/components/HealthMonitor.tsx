@@ -140,7 +140,7 @@ export function HealthMonitor() {
       <Card>
         <CardHeader>
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <Activity className={`h-5 w-5 ${allHealthy ? "text-zinc-500" : hasCritical ? "text-zinc-500" : "text-yellow-500"}`} />
+            <Activity className={`h-5 w-5 ${allHealthy ? "text-zinc-500" : hasCritical ? "text-zinc-500" : "text-zinc-400"}`} />
             HEALTH MONITOR
           </CardTitle>
         </CardHeader>
@@ -193,10 +193,10 @@ function AlertBadge({ alert }: AlertBadgeProps) {
         };
       case "warning":
         return {
-          bg: "bg-yellow-50 dark:bg-yellow-950",
-          border: "border-yellow-200 dark:border-yellow-800",
-          text: "text-yellow-800 dark:text-yellow-200",
-          icon: "text-yellow-500",
+          bg: "bg-zinc-50 dark:bg-zinc-950",
+          border: "border-zinc-200 dark:border-zinc-800",
+          text: "text-zinc-800 dark:text-yellow-200",
+          icon: "text-zinc-400",
         };
       default:
         return {

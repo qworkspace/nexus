@@ -46,7 +46,7 @@ function highlightMatches(text: string, query: string): React.ReactNode {
     );
     if (isMatch) {
       return (
-        <mark key={i} className="bg-yellow-200 rounded px-0.5">
+        <mark key={i} className="bg-zinc-200 rounded px-0.5">
           {part}
         </mark>
       );

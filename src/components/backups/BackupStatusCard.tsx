@@ -17,7 +17,7 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
       case 'success':
         return <CheckCircle className="h-5 w-5 text-zinc-500" />;
       case 'warning':
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
+        return <AlertTriangle className="h-5 w-5 text-zinc-400" />;
       case 'error':
         return <XCircle className="h-5 w-5 text-zinc-500" />;
       default:
@@ -30,7 +30,7 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
       case 'success':
         return <Badge className="bg-zinc-500 hover:bg-[#F5D547]"><Check size={16} className="inline mr-1" /> Healthy</Badge>;
       case 'warning':
-        return <Badge className="bg-yellow-500 hover:bg-yellow-600"><AlertTriangle size={16} className="inline mr-1" /> Warning</Badge>;
+        return <Badge className="bg-zinc-400 hover:bg-zinc-500"><AlertTriangle size={16} className="inline mr-1" /> Warning</Badge>;
       case 'error':
         return <Badge className="bg-zinc-500 hover:bg-zinc-600"><X size={16} className="inline mr-1" /> Error</Badge>;
       default:
@@ -173,7 +173,7 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
               {backup.remoteStatus.hasRemote ? (
                 <div className="space-y-1 text-xs text-muted-foreground">
                   {backup.remoteStatus.isAhead > 0 && (
-                    <div className="text-yellow-600">
+                    <div className="text-zinc-400">
                       ↑ {backup.remoteStatus.isAhead} commit{backup.remoteStatus.isAhead > 1 ? 's' : ''} ahead
                     </div>
                   )}

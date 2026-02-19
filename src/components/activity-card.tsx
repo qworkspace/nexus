@@ -53,7 +53,7 @@ const statusIcons: Record<string, string> = {
 const statusColors: Record<string, string> = {
   success: "text-zinc-900",
   error: "text-zinc-500",
-  pending: "text-yellow-600",
+  pending: "text-zinc-500",
 };
 
 function formatRelativeTime(date: string) {

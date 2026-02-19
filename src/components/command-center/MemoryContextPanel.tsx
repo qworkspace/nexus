@@ -37,7 +37,7 @@ function formatSize(bytes: number): string {
 
 function getContextColor(percentage: number): string {
   if (percentage < 50) return "bg-zinc-500";
-  if (percentage < 75) return "bg-yellow-500";
+  if (percentage < 75) return "bg-zinc-500";
   return "bg-zinc-500";
 }
 

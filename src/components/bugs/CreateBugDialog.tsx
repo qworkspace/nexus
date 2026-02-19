@@ -108,7 +108,7 @@ export function CreateBugDialog({
                 value={project}
                 onChange={(e) => setProject(e.target.value as Project)}
                 disabled={isCreating}
-                className="w-full mt-1 px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-blue-500"
+                className="w-full mt-1 px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
                 required
               >
                 {projects.map(p => (
@@ -126,7 +126,7 @@ export function CreateBugDialog({
                 value={severity}
                 onChange={(e) => setSeverity(e.target.value as Severity)}
                 disabled={isCreating}
-                className="w-full mt-1 px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-blue-500"
+                className="w-full mt-1 px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
                 required
               >
                 {severities.map(s => (
@@ -144,7 +144,7 @@ export function CreateBugDialog({
                 value={source}
                 onChange={(e) => setSource(e.target.value as BugSource)}
                 disabled={isCreating}
-                className="w-full mt-1 px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-blue-500"
+                className="w-full mt-1 px-3 py-2 text-sm border rounded-md bg-white dark:bg-background text-zinc-900 dark:text-foreground focus:ring-2 focus:ring-zinc-500"
                 required
               >
                 {sources.map(s => (

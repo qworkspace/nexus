@@ -19,7 +19,7 @@ export function CacheEfficiencyCard({
   const getColor = () => {
     if (hitRate >= 85) return "text-zinc-900";
     if (hitRate >= 70) return "text-zinc-900";
-    if (hitRate >= 50) return "text-yellow-600";
+    if (hitRate >= 50) return "text-zinc-500";
     return "text-zinc-500";
   };
 

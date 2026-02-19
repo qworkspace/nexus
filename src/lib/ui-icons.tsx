@@ -42,7 +42,7 @@ export const StatusCircle = ({
     online: "fill-[#F5D547] text-zinc-500",
     busy: "fill-zinc-500 text-zinc-500",
     error: "fill-zinc-500 text-zinc-500",
-    warning: "fill-yellow-500 text-yellow-500",
+    warning: "fill-zinc-400 text-zinc-400",
     offline: "fill-zinc-500 text-zinc-500",
   };
   

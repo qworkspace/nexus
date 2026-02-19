@@ -53,7 +53,7 @@ export function BackupMonitor() {
       case 'success':
         return 'text-zinc-500';
       case 'warning':
-        return 'text-yellow-500';
+        return 'text-zinc-400';
       case 'error':
         return 'text-zinc-500';
       default:
@@ -189,7 +189,7 @@ export function BackupMonitor() {
                     <span>Source</span>
                     <span className={`font-medium ${
                       data.source === 'live' ? 'text-zinc-900 dark:text-zinc-400' :
-                      data.source === 'mock' ? 'text-yellow-600 dark:text-yellow-400' :
+                      data.source === 'mock' ? 'text-zinc-500 dark:text-zinc-400' :
                       'text-zinc-500 dark:text-zinc-400'
                     }`}>
                       {data.source === 'live' ? 'Live' :
@@ -237,10 +237,10 @@ function AlertMessage({ type, message }: AlertMessageProps) {
         };
       case 'warning':
         return {
-          bg: 'bg-yellow-50 dark:bg-yellow-950',
-          border: 'border-yellow-200 dark:border-yellow-800',
-          text: 'text-yellow-800 dark:text-yellow-200',
-          icon: 'text-yellow-500',
+          bg: 'bg-zinc-50 dark:bg-zinc-950',
+          border: 'border-zinc-200 dark:border-zinc-800',
+          text: 'text-zinc-800 dark:text-yellow-200',
+          icon: 'text-zinc-400',
         };
       case 'error':
         return {

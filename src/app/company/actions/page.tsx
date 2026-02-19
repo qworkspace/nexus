@@ -34,8 +34,8 @@ const COLUMNS = [
 
 const PRIORITY_COLORS: Record<string, string> = {
   high: "bg-zinc-500",
-  medium: "bg-[#FFE135]",
-  low: "bg-[#FFE135]",
+  medium: "bg-[#F5D547]",
+  low: "bg-[#F5D547]",
 };
 
 export default function ActionsPage() {
@@ -148,7 +148,7 @@ export default function ActionsPage() {
                         {col.key === "blocked" && (
                           <button
                             onClick={() => updateStatus(item.id, "new")}
-                            className="text-xs text-[#FFE135] hover:underline"
+                            className="text-xs text-[#F5D547] hover:underline"
                           >
                             Unblock
                           </button>

@@ -77,7 +77,7 @@ export function AuditLog({ logs, selectedAgent, onAgentFilter }: AuditLogProps) 
               ? "text-zinc-500"
               : log.result === "error"
               ? "text-zinc-500"
-              : "text-yellow-500";
+              : "text-zinc-400";
 
           return (
             <div

@@ -31,7 +31,7 @@ const fetcher = (url: string) => fetch(url).then(r => r.json());
 
 const statusConfig = {
   active: { color: "bg-zinc-500", glow: "status-glow", label: "Active" },
-  idle: { color: "bg-yellow-500", glow: "status-glow-yellow", label: "Idle" },
+  idle: { color: "bg-zinc-500", glow: "status-glow-yellow", label: "Idle" },
   completed: { color: "bg-foreground", glow: "status-glow-blue", label: "Done" },
   error: { color: "bg-zinc-500", glow: "status-glow", label: "Error" },
 };

@@ -35,7 +35,7 @@ export function LiveSessions() {
       case "active":
         return "bg-zinc-500";
       case "building":
-        return "bg-yellow-500";
+        return "bg-zinc-500";
       case "complete":
         return "bg-zinc-400";
       case "error":

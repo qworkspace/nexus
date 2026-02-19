@@ -167,7 +167,7 @@ function StatusDot({ status }: { status: string }) {
   const colors = {
     success: "bg-zinc-500",
     error: "bg-zinc-500",
-    pending: "bg-yellow-500",
+    pending: "bg-zinc-500",
   };
   return (
     <span

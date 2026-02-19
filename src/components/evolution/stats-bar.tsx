@@ -67,7 +67,7 @@ export function StatsBar({ stats }: StatsBarProps) {
               stats.successRate >= 95
                 ? "text-zinc-900"
                 : stats.successRate >= 80
-                ? "text-yellow-600"
+                ? "text-zinc-500"
                 : "text-zinc-500"
             )}
           >

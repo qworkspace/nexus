@@ -67,7 +67,7 @@ const getStatusColor = (status: string): string => {
     case "healthy":
       return "bg-zinc-500";
     case "attention":
-      return "bg-yellow-500";
+      return "bg-zinc-500";
     case "critical":
       return "bg-zinc-500";
     default:
@@ -80,7 +80,7 @@ const getStatusDot = (status: string): JSX.Element => {
     case "healthy":
       return <Circle size={8} className="fill-[#F5D547] text-zinc-500" />;
     case "attention":
-      return <Circle size={8} className="fill-yellow-500 text-yellow-500" />;
+      return <Circle size={8} className="fill-zinc-400 text-zinc-400" />;
     case "critical":
       return <Circle size={8} className="fill-zinc-500 text-zinc-500" />;
     default:

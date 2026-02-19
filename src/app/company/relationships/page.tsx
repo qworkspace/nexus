@@ -344,8 +344,8 @@ export default function RelationshipsPage() {
             <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
               <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-3">Legend</h3>
               <div className="space-y-2 text-xs text-muted-foreground">
-                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#FFE135]" /> High trust (60+)</div>
-                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#FFE135]" /> Neutral (40-59)</div>
+                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#F5D547]" /> High trust (60+)</div>
+                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#F5D547]" /> Neutral (40-59)</div>
                 <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-zinc-500" /> Low trust (&lt;40)</div>
                 <div className="flex items-center gap-2"><span className="text-muted-foreground">Line thickness</span> = trust level</div>
               </div>
@@ -590,8 +590,8 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
 }
 
 function TrustBadge({ trust }: { trust: number }) {
-  const color = trust >= 60 ? "text-zinc-900 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#FFE135]"
-    : trust >= 40 ? "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#FFE135]"
+  const color = trust >= 60 ? "text-zinc-900 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#F5D547]"
+    : trust >= 40 ? "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#F5D547]"
     : "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400";
   return <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${color}`}>{trust}</span>;
 }

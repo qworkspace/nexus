@@ -102,7 +102,7 @@ export function CronJobMonitor() {
       case 'error':
         return <XCircle className="h-4 w-4 text-zinc-500" />;
       case 'timeout':
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+        return <AlertTriangle className="h-4 w-4 text-zinc-400" />;
       default:
         return <Clock className="h-4 w-4 text-zinc-400" />;
     }
@@ -116,7 +116,7 @@ export function CronJobMonitor() {
       case 'error':
         return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">ERROR</Badge>;
       case 'timeout':
-        return <Badge variant="outline" className="text-xs text-yellow-600 border-yellow-200">TIMEOUT</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">TIMEOUT</Badge>;
       default:
         return <Badge variant="outline" className="text-xs">PENDING</Badge>;
     }

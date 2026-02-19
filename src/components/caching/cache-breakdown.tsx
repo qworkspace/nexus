@@ -31,14 +31,14 @@ export function CacheBreakdown({ tokens, costs }: CacheBreakdownProps) {
   };
 
   const tokenItems = [
-    { label: "Cache Read", value: tokens.cacheRead, color: "bg-[#FFE135]" },
+    { label: "Cache Read", value: tokens.cacheRead, color: "bg-[#F5D547]" },
     { label: "Cache Write", value: tokens.cacheWrite, color: "bg-foreground" },
     { label: "Fresh Input", value: tokens.input, color: "bg-zinc-500" },
     { label: "Fresh Output", value: tokens.output, color: "bg-zinc-500" },
   ];
 
   const costItems = [
-    { label: "Cache Read", value: costs.cacheRead, color: "bg-[#FFE135]" },
+    { label: "Cache Read", value: costs.cacheRead, color: "bg-[#F5D547]" },
     { label: "Cache Write", value: costs.cacheWrite, color: "bg-foreground" },
     { label: "Fresh Input", value: costs.input, color: "bg-zinc-500" },
     { label: "Fresh Output", value: costs.output, color: "bg-zinc-500" },

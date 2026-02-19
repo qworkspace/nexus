@@ -61,7 +61,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
     <div
       className={`rounded-lg p-4 ${
         isSystem
-          ? 'bg-yellow-50 border border-yellow-200 text-yellow-900'
+          ? 'bg-zinc-50 border border-zinc-200 text-zinc-900'
           : isUser
           ? 'bg-zinc-50 border border-zinc-200'
           : 'bg-white border border-zinc-200'
@@ -70,7 +70,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
       {/* Header */}
       <div className="flex items-center gap-2 mb-2">
         {isSystem ? (
-          <AlertCircle className="w-4 h-4 text-yellow-600" />
+          <AlertCircle className="w-4 h-4 text-zinc-500" />
         ) : isUser ? (
           <User className="w-4 h-4 text-zinc-900" />
         ) : (
@@ -78,7 +78,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         )}
         <span className={`text-xs font-medium ${
           isSystem
-            ? 'text-yellow-900'
+            ? 'text-zinc-900'
             : isUser
             ? 'text-zinc-900'
             : 'text-zinc-900'
@@ -97,7 +97,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
 
       {/* Content */}
       <div className={`text-sm ${
-        isSystem ? 'text-yellow-900 italic' : isUser ? 'text-zinc-900' : 'text-zinc-800'
+        isSystem ? 'text-zinc-900 italic' : isUser ? 'text-zinc-900' : 'text-zinc-800'
       }`}>
         {renderContent(contentArray)}
       </div>

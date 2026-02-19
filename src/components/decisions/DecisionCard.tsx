@@ -14,7 +14,7 @@ function ConfidenceBar({ confidence }: { confidence: number }) {
   const percentage = confidence * 100;
   let barColor = "bg-zinc-500";
   if (percentage >= 80) barColor = "bg-zinc-500";
-  else if (percentage >= 60) barColor = "bg-yellow-500";
+  else if (percentage >= 60) barColor = "bg-zinc-400";
   else if (percentage >= 40) barColor = "bg-zinc-500";
 
   return (

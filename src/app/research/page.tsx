@@ -19,8 +19,8 @@ interface ResearchItem {
 const SOURCE_CONFIG: Record<string, { label: string; color: string; bgColor: string }> = {
   'think_session': { label: 'Think Session', color: 'text-zinc-700 dark:text-zinc-400', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
   'research_scan': { label: 'Research Scan', color: 'text-zinc-700 dark:text-foreground', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
-  'ai_intel': { label: 'AI Intel', color: 'text-zinc-700 dark:text-[#FFE135]', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
-  'memo': { label: 'Memo', color: 'text-zinc-700 dark:text-[#FFE135]', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
+  'ai_intel': { label: 'AI Intel', color: 'text-zinc-700 dark:text-[#F5D547]', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
+  'memo': { label: 'Memo', color: 'text-zinc-700 dark:text-[#F5D547]', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
   'morning_brief': { label: 'Morning Brief', color: 'text-sky-700 dark:text-sky-400', bgColor: 'bg-sky-100 dark:bg-sky-900/30' },
   'evening_brief': { label: 'Evening Brief', color: 'text-zinc-700 dark:text-muted-foreground', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
 };
@@ -261,7 +261,7 @@ export default function ResearchPage() {
               {/* Notable Items */}
               {selectedItem.notable.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-zinc-500 dark:text-[#FFE135] font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-500 dark:text-[#F5D547] font-medium text-sm mb-2">
                     <Lightbulb className="h-4 w-4" />
                     <span>Notable</span>
                   </div>
@@ -291,7 +291,7 @@ export default function ResearchPage() {
               {/* Actions */}
               {selectedItem.actions.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-zinc-900 dark:text-[#FFE135] font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-900 dark:text-[#F5D547] font-medium text-sm mb-2">
                     <CheckCircle className="h-4 w-4" />
                     <span>Actions</span>
                   </div>
@@ -388,7 +388,7 @@ function ResearchCard({
         {/* Notable Items */}
         {item.notable.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-zinc-500 dark:text-[#FFE135] font-medium text-sm">
+            <div className="flex items-center gap-2 text-zinc-500 dark:text-[#F5D547] font-medium text-sm">
               <Lightbulb className="h-4 w-4" />
               <span>Notable</span>
             </div>
@@ -422,7 +422,7 @@ function ResearchCard({
         {/* Actions */}
         {item.actions.length > 0 && (
           <div className="pt-2 border-t border-zinc-200 dark:border-border">
-            <div className="flex items-center gap-2 text-zinc-900 dark:text-[#FFE135] font-medium text-sm mb-2">
+            <div className="flex items-center gap-2 text-zinc-900 dark:text-[#F5D547] font-medium text-sm mb-2">
               <CheckCircle className="h-4 w-4" />
               <span>Actions</span>
             </div>

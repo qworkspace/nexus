@@ -78,7 +78,7 @@ export function ModelIntelligenceDashboard() {
     if (model.includes('opus')) return 'bg-zinc-100 text-zinc-700 border-zinc-200';
     if (model.includes('sonnet')) return 'bg-zinc-100 text-zinc-700 border-zinc-200';
     if (model.includes('haiku')) return 'bg-zinc-100 text-zinc-700 border-zinc-200';
-    if (model.includes('glm')) return 'bg-yellow-100 text-yellow-700 border-yellow-200';
+    if (model.includes('glm')) return 'bg-zinc-100 text-zinc-700 border-zinc-200';
     if (model.includes('gpt')) return 'bg-zinc-100 text-zinc-700 border-zinc-200';
     return 'bg-zinc-100 text-zinc-700 border-zinc-200';
   };
@@ -172,7 +172,7 @@ export function ModelIntelligenceDashboard() {
           {recommendations.length > 0 && (
             <div className="pt-3 border-t border-zinc-200 dark:border-zinc-800">
               <div className="flex items-center gap-1 mb-2">
-                <Zap className="h-3 w-3 text-yellow-500" />
+                <Zap className="h-3 w-3 text-zinc-400" />
                 <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
                   Recommendations
                 </p>
@@ -181,10 +181,10 @@ export function ModelIntelligenceDashboard() {
                 {recommendations.slice(0, 2).map((rec, idx) => (
                   <div
                     key={idx}
-                    className="bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded p-2"
+                    className="bg-zinc-50 dark:bg-zinc-950/20 border border-zinc-200 dark:border-zinc-800 rounded p-2"
                   >
                     <div className="flex items-start gap-2">
-                      <div className="mt-0.5 text-yellow-600 dark:text-yellow-400">
+                      <div className="mt-0.5 text-zinc-500 dark:text-zinc-400">
                         {getRecommendationIcon(rec.message)}
                       </div>
                       <div className="flex-1">

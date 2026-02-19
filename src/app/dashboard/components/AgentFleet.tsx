@@ -29,7 +29,7 @@ const getStatusDotColor = (status: string): string => {
     case "online":
       return "fill-[#F5D547] text-zinc-500";
     case "busy":
-      return "fill-yellow-500 text-yellow-500";
+      return "fill-zinc-400 text-zinc-400";
     case "idle":
       return "fill-zinc-400 text-zinc-400";
     case "error":

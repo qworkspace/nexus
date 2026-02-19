@@ -70,7 +70,7 @@ export function NotificationCenter() {
       case 'info':
         return "text-zinc-500";
       case 'warning':
-        return "text-yellow-500";
+        return "text-zinc-400";
       case 'error':
         return "text-zinc-500";
       case 'success':
@@ -85,7 +85,7 @@ export function NotificationCenter() {
       case 'info':
         return "bg-zinc-50 dark:bg-zinc-950";
       case 'warning':
-        return "bg-yellow-50 dark:bg-yellow-950";
+        return "bg-zinc-50 dark:bg-zinc-950";
       case 'error':
         return "bg-zinc-50 dark:bg-zinc-950";
       case 'success':

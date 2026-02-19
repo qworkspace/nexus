@@ -73,7 +73,7 @@ function SessionBadge({ target }: { target: 'main' | 'isolated' }) {
     <span className={cn(
       "text-[9px] px-1 py-0.5 rounded font-mono",
       target === 'main'
-        ? "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-[#FFE135]"
+        ? "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-[#F5D547]"
         : "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-muted-foreground"
     )}>
       {target === 'main' ? 'MAIN' : 'ISO'}
@@ -84,7 +84,7 @@ function SessionBadge({ target }: { target: 'main' | 'isolated' }) {
 const statusConfig = {
   ok: { color: "bg-zinc-500", badge: "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400" },
   error: { color: "bg-zinc-500", badge: "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400" },
-  timeout: { color: "bg-yellow-500", badge: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400" },
+  timeout: { color: "bg-zinc-400", badge: "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400" },
 };
 
 function formatNextRun(ms: number): string {

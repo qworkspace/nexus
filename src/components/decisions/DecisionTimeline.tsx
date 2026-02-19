@@ -44,7 +44,7 @@ export function DecisionTimeline({ decisions, loading }: DecisionTimelineProps) 
             <div
               className={`absolute left-3.5 top-5 w-3 h-3 rounded-full border-2 border-white shadow-sm ${
                 !decision.outcome
-                  ? "bg-[#FFE135]"
+                  ? "bg-[#F5D547]"
                   : decision.outcome.matched
                   ? "bg-zinc-500"
                   : "bg-zinc-500"

@@ -41,8 +41,8 @@ const modelColors: Record<string, string> = {
   'claude-sonnet-4': 'bg-foreground',
   'claude-3-5-sonnet': 'bg-foreground',
   'claude-3-5-haiku': 'bg-zinc-500',
-  'glm-4-flash': 'bg-[#FFE135]',
-  'gpt-4o': 'bg-[#FFE135]',
+  'glm-4-flash': 'bg-[#F5D547]',
+  'gpt-4o': 'bg-[#F5D547]',
   'gpt-4o-mini': 'bg-zinc-500',
 };
 

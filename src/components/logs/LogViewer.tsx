@@ -123,7 +123,7 @@ export function LogViewer() {
 
   const LEVEL_COLORS = {
     info: "bg-foreground",
-    warn: "bg-yellow-500",
+    warn: "bg-zinc-500",
     error: "bg-zinc-500",
     debug: "bg-zinc-500",
   };

@@ -13,7 +13,7 @@ export interface LogEntry {
 
 const LEVEL_COLORS = {
   info: "bg-foreground/10 text-foreground border-zinc-500/20",
-  warn: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
+  warn: "bg-zinc-500/10 text-zinc-400 border-yellow-500/20",
   error: "bg-zinc-500/10 text-zinc-500 border-zinc-500/20",
   debug: "bg-zinc-500/10 text-muted-foreground border-zinc-500/20",
 };

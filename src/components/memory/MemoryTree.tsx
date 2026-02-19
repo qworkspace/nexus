@@ -64,7 +64,7 @@ export function MemoryTree({ files, selectedFile, onSelectFile, searchTerm = "" 
             "flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors",
             isSelected ? "bg-card text-foreground" : "hover:bg-zinc-100",
             searchTerm && file.name.toLowerCase().includes(searchTerm.toLowerCase())
-              ? "bg-yellow-50 hover:bg-yellow-100"
+              ? "bg-zinc-50 hover:bg-zinc-100"
               : ""
           )}
           style={{ paddingLeft: `${level * 16 + 8}px` }}

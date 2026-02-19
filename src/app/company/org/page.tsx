@@ -135,9 +135,9 @@ export default function OrgChartPage() {
           <div className="relative flex flex-col items-center gap-6" style={{ zIndex: 2 }}>
             {/* Company */}
             <div data-node-id="company">
-              <div className="px-8 py-4 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 border-2 border-zinc-300 dark:border-amber-700 text-center shadow-lg">
+              <div className="px-8 py-4 rounded-xl bg-gradient-to-r from-zinc-50 to-zinc-100 dark:from-zinc-900/20 dark:to-zinc-800/20 border-2 border-zinc-300 dark:border-zinc-700 text-center shadow-lg">
                 <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Villanueva Creative Pty Ltd</p>
-                <p className="text-[10px] text-[#FFE135] mt-0.5">Est. Sydney, Australia</p>
+                <p className="text-[10px] text-[#F5D547] mt-0.5">Est. Sydney, Australia</p>
               </div>
             </div>
 
@@ -251,7 +251,7 @@ export default function OrgChartPage() {
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-6 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900/30 text-zinc-900 dark:text-[#FFE135] text-[10px] font-medium">Mac Mini</span>
+                <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900/30 text-zinc-900 dark:text-[#F5D547] text-[10px] font-medium">Mac Mini</span>
                 <span>M4 32GB — Primary</span>
               </div>
               <div className="flex items-center gap-2">
@@ -300,8 +300,8 @@ export default function OrgChartPage() {
                           }
                           const rel = agent.relationships?.[other.agentId];
                           const trust = rel?.trust ?? 50;
-                          const color = trust >= 60 ? "text-zinc-900 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#FFE135]"
-                            : trust >= 40 ? "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#FFE135]"
+                          const color = trust >= 60 ? "text-zinc-900 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#F5D547]"
+                            : trust >= 40 ? "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#F5D547]"
                             : "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400";
                           return (
                             <td
@@ -445,14 +445,14 @@ function OrgCard({
   const textSize = size === "lg" ? "text-sm" : size === "sm" ? "text-xs" : "text-xs";
 
   const colorClasses: Record<string, string> = {
-    amber: "border-zinc-300 dark:border-amber-600 bg-white dark:bg-card",
+    amber: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
     gold: "border-yellow-400 dark:border-yellow-600 bg-white dark:bg-card",
-    pink: "border-zinc-300 dark:border-pink-600 bg-white dark:bg-card",
+    pink: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
     mint: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
     emerald: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
-    cyan: "border-cyan-300 dark:border-cyan-600 bg-white dark:bg-card",
+    cyan: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
     blue: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
-    orange: "border-zinc-300 dark:border-orange-600 bg-white dark:bg-card",
+    orange: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
     sky: "border-sky-300 dark:border-sky-600 bg-white dark:bg-card",
     zinc: "border-zinc-300 dark:border-border bg-white dark:bg-card",
   };
@@ -464,7 +464,7 @@ function OrgCard({
       )}
       {badge && (
         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
-          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold shadow-sm ${badge === "VPS" ? "bg-zinc-100 dark:bg-zinc-900/40 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800" : "bg-zinc-100 dark:bg-zinc-900/40 text-zinc-900 dark:text-[#FFE135] border border-zinc-200 dark:border-zinc-800"}`}>
+          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold shadow-sm ${badge === "VPS" ? "bg-zinc-100 dark:bg-zinc-900/40 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800" : "bg-zinc-100 dark:bg-zinc-900/40 text-zinc-900 dark:text-[#F5D547] border border-zinc-200 dark:border-zinc-800"}`}>
             {badge}
           </span>
         </div>

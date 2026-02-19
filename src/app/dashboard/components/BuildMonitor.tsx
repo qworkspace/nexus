@@ -156,7 +156,7 @@ export function BuildMonitor() {
       case 'error':
         return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">ERROR</Badge>;
       case 'cancelled':
-        return <Badge variant="outline" className="text-xs text-yellow-600 border-yellow-200">CANCELLED</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">CANCELLED</Badge>;
       case 'completed':
         return <Badge variant="outline" className="text-xs text-zinc-600">DONE</Badge>;
       case 'blocked':
@@ -171,7 +171,7 @@ export function BuildMonitor() {
       case 'high':
         return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">HIGH</Badge>;
       case 'medium':
-        return <Badge variant="outline" className="text-xs text-yellow-600 border-yellow-200">MED</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">MED</Badge>;
       case 'low':
         return <Badge variant="outline" className="text-xs text-zinc-600">LOW</Badge>;
       default:

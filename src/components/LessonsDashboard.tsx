@@ -121,7 +121,7 @@ export function LessonsDashboard() {
   const getEffectivenessColor = (effectiveness: number | null) => {
     if (effectiveness === null) return "text-muted-foreground";
     if (effectiveness >= 90) return "text-zinc-900";
-    if (effectiveness >= 80) return "text-yellow-600";
+    if (effectiveness >= 80) return "text-zinc-500";
     return "text-zinc-500";
   };
 
@@ -288,7 +288,7 @@ export function LessonsDashboard() {
                         data.effectiveness >= 90
                           ? "bg-zinc-500"
                           : data.effectiveness >= 80
-                          ? "bg-yellow-500"
+                          ? "bg-zinc-500"
                           : data.effectiveness > 0
                           ? "bg-zinc-500"
                           : "bg-zinc-400"
@@ -475,11 +475,11 @@ export function LessonsDashboard() {
                   </p>
                 </div>
                 {selectedLesson.fix && (
-                  <div className="mt-3 bg-yellow-50 dark:bg-yellow-950 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-                    <h4 className="text-xs font-semibold text-yellow-800 dark:text-yellow-200 mb-1">
+                  <div className="mt-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4">
+                    <h4 className="text-xs font-semibold text-zinc-800 dark:text-zinc-300 mb-1">
                       Fix
                     </h4>
-                    <p className="text-xs text-yellow-700 dark:text-yellow-300 whitespace-pre-wrap">
+                    <p className="text-xs text-zinc-700 dark:text-zinc-400 whitespace-pre-wrap">
                       {selectedLesson.fix}
                     </p>
                   </div>

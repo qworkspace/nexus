@@ -14,7 +14,7 @@ const getSeverityColor = (severity: "warning" | "critical"): string => {
     case "critical":
       return "text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-zinc-800";
     case "warning":
-      return "text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/30 border-yellow-200 dark:border-yellow-800";
+      return "text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/30 border-zinc-200 dark:border-zinc-800";
     default:
       return "text-muted-foreground dark:text-muted-foreground bg-zinc-50 dark:bg-background/30 border-zinc-200 dark:border-border";
   }

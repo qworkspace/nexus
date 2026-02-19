@@ -25,7 +25,7 @@ interface PillarCardProps {
 }
 
 const statusColors: Record<Pillar["status"], string> = {
-  learning: "bg-yellow-100 text-yellow-800",
+  learning: "bg-zinc-100 text-zinc-800",
   ready: "bg-zinc-100 text-zinc-800",
   active: "bg-zinc-100 text-zinc-800",
   vibing: "bg-zinc-100 text-zinc-800",
@@ -34,13 +34,13 @@ const statusColors: Record<Pillar["status"], string> = {
 
 const itemStatusColors: Record<PillarItem["status"], string> = {
   done: "text-zinc-900",
-  "in-progress": "text-yellow-600",
+  "in-progress": "text-zinc-400",
   "not-started": "text-zinc-500",
 };
 
 const itemStatusIcons: Record<PillarItem["status"], JSX.Element> = {
   done: <CheckCircle size={14} className="text-zinc-900" />,
-  "in-progress": <Circle size={14} className="fill-yellow-500 text-yellow-500" />,
+  "in-progress": <Circle size={14} className="fill-zinc-400 text-zinc-400" />,
   "not-started": <Circle size={14} className="fill-zinc-500 text-zinc-500" />,
 };
 
@@ -87,7 +87,7 @@ export function PillarCard({ pillar }: PillarCardProps) {
                   percentage >= 80
                     ? "bg-zinc-500"
                     : percentage >= 50
-                    ? "bg-yellow-500"
+                    ? "bg-zinc-400"
                     : "bg-zinc-500"
                 )}
                 style={{ width: `${percentage}%` }}

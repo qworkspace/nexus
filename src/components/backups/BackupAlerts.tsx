@@ -63,19 +63,19 @@ export function BackupAlerts({ critical, warning, info }: BackupAlertsProps) {
         {/* Warning Alerts */}
         {warning.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-sm font-medium text-yellow-700">
+            <div className="flex items-center gap-2 text-sm font-medium text-zinc-700">
               <AlertTriangle className="h-4 w-4" />
               <span>Warnings ({warning.length})</span>
             </div>
             <div className="space-y-2">
               {warning.map((backup) => (
-                <div key={backup.repo.name} className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <div key={backup.repo.name} className="bg-zinc-100 border border-zinc-200 rounded-lg p-3">
                   <div className="flex items-start justify-between gap-2 mb-1">
-                    <h4 className="font-medium text-yellow-900">{backup.repo.name}</h4>
-                    <Badge className="bg-yellow-500 hover:bg-yellow-600 text-xs">Warning</Badge>
+                    <h4 className="font-medium text-zinc-900">{backup.repo.name}</h4>
+                    <Badge className="bg-zinc-400 hover:bg-zinc-500 text-xs">Warning</Badge>
                   </div>
                   {backup.hoursSinceBackup > 20 && (
-                    <p className="text-sm text-yellow-700">
+                    <p className="text-sm text-zinc-700">
                       Backup is {backup.hoursSinceBackup.toFixed(1)} hours old (approaching 24h threshold)
                     </p>
                   )}

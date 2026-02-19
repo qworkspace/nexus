@@ -12,7 +12,7 @@ export function BugStats({ stats }: BugStatsProps) {
   const SEVERITY_COLORS = {
     critical: 'text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/50',
     high: 'text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/50',
-    medium: 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/50',
+    medium: 'text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-950/50',
     low: 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-950/50',
   };
 
@@ -66,7 +66,7 @@ export function BugStats({ stats }: BugStatsProps) {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Info className="h-4 w-4 text-yellow-500" />
+                <Info className="h-4 w-4 text-zinc-400" />
                 <span className="text-sm text-zinc-700 dark:text-foreground">Medium</span>
               </div>
               <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${SEVERITY_COLORS.medium}`}>

@@ -204,7 +204,7 @@ export function SessionViewer() {
               </Badge>
             )}
             {data?.source === 'mock' && (
-              <Badge variant="outline" className="text-zinc-500 border-amber-600">
+              <Badge variant="outline" className="text-zinc-500 border-zinc-400">
                 Mock Data
               </Badge>
             )}

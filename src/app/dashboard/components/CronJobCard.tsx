@@ -92,7 +92,7 @@ export function CronJobCard({
       case 'error':
         return <XCircle className="h-4 w-4 text-zinc-500" />;
       case 'timeout':
-        return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
+        return <AlertTriangle className="h-4 w-4 text-zinc-400" />;
       default:
         return <Clock className="h-4 w-4 text-zinc-400" />;
     }

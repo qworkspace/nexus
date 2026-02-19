@@ -37,7 +37,7 @@ function formatDate(isoString: string): string {
 
 function getSimilarityColor(score: number): string {
   if (score >= 0.8) return 'bg-zinc-100 text-zinc-700';
-  if (score >= 0.6) return 'bg-yellow-100 text-yellow-700';
+  if (score >= 0.6) return 'bg-zinc-100 text-zinc-700';
   if (score >= 0.4) return 'bg-zinc-100 text-zinc-700';
   return 'bg-gray-100 text-gray-700';
 }

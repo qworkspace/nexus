@@ -122,7 +122,7 @@ export function MemoryStatsCard() {
       {/* Data Source Badge */}
       {data.source === 'mock' && (
         <div className="mt-4 pt-4 border-t border-zinc-100">
-          <span className="inline-flex items-center px-2 py-1 rounded bg-yellow-100 text-yellow-700 text-xs font-medium">
+          <span className="inline-flex items-center px-2 py-1 rounded bg-zinc-100 text-zinc-700 text-xs font-medium">
             Using mock data
           </span>
         </div>

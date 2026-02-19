@@ -40,8 +40,8 @@ interface Agent {
 
 const PRIORITY_COLORS: Record<string, string> = {
   high: "bg-zinc-500",
-  medium: "bg-[#FFE135]",
-  low: "bg-[#FFE135]",
+  medium: "bg-[#F5D547]",
+  low: "bg-[#F5D547]",
 };
 
 export default function MeetingsPage() {
@@ -210,7 +210,7 @@ export default function MeetingsPage() {
                 )}
                 {summary && (
                   <div className="mb-3 p-3 bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-200 dark:border-zinc-800 rounded-lg">
-                    <h3 className="text-xs font-bold text-zinc-900 dark:text-[#FFE135] mb-1.5 flex items-center gap-1">
+                    <h3 className="text-xs font-bold text-zinc-900 dark:text-[#F5D547] mb-1.5 flex items-center gap-1">
                       <FileText size={12} />
                       TL;DR
                     </h3>
@@ -295,9 +295,9 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
   const agent = agentMap[item.assignee] || agentMap[item.assignee?.toLowerCase()];
   const statusColors: Record<string, string> = {
     "new": "border-l-zinc-400",
-    "in-progress": "border-l-blue-500",
-    "done": "border-l-emerald-500",
-    "blocked": "border-l-red-500",
+    "in-progress": "border-l-zinc-500",
+    "done": "border-l-zinc-500",
+    "blocked": "border-l-zinc-600",
   };
 
   return (
@@ -326,7 +326,7 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
             </button>
           )}
           {item.status === "blocked" && (
-            <button onClick={() => onUpdateStatus(item.id, "new")} className="text-[10px] text-[#FFE135] hover:underline">
+            <button onClick={() => onUpdateStatus(item.id, "new")} className="text-[10px] text-[#F5D547] hover:underline">
               Unblock
             </button>
           )}

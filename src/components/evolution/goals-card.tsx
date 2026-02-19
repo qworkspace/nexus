@@ -55,7 +55,7 @@ export function GoalsCard({ goals }: GoalsCardProps) {
                         progress >= 80
                           ? "bg-zinc-500"
                           : progress >= 50
-                          ? "bg-yellow-500"
+                          ? "bg-zinc-500"
                           : "bg-zinc-500"
                       )}
                       style={{ width: `${progress}%` }}

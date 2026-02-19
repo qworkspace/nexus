@@ -50,7 +50,7 @@ const getStatusIcon = (status: string): React.ReactNode => {
     case "stopped":
       return <XCircle className="h-4 w-4 text-zinc-500" />;
     default:
-      return <AlertCircle className="h-4 w-4 text-yellow-500" />;
+      return <AlertCircle className="h-4 w-4 text-zinc-400" />;
   }
 };
 
@@ -61,7 +61,7 @@ const getStatusColor = (status: string): string => {
     case "stopped":
       return "text-zinc-500 dark:text-zinc-400";
     default:
-      return "text-yellow-600 dark:text-yellow-400";
+      return "text-zinc-500 dark:text-zinc-400";
   }
 };
 
@@ -72,7 +72,7 @@ const getStatusBg = (status: string): string => {
     case "stopped":
       return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
     default:
-      return "bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800";
+      return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
   }
 };
 
@@ -124,7 +124,7 @@ export function ServiceStatus() {
                   {allRunning ? (
                     <CheckCircle className="h-4 w-4 text-zinc-500" />
                   ) : (
-                    <AlertCircle className="h-4 w-4 text-yellow-500" />
+                    <AlertCircle className="h-4 w-4 text-zinc-400" />
                   )}
                   <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
                     Overall Status
@@ -164,7 +164,7 @@ function ActivityIcon({ allRunning, anyStopped }: ActivityIconProps) {
   if (anyStopped) {
     return <XCircle className="h-5 w-5 text-zinc-500" />;
   }
-  return <AlertCircle className="h-5 w-5 text-yellow-500" />;
+  return <AlertCircle className="h-5 w-5 text-zinc-400" />;
 }
 
 interface ServiceItemProps {
