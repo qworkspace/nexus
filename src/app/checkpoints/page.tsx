@@ -123,7 +123,7 @@ export default function CheckpointsPage() {
             </div>
             <button
               onClick={fetchCheckpoints}
-              className="px-3 py-1.5 text-sm bg-zinc-900 text-white rounded-md hover:bg-zinc-800 transition-colors"
+              className="px-3 py-1.5 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
             >
               Refresh
             </button>

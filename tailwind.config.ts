@@ -56,6 +56,12 @@ const config: Config = {
   				'5': 'hsl(var(--chart-5))'
   			}
   		},
+  		'weavy': {
+  			yellow: '#FFE135',
+  			black: '#0A0B0F',
+  			gray: '#F5F6F8',
+  			border: '#E0E3EC',
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
