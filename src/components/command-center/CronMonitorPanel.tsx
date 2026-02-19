@@ -3,6 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Timer } from "lucide-react";
 import { cn } from "@/lib/utils";
 import useSWR from "swr";
 import { useState } from "react";
@@ -187,7 +188,7 @@ export function CronMonitorPanel() {
     <Card className="dark:glass-panel">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
-          <span className="text-lg">⏰</span>
+          <Timer size={16} className="text-muted-foreground" />
           Cron Jobs
         </CardTitle>
       </CardHeader>

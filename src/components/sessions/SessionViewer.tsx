@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import useSWR from 'swr';
 import Link from 'next/link';
 import { 
@@ -13,7 +13,10 @@ import {
   User,
   Plus,
   Loader2,
-  ExternalLink
+  ExternalLink,
+  Smartphone,
+  Timer,
+  Monitor
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -69,14 +72,12 @@ function formatDate(date: Date): string {
   });
 }
 
-function getKindIcon(kind: TranscriptMeta['kind']): string {
+function getKindIcon(kind: TranscriptMeta['kind']): React.ReactNode {
   switch (kind) {
-    case 'main':
-      return 'smartphone';
-    case 'cron':
-      return '⏰';
-    case 'spawn':
-      return 'monitor';
+    case 'main': return <Smartphone size={16} className="text-muted-foreground" />;
+    case 'cron': return <Timer size={16} className="text-muted-foreground" />;
+    case 'spawn': return <Monitor size={16} className="text-muted-foreground" />;
+    default: return <Monitor size={16} className="text-muted-foreground" />;
   }
 }
 
@@ -402,7 +403,7 @@ export function SessionViewer() {
                 {/* Header */}
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2 flex-1">
-                    <span className="text-lg">{getKindIcon(session.kind)}</span>
+                    <span className="flex items-center">{getKindIcon(session.kind)}</span>
                     <h3 className="font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors">
                       {session.label || 'Untitled Session'}
                     </h3>

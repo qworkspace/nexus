@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bot, Monitor} from "lucide-react";
+import { Bot, Monitor, Timer } from "lucide-react";
 
 interface StatusBarData {
   model: string;
@@ -67,7 +67,7 @@ export function StatusBar() {
       </div>
 
       <div className="flex items-center gap-1.5">
-        <span>⏰</span>
+        <Timer size={13} className="text-zinc-400" />
         <span className="text-zinc-400">Next cron:</span>
         <span className="text-white">{data.nextCron}</span>
       </div>
