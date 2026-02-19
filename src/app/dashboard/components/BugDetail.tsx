@@ -20,16 +20,16 @@ interface BugDetailProps {
 
 const PRIORITY_COLORS: Record<BugPriority, string> = {
   critical: "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800",
-  high: "bg-zinc-100 dark:bg-orange-950 text-[#FFE135] dark:text-[#FFE135] border-zinc-300 dark:border-zinc-300",
+  high: "bg-orange-100 dark:bg-orange-950 text-orange-700 dark:text-orange-400 border-orange-200 dark:border-orange-800",
   medium: "bg-yellow-100 dark:bg-yellow-950 text-yellow-700 dark:text-yellow-400 border-yellow-200 dark:border-yellow-800",
-  low: "bg-zinc-100 dark:bg-green-950 text-zinc-700 dark:text-zinc-500 border-zinc-300 dark:border-zinc-300",
+  low: "bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",
 };
 
 const STATUS_COLORS: Record<BugStatus, string> = {
   open: "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800",
-  "in-progress": "bg-zinc-100 dark:bg-blue-950 text-zinc-700 dark:text-zinc-500 border-zinc-300 dark:border-zinc-300",
-  testing: "bg-zinc-100 dark:bg-purple-950 text-zinc-700 dark:text-zinc-500 border-zinc-300 dark:border-zinc-300",
-  resolved: "bg-zinc-100 dark:bg-green-950 text-zinc-700 dark:text-zinc-500 border-zinc-300 dark:border-zinc-300",
+  "in-progress": "bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+  testing: "bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800",
+  resolved: "bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",
   closed: "bg-gray-100 dark:bg-gray-950 text-gray-700 dark:text-gray-400 border-gray-200 dark:border-gray-800",
 };
 
@@ -241,7 +241,7 @@ export function BugDetail({ bug, onClose, onUpdate, onAddComment }: BugDetailPro
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment..."
-                className="w-full px-3 py-2 text-sm border border-zinc-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-300 resize-none"
+                className="w-full px-3 py-2 text-sm border border-zinc-300 dark:border-zinc-700 rounded-lg bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                 rows={3}
               />
               <div className="flex justify-end mt-2">

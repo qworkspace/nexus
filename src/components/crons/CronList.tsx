@@ -31,13 +31,13 @@ export function CronList({ jobs, selectedJob, onSelectJob }: CronListProps) {
                 <StatusDot status={job.lastStatus} enabled={job.enabled} />
                 <div>
                   <h3 className="font-medium text-zinc-900">{job.name}</h3>
-                  <p className="text-xs text-zinc-500">
+                  <p className="text-xs text-muted-foreground">
                     {describeCronExpression(job.schedule.expr)}
                   </p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-xs text-zinc-500">Next run</p>
+                <p className="text-xs text-muted-foreground">Next run</p>
                 <p className="text-sm font-medium text-zinc-900">
                   {formatRelativeTime(job.nextRunAt)}
                 </p>
@@ -60,7 +60,7 @@ function StatusDot({ status, enabled }: { status: 'ok' | 'error' | null; enabled
   }
 
   const colors = {
-    ok: "bg-zinc-800",
+    ok: "bg-green-500",
     error: "bg-red-500",
   };
 

@@ -22,7 +22,7 @@ export function DecisionTimeline({ decisions, loading }: DecisionTimelineProps) 
 
   if (decisions.length === 0) {
     return (
-      <div className="text-center py-12 text-zinc-500">
+      <div className="text-center py-12 text-muted-foreground">
         <p className="text-lg mb-2">No decisions found</p>
         <p className="text-sm">
           Q&apos;s autonomous decisions will appear here once they are logged.
@@ -46,7 +46,7 @@ export function DecisionTimeline({ decisions, loading }: DecisionTimelineProps) 
                 !decision.outcome
                   ? "bg-[#FFE135]"
                   : decision.outcome.matched
-                  ? "bg-zinc-800"
+                  ? "bg-green-500"
                   : "bg-red-500"
               }`}
             />

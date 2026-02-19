@@ -79,7 +79,7 @@ export function BuildStats() {
         <CardTitle className="flex items-center gap-2">
           <BarChart3 className="h-4 w-4" />
           Stats
-          <span className="ml-2 text-xs text-zinc-500 font-normal">Today</span>
+          <span className="ml-2 text-xs text-muted-foreground font-normal">Today</span>
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -91,8 +91,8 @@ export function BuildStats() {
                 onClick={() => setPeriod(p)}
                 className={`px-2 py-1 text-xs rounded ${
                   period === p
-                    ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
-                    : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
+                    ? 'bg-card text-foreground dark:bg-white dark:text-zinc-900'
+                    : 'bg-zinc-100 text-muted-foreground dark:bg-secondary dark:text-muted-foreground'
                 }`}
               >
                 {p}
@@ -104,55 +104,55 @@ export function BuildStats() {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {/* Total Builds */}
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <BarChart3 className="h-3 w-3" />
               <span>Builds</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
               {stats.totalToday}
             </div>
           </div>
 
           {/* Success Rate */}
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <TrendingUp className="h-3 w-3" />
               <span>Success</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
               {stats.successRate.toFixed(0)}%
             </div>
           </div>
 
           {/* Avg Duration */}
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <Clock className="h-3 w-3" />
               <span>Avg Time</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
               {formatDuration(stats.avgDuration)}
             </div>
           </div>
 
           {/* Total Cost */}
           <div className="space-y-1">
-            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <DollarSign className="h-3 w-3" />
               <span>Cost</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
               ${formatCost(stats.totalCost)}
             </div>
           </div>
 
           {/* Lines Changed */}
           <div className="space-y-1 md:col-span-2 lg:col-span-1">
-            <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
               <BarChart3 className="h-3 w-3" />
               <span>Lines</span>
             </div>
-            <div className="text-xl font-bold text-zinc-900 dark:text-zinc-100">
+            <div className="text-xl font-bold text-zinc-900 dark:text-foreground">
               {stats.totalLinesChanged.toLocaleString()}
             </div>
           </div>

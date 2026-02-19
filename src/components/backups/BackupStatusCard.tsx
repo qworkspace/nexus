@@ -15,20 +15,20 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
   const getStatusIcon = () => {
     switch (backup.status) {
       case 'success':
-        return <CheckCircle className="h-5 w-5 text-zinc-600" />;
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
       case 'warning':
         return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case 'error':
         return <XCircle className="h-5 w-5 text-red-500" />;
       default:
-        return <Info className="h-5 w-5 text-zinc-400" />;
+        return <Info className="h-5 w-5 text-muted-foreground" />;
     }
   };
 
   const getStatusBadge = () => {
     switch (backup.status) {
       case 'success':
-        return <Badge className="bg-zinc-800 hover:bg-zinc-800"><Check size={16} className="inline mr-1" /> Healthy</Badge>;
+        return <Badge className="bg-green-500 hover:bg-green-600"><Check size={16} className="inline mr-1" /> Healthy</Badge>;
       case 'warning':
         return <Badge className="bg-yellow-500 hover:bg-yellow-600"><AlertTriangle size={16} className="inline mr-1" /> Warning</Badge>;
       case 'error':
@@ -76,7 +76,7 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
             <div>
               <h3 className="text-lg font-semibold text-zinc-900">{backup.repo.name}</h3>
               {backup.repo.description && (
-                <p className="text-sm text-zinc-500">{backup.repo.description}</p>
+                <p className="text-sm text-muted-foreground">{backup.repo.description}</p>
               )}
             </div>
           </div>
@@ -106,23 +106,23 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-zinc-700">Last Backup</span>
-                  <span className="text-sm text-zinc-600">
+                  <span className="text-sm text-muted-foreground">
                     {formatTimeAgo(backup.lastCommit.timestamp)}
                   </span>
                 </div>
                 <div className="bg-zinc-50 rounded-lg p-3 space-y-2">
                   <div className="flex items-start gap-2">
-                    <Clock className="h-4 w-4 text-zinc-400 mt-0.5" />
+                    <Clock className="h-4 w-4 text-muted-foreground mt-0.5" />
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-zinc-900 truncate">
                         {backup.lastCommit.message}
                       </p>
-                      <p className="text-xs text-zinc-500">
+                      <p className="text-xs text-muted-foreground">
                         {backup.lastCommit.author} • {formatDate(backup.lastCommit.timestamp)}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-4 text-xs text-zinc-600">
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <GitCommit className="h-3 w-3" />
                       {backup.lastCommit.shortHash}
@@ -139,23 +139,23 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-zinc-50 rounded-lg p-3">
-                <div className="text-xs text-zinc-500 mb-1">Total Commits</div>
+                <div className="text-xs text-muted-foreground mb-1">Total Commits</div>
                 <div className="text-lg font-semibold text-zinc-900">
                   {backup.totalCommits.toLocaleString()}
                 </div>
               </div>
               <div className="bg-zinc-50 rounded-lg p-3">
-                <div className="text-xs text-zinc-500 mb-1">Hours Since Backup</div>
+                <div className="text-xs text-muted-foreground mb-1">Hours Since Backup</div>
                 <div className={`text-lg font-semibold ${backup.isStale ? 'text-red-600' : 'text-zinc-900'}`}>
                   {backup.hoursSinceBackup.toFixed(1)}h
                 </div>
               </div>
               <div className="bg-zinc-50 rounded-lg p-3">
-                <div className="text-xs text-zinc-500 mb-1">Repository Size</div>
+                <div className="text-xs text-muted-foreground mb-1">Repository Size</div>
                 <div className="text-lg font-semibold text-zinc-900">{backup.sizeFormatted}</div>
               </div>
               <div className="bg-zinc-50 rounded-lg p-3">
-                <div className="text-xs text-zinc-500 mb-1">File Count</div>
+                <div className="text-xs text-muted-foreground mb-1">File Count</div>
                 <div className="text-lg font-semibold text-zinc-900">
                   {backup.fileCount.toLocaleString()}
                 </div>
@@ -171,23 +171,23 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
                 </Badge>
               </div>
               {backup.remoteStatus.hasRemote ? (
-                <div className="space-y-1 text-xs text-zinc-600">
+                <div className="space-y-1 text-xs text-muted-foreground">
                   {backup.remoteStatus.isAhead > 0 && (
                     <div className="text-yellow-600">
                       ↑ {backup.remoteStatus.isAhead} commit{backup.remoteStatus.isAhead > 1 ? 's' : ''} ahead
                     </div>
                   )}
                   {backup.remoteStatus.isBehind > 0 && (
-                    <div className="text-[#FFE135]">
+                    <div className="text-orange-600">
                       ↓ {backup.remoteStatus.isBehind} commit{backup.remoteStatus.isBehind > 1 ? 's' : ''} behind
                     </div>
                   )}
                   {backup.remoteStatus.isAhead === 0 && backup.remoteStatus.isBehind === 0 && (
-                    <div className="text-zinc-600"><Check size={16} className="inline mr-1" /> Up to date with remote</div>
+                    <div className="text-green-600"><Check size={16} className="inline mr-1" /> Up to date with remote</div>
                   )}
                 </div>
               ) : (
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-muted-foreground">
                   No remote configured. Consider adding a remote backup location.
                 </p>
               )}
@@ -196,7 +196,7 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
         )}
 
         {/* Path */}
-        <div className="text-xs text-zinc-400">
+        <div className="text-xs text-muted-foreground">
           {backup.repo.path}
         </div>
       </CardContent>

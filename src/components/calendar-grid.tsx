@@ -45,11 +45,11 @@ function isSameDay(date1: Date, date2: Date): boolean {
 }
 
 const jobColors: Record<string, string> = {
-  "morning-brief": "bg-zinc-100 border-zinc-300 text-[#FFE135]",
-  "morning-mode": "bg-zinc-100 border-zinc-300 text-zinc-800",
-  "discord-digest-morning": "bg-zinc-100 border-zinc-300 text-zinc-700",
-  "discord-digest-evening": "bg-zinc-100 border-zinc-300 text-zinc-700",
-  "night-mode": "bg-zinc-100 border-zinc-300 text-zinc-700",
+  "morning-brief": "bg-amber-100 border-amber-300 text-amber-800",
+  "morning-mode": "bg-blue-100 border-blue-300 text-blue-800",
+  "discord-digest-morning": "bg-purple-100 border-purple-300 text-purple-800",
+  "discord-digest-evening": "bg-purple-100 border-purple-300 text-purple-800",
+  "night-mode": "bg-indigo-100 border-indigo-300 text-indigo-800",
   "dj-discovery": "bg-pink-100 border-pink-300 text-pink-800",
 };
 
@@ -88,7 +88,7 @@ export function CalendarGrid({ weekStart, events }: CalendarGridProps) {
               key={i}
               className={cn(
                 "p-2 text-center border-r border-zinc-200 last:border-r-0",
-                isSameDay(date, today) && "bg-zinc-900 text-white"
+                isSameDay(date, today) && "bg-card text-foreground"
               )}
             >
               <div className="text-xs font-medium">{dayNames[date.getDay()]}</div>
@@ -105,7 +105,7 @@ export function CalendarGrid({ weekStart, events }: CalendarGridProps) {
               className="grid grid-cols-[60px_repeat(7,1fr)] border-b border-zinc-100 last:border-b-0"
             >
               {/* Hour label */}
-              <div className="p-1 text-xs text-zinc-400 text-right pr-2 border-r border-zinc-100">
+              <div className="p-1 text-xs text-muted-foreground text-right pr-2 border-r border-zinc-100">
                 {formatHour(hour)}
               </div>
 
@@ -148,20 +148,20 @@ export function CalendarGrid({ weekStart, events }: CalendarGridProps) {
           </DialogHeader>
           <div className="space-y-3">
             <div>
-              <span className="text-sm text-zinc-500">Scheduled time</span>
+              <span className="text-sm text-muted-foreground">Scheduled time</span>
               <p className="font-medium">
                 {selectedEvent &&
                   new Date(selectedEvent.datetime).toLocaleString()}
               </p>
             </div>
             <div>
-              <span className="text-sm text-zinc-500">Cron expression</span>
+              <span className="text-sm text-muted-foreground">Cron expression</span>
               <Badge variant="secondary" className="ml-2 font-mono">
                 {selectedEvent?.schedule}
               </Badge>
             </div>
             <div>
-              <span className="text-sm text-zinc-500">Job ID</span>
+              <span className="text-sm text-muted-foreground">Job ID</span>
               <p className="font-mono text-sm">{selectedEvent?.jobId}</p>
             </div>
           </div>

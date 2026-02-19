@@ -24,7 +24,7 @@ export function CacheChart({ data }: CacheChartProps) {
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-64">
-        <p className="text-zinc-500 text-sm">No cache data for this period</p>
+        <p className="text-muted-foreground text-sm">No cache data for this period</p>
       </div>
     );
   }

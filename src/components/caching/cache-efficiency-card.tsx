@@ -17,8 +17,8 @@ export function CacheEfficiencyCard({
   period,
 }: CacheEfficiencyCardProps) {
   const getColor = () => {
-    if (hitRate >= 85) return "text-zinc-600";
-    if (hitRate >= 70) return "text-zinc-600";
+    if (hitRate >= 85) return "text-emerald-600";
+    if (hitRate >= 70) return "text-blue-600";
     if (hitRate >= 50) return "text-yellow-600";
     return "text-red-600";
   };
@@ -36,8 +36,8 @@ export function CacheEfficiencyCard({
   const offset = circumference - (hitRate / 100) * circumference;
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
-      <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">Cache Hit Rate ({period})</p>
+    <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+      <p className="text-sm font-medium text-muted-foreground dark:text-muted-foreground">Cache Hit Rate ({period})</p>
       <div className="flex items-center justify-center mt-4">
         <svg width={100} height={100} className="transform -rotate-90">
           <circle
@@ -66,7 +66,7 @@ export function CacheEfficiencyCard({
           {hitRate.toFixed(1)}%
         </span>
       </div>
-      <p className="text-xs text-zinc-500 text-center mt-2">
+      <p className="text-xs text-muted-foreground text-center mt-2">
         {totalTokens > 0 ? `${(cacheReadTokens / totalTokens * 100).toFixed(1)}% cached` : "No data"}
       </p>
     </div>

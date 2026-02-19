@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import useSWR from 'swr';
 import Link from 'next/link';
 import { 
@@ -13,10 +13,7 @@ import {
   User,
   Plus,
   Loader2,
-  ExternalLink,
-  Smartphone,
-  Timer,
-  Monitor
+  ExternalLink
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
@@ -72,12 +69,14 @@ function formatDate(date: Date): string {
   });
 }
 
-function getKindIcon(kind: TranscriptMeta['kind']): React.ReactNode {
+function getKindIcon(kind: TranscriptMeta['kind']): string {
   switch (kind) {
-    case 'main': return <Smartphone size={16} className="text-muted-foreground" />;
-    case 'cron': return <Timer size={16} className="text-muted-foreground" />;
-    case 'spawn': return <Monitor size={16} className="text-muted-foreground" />;
-    default: return <Monitor size={16} className="text-muted-foreground" />;
+    case 'main':
+      return 'smartphone';
+    case 'cron':
+      return '⏰';
+    case 'spawn':
+      return 'monitor';
   }
 }
 
@@ -197,15 +196,15 @@ export function SessionViewer() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-3">
-            <ScrollText className="w-6 h-6 text-zinc-600" />
+            <ScrollText className="w-6 h-6 text-muted-foreground" />
             <h1 className="text-2xl font-semibold text-zinc-900">Session Browser</h1>
             {data?.source === 'live' && (
-              <Badge variant="outline" className="text-zinc-600 border-zinc-300">
+              <Badge variant="outline" className="text-green-600 border-green-600">
                 Live
               </Badge>
             )}
             {data?.source === 'mock' && (
-              <Badge variant="outline" className="text-[#FFE135] border-zinc-300">
+              <Badge variant="outline" className="text-amber-600 border-amber-600">
                 Mock Data
               </Badge>
             )}
@@ -216,7 +215,7 @@ export function SessionViewer() {
             <ExternalLink className="w-3 h-3" />
           </Button>
         </div>
-        <p className="text-zinc-500 text-sm ml-9">
+        <p className="text-muted-foreground text-sm ml-9">
           Browse and search through all agent sessions with transcript viewer
         </p>
       </div>
@@ -224,7 +223,7 @@ export function SessionViewer() {
       {/* Search */}
       <div className="mb-6">
         <div className="relative">
-          <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search sessions by label, message, agent, or session ID..."
@@ -241,7 +240,7 @@ export function SessionViewer() {
         <div className="flex flex-wrap items-center gap-4">
           {/* Filter by type */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-zinc-500 font-medium">Type:</span>
+            <span className="text-sm text-muted-foreground font-medium">Type:</span>
             <div className="flex gap-1">
               {(['all', 'main', 'cron', 'spawn'] as FilterType[]).map((type) => (
                 <button
@@ -249,7 +248,7 @@ export function SessionViewer() {
                   onClick={() => setFilterType(type)}
                   className={`px-3 py-1 text-sm rounded-md transition-colors ${
                     filterType === type
-                      ? 'bg-zinc-900 text-white'
+                      ? 'bg-card text-foreground'
                       : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
@@ -261,7 +260,7 @@ export function SessionViewer() {
 
           {/* Filter by agent */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-zinc-500 font-medium">Agent:</span>
+            <span className="text-sm text-muted-foreground font-medium">Agent:</span>
             <select
               value={agentFilter}
               onChange={(e) => setAgentFilter(e.target.value)}
@@ -278,7 +277,7 @@ export function SessionViewer() {
 
           {/* Filter by date */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-zinc-500 font-medium">Date:</span>
+            <span className="text-sm text-muted-foreground font-medium">Date:</span>
             <div className="flex gap-1">
               {(['all', 'today', 'week', 'month'] as const).map((date) => (
                 <button
@@ -286,7 +285,7 @@ export function SessionViewer() {
                   onClick={() => setDateFilter(date)}
                   className={`px-3 py-1 text-sm rounded-md transition-colors ${
                     dateFilter === date
-                      ? 'bg-zinc-900 text-white'
+                      ? 'bg-card text-foreground'
                       : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
@@ -298,7 +297,7 @@ export function SessionViewer() {
 
           {/* Filter by status */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-zinc-500 font-medium">Status:</span>
+            <span className="text-sm text-muted-foreground font-medium">Status:</span>
             <div className="flex gap-1">
               {(['all', 'active', 'completed'] as StatusFilter[]).map((status) => (
                 <button
@@ -306,7 +305,7 @@ export function SessionViewer() {
                   onClick={() => setStatusFilter(status)}
                   className={`px-3 py-1 text-sm rounded-md transition-colors ${
                     statusFilter === status
-                      ? 'bg-zinc-900 text-white'
+                      ? 'bg-card text-foreground'
                       : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
@@ -319,7 +318,7 @@ export function SessionViewer() {
 
         {/* Sort Controls */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-500 font-medium">Sort by:</span>
+          <span className="text-sm text-muted-foreground font-medium">Sort by:</span>
           <div className="flex gap-1">
             {(['recent', 'oldest', 'tokens', 'duration'] as SortType[]).map((sort) => (
               <button
@@ -327,7 +326,7 @@ export function SessionViewer() {
                 onClick={() => setSortType(sort)}
                 className={`px-3 py-1 text-sm rounded-md transition-colors flex items-center gap-1 ${
                   sortType === sort
-                    ? 'bg-zinc-900 text-white'
+                    ? 'bg-card text-foreground'
                     : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                 }`}
               >
@@ -341,7 +340,7 @@ export function SessionViewer() {
 
       {/* Results count and data source info */}
       <div className="mb-4 flex items-center justify-between">
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-muted-foreground">
           {isLoading ? (
             <span className="flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -357,7 +356,7 @@ export function SessionViewer() {
           )}
         </p>
         {data?.error && (
-          <p className="text-xs text-[#FFE135]">{data.error}</p>
+          <p className="text-xs text-amber-600">{data.error}</p>
         )}
       </div>
 
@@ -365,18 +364,18 @@ export function SessionViewer() {
       <div className="space-y-3">
         {isLoading ? (
           <div className="text-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-zinc-400" />
-            <p className="text-zinc-500">Loading sessions...</p>
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-muted-foreground" />
+            <p className="text-muted-foreground">Loading sessions...</p>
           </div>
         ) : error ? (
           <div className="text-center py-12">
             <p className="text-red-600 mb-2">Failed to load sessions</p>
-            <p className="text-sm text-zinc-500">Please check console for details</p>
+            <p className="text-sm text-muted-foreground">Please check console for details</p>
           </div>
         ) : filteredSessions.length === 0 ? (
           <div className="text-center py-12">
-            <ScrollText className="w-12 h-12 mx-auto mb-4 text-zinc-300" />
-            <p className="text-zinc-500">No sessions match your filters</p>
+            <ScrollText className="w-12 h-12 mx-auto mb-4 text-foreground" />
+            <p className="text-muted-foreground">No sessions match your filters</p>
             <Button 
               variant="outline" 
               size="sm" 
@@ -403,48 +402,48 @@ export function SessionViewer() {
                 {/* Header */}
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2 flex-1">
-                    <span className="flex items-center">{getKindIcon(session.kind)}</span>
-                    <h3 className="font-semibold text-zinc-900 group-hover:text-zinc-600 transition-colors">
+                    <span className="text-lg">{getKindIcon(session.kind)}</span>
+                    <h3 className="font-semibold text-zinc-900 group-hover:text-blue-600 transition-colors">
                       {session.label || 'Untitled Session'}
                     </h3>
                     <Badge variant={getKindBadgeVariant(session.kind)} className="ml-2">
                       {session.kind}
                     </Badge>
                   </div>
-                  <span className="text-xs text-zinc-400 whitespace-nowrap ml-2">
+                  <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
                     {formatDate(session.startedAt)}
                   </span>
                 </div>
 
                 {/* Stats */}
                 <div className="flex flex-wrap items-center gap-4 mb-2">
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <MessageSquare className="w-3.5 h-3.5" />
                     <span>{session.messageCount} messages</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <Hash className="w-3.5 h-3.5" />
                     <span>{formatTokens(session.tokenCount)} tokens</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <Clock className="w-3.5 h-3.5" />
                     <span>{formatDuration(session.duration)}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 text-xs text-zinc-500">
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                     <User className="w-3.5 h-3.5" />
                     <span className="font-mono">{session.agent}</span>
                   </div>
-                  <span className="text-xs text-zinc-400">•</span>
-                  <span className="text-xs font-mono text-zinc-400">{session.model}</span>
+                  <span className="text-xs text-muted-foreground">•</span>
+                  <span className="text-xs font-mono text-muted-foreground">{session.model}</span>
                 </div>
 
                 {/* Preview */}
-                <p className="text-sm text-zinc-600 line-clamp-2">
+                <p className="text-sm text-muted-foreground line-clamp-2">
                   {session.lastMessage || 'No messages yet'}
                 </p>
 
                 {/* Session ID (for debugging) */}
-                <p className="text-xs text-zinc-400 mt-2 font-mono">
+                <p className="text-xs text-muted-foreground mt-2 font-mono">
                   ID: {session.sessionId.substring(0, 16)}...
                 </p>
               </div>

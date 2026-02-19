@@ -4,6 +4,7 @@ import path from 'path';
 
 const HISTORY_FILE = path.join(
   process.env.HOME!,
+  '.openclaw',
   'shared',
   'floor-history.jsonl'
 );

@@ -59,20 +59,20 @@ export function ModelSwitcher() {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <RefreshCw size={16} /> SWITCH MODEL
-            <span className="ml-auto text-xs text-zinc-400 font-normal">ESC</span>
+            <span className="ml-auto text-xs text-muted-foreground font-normal">ESC</span>
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           <div className="p-3 bg-zinc-50 rounded-md">
-            <div className="text-sm text-zinc-600">Current</div>
+            <div className="text-sm text-muted-foreground">Current</div>
             <div className="font-semibold text-zinc-900">
               {currentModel?.name} ({currentModel?.quality})
             </div>
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold text-zinc-500 uppercase mb-2">SELECT MODEL</h3>
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">SELECT MODEL</h3>
             <div className="space-y-2">
               {MODELS.map((model) => (
                 <button
@@ -88,21 +88,21 @@ export function ModelSwitcher() {
                   <div className="flex items-center gap-3">
                     <div className="w-4 h-4 rounded-full border-2 flex items-center justify-center">
                       {selectedModel === model.id && (
-                        <div className="w-2 h-2 rounded-full bg-zinc-900" />
+                        <div className="w-2 h-2 rounded-full bg-card" />
                       )}
                     </div>
                     <div className="text-left">
                       <div className="font-medium text-zinc-900">{model.name}</div>
-                      <div className="text-xs text-zinc-500">{model.quality}</div>
+                      <div className="text-xs text-muted-foreground">{model.quality}</div>
                     </div>
                   </div>
-                  <div className="text-sm font-semibold text-zinc-600">{model.cost}</div>
+                  <div className="text-sm font-semibold text-muted-foreground">{model.cost}</div>
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="flex items-start gap-2 text-xs text-[#FFE135] bg-zinc-50 p-3 rounded-md">
+          <div className="flex items-start gap-2 text-xs text-amber-600 bg-amber-50 p-3 rounded-md">
             <AlertTriangle size={16} />
             <span>Model change affects main session only</span>
           </div>

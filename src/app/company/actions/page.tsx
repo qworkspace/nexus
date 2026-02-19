@@ -33,9 +33,9 @@ const COLUMNS = [
 ];
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "bg-red-600",
+  high: "bg-red-500",
   medium: "bg-[#FFE135]",
-  low: "bg-zinc-900",
+  low: "bg-[#FFE135]",
 };
 
 export default function ActionsPage() {
@@ -69,20 +69,20 @@ export default function ActionsPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <Link href="/company" className="text-sm text-zinc-500 hover:text-foreground hover:underline mb-2 inline-block">← The Core</Link>
+      <Link href="/company" className="text-sm text-foreground hover:underline mb-2 inline-block">← The Core</Link>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground flex items-center gap-2">
             <Inbox size={24} />
             Action Items Board
           </h1>
-          <p className="text-zinc-500 text-sm">{items.length} total items</p>
+          <p className="text-muted-foreground text-sm">{items.length} total items</p>
         </div>
         <div className="flex gap-2">
           <select
             value={agentFilter}
             onChange={e => setAgentFilter(e.target.value)}
-            className="px-3 py-1 rounded-lg text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 border border-zinc-200 dark:border-zinc-700"
+            className="px-3 py-1 rounded-lg text-xs bg-zinc-100 dark:bg-secondary text-zinc-700 dark:text-foreground border border-zinc-200 dark:border-border"
           >
             <option value="all">All Agents</option>
             {agents.map(a => (
@@ -96,13 +96,13 @@ export default function ActionsPage() {
         {COLUMNS.map(col => {
           const colItems = filtered.filter(i => i.status === col.key);
           return (
-            <div key={col.key} className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
+            <div key={col.key} className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <h3 className="font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
                   <col.icon size={16} />
                   {col.label}
                 </h3>
-                <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-500">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-secondary text-muted-foreground">
                   {colItems.length}
                 </span>
               </div>
@@ -111,27 +111,27 @@ export default function ActionsPage() {
                 {colItems.map(item => {
                   const agent = agentMap[item.assignee] || agentMap[item.assignee.toLowerCase()];
                   return (
-                    <div key={item.id} className="p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-800/50">
+                    <div key={item.id} className="p-3 rounded-lg border border-zinc-200 dark:border-border bg-zinc-50 dark:bg-secondary/50">
                       <div className="flex items-center gap-2 mb-2">
                         {agent?.emoji ? (
                           <AgentIcon emoji={agent.emoji} size={14} />
                         ) : (
-                          <HelpCircle size={14} className="text-zinc-400" />
+                          <HelpCircle size={14} className="text-muted-foreground" />
                         )}
-                        <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                        <span className="text-xs font-medium text-zinc-700 dark:text-foreground">
                           @{agent?.name || item.assignee}
                         </span>
                         <span className={`w-2 h-2 rounded-full ${PRIORITY_COLORS[item.priority] || "bg-zinc-400"}`} />
                       </div>
-                      <p className="text-sm text-zinc-700 dark:text-zinc-300 mb-2">{item.task}</p>
+                      <p className="text-sm text-zinc-700 dark:text-foreground mb-2">{item.task}</p>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-zinc-400">
+                        <span className="text-xs text-muted-foreground">
                           {item.source?.meeting} • {item.source?.date}
                         </span>
                         {col.key === "new" && (
                           <button
                             onClick={() => updateStatus(item.id, "in-progress")}
-                            className="text-xs text-zinc-500 hover:text-foreground hover:underline"
+                            className="text-xs text-foreground hover:underline"
                           >
                             Start →
                           </button>
@@ -139,7 +139,7 @@ export default function ActionsPage() {
                         {col.key === "in-progress" && (
                           <button
                             onClick={() => updateStatus(item.id, "done")}
-                            className="text-xs text-zinc-500 hover:text-foreground hover:underline flex items-center gap-1"
+                            className="text-xs text-foreground hover:underline flex items-center gap-1"
                           >
                             Done
                             <Check size={12} />
@@ -148,14 +148,14 @@ export default function ActionsPage() {
                         {col.key === "blocked" && (
                           <button
                             onClick={() => updateStatus(item.id, "new")}
-                            className="text-xs text-zinc-600 hover:underline"
+                            className="text-xs text-[#FFE135] hover:underline"
                           >
                             Unblock
                           </button>
                         )}
                       </div>
                       {item.outcome && (
-                        <p className="text-xs text-zinc-600 mt-1 flex items-center gap-1">
+                        <p className="text-xs text-foreground mt-1 flex items-center gap-1">
                           <CheckCircle size={12} />
                           {item.outcome}
                         </p>
@@ -170,7 +170,7 @@ export default function ActionsPage() {
                   );
                 })}
                 {colItems.length === 0 && (
-                  <p className="text-xs text-zinc-400 text-center py-4">No items</p>
+                  <p className="text-xs text-muted-foreground text-center py-4">No items</p>
                 )}
               </div>
             </div>

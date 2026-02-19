@@ -36,9 +36,9 @@ function formatDate(isoString: string): string {
 }
 
 function getSimilarityColor(score: number): string {
-  if (score >= 0.8) return 'bg-zinc-100 text-zinc-700';
+  if (score >= 0.8) return 'bg-green-100 text-green-700';
   if (score >= 0.6) return 'bg-yellow-100 text-yellow-700';
-  if (score >= 0.4) return 'bg-zinc-100 text-[#FFE135]';
+  if (score >= 0.4) return 'bg-orange-100 text-orange-700';
   return 'bg-gray-100 text-gray-700';
 }
 
@@ -63,14 +63,14 @@ export function MemoryChunkCard({
           <div className="flex-1 min-w-0">
             {/* Source */}
             <div className="flex items-center gap-2 mb-2">
-              <ExternalLink className="w-3.5 h-3.5 text-zinc-400" />
-              <span className="text-sm font-mono text-zinc-600 truncate">
+              <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
+              <span className="text-sm font-mono text-muted-foreground truncate">
                 {formatSourcePath(metadata.source)}
               </span>
             </div>
 
             {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-500">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
               <span>Chunk {metadata.chunk_index + 1} of {metadata.total_chunks}</span>
               <span>•</span>
               <span>{formatDate(created_at)}</span>
@@ -102,7 +102,7 @@ export function MemoryChunkCard({
         {content.length > 200 && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="mt-3 flex items-center gap-1 text-sm text-zinc-500 hover:text-zinc-900 transition-colors"
+            className="mt-3 flex items-center gap-1 text-sm text-muted-foreground hover:text-zinc-900 transition-colors"
           >
             {expanded ? (
               <>

@@ -66,7 +66,7 @@ export function MemoryStatsCard() {
     <div className="border border-zinc-200 rounded-lg bg-white p-6">
       {/* Header */}
       <div className="flex items-center gap-2 mb-4">
-        <Brain className="w-5 h-5 text-zinc-600" />
+        <Brain className="w-5 h-5 text-muted-foreground" />
         <h3 className="font-semibold text-zinc-900">Memory Stats</h3>
       </div>
 
@@ -74,23 +74,23 @@ export function MemoryStatsCard() {
       <div className="grid grid-cols-2 gap-4">
         {/* Total Chunks */}
         <div className="flex items-start gap-3">
-          <Database className="w-4 h-4 text-zinc-400 mt-0.5" />
+          <Database className="w-4 h-4 text-muted-foreground mt-0.5" />
           <div>
             <p className="text-2xl font-semibold text-zinc-900">
               {data.totalMemories}
             </p>
-            <p className="text-xs text-zinc-500">chunks indexed</p>
+            <p className="text-xs text-muted-foreground">chunks indexed</p>
           </div>
         </div>
 
         {/* Total Files */}
         <div className="flex items-start gap-3">
-          <FileText className="w-4 h-4 text-zinc-400 mt-0.5" />
+          <FileText className="w-4 h-4 text-muted-foreground mt-0.5" />
           <div>
             <p className="text-2xl font-semibold text-zinc-900">
               {data.totalFiles}
             </p>
-            <p className="text-xs text-zinc-500">source files</p>
+            <p className="text-xs text-muted-foreground">source files</p>
           </div>
         </div>
       </div>
@@ -99,19 +99,19 @@ export function MemoryStatsCard() {
       <div className="mt-4 pt-4 border-t border-zinc-100 space-y-2">
         {/* Model */}
         <div className="flex items-center justify-between text-xs">
-          <span className="text-zinc-500">Embedding model</span>
+          <span className="text-muted-foreground">Embedding model</span>
           <span className="font-mono text-zinc-700">{data.model}</span>
         </div>
 
         {/* Index Size */}
         <div className="flex items-center justify-between text-xs">
-          <span className="text-zinc-500">Est. index size</span>
+          <span className="text-muted-foreground">Est. index size</span>
           <span className="text-zinc-700">{formatSize(data.totalMemories)}</span>
         </div>
 
         {/* Last Updated */}
         <div className="flex items-center justify-between text-xs">
-          <span className="text-zinc-500">Last indexed</span>
+          <span className="text-muted-foreground">Last indexed</span>
           <div className="flex items-center gap-1 text-zinc-700">
             <Clock className="w-3 h-3" />
             <span>{formatDate(data.lastUpdated)}</span>

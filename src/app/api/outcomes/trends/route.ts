@@ -34,7 +34,7 @@ interface TrendsResponse {
 }
 
 function getOutcomesDir(): string {
-  return join(homedir(), "shared", "logs", "outcomes");
+  return join(homedir(), ".openclaw", "shared", "logs", "outcomes");
 }
 
 function parseOutcomeFile(filepath: string): Outcome[] {

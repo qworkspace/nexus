@@ -19,11 +19,11 @@ export function BackupAlerts({ critical, warning, info }: BackupAlertsProps) {
   }
 
   return (
-    <Card className="border-zinc-300">
+    <Card className="border-orange-200">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-[#FFE135]" />
+            <AlertCircle className="h-5 w-5 text-orange-500" />
             <span>Backup Alerts</span>
           </div>
           <Badge variant="destructive" className="text-xs">
@@ -100,7 +100,7 @@ export function BackupAlerts({ critical, warning, info }: BackupAlertsProps) {
                     <Badge variant="outline" className="text-xs">Info</Badge>
                   </div>
                   {!backup.remoteStatus.hasRemote && (
-                    <p className="text-sm text-zinc-600">
+                    <p className="text-sm text-muted-foreground">
                       No remote repository configured. Consider adding a remote backup location.
                     </p>
                   )}

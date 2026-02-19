@@ -259,12 +259,11 @@ export default function RelationshipsPage() {
       ctx.lineWidth = isHovered ? 3 : 2;
       ctx.stroke();
 
-      // Agent initial
-      ctx.font = `bold ${isHovered ? 16 : 12}px sans-serif`;
+      // Emoji
+      ctx.font = `${isHovered ? 18 : 14}px serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillStyle = color;
-      ctx.fillText(node.name.charAt(0).toUpperCase(), node.x, node.y);
+      ctx.fillText(node.emoji, node.x, node.y);
 
       // Name
       ctx.fillStyle = color;
@@ -307,29 +306,29 @@ export default function RelationshipsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground flex items-center gap-2">
             <LinkIcon size={24} />
             Relationships
           </h1>
-          <p className="text-zinc-500 text-sm">Trust scores and interaction patterns</p>
+          <p className="text-muted-foreground text-sm">Trust scores and interaction patterns</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setView("graph")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "graph" ? "bg-zinc-900 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
+          <button onClick={() => setView("graph")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "graph" ? "bg-foreground text-foreground" : "bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground"}`}>
             Graph
           </button>
-          <button onClick={() => setView("matrix")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "matrix" ? "bg-zinc-900 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
+          <button onClick={() => setView("matrix")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "matrix" ? "bg-foreground text-foreground" : "bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground"}`}>
             Matrix
           </button>
-          <button onClick={() => setView("timeline")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "timeline" ? "bg-zinc-900 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
+          <button onClick={() => setView("timeline")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "timeline" ? "bg-foreground text-foreground" : "bg-zinc-100 dark:bg-secondary text-muted-foreground dark:text-muted-foreground"}`}>
             Timeline
           </button>
-          <Link href="/company" className="text-xs text-zinc-500 hover:text-foreground hover:underline ml-4">← HQ</Link>
+          <Link href="/company" className="text-xs text-foreground hover:underline ml-4">← HQ</Link>
         </div>
       </div>
 
       {view === "graph" ? (
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-          <div className="xl:col-span-2 bg-zinc-900 rounded-xl border border-zinc-700 overflow-hidden">
+          <div className="xl:col-span-2 bg-card rounded-xl border border-border overflow-hidden">
             <canvas
               ref={canvasRef}
               width={800}
@@ -342,18 +341,18 @@ export default function RelationshipsPage() {
             />
           </div>
           <div className="space-y-4">
-            <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">Legend</h3>
-              <div className="space-y-2 text-xs text-zinc-500">
-                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-zinc-800" /> High trust (60+)</div>
+            <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-3">Legend</h3>
+              <div className="space-y-2 text-xs text-muted-foreground">
+                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#FFE135]" /> High trust (60+)</div>
                 <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#FFE135]" /> Neutral (40-59)</div>
                 <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-red-500" /> Low trust (&lt;40)</div>
-                <div className="flex items-center gap-2"><span className="text-zinc-400">Line thickness</span> = trust level</div>
+                <div className="flex items-center gap-2"><span className="text-muted-foreground">Line thickness</span> = trust level</div>
               </div>
             </div>
             {hoveredNode && (
-              <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2 flex items-center gap-1.5">
+              <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2 flex items-center gap-1.5">
                   <AgentIcon emoji={AGENT_EMOJIS[hoveredNode]} size={14} />
                   {relData.find(a => a.agentId === hoveredNode)?.agentName}
                 </h3>
@@ -363,7 +362,7 @@ export default function RelationshipsPage() {
                     .sort(([,a], [,b]) => b.trust - a.trust)
                     .map(([id, rel]) => (
                     <div key={id} className="flex items-center justify-between text-xs">
-                      <span className="text-zinc-500 flex items-center gap-1.5">
+                      <span className="text-muted-foreground flex items-center gap-1.5">
                         <AgentIcon emoji={AGENT_EMOJIS[id]} size={12} />
                         {relData.find(a => a.agentId === id)?.agentName || id}
                       </span>
@@ -377,13 +376,13 @@ export default function RelationshipsPage() {
         </div>
       ) : view === "matrix" ? (
         /* Matrix View */
-        <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 overflow-x-auto">
+        <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4 overflow-x-auto">
           <table className="w-full text-xs">
             <thead>
               <tr>
-                <th className="p-2 text-left text-zinc-500 font-medium">Agent</th>
+                <th className="p-2 text-left text-muted-foreground font-medium">Agent</th>
                 {localAgents.map(a => (
-                  <th key={a.agentId} className="p-2 text-center text-zinc-500 font-medium">
+                  <th key={a.agentId} className="p-2 text-center text-muted-foreground font-medium">
                     <div className="flex flex-col items-center gap-1">
                       <AgentIcon emoji={AGENT_EMOJIS[a.agentId]} size={14} />
                       <span className="text-[10px]">{a.agentName}</span>
@@ -394,26 +393,26 @@ export default function RelationshipsPage() {
             </thead>
             <tbody>
               {localAgents.map(agent => (
-                <tr key={agent.agentId} className="border-t border-zinc-100 dark:border-zinc-800">
-                  <td className="p-2 font-medium text-zinc-700 dark:text-zinc-300 flex items-center gap-1.5">
+                <tr key={agent.agentId} className="border-t border-zinc-100 dark:border-border">
+                  <td className="p-2 font-medium text-zinc-700 dark:text-foreground flex items-center gap-1.5">
                     <AgentIcon emoji={AGENT_EMOJIS[agent.agentId]} size={14} />
                     {agent.agentName}
                   </td>
                   {agentIds.map(otherId => {
                     if (agent.agentId === otherId) {
-                      return <td key={otherId} className="p-2 text-center text-zinc-300 dark:text-zinc-700">—</td>;
+                      return <td key={otherId} className="p-2 text-center text-foreground dark:text-zinc-700">—</td>;
                     }
                     const rel = getRelation(agent.agentId, otherId);
                     return (
                       <td
                         key={otherId}
-                        className="p-2 text-center cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-800 transition"
+                        className="p-2 text-center cursor-pointer hover:bg-zinc-50 dark:hover:bg-secondary transition"
                         onClick={() => setSelectedPair({ from: agent.agentId, to: otherId })}
                       >
                         <div className="flex flex-col items-center gap-1">
                           <TrustBadge trust={rel?.trust ?? 50} />
                           {rel?.lastInteraction && (
-                            <span className="text-[9px] text-zinc-400">
+                            <span className="text-[9px] text-muted-foreground">
                               {(() => {
                                 const date = new Date(rel.lastInteraction);
                                 const now = new Date();
@@ -441,29 +440,29 @@ export default function RelationshipsPage() {
             const fromName = relData.find(a => a.agentId === selectedPair.from)?.agentName;
             const toName = relData.find(a => a.agentId === selectedPair.to)?.agentName;
             return (
-              <div className="mt-4 p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+              <div className="mt-4 p-4 rounded-lg bg-zinc-50 dark:bg-secondary border border-zinc-200 dark:border-border">
                 <div className="flex items-center justify-between mb-2">
-                  <h4 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                  <h4 className="text-sm font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
                     <AgentIcon emoji={AGENT_EMOJIS[selectedPair.from]} size={14} />
                     {fromName} →
                     <AgentIcon emoji={AGENT_EMOJIS[selectedPair.to]} size={14} />
                     {toName}
                   </h4>
-                  <button onClick={() => setSelectedPair(null)} className="text-xs text-zinc-400 hover:text-zinc-600">
+                  <button onClick={() => setSelectedPair(null)} className="text-xs text-muted-foreground hover:text-muted-foreground">
                     <X size={16} />
                   </button>
                 </div>
                 <div className="grid grid-cols-3 gap-4 text-xs">
                   <div>
-                    <p className="text-zinc-500">Trust</p>
-                    <p className="font-bold text-lg text-zinc-900 dark:text-zinc-100">{rel.trust}/100</p>
+                    <p className="text-muted-foreground">Trust</p>
+                    <p className="font-bold text-lg text-zinc-900 dark:text-foreground">{rel.trust}/100</p>
                   </div>
                   <div>
-                    <p className="text-zinc-500">Interactions</p>
-                    <p className="font-bold text-lg text-zinc-900 dark:text-zinc-100">{rel.interactionCount}</p>
+                    <p className="text-muted-foreground">Interactions</p>
+                    <p className="font-bold text-lg text-zinc-900 dark:text-foreground">{rel.interactionCount}</p>
                   </div>
                   <div>
-                    <p className="text-zinc-500">Trend</p>
+                    <p className="text-muted-foreground">Trend</p>
                     <p className="font-bold text-lg flex items-center gap-1.5">
                       <TrendIcon 
                         trend={rel.trend === "up" ? "improving" : rel.trend === "down" ? "declining" : "stable"} 
@@ -473,7 +472,7 @@ export default function RelationshipsPage() {
                     </p>
                   </div>
                 </div>
-                <p className="text-xs text-zinc-500 mt-2 italic">&quot;{rel.opinion}&quot;</p>
+                <p className="text-xs text-muted-foreground mt-2 italic">&quot;{rel.opinion}&quot;</p>
               </div>
             );
           })()}
@@ -534,12 +533,12 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
   };
 
   return (
-    <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
-      <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">
+    <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+      <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-4">
         Recent Interactions
       </h3>
       {sorted.length === 0 ? (
-        <div className="text-center py-12 text-zinc-500">
+        <div className="text-center py-12 text-muted-foreground">
           <p className="text-sm">No interactions recorded yet</p>
         </div>
       ) : (
@@ -547,31 +546,31 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
           {sorted.slice(0, 20).map((evt, i) => (
             <div
               key={i}
-              className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700"
+              className="p-3 rounded-lg bg-zinc-50 dark:bg-secondary border border-zinc-200 dark:border-border"
             >
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2 text-xs">
                   <AgentIcon emoji={AGENT_EMOJIS[evt.fromAgent]} size={14} />
-                  <span className="text-zinc-700 dark:text-zinc-300">
+                  <span className="text-zinc-700 dark:text-foreground">
                     {evt.fromName}
                   </span>
-                  <span className="text-zinc-400">→</span>
+                  <span className="text-muted-foreground">→</span>
                   <AgentIcon emoji={AGENT_EMOJIS[evt.toAgent]} size={14} />
-                  <span className="text-zinc-700 dark:text-zinc-300">
+                  <span className="text-zinc-700 dark:text-foreground">
                     {evt.toName}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-zinc-400">
+                  <span className="text-xs text-muted-foreground">
                     {formatRelativeTime(evt.date)}
                   </span>
                   <span
                     className={`text-xs font-bold ${
                       evt.delta > 0
-                        ? 'text-zinc-600'
+                        ? 'text-emerald-600'
                         : evt.delta < 0
                         ? 'text-red-600'
-                        : 'text-zinc-500'
+                        : 'text-muted-foreground'
                     }`}
                   >
                     {evt.delta > 0 && '+'}
@@ -579,7 +578,7 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
                   </span>
                 </div>
               </div>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400">
+              <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                 {evt.event}
               </p>
             </div>
@@ -591,8 +590,8 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
 }
 
 function TrustBadge({ trust }: { trust: number }) {
-  const color = trust >= 60 ? "text-zinc-600 bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-500"
-    : trust >= 40 ? "text-[#FFE135] bg-zinc-100 dark:bg-[#FFE135]/30 dark:text-[#FFE135]"
+  const color = trust >= 60 ? "text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 dark:text-[#FFE135]"
+    : trust >= 40 ? "text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-[#FFE135]"
     : "text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400";
   return <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${color}`}>{trust}</span>;
 }

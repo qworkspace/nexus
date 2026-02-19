@@ -52,13 +52,13 @@ export default function DecisionsPage() {
       <div className="mb-6 flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-zinc-900">Decision Audit Trail</h1>
-          <p className="text-zinc-500 text-sm">
+          <p className="text-muted-foreground text-sm">
             Q&apos;s autonomous decisions with reasoning chains and outcomes
           </p>
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors text-sm font-medium"
+          className="px-4 py-2 bg-foreground text-foreground rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
         >
           + Add Decision
         </button>
@@ -93,9 +93,9 @@ export default function DecisionsPage() {
               <button
                 key={action}
                 onClick={() => setAction(action)}
-                className="px-3 py-1.5 bg-white border border-zinc-200 rounded-full text-sm text-zinc-600 hover:bg-zinc-100 hover:border-zinc-300 transition-colors"
+                className="px-3 py-1.5 bg-white border border-zinc-200 rounded-full text-sm text-muted-foreground hover:bg-zinc-100 hover:border-zinc-300 transition-colors"
               >
-                {action} <span className="text-zinc-400">({count})</span>
+                {action} <span className="text-muted-foreground">({count})</span>
               </button>
             ))}
           </div>

@@ -45,7 +45,7 @@ export function GoalsCard({ goals }: GoalsCardProps) {
                   <span className="text-sm font-medium text-zinc-900">
                     {category.name}
                   </span>
-                  <span className="text-xs text-zinc-500">{progress}%</span>
+                  <span className="text-xs text-muted-foreground">{progress}%</span>
                 </div>
                 <div className="mb-3">
                   <div className="w-full bg-zinc-200 rounded-full h-1.5">
@@ -53,7 +53,7 @@ export function GoalsCard({ goals }: GoalsCardProps) {
                       className={cn(
                         "h-1.5 rounded-full transition-all",
                         progress >= 80
-                          ? "bg-zinc-800"
+                          ? "bg-green-500"
                           : progress >= 50
                           ? "bg-yellow-500"
                           : "bg-red-500"
@@ -68,11 +68,11 @@ export function GoalsCard({ goals }: GoalsCardProps) {
                       key={goalIdx}
                       className={cn(
                         "text-sm flex items-start gap-2",
-                        goal.done ? "text-zinc-400 line-through" : "text-zinc-700"
+                        goal.done ? "text-muted-foreground line-through" : "text-zinc-700"
                       )}
                     >
                       <span className="mt-0.5">
-                        {goal.done ? <CheckSquare size={14} className="text-zinc-600" /> : <Square size={14} className="text-zinc-400" />}
+                        {goal.done ? <CheckSquare size={14} className="text-green-600" /> : <Square size={14} className="text-muted-foreground" />}
                       </span>
                       <span>{goal.text}</span>
                     </div>
@@ -84,7 +84,7 @@ export function GoalsCard({ goals }: GoalsCardProps) {
         </div>
 
         {goals.categories.length === 0 && (
-          <div className="text-center text-sm text-zinc-400 py-8">
+          <div className="text-center text-sm text-muted-foreground py-8">
             No goals set for this quarter
           </div>
         )}

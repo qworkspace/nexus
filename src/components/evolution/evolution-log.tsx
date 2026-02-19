@@ -34,7 +34,7 @@ export function EvolutionLog({ entries }: EvolutionLogProps) {
             {entries.map((entry, idx) => (
               <div key={idx} className="relative pl-4 border-l-2 border-zinc-200">
                 <div className="mb-1">
-                  <span className="text-xs font-medium text-zinc-500">
+                  <span className="text-xs font-medium text-muted-foreground">
                     {formatDate(entry.date)}
                   </span>
                 </div>
@@ -42,13 +42,13 @@ export function EvolutionLog({ entries }: EvolutionLogProps) {
                   {entry.change}
                 </div>
                 {entry.impact && (
-                  <div className="text-xs text-zinc-500">{entry.impact}</div>
+                  <div className="text-xs text-muted-foreground">{entry.impact}</div>
                 )}
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-center text-sm text-zinc-400 py-8">
+          <div className="text-center text-sm text-muted-foreground py-8">
             No evolution entries yet
           </div>
         )}

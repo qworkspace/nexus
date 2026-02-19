@@ -27,7 +27,7 @@ const AGENTS: Agent[] = [
 const getStatusDotColor = (status: string): string => {
   switch (status) {
     case "online":
-      return "fill-green-500 text-zinc-600";
+      return "fill-green-500 text-green-500";
     case "busy":
       return "fill-yellow-500 text-yellow-500";
     case "idle":
@@ -89,7 +89,7 @@ export function AgentFleet() {
             <span>Fleet Stats:</span>
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <Circle size={8} className="fill-green-500 text-zinc-600" />
+                <Circle size={8} className="fill-green-500 text-green-500" />
                 {activeCount} active
               </span>
               <span className="flex items-center gap-1">

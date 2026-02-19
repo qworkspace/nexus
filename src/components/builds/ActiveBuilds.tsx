@@ -40,7 +40,7 @@ export function ActiveBuilds() {
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center h-32">
-            <Loader2 className="h-6 w-6 animate-spin text-zinc-400" />
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         </CardContent>
       </Card>
@@ -54,7 +54,7 @@ export function ActiveBuilds() {
           <Cpu className="h-4 w-4" />
           Active Builds
           {builds.length > 0 && (
-            <span className="ml-2 px-2 py-0.5 text-xs bg-zinc-100 text-zinc-700 rounded-full">
+            <span className="ml-2 px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">
               {builds.length}
             </span>
           )}
@@ -62,7 +62,7 @@ export function ActiveBuilds() {
       </CardHeader>
       <CardContent>
         {builds.length === 0 ? (
-          <div className="text-center py-8 text-zinc-500">
+          <div className="text-center py-8 text-muted-foreground">
             <Cpu className="h-12 w-12 mx-auto mb-3 opacity-50" />
             <p className="text-sm">No active builds</p>
           </div>
@@ -71,16 +71,16 @@ export function ActiveBuilds() {
             {builds.map((build) => (
               <div
                 key={build.id}
-                className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg"
+                className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-card rounded-lg"
               >
                 <div className="flex-shrink-0 mt-0.5">
-                  <div className="h-2 w-2 rounded-full bg-zinc-800 animate-pulse" />
+                  <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2">
+                  <p className="text-sm font-medium text-zinc-900 dark:text-foreground line-clamp-2">
                     {build.task}
                   </p>
-                  <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500">
+                  <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                     <Clock className="h-3 w-3" />
                     <span>Started {new Date(build.startTime).toLocaleTimeString()}</span>
                   </div>

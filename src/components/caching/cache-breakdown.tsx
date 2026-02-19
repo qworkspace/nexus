@@ -31,35 +31,35 @@ export function CacheBreakdown({ tokens, costs }: CacheBreakdownProps) {
   };
 
   const tokenItems = [
-    { label: "Cache Read", value: tokens.cacheRead, color: "bg-zinc-800" },
-    { label: "Cache Write", value: tokens.cacheWrite, color: "bg-zinc-900" },
-    { label: "Fresh Input", value: tokens.input, color: "bg-zinc-900" },
+    { label: "Cache Read", value: tokens.cacheRead, color: "bg-[#FFE135]" },
+    { label: "Cache Write", value: tokens.cacheWrite, color: "bg-foreground" },
+    { label: "Fresh Input", value: tokens.input, color: "bg-purple-500" },
     { label: "Fresh Output", value: tokens.output, color: "bg-zinc-500" },
   ];
 
   const costItems = [
-    { label: "Cache Read", value: costs.cacheRead, color: "bg-zinc-800" },
-    { label: "Cache Write", value: costs.cacheWrite, color: "bg-zinc-900" },
-    { label: "Fresh Input", value: costs.input, color: "bg-zinc-900" },
+    { label: "Cache Read", value: costs.cacheRead, color: "bg-[#FFE135]" },
+    { label: "Cache Write", value: costs.cacheWrite, color: "bg-foreground" },
+    { label: "Fresh Input", value: costs.input, color: "bg-purple-500" },
     { label: "Fresh Output", value: costs.output, color: "bg-zinc-500" },
   ];
 
   const BreakdownSection = ({ title, items, total, isCost }: { title: string; items: { label: string; value: number; color: string }[]; total: number; isCost: boolean }) => {
     return (
-      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
-        <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-4">{title}</h3>
+      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+        <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-4">{title}</h3>
         <div className="space-y-3">
           {items.map((item, i) => {
             const percentage = total > 0 ? (item.value / total) * 100 : 0;
             return (
               <div key={i}>
                 <div className="flex justify-between text-xs mb-1">
-                  <span className="text-zinc-600 dark:text-zinc-400">{item.label}</span>
-                  <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                  <span className="text-muted-foreground dark:text-muted-foreground">{item.label}</span>
+                  <span className="font-medium text-zinc-900 dark:text-foreground">
                     {isCost ? `$${item.value.toFixed(2)}` : formatTokens(item.value)}
                   </span>
                 </div>
-                <div className="h-2 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+                <div className="h-2 bg-zinc-100 dark:bg-secondary rounded-full overflow-hidden">
                   <div
                     className={`h-full ${item.color} transition-all duration-500`}
                     style={{ width: `${percentage}%` }}
@@ -69,10 +69,10 @@ export function CacheBreakdown({ tokens, costs }: CacheBreakdownProps) {
             );
           })}
         </div>
-        <div className="border-t border-zinc-100 dark:border-zinc-800 mt-4 pt-3">
+        <div className="border-t border-zinc-100 dark:border-border mt-4 pt-3">
           <div className="flex justify-between text-xs font-medium">
-            <span className="text-zinc-900 dark:text-zinc-100">Total</span>
-            <span className="text-zinc-900 dark:text-zinc-100">
+            <span className="text-zinc-900 dark:text-foreground">Total</span>
+            <span className="text-zinc-900 dark:text-foreground">
               {isCost ? `$${total.toFixed(2)}` : formatTokens(total)}
             </span>
           </div>

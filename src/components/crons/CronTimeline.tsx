@@ -53,7 +53,7 @@ export function CronTimeline({ jobs }: CronTimelineProps) {
         <div className="space-y-2">
           {hours.map(({ hour, occurrences }) => (
             <div key={hour} className="flex items-center gap-3">
-              <div className="w-14 text-xs text-zinc-500 text-right">
+              <div className="w-14 text-xs text-muted-foreground text-right">
                 {formatHour(hour)}
               </div>
               <div className="flex-1 h-8 bg-zinc-50 rounded-lg border border-zinc-200 relative overflow-hidden">
@@ -66,7 +66,7 @@ export function CronTimeline({ jobs }: CronTimelineProps) {
                       key={`${job.id}-${idx}`}
                       className={cn(
                         "absolute w-3 h-3 rounded-full border-2 border-white cursor-pointer hover:scale-110 transition-transform",
-                        job.lastStatus === 'ok' && 'bg-zinc-800',
+                        job.lastStatus === 'ok' && 'bg-green-500',
                         job.lastStatus === 'error' && 'bg-red-500',
                         !job.lastStatus && 'bg-zinc-400'
                       )}
@@ -82,14 +82,14 @@ export function CronTimeline({ jobs }: CronTimelineProps) {
               </div>
               <div className="w-32 flex flex-wrap gap-1">
                 {occurrences.length > 3 ? (
-                  <span className="text-xs text-zinc-500">
+                  <span className="text-xs text-muted-foreground">
                     +{occurrences.length} jobs
                   </span>
                 ) : (
                   occurrences.map(({ job }) => (
                     <span
                       key={job.id}
-                      className="text-xs text-zinc-600 truncate"
+                      className="text-xs text-muted-foreground truncate"
                     >
                       {job.name.slice(0, 8)}
                     </span>

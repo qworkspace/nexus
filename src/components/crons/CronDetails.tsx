@@ -13,7 +13,7 @@ export function CronDetails({ job }: CronDetailsProps) {
     return (
       <Card>
         <CardContent className="p-12 text-center">
-          <p className="text-zinc-500">Select a cron job to view details</p>
+          <p className="text-muted-foreground">Select a cron job to view details</p>
         </CardContent>
       </Card>
     );
@@ -27,7 +27,7 @@ export function CronDetails({ job }: CronDetailsProps) {
           <div className="flex items-start justify-between">
             <div>
               <CardTitle className="text-xl">{job.name}</CardTitle>
-              <p className="text-sm text-zinc-500 mt-1">{job.schedule.expr}</p>
+              <p className="text-sm text-muted-foreground mt-1">{job.schedule.expr}</p>
             </div>
             <div className="flex items-center gap-2">
               <StatusBadge status={job.lastStatus} enabled={job.enabled} />
@@ -36,18 +36,18 @@ export function CronDetails({ job }: CronDetailsProps) {
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-zinc-500">Timezone</span>
+            <span className="text-muted-foreground">Timezone</span>
             <span className="font-medium text-zinc-900">{job.schedule.tz}</span>
           </div>
           <div className="flex items-center justify-between text-sm">
-            <span className="text-zinc-500">Next run</span>
+            <span className="text-muted-foreground">Next run</span>
             <span className="font-medium text-zinc-900">
               {formatDateTime(job.nextRunAt)}
             </span>
           </div>
           {job.lastRunAt && (
             <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-500">Last run</span>
+              <span className="text-muted-foreground">Last run</span>
               <span className="font-medium text-zinc-900">
                 {formatDateTime(job.lastRunAt)}
               </span>
@@ -63,11 +63,11 @@ export function CronDetails({ job }: CronDetailsProps) {
         </CardHeader>
         <CardContent>
           <div className="bg-zinc-50 rounded-lg p-3 font-mono text-sm">
-            <div className="text-zinc-600">
-              <span className="text-zinc-400">kind:</span> {job.payload.kind}
+            <div className="text-muted-foreground">
+              <span className="text-muted-foreground">kind:</span> {job.payload.kind}
             </div>
-            <div className="text-zinc-600 mt-1">
-              <span className="text-zinc-400">message:</span> {job.payload.message}
+            <div className="text-muted-foreground mt-1">
+              <span className="text-muted-foreground">message:</span> {job.payload.message}
             </div>
           </div>
         </CardContent>
@@ -80,7 +80,7 @@ export function CronDetails({ job }: CronDetailsProps) {
         </CardHeader>
         <CardContent>
           {job.runHistory.length === 0 ? (
-            <p className="text-sm text-zinc-500 py-4">No runs yet</p>
+            <p className="text-sm text-muted-foreground py-4">No runs yet</p>
           ) : (
             <div className="space-y-2">
               {job.runHistory.slice(0, 5).map((run) => (
@@ -95,12 +95,12 @@ export function CronDetails({ job }: CronDetailsProps) {
                         {run.status === 'ok' ? 'Success' : 'Failed'}
                       </p>
                       {run.duration && (
-                        <span className="text-xs text-zinc-500">
+                        <span className="text-xs text-muted-foreground">
                           {formatDuration(run.duration)}
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-zinc-500">
+                    <p className="text-xs text-muted-foreground">
                       {formatRelativeTime(run.timestamp)}
                     </p>
                     {run.error && (
@@ -120,14 +120,14 @@ export function CronDetails({ job }: CronDetailsProps) {
           <CardTitle className="text-base font-semibold">Actions</CardTitle>
         </CardHeader>
         <CardContent className="space-y-2">
-          <button className="w-full px-4 py-2 bg-zinc-900 text-white text-sm font-medium rounded-lg hover:bg-zinc-800 transition-colors">
+          <button className="w-full px-4 py-2 bg-card text-foreground text-sm font-medium rounded-lg hover:bg-secondary transition-colors">
             Run Now
           </button>
           <button className={cn(
             "w-full px-4 py-2 border text-sm font-medium rounded-lg transition-colors",
             job.enabled
               ? "border-zinc-300 text-zinc-700 hover:bg-zinc-50"
-              : "border-zinc-300 text-zinc-700 hover:bg-zinc-50"
+              : "border-green-500 text-green-700 hover:bg-green-50"
           )}>
             {job.enabled ? 'Disable' : 'Enable'}
           </button>
@@ -140,7 +140,7 @@ export function CronDetails({ job }: CronDetailsProps) {
 function StatusBadge({ status, enabled }: { status: 'ok' | 'error' | null; enabled: boolean }) {
   if (!enabled) {
     return (
-      <span className="px-2 py-1 bg-zinc-200 text-zinc-600 text-xs font-medium rounded-full">
+      <span className="px-2 py-1 bg-zinc-200 text-muted-foreground text-xs font-medium rounded-full">
         Disabled
       </span>
     );
@@ -148,14 +148,14 @@ function StatusBadge({ status, enabled }: { status: 'ok' | 'error' | null; enabl
 
   if (!status) {
     return (
-      <span className="px-2 py-1 bg-zinc-100 text-zinc-600 text-xs font-medium rounded-full">
+      <span className="px-2 py-1 bg-zinc-100 text-muted-foreground text-xs font-medium rounded-full">
         Never run
       </span>
     );
   }
 
   const variants = {
-    ok: "bg-zinc-100 text-zinc-700",
+    ok: "bg-green-100 text-green-700",
     error: "bg-red-100 text-red-700",
   };
 
@@ -168,7 +168,7 @@ function StatusBadge({ status, enabled }: { status: 'ok' | 'error' | null; enabl
 
 function StatusDot({ status }: { status: 'ok' | 'error' }) {
   const colors = {
-    ok: "bg-zinc-800",
+    ok: "bg-green-500",
     error: "bg-red-500",
   };
 

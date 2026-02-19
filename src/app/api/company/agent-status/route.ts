@@ -127,7 +127,7 @@ export async function GET() {
     // Load activity feed for additional context
     let activityFeed: ActivityEntry[] = [];
     try {
-      const sharedPath = process.env.HOME ? join(process.env.HOME, ".openclaw/shared") : "/Users/paulvillanueva/.openclaw/shared";
+      const sharedPath = process.env.HOME ? join(process.env.HOME, "shared") : "/Users/paulvillanueva/shared";
       const activityPath = join(sharedPath, "activity-feed.json");
       const activityData = JSON.parse(readFileSync(activityPath, "utf-8"));
       activityFeed = activityData.entries || [];

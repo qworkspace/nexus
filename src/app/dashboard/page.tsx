@@ -23,15 +23,15 @@ import { AgentActivity } from "./components/AgentActivity";
 
 export default function MissionControlDashboard() {
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white dark:bg-background">
       {/* Header */}
-      <div className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-6 py-4">
+      <div className="border-b border-zinc-200 dark:border-border bg-white dark:bg-background px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+            <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">
               MISSION CONTROL
             </h1>
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm">
+            <p className="text-muted-foreground dark:text-muted-foreground text-sm">
               Q&apos;s Command Center
             </p>
           </div>
@@ -119,13 +119,13 @@ export default function MissionControlDashboard() {
         </div>
 
         {/* Footer Session Stats */}
-        <div className="mt-6 border-t border-zinc-200 dark:border-zinc-800 pt-4">
-          <div className="flex items-center justify-center gap-6 text-xs text-zinc-500 dark:text-zinc-400">
+        <div className="mt-6 border-t border-zinc-200 dark:border-border pt-4">
+          <div className="flex items-center justify-center gap-6 text-xs text-muted-foreground dark:text-muted-foreground">
             <span>Real-time updates enabled</span>
-            <span className="text-zinc-300 dark:text-zinc-700">|</span>
+            <span className="text-foreground dark:text-zinc-700">|</span>
             <span>Auto-refresh: 10-30s</span>
-            <span className="text-zinc-300 dark:text-zinc-700">|</span>
-            <span>Press <kbd className="px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-600 dark:text-zinc-300 font-mono">?</kbd> for shortcuts</span>
+            <span className="text-foreground dark:text-zinc-700">|</span>
+            <span>Press <kbd className="px-1.5 py-0.5 bg-zinc-100 dark:bg-secondary rounded text-muted-foreground dark:text-foreground font-mono">?</kbd> for shortcuts</span>
           </div>
         </div>
       </div>

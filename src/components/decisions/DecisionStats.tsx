@@ -30,30 +30,30 @@ export function DecisionStats({ stats, loading }: DecisionStatsProps) {
       label: "Total Decisions",
       value: stats.total.toString(),
       icon: TrendingUp,
-      color: "text-zinc-600",
-      bgColor: "bg-zinc-50",
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
     },
     {
       label: "Success Rate",
       value: `${stats.successRate.toFixed(1)}%`,
       subValue: `${stats.successCount} of ${stats.successCount + stats.failCount}`,
       icon: CheckCircle,
-      color: "text-zinc-600",
-      bgColor: "bg-zinc-50",
+      color: "text-green-600",
+      bgColor: "bg-green-50",
     },
     {
       label: "Avg Confidence",
       value: `${(stats.avgConfidence * 100).toFixed(1)}%`,
       icon: TrendingUp,
-      color: "text-zinc-700",
-      bgColor: "bg-zinc-50",
+      color: "text-purple-600",
+      bgColor: "bg-purple-50",
     },
     {
       label: "Pending",
       value: stats.pendingCount.toString(),
       icon: Clock,
-      color: "text-[#FFE135]",
-      bgColor: "bg-zinc-50",
+      color: "text-amber-600",
+      bgColor: "bg-amber-50",
     },
   ];
 
@@ -64,10 +64,10 @@ export function DecisionStats({ stats, loading }: DecisionStatsProps) {
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-zinc-500 mb-1">{card.label}</p>
+                <p className="text-sm text-muted-foreground mb-1">{card.label}</p>
                 <p className="text-2xl font-semibold text-zinc-900">{card.value}</p>
                 {card.subValue && (
-                  <p className="text-xs text-zinc-400 mt-1">{card.subValue}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{card.subValue}</p>
                 )}
               </div>
               <div className={`p-2 rounded-lg ${card.bgColor}`}>

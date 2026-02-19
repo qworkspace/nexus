@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { aggregateUsageFromTranscripts, fetchOpenClawSessions } from '@/lib/data-utils';
 import { db } from '@/lib/db';
+import { toSydneyDateStr, getSydneyDayStart } from '@/lib/timezone';
 
 interface AnalyticsOverviewResponse {
   overview: {
@@ -18,11 +19,11 @@ interface AnalyticsOverviewResponse {
 
 function getPeriodRange(period: string) {
   const now = new Date();
-  const start = new Date();
+  let start = new Date();
 
   switch (period) {
     case 'today':
-      start.setHours(0, 0, 0, 0);
+      start = getSydneyDayStart();
       break;
     case 'week':
       start.setDate(now.getDate() - 7);
@@ -43,7 +44,7 @@ async function getDailyData(start: Date, end: Date) {
     const dailyMap = new Map<string, { messages: number; cost: number }>();
 
     for (const u of usage) {
-      const date = new Date(u.timestamp).toISOString().split('T')[0];
+      const date = toSydneyDateStr(new Date(u.timestamp));
       const existing = dailyMap.get(date) || { messages: 0, cost: 0 };
       existing.messages += (u.inputTokens || 0) + (u.outputTokens || 0);
       existing.cost += u.cost;
@@ -75,7 +76,7 @@ function getMockDailyData(period: string): Array<{ date: string; messages: numbe
     const date = new Date();
     date.setDate(date.getDate() - i);
     data.push({
-      date: date.toISOString().split('T')[0],
+      date: toSydneyDateStr(date),
       messages: Math.floor(Math.random() * 300) + 50,
       cost: Number((Math.random() * 15 + 2).toFixed(2)),
     });

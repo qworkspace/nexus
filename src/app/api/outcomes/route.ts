@@ -35,7 +35,7 @@ let cache: { data: SummaryResponse | null; timestamp: number } = {
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 function getOutcomesDir(): string {
-  return join(homedir(), "shared", "logs", "outcomes");
+  return join(homedir(), ".openclaw", "shared", "logs", "outcomes");
 }
 
 function parseOutcomeFile(filepath: string): Outcome[] {

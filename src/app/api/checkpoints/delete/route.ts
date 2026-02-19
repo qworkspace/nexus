@@ -16,7 +16,7 @@ export async function DELETE(request: Request) {
       );
     }
 
-    const filePath = path.join(homedir(), 'shared', 'checkpoints', dateDir, id);
+    const filePath = path.join(homedir(), '.openclaw', 'shared', 'checkpoints', dateDir, id);
 
     // Check if file exists
     try {

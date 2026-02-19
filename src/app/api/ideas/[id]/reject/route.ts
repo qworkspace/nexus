@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from "fs";
 
 export const dynamic = "force-dynamic";
 
-const STATUS_FILE = "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/idea-status.json";
+const STATUS_FILE = "/Users/paulvillanueva/shared/research/ai-intel/idea-status.json";
 
 type IdeaStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped";
 

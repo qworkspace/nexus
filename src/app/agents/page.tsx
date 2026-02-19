@@ -128,7 +128,7 @@ export default function AgentsPage() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-zinc-900">Agent Directory</h1>
-        <p className="text-zinc-500 text-sm">
+        <p className="text-muted-foreground text-sm">
           View and manage all configured agents
         </p>
       </div>

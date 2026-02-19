@@ -12,11 +12,11 @@ interface SlowTask {
 }
 
 const typeColors: Record<string, string> = {
-  task: "bg-zinc-100 text-zinc-800",
-  message: "bg-zinc-100 text-zinc-700",
-  cron: "bg-zinc-100 text-[#FFE135]",
-  file: "bg-zinc-100 text-zinc-800",
-  search: "bg-zinc-100 text-zinc-700",
+  task: "bg-blue-100 text-blue-800",
+  message: "bg-purple-100 text-purple-800",
+  cron: "bg-orange-100 text-orange-800",
+  file: "bg-green-100 text-green-800",
+  search: "bg-cyan-100 text-cyan-800",
   spawn: "bg-pink-100 text-pink-800",
 };
 
@@ -46,13 +46,13 @@ export function SlowTasks({ tasks }: { tasks: SlowTask[] }) {
     return (
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <Clock size={16} />
             Slowest Tasks
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-zinc-400 py-4 text-center">
+          <p className="text-sm text-muted-foreground py-4 text-center">
             No duration data yet
           </p>
         </CardContent>
@@ -63,7 +63,7 @@ export function SlowTasks({ tasks }: { tasks: SlowTask[] }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
           <Clock size={16} />
           Slowest Tasks
         </CardTitle>
@@ -75,7 +75,7 @@ export function SlowTasks({ tasks }: { tasks: SlowTask[] }) {
               key={i}
               className="flex items-start gap-3 py-2 border-b border-zinc-100 last:border-0"
             >
-              <span className="text-xs text-zinc-400 w-4">{i + 1}.</span>
+              <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-zinc-900 truncate">
                   {task.title}
@@ -87,12 +87,12 @@ export function SlowTasks({ tasks }: { tasks: SlowTask[] }) {
                   >
                     {task.type}
                   </Badge>
-                  <span className="text-xs text-zinc-500">
+                  <span className="text-xs text-muted-foreground">
                     {formatTime(task.timestamp)}
                   </span>
                 </div>
               </div>
-              <span className="text-sm font-semibold text-[#FFE135]">
+              <span className="text-sm font-semibold text-orange-600">
                 {formatDuration(task.duration)}
               </span>
             </div>

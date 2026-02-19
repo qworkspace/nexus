@@ -91,7 +91,7 @@ export default function CalendarPage() {
     <div className="p-6">
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-zinc-900">Calendar</h1>
-        <p className="text-zinc-500 text-sm">
+        <p className="text-muted-foreground text-sm">
           Scheduled cron jobs and recurring tasks
         </p>
       </div>
@@ -135,19 +135,19 @@ export default function CalendarPage() {
         <h3 className="text-sm font-medium text-zinc-700 mb-2">Legend</h3>
         <div className="flex flex-wrap gap-3">
           <span className="flex items-center gap-1 text-xs">
-            <span className="w-3 h-3 rounded bg-zinc-100 border border-zinc-300"></span>
+            <span className="w-3 h-3 rounded bg-amber-100 border border-amber-300"></span>
             Morning Brief
           </span>
           <span className="flex items-center gap-1 text-xs">
-            <span className="w-3 h-3 rounded bg-zinc-100 border border-zinc-300"></span>
+            <span className="w-3 h-3 rounded bg-blue-100 border border-blue-300"></span>
             Morning Mode
           </span>
           <span className="flex items-center gap-1 text-xs">
-            <span className="w-3 h-3 rounded bg-zinc-100 border border-zinc-300"></span>
+            <span className="w-3 h-3 rounded bg-purple-100 border border-purple-300"></span>
             Discord Digest
           </span>
           <span className="flex items-center gap-1 text-xs">
-            <span className="w-3 h-3 rounded bg-zinc-100 border border-zinc-300"></span>
+            <span className="w-3 h-3 rounded bg-indigo-100 border border-indigo-300"></span>
             Night Mode
           </span>
           <span className="flex items-center gap-1 text-xs">

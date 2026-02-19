@@ -25,14 +25,14 @@ interface AgentCardProps {
 }
 
 const statusColors = {
-  online: "bg-zinc-100 text-zinc-800",
+  online: "bg-green-100 text-green-800",
   offline: "bg-zinc-100 text-zinc-800",
   busy: "bg-yellow-100 text-yellow-800",
 };
 
 const statusDotColors = {
-  online: "fill-green-500 text-zinc-600",
-  offline: "fill-zinc-300 text-zinc-300",
+  online: "fill-green-500 text-green-500",
+  offline: "fill-zinc-300 text-foreground",
   busy: "fill-yellow-500 text-yellow-500",
 };
 
@@ -52,7 +52,7 @@ export function AgentCard({ agent }: AgentCardProps) {
         <div className="flex items-center gap-3 mb-3">
           {/* Icon */}
           <div className="flex items-center justify-center">
-            <AgentIcon emoji={agent.emoji} size={32} className="text-zinc-600 dark:text-zinc-300" />
+            <AgentIcon emoji={agent.emoji} size={32} className="text-muted-foreground dark:text-foreground" />
           </div>
 
           {/* Name and Model */}
@@ -67,17 +67,17 @@ export function AgentCard({ agent }: AgentCardProps) {
                 {agent.status}
               </Badge>
             </div>
-            <p className="text-sm text-zinc-500 font-mono">{agent.model}</p>
+            <p className="text-sm text-muted-foreground font-mono">{agent.model}</p>
           </div>
 
           {/* Expand indicator */}
-          <div className="text-zinc-400 transition-transform duration-200">
+          <div className="text-muted-foreground transition-transform duration-200">
             {expanded ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
           </div>
         </div>
 
         {/* Quick stats */}
-        <div className="flex items-center gap-4 text-sm text-zinc-600">
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <span>{agent.tasksToday} tasks today</span>
           <span>·</span>
           <span>{agent.tokensUsed.toLocaleString()} tokens</span>

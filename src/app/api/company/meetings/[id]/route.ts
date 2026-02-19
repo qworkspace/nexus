@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-const MEETINGS_DIR = join(process.env.HOME || '', '.openclaw/shared/meetings');
+const RETROS_DIR = join(process.env.HOME || '', '.openclaw/shared/retros');
 
 export async function GET(
   _request: Request,
@@ -10,7 +10,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    const filePath = join(MEETINGS_DIR, `${id}.md`);
+    const filePath = join(RETROS_DIR, `${id}.md`);
     const content = readFileSync(filePath, 'utf-8');
     return NextResponse.json({ id, content });
   } catch (error) {

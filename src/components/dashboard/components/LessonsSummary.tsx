@@ -49,7 +49,7 @@ export function LessonsSummary() {
   };
 
   const getEffectivenessColor = (effectiveness: number) => {
-    if (effectiveness >= 90) return "text-zinc-600";
+    if (effectiveness >= 90) return "text-green-600";
     if (effectiveness >= 80) return "text-yellow-600";
     return "text-red-600";
   };
@@ -95,10 +95,10 @@ export function LessonsSummary() {
         {/* Stats */}
         <div className="grid grid-cols-3 gap-3 mb-4">
           <div className="text-center">
-            <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+            <p className="text-2xl font-semibold text-zinc-900 dark:text-foreground">
               {stats.total}
             </p>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
               Total
             </p>
           </div>
@@ -106,7 +106,7 @@ export function LessonsSummary() {
             <p className={`text-2xl font-semibold ${getEffectivenessColor(stats.avgEffectiveness)}`}>
               {stats.avgEffectiveness}%
             </p>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
               Success
             </p>
           </div>
@@ -114,7 +114,7 @@ export function LessonsSummary() {
             <p className="text-2xl font-semibold text-red-600">
               {stats.needsReview}
             </p>
-            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
               Review
             </p>
           </div>
@@ -123,7 +123,7 @@ export function LessonsSummary() {
         {/* Top Lessons */}
         {topLessons.length > 0 && (
           <div>
-            <h3 className="text-xs font-semibold text-zinc-500 dark:text-zinc-400 mb-2 flex items-center gap-1">
+            <h3 className="text-xs font-semibold text-muted-foreground dark:text-muted-foreground mb-2 flex items-center gap-1">
               <TrendingUp className="h-3 w-3" />
               Priority Review
             </h3>
@@ -131,10 +131,10 @@ export function LessonsSummary() {
               {topLessons.slice(0, 3).map((lesson) => (
                 <div
                   key={lesson.id}
-                  className="text-xs bg-zinc-50 dark:bg-zinc-900 rounded p-2"
+                  className="text-xs bg-zinc-50 dark:bg-card rounded p-2"
                 >
                   <div className="flex items-center gap-1 mb-1">
-                    <span className="font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="font-medium text-zinc-700 dark:text-foreground">
                       {lesson.category}
                     </span>
                     {lesson.effectiveness !== null && (
@@ -145,7 +145,7 @@ export function LessonsSummary() {
                       </span>
                     )}
                   </div>
-                  <p className="text-zinc-600 dark:text-zinc-400 line-clamp-2">
+                  <p className="text-muted-foreground dark:text-muted-foreground line-clamp-2">
                     {lesson.pattern}
                   </p>
                 </div>

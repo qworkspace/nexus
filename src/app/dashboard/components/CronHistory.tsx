@@ -76,7 +76,7 @@ export function CronHistory({ jobId, jobName, onClose }: CronHistoryProps) {
   const getStatusIcon = (status: RunEntry['status']) => {
     switch (status) {
       case 'ok':
-        return <CheckCircle className="h-4 w-4 text-zinc-600" />;
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
       case 'error':
         return <XCircle className="h-4 w-4 text-red-500" />;
       case 'timeout':
@@ -87,7 +87,7 @@ export function CronHistory({ jobId, jobName, onClose }: CronHistoryProps) {
   const getStatusBadge = (status: RunEntry['status']) => {
     switch (status) {
       case 'ok':
-        return <Badge variant="outline" className="text-xs text-zinc-600 border-zinc-300">SUCCESS</Badge>;
+        return <Badge variant="outline" className="text-xs text-green-600 border-green-200">SUCCESS</Badge>;
       case 'error':
         return <Badge variant="outline" className="text-xs text-red-600 border-red-200">ERROR</Badge>;
       case 'timeout':

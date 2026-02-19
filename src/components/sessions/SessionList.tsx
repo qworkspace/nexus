@@ -85,7 +85,7 @@ export function resolveAgentName(sessionId: string): { name: string; model: stri
 
 /**
  * Determine session type based on agent and metadata
- * Returns type label and icon key
+ * Returns type label and emoji icon
  */
 export function getSessionType(session: TranscriptMeta): { type: string; icon: string } {
   const agent = resolveAgentName(session.agent);
@@ -93,36 +93,36 @@ export function getSessionType(session: TranscriptMeta): { type: string; icon: s
 
   // Dev agent = BUILD
   if (agent.name === 'Dev' || label.includes('build') || label.includes('code')) {
-    return { type: 'BUILD', icon: 'build' };
+    return { type: 'BUILD', icon: '🛠️' };
   }
 
   // Research agent = RESEARCH
   if (agent.name === 'Research' || label.includes('research') || label.includes('analyz')) {
-    return { type: 'RESEARCH', icon: 'research' };
+    return { type: 'RESEARCH', icon: '📊' };
   }
 
   // Q agent = CHAT
   if (agent.name === 'Q' || label.includes('chat') || label.includes('briefing')) {
-    return { type: 'CHAT', icon: 'chat' };
+    return { type: 'CHAT', icon: '💬' };
   }
 
   // Cron sessions = MAINTENANCE
   if (session.kind === 'cron') {
-    return { type: 'MAINTENANCE', icon: 'maintenance' };
+    return { type: 'MAINTENANCE', icon: '⚙️' };
   }
 
   // Creative agent = CREATIVE
   if (agent.name === 'Creative') {
-    return { type: 'CREATIVE', icon: 'creative' };
+    return { type: 'CREATIVE', icon: '🎨' };
   }
 
   // Luna agent = SUPPORT
   if (agent.name === 'Luna') {
-    return { type: 'SUPPORT', icon: 'support' };
+    return { type: 'SUPPORT', icon: '💬' };
   }
 
   // Default
-  return { type: 'OTHER', icon: 'other' };
+  return { type: 'OTHER', icon: '📝' };
 }
 
 /**
@@ -313,21 +313,21 @@ export function SessionList({ showTitle = true }: SessionListProps) {
         <div>
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-3">
-              <ScrollText className="w-6 h-6 text-zinc-600" />
+              <ScrollText className="w-6 h-6 text-muted-foreground" />
               <h1 className="text-2xl font-semibold text-zinc-900">Session Browser</h1>
               {data?.source === 'live' && (
-                <Badge variant="outline" className="text-zinc-600 border-zinc-300">
+                <Badge variant="outline" className="text-green-600 border-green-600">
                   Live
                 </Badge>
               )}
               {data?.source === 'mock' && (
-                <Badge variant="outline" className="text-[#FFE135] border-zinc-300">
+                <Badge variant="outline" className="text-amber-600 border-amber-600">
                   Mock Data
                 </Badge>
               )}
             </div>
           </div>
-          <p className="text-zinc-500 text-sm ml-9">
+          <p className="text-muted-foreground text-sm ml-9">
             Browse and search through all agent sessions with transcript viewer
           </p>
         </div>
@@ -336,7 +336,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
       {/* Search */}
       <div>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search sessions by label, message, agent, or session ID..."
@@ -353,7 +353,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
         <div className="flex flex-wrap items-center gap-4">
           {/* Filter by type */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-zinc-500 font-medium">Type:</span>
+            <span className="text-sm text-muted-foreground font-medium">Type:</span>
             <div className="flex gap-1">
               {(['all', 'main', 'cron', 'spawn'] as FilterType[]).map((type) => (
                 <button
@@ -361,7 +361,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
                   onClick={() => setFilterType(type)}
                   className={`px-3 py-1 text-sm rounded-md transition-colors ${
                     filterType === type
-                      ? 'bg-zinc-900 text-white'
+                      ? 'bg-card text-foreground'
                       : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
@@ -374,7 +374,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
           {/* Filter by agent */}
           {availableAgents.length > 0 && (
             <div className="flex items-center gap-2">
-              <span className="text-sm text-zinc-500 font-medium">Agent:</span>
+              <span className="text-sm text-muted-foreground font-medium">Agent:</span>
               <select
                 value={agentFilter}
                 onChange={(e) => setAgentFilter(e.target.value)}
@@ -392,7 +392,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
 
           {/* Filter by date */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-zinc-500 font-medium">Date:</span>
+            <span className="text-sm text-muted-foreground font-medium">Date:</span>
             <div className="flex gap-1">
               {(['all', 'today', 'week', 'month'] as const).map((date) => (
                 <button
@@ -400,7 +400,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
                   onClick={() => setDateFilter(date)}
                   className={`px-3 py-1 text-sm rounded-md transition-colors ${
                     dateFilter === date
-                      ? 'bg-zinc-900 text-white'
+                      ? 'bg-card text-foreground'
                       : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
@@ -412,7 +412,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
 
           {/* Filter by status */}
           <div className="flex items-center gap-2">
-            <span className="text-sm text-zinc-500 font-medium">Status:</span>
+            <span className="text-sm text-muted-foreground font-medium">Status:</span>
             <div className="flex gap-1">
               {(['all', 'active', 'completed'] as StatusFilter[]).map((status) => (
                 <button
@@ -420,7 +420,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
                   onClick={() => setStatusFilter(status)}
                   className={`px-3 py-1 text-sm rounded-md transition-colors ${
                     statusFilter === status
-                      ? 'bg-zinc-900 text-white'
+                      ? 'bg-card text-foreground'
                       : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                   }`}
                 >
@@ -433,7 +433,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
 
         {/* Sort Controls */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-500 font-medium">Sort by:</span>
+          <span className="text-sm text-muted-foreground font-medium">Sort by:</span>
           <div className="flex gap-1">
             {(['recent', 'oldest', 'tokens', 'duration'] as SortType[]).map((sort) => (
               <button
@@ -441,7 +441,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
                 onClick={() => setSortType(sort)}
                 className={`px-3 py-1 text-sm rounded-md transition-colors flex items-center gap-1 ${
                   sortType === sort
-                    ? 'bg-zinc-900 text-white'
+                    ? 'bg-card text-foreground'
                     : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
                 }`}
               >
@@ -455,7 +455,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
 
       {/* Results count and data source info */}
       <div className="flex items-center justify-between">
-        <p className="text-sm text-zinc-500">
+        <p className="text-sm text-muted-foreground">
           {isLoading ? (
             <span className="flex items-center gap-2">
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -471,7 +471,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
           )}
         </p>
         {data?.error && (
-          <p className="text-xs text-[#FFE135]">{data.error}</p>
+          <p className="text-xs text-amber-600">{data.error}</p>
         )}
       </div>
 
@@ -479,18 +479,18 @@ export function SessionList({ showTitle = true }: SessionListProps) {
       <div className="space-y-3">
         {isLoading ? (
           <div className="text-center py-12">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-zinc-400" />
-            <p className="text-zinc-500">Loading sessions...</p>
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-muted-foreground" />
+            <p className="text-muted-foreground">Loading sessions...</p>
           </div>
         ) : error ? (
           <div className="text-center py-12">
             <p className="text-red-600 mb-2">Failed to load sessions</p>
-            <p className="text-sm text-zinc-500">Please check console for details</p>
+            <p className="text-sm text-muted-foreground">Please check console for details</p>
           </div>
         ) : filteredSessions.length === 0 ? (
           <div className="text-center py-12">
-            <ScrollText className="w-12 h-12 mx-auto mb-4 text-zinc-300" />
-            <p className="text-zinc-500">No sessions match your filters</p>
+            <ScrollText className="w-12 h-12 mx-auto mb-4 text-foreground" />
+            <p className="text-muted-foreground">No sessions match your filters</p>
             <Button 
               variant="outline" 
               size="sm" 

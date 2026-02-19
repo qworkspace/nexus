@@ -3,7 +3,7 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { homedir } from 'os';
 
-const BUILDS_LOG = path.join(homedir(), 'shared', 'overnight-builds.log');
+const BUILDS_LOG = path.join(homedir(), '.openclaw', 'shared', 'overnight-builds.log');
 
 export interface BuildEntry {
   id: string;

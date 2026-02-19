@@ -63,11 +63,11 @@ export function LiveAgentStatusPanel() {
   const getStatusColor = (status: string): string => {
     switch (status) {
       case 'active':
-        return 'bg-zinc-800';
+        return 'bg-green-500';
       case 'idle':
         return 'bg-zinc-400';
       case 'completed':
-        return 'bg-zinc-900';
+        return 'bg-blue-500';
       case 'error':
         return 'bg-red-500';
       default:
@@ -78,11 +78,11 @@ export function LiveAgentStatusPanel() {
   const getStatusDot = (status: string): JSX.Element => {
     switch (status) {
       case 'active':
-        return <Circle size={8} className="fill-green-500 text-zinc-600" />;
+        return <Circle size={8} className="fill-green-500 text-green-500" />;
       case 'idle':
         return <Circle size={8} className="fill-zinc-400 text-zinc-400" />;
       case 'completed':
-        return <Circle size={8} className="fill-blue-500 text-zinc-600" />;
+        return <Circle size={8} className="fill-blue-500 text-blue-500" />;
       case 'error':
         return <Circle size={8} className="fill-red-500 text-red-500" />;
       default:
@@ -221,7 +221,7 @@ export function LiveAgentStatusPanel() {
                       {agent.progress !== undefined && (
                         <div className="mt-2 w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-1.5">
                           <div
-                            className="bg-zinc-900 h-1.5 rounded-full transition-all"
+                            className="bg-blue-500 h-1.5 rounded-full transition-all"
                             style={{ width: `${agent.progress}%` }}
                           />
                         </div>
@@ -296,7 +296,7 @@ export function LiveAgentStatusPanel() {
                           <Button
                             variant="link"
                             size="sm"
-                            className="h-auto p-0 text-xs text-zinc-600"
+                            className="h-auto p-0 text-xs text-blue-600"
                             onClick={() => window.open(completion.commitUrl, '_blank')}
                           >
                             View Commit

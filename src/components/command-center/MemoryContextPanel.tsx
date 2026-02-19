@@ -36,7 +36,7 @@ function formatSize(bytes: number): string {
 }
 
 function getContextColor(percentage: number): string {
-  if (percentage < 50) return "bg-zinc-800";
+  if (percentage < 50) return "bg-green-500";
   if (percentage < 75) return "bg-yellow-500";
   return "bg-red-500";
 }
@@ -60,15 +60,15 @@ export function MemoryContextPanel() {
       <CardContent className="space-y-3">
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
-            <p className="text-[10px] text-zinc-500 uppercase">Files</p>
-            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-card/80">
+            <p className="text-[10px] text-muted-foreground uppercase">Files</p>
+            <p className="text-lg font-bold text-zinc-900 dark:text-foreground">
               {data?.totalFiles || 0}
             </p>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
-            <p className="text-[10px] text-zinc-500 uppercase">Total Size</p>
-            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-card/80">
+            <p className="text-[10px] text-muted-foreground uppercase">Total Size</p>
+            <p className="text-lg font-bold text-zinc-900 dark:text-foreground">
               {formatSize(data?.totalSize || 0)}
             </p>
           </div>
@@ -77,12 +77,12 @@ export function MemoryContextPanel() {
         {/* Context Meter */}
         <div className="space-y-1">
           <div className="flex items-center justify-between text-xs">
-            <span className="text-zinc-500">Context</span>
-            <span className="font-mono text-zinc-600 dark:text-zinc-400">
+            <span className="text-muted-foreground">Context</span>
+            <span className="font-mono text-muted-foreground dark:text-muted-foreground">
               {isLoading ? "..." : `${data?.currentContext?.percentage}%`}
             </span>
           </div>
-          <div className="h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+          <div className="h-2 bg-zinc-200 dark:bg-secondary rounded-full overflow-hidden">
             {isLoading ? (
               <div className="h-full w-1/4 shimmer" />
             ) : (
@@ -103,10 +103,10 @@ export function MemoryContextPanel() {
             placeholder="Search memory..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-8 text-sm h-8 dark:bg-zinc-900/50 dark:border-zinc-700"
+            className="pl-8 text-sm h-8 dark:bg-card/80 dark:border-border"
           />
-          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-400" />
-          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-zinc-400 px-1 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded">
+          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <kbd className="absolute right-2 top-1/2 -translate-y-1/2 text-xs text-muted-foreground px-1 py-0.5 bg-zinc-100 dark:bg-secondary rounded">
             /
           </kbd>
         </div>
@@ -118,7 +118,7 @@ export function MemoryContextPanel() {
               <button
                 key={topic}
                 onClick={() => setSearchQuery(topic)}
-                className="px-2 py-0.5 rounded-full text-[10px] bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-400 transition-colors"
+                className="px-2 py-0.5 rounded-full text-[10px] bg-zinc-100 dark:bg-secondary hover:bg-zinc-200 dark:hover:bg-muted text-muted-foreground dark:text-muted-foreground transition-colors"
               >
                 #{topic}
               </button>

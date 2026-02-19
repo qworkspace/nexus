@@ -27,8 +27,8 @@ export default function SessionDetailPage() {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-zinc-400" />
-          <p className="text-zinc-500">Loading session transcript...</p>
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-muted-foreground" />
+          <p className="text-muted-foreground">Loading session transcript...</p>
         </div>
       </div>
     );
@@ -39,8 +39,8 @@ export default function SessionDetailPage() {
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
           <p className="text-red-600 mb-2">Failed to load session transcript</p>
-          <p className="text-sm text-zinc-500">Session ID: {sessionId}</p>
-          {data?.error && <p className="text-xs text-zinc-400 mt-2">{data.error}</p>}
+          <p className="text-sm text-muted-foreground">Session ID: {sessionId}</p>
+          {data?.error && <p className="text-xs text-muted-foreground mt-2">{data.error}</p>}
         </div>
       </div>
     );

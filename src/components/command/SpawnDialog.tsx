@@ -47,7 +47,7 @@ export function SpawnDialog() {
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Rocket size={16} /> SPAWN AGENT
-            <span className="ml-auto text-xs text-zinc-400 font-normal">ESC</span>
+            <span className="ml-auto text-xs text-muted-foreground font-normal">ESC</span>
           </DialogTitle>
         </DialogHeader>
 

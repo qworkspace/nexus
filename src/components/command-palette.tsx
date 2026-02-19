@@ -132,7 +132,7 @@ export function CommandPalette() {
         </div>
         <div className="max-h-80 overflow-y-auto py-2">
           {filteredCommands.length === 0 ? (
-            <div className="text-center py-6 text-zinc-500 text-sm">
+            <div className="text-center py-6 text-muted-foreground text-sm">
               No commands found
             </div>
           ) : (
@@ -151,13 +151,13 @@ export function CommandPalette() {
                     : "hover:bg-zinc-50"
                 )}
               >
-                <span className="text-zinc-400">{cmd.icon}</span>
+                <span className="text-muted-foreground">{cmd.icon}</span>
                 <span className="text-zinc-900">{cmd.label}</span>
               </button>
             ))
           )}
         </div>
-        <div className="border-t border-zinc-200 px-4 py-2 text-xs text-zinc-400 flex gap-4">
+        <div className="border-t border-zinc-200 px-4 py-2 text-xs text-muted-foreground flex gap-4">
           <span>↑↓ Navigate</span>
           <span>↵ Select</span>
           <span>esc Close</span>

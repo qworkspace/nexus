@@ -62,7 +62,7 @@ export function MemoryTree({ files, selectedFile, onSelectFile, searchTerm = "" 
         <div
           className={cn(
             "flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer transition-colors",
-            isSelected ? "bg-zinc-900 text-white" : "hover:bg-zinc-100",
+            isSelected ? "bg-card text-foreground" : "hover:bg-zinc-100",
             searchTerm && file.name.toLowerCase().includes(searchTerm.toLowerCase())
               ? "bg-yellow-50 hover:bg-yellow-100"
               : ""
@@ -86,7 +86,7 @@ export function MemoryTree({ files, selectedFile, onSelectFile, searchTerm = "" 
               <Folder className="w-4 h-4" />
               <span className="text-sm font-medium">{file.name}</span>
               {hasMatchingChildren && (
-                <span className="text-xs text-zinc-400">({file.children?.length})</span>
+                <span className="text-xs text-muted-foreground">({file.children?.length})</span>
               )}
             </>
           ) : (

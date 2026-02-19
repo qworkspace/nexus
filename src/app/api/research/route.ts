@@ -4,10 +4,10 @@ import { join } from "path";
 
 export const dynamic = "force-dynamic";
 
-const DEEP_FOCUS_DIR = "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/deep-focus";
-const WHATS_NEW_DIR = "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/whats-new";
-const SPEC_BRIEFS_DIR = "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/spec-briefs";
-const SPECS_DIR = "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/specs";
+const DEEP_FOCUS_DIR = "/Users/paulvillanueva/shared/research/ai-intel/deep-focus";
+const WHATS_NEW_DIR = "/Users/paulvillanueva/shared/research/ai-intel/whats-new";
+const SPEC_BRIEFS_DIR = "/Users/paulvillanueva/shared/research/ai-intel/spec-briefs";
+const SPECS_DIR = "/Users/paulvillanueva/shared/research/ai-intel/specs";
 
 type ResearchType = "deep-focus" | "whats-new" | "spec-briefs" | "specs";
 

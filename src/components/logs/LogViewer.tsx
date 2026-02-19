@@ -122,7 +122,7 @@ export function LogViewer() {
   };
 
   const LEVEL_COLORS = {
-    info: "bg-zinc-900",
+    info: "bg-foreground",
     warn: "bg-yellow-500",
     error: "bg-red-500",
     debug: "bg-zinc-500",
@@ -138,13 +138,13 @@ export function LogViewer() {
           <div className="flex items-center gap-2">
             <CardTitle>System Logs</CardTitle>
             {data?.source === "mock" && (
-              <span className="text-xs bg-zinc-800 text-zinc-400 px-2 py-1 rounded">
+              <span className="text-xs bg-secondary text-muted-foreground px-2 py-1 rounded">
                 Mock Data
               </span>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-muted-foreground">
               {filteredLogs.length} logs • {lastUpdated.toLocaleTimeString()}
             </span>
             <Button
@@ -162,7 +162,7 @@ export function LogViewer() {
         <div className="flex items-center gap-2 flex-wrap">
           {/* Search */}
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search logs..."
               value={searchQuery}
@@ -172,7 +172,7 @@ export function LogViewer() {
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -188,7 +188,7 @@ export function LogViewer() {
           >
             <Filter className="h-4 w-4" />
             {activeFiltersCount > 0 && (
-              <span className="absolute -top-1 -right-1 h-4 w-4 bg-zinc-900 text-white text-xs rounded-full flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 h-4 w-4 bg-foreground text-foreground text-xs rounded-full flex items-center justify-center">
                 {activeFiltersCount}
               </span>
             )}
@@ -216,7 +216,7 @@ export function LogViewer() {
 
         {/* Filters Panel */}
         {showFilters && (
-          <div className="space-y-3 p-4 bg-zinc-900/50 rounded-lg border border-zinc-800">
+          <div className="space-y-3 p-4 bg-card/80 rounded-lg border border-border">
             {/* Level Filters */}
             <div>
               <div className="text-sm font-medium mb-2">Log Level</div>
@@ -255,7 +255,7 @@ export function LogViewer() {
                     </Button>
                   ))}
                   {availableSources.length > 10 && (
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-muted-foreground">
                       +{availableSources.length - 10} more
                     </span>
                   )}
@@ -282,7 +282,7 @@ export function LogViewer() {
         <ScrollArea className="h-[600px] px-6">
           <div ref={scrollRef} className="space-y-1 pb-4">
             {isLoading && filteredLogs.length === 0 ? (
-              <div className="text-center text-zinc-500 py-8">
+              <div className="text-center text-muted-foreground py-8">
                 Loading logs...
               </div>
             ) : error ? (
@@ -290,7 +290,7 @@ export function LogViewer() {
                 Failed to load logs. Is the gateway running?
               </div>
             ) : filteredLogs.length === 0 ? (
-              <div className="text-center text-zinc-500 py-8">
+              <div className="text-center text-muted-foreground py-8">
                 No logs found matching filters.
               </div>
             ) : (

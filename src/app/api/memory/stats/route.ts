@@ -4,6 +4,7 @@ import { promisify } from 'util';
 import { readdir, stat } from 'fs/promises';
 import path from 'path';
 import { homedir } from 'os';
+import { fetchOpenClawSessions } from '@/lib/data-utils';
 import { formatBytes } from '@/lib/data-utils';
 
 const execAsync = promisify(exec);
@@ -165,6 +166,28 @@ export async function GET(): Promise<NextResponse<MemoryStats>> {
   const fileSystemStats = await getMemoryFileStats();
   if (fileSystemStats) {
     stats.fileSystem = fileSystemStats;
+    // Populate top-level fields expected by MemoryContextPanel
+    (stats as unknown as Record<string, unknown>).totalSize = fileSystemStats.totalSizeBytes;
+    (stats as unknown as Record<string, unknown>).totalFiles = fileSystemStats.totalFiles;
+  }
+
+  // Populate currentContext from active main session
+  try {
+    const sessionsData = await fetchOpenClawSessions(5);
+    const mainSession = sessionsData.sessions.find(
+      (s) => (s.key as string) === 'agent:main:main'
+    );
+    if (mainSession) {
+      const totalTokens = (mainSession.totalTokens as number) || 0;
+      const contextTokens = (mainSession.contextTokens as number) || 200000;
+      (stats as unknown as Record<string, unknown>).currentContext = {
+        used: totalTokens,
+        max: contextTokens,
+        percentage: Math.round((totalTokens / contextTokens) * 100),
+      };
+    }
+  } catch {
+    // currentContext remains unset; panel handles undefined gracefully
   }
 
   return NextResponse.json(stats);

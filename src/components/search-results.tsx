@@ -20,10 +20,10 @@ interface SearchResultsProps {
 }
 
 const categoryColors: Record<string, string> = {
-  memory: "bg-zinc-100 text-zinc-700",
-  docs: "bg-zinc-100 text-zinc-800",
-  project: "bg-zinc-100 text-zinc-800",
-  activity: "bg-zinc-100 text-[#FFE135]",
+  memory: "bg-purple-100 text-purple-800",
+  docs: "bg-blue-100 text-blue-800",
+  project: "bg-green-100 text-green-800",
+  activity: "bg-orange-100 text-orange-800",
 };
 
 const categoryIcons: Record<string, string> = {
@@ -69,7 +69,7 @@ export function SearchResults({
 }: SearchResultsProps) {
   if (results.length === 0) {
     return (
-      <div className="text-center py-12 text-zinc-500">
+      <div className="text-center py-12 text-muted-foreground">
         <p className="text-lg mb-2">No results found</p>
         <p className="text-sm">Try different search terms</p>
       </div>
@@ -89,7 +89,7 @@ export function SearchResults({
         >
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <span className="text-lg text-zinc-400">
+              <span className="text-lg text-muted-foreground">
                 {categoryIcons[result.category] || "○"}
               </span>
 
@@ -106,11 +106,11 @@ export function SearchResults({
                   </Badge>
                 </div>
 
-                <p className="text-sm text-zinc-600 mb-2">
+                <p className="text-sm text-muted-foreground mb-2">
                   {highlightMatches(result.snippet, query)}
                 </p>
 
-                <p className="text-xs text-zinc-400 font-mono truncate">
+                <p className="text-xs text-muted-foreground font-mono truncate">
                   {formatPath(result.path)}
                 </p>
               </div>

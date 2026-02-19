@@ -43,7 +43,7 @@ export interface SessionFileInfo {
 // ============================================================================
 
 export async function loadAgentRoster(): Promise<{ agents: Array<{ id: string; name: string; emoji: string; role: string }> }> {
-  const rosterPath = path.join(homedir(), 'shared', 'agent-roster.json');
+  const rosterPath = path.join(homedir(), '.openclaw', 'shared', 'agent-roster.json');
   try {
     const content = await readFile(rosterPath, 'utf-8');
     return JSON.parse(content);
@@ -211,7 +211,7 @@ export async function aggregateUsageFromTranscripts(
 // ============================================================================
 
 export async function getHandoffs(): Promise<HandoffFile[]> {
-  const handoffsDir = path.join(homedir(), 'shared', 'handoffs');
+  const handoffsDir = path.join(homedir(), '.openclaw', 'shared', 'handoffs');
   const handoffs: HandoffFile[] = [];
 
   try {

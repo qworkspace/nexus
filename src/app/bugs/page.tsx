@@ -70,8 +70,8 @@ export default function BugsPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
-            <Bug className="h-12 w-12 mx-auto mb-4 animate-pulse text-zinc-300 dark:text-zinc-600" />
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">Loading bugs...</p>
+            <Bug className="h-12 w-12 mx-auto mb-4 animate-pulse text-foreground dark:text-muted-foreground" />
+            <p className="text-sm text-muted-foreground dark:text-muted-foreground">Loading bugs...</p>
           </div>
         </div>
       </div>
@@ -81,10 +81,10 @@ export default function BugsPage() {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+        <h1 className="text-3xl font-bold text-zinc-900 dark:text-foreground">
           Bug Tracker
         </h1>
-        <p className="mt-2 text-zinc-600 dark:text-zinc-400">
+        <p className="mt-2 text-muted-foreground dark:text-muted-foreground">
           Track and manage bugs across all projects
         </p>
       </div>

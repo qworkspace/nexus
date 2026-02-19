@@ -23,13 +23,13 @@ export function ExpensiveActivities({
     return (
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
+          <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
             <DollarSign size={16} />
             Top Expensive Activities
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-zinc-400 py-4 text-center">No data yet</p>
+          <p className="text-sm text-muted-foreground py-4 text-center">No data yet</p>
         </CardContent>
       </Card>
     );
@@ -38,7 +38,7 @@ export function ExpensiveActivities({
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-2">
+        <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-2">
           <DollarSign size={16} />
           Top Expensive Activities
         </CardTitle>
@@ -50,12 +50,12 @@ export function ExpensiveActivities({
               key={activity.id}
               className="flex items-start gap-3 py-2 border-b border-zinc-100 last:border-0"
             >
-              <span className="text-xs text-zinc-400 w-4">{i + 1}.</span>
+              <span className="text-xs text-muted-foreground w-4">{i + 1}.</span>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-medium text-zinc-900 truncate">
                   {activity.title}
                 </p>
-                <p className="text-xs text-zinc-500">
+                <p className="text-xs text-muted-foreground">
                   {activity.type} · {activity.model || "unknown"} ·{" "}
                   {formatTokens(activity.tokensIn)} in / {formatTokens(activity.tokensOut)} out
                 </p>

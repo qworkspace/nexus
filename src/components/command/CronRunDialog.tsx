@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCommandStore } from "@/stores/commandStore";
-import { Check, Play, Timer } from 'lucide-react';
+import { Check, Play } from 'lucide-react';
 
 
 interface Cron {
@@ -49,8 +49,8 @@ export function CronRunDialog() {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Timer size={14} /> RUN CRON JOB
-            <span className="ml-auto text-xs text-zinc-400 font-normal">ESC</span>
+            ⏰ RUN CRON JOB
+            <span className="ml-auto text-xs text-muted-foreground font-normal">ESC</span>
           </DialogTitle>
         </DialogHeader>
 
@@ -64,10 +64,10 @@ export function CronRunDialog() {
           </div>
 
           <div>
-            <h3 className="text-xs font-semibold text-zinc-500 uppercase mb-2">RECENT</h3>
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">RECENT</h3>
             <div className="space-y-1 max-h-64 overflow-y-auto">
               {filteredCrons.length === 0 ? (
-                <div className="text-center py-6 text-zinc-500 text-sm">
+                <div className="text-center py-6 text-muted-foreground text-sm">
                   No crons found
                 </div>
               ) : (
@@ -83,8 +83,8 @@ export function CronRunDialog() {
                     type="button"
                   >
                     <div>
-                      <div className="font-medium text-zinc-900 flex items-center gap-1.5"><Timer size={12} className="text-muted-foreground shrink-0" />{cron.name}</div>
-                      <div className="text-xs text-zinc-500">Next: {cron.nextRun}</div>
+                      <div className="font-medium text-zinc-900">⏰ {cron.name}</div>
+                      <div className="text-xs text-muted-foreground">Next: {cron.nextRun}</div>
                     </div>
                     {selectedCron?.id === cron.id && (
                       <Check size={16} />
@@ -96,7 +96,7 @@ export function CronRunDialog() {
           </div>
 
           {query === "" && (
-            <Button variant="ghost" className="w-full text-sm text-zinc-600">
+            <Button variant="ghost" className="w-full text-sm text-muted-foreground">
               Show 49 crons...
             </Button>
           )}

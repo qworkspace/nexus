@@ -22,7 +22,7 @@ export default function CronDashboard() {
     <div className="p-6 max-w-7xl">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-zinc-900">Cron Jobs</h1>
-        <p className="text-zinc-500 text-sm">
+        <p className="text-muted-foreground text-sm">
           Manage and monitor scheduled tasks
         </p>
       </div>

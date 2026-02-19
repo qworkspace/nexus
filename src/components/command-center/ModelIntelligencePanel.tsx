@@ -37,13 +37,13 @@ const modelIcons: Record<string, JSX.Element> = {
 };
 
 const modelColors: Record<string, string> = {
-  'claude-opus-4-5': 'bg-zinc-900',
-  'claude-sonnet-4': 'bg-zinc-900',
-  'claude-3-5-sonnet': 'bg-zinc-900',
-  'claude-3-5-haiku': 'bg-zinc-800',
+  'claude-opus-4-5': 'bg-purple-500',
+  'claude-sonnet-4': 'bg-foreground',
+  'claude-3-5-sonnet': 'bg-foreground',
+  'claude-3-5-haiku': 'bg-green-500',
   'glm-4-flash': 'bg-[#FFE135]',
-  'gpt-4o': 'bg-zinc-800',
-  'gpt-4o-mini': 'bg-zinc-800',
+  'gpt-4o': 'bg-[#FFE135]',
+  'gpt-4o-mini': 'bg-teal-500',
 };
 
 function formatTokens(tokens: number): string {
@@ -89,30 +89,30 @@ export function ModelIntelligencePanel() {
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Current Model */}
-        <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 border dark:border-zinc-800">
-          <span className="text-zinc-600 dark:text-zinc-400">
+        <div className="flex items-center gap-3 p-3 rounded-lg bg-zinc-50 dark:bg-card/80 border dark:border-border">
+          <span className="text-muted-foreground dark:text-muted-foreground">
             {modelIcons[data?.currentModel || ''] || <Bot size={20} />}
           </span>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+              <span className="font-semibold text-zinc-900 dark:text-foreground">
                 {formatModelName(data?.currentModel || 'Loading...')}
               </span>
-              <Badge variant="secondary" className="text-xs bg-zinc-100 dark:bg-zinc-900/30 text-zinc-700 dark:text-zinc-500">
+              <Badge variant="secondary" className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
                 Active
               </Badge>
             </div>
-            <span className="text-xs text-zinc-500">Current session model</span>
+            <span className="text-xs text-muted-foreground">Current session model</span>
           </div>
         </div>
 
         {/* Token Usage by Model */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Today&apos;s Usage
             </h4>
-            <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <span className="text-sm font-semibold text-zinc-900 dark:text-foreground">
               ${data?.totalCost.toFixed(2) || '0.00'}
             </span>
           </div>
@@ -120,7 +120,7 @@ export function ModelIntelligencePanel() {
           {isLoading ? (
             <div className="space-y-2">
               {[1, 2, 3].map(i => (
-                <div key={i} className="h-12 rounded-lg bg-zinc-100 dark:bg-zinc-800 shimmer" />
+                <div key={i} className="h-12 rounded-lg bg-zinc-100 dark:bg-secondary shimmer" />
               ))}
             </div>
           ) : (
@@ -134,12 +134,12 @@ export function ModelIntelligencePanel() {
                   <div key={model.model} className="space-y-1">
                     <div className="flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2">
-                        <span className="text-zinc-500">{modelIcons[model.model] || <Bot size={16} />}</span>
-                        <span className="text-zinc-700 dark:text-zinc-300">
+                        <span className="text-muted-foreground">{modelIcons[model.model] || <Bot size={16} />}</span>
+                        <span className="text-zinc-700 dark:text-foreground">
                           {formatModelName(model.model)}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 text-xs text-zinc-500">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
                         <span>{model.requests} reqs</span>
                         <span className="font-mono">
                           ${model.cost.toFixed(2)}
@@ -147,13 +147,13 @@ export function ModelIntelligencePanel() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      <div className="flex-1 h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+                      <div className="flex-1 h-2 bg-zinc-200 dark:bg-secondary rounded-full overflow-hidden">
                         <div
                           className={cn("h-full rounded-full transition-all duration-500", color)}
                           style={{ width: `${percentage}%` }}
                         />
                       </div>
-                      <span className="text-xs text-zinc-400 w-16 text-right">
+                      <span className="text-xs text-muted-foreground w-16 text-right">
                         {formatTokens(totalTokens)}
                       </span>
                     </div>
@@ -166,8 +166,8 @@ export function ModelIntelligencePanel() {
 
         {/* Recommendations */}
         {data?.recommendations && data?.recommendations?.length > 0 && (
-          <div className="space-y-2 pt-2 border-t dark:border-zinc-800">
-            <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide">
+          <div className="space-y-2 pt-2 border-t dark:border-border">
+            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               Recommendations
             </h4>
             {(data?.recommendations || []).slice(0, 2).map((rec, i) => (
@@ -176,17 +176,17 @@ export function ModelIntelligencePanel() {
                 className={cn(
                   "p-2 rounded-lg text-sm",
                   rec.model
-                    ? "bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-300 dark:border-zinc-300/30"
-                    : "bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-300 dark:border-zinc-300/30"
+                    ? "bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/30"
+                    : "bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30"
                 )}
               >
                 <p className={cn(
                   "font-medium",
-                  rec.model ? "text-zinc-700 dark:text-zinc-500" : "text-zinc-700 dark:text-zinc-500"
+                  rec.model ? "text-blue-700 dark:text-foreground" : "text-green-700 dark:text-green-400"
                 )}>
                   {rec.message}
                 </p>
-                <p className="text-xs text-zinc-500 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   {rec.reason}
                 </p>
               </div>

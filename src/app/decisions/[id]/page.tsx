@@ -33,7 +33,7 @@ export default function DecisionDetailPage() {
   if (loading) {
     return (
       <div className="p-6 flex items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-zinc-400" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -41,13 +41,13 @@ export default function DecisionDetailPage() {
   if (!decision) {
     return (
       <div className="p-6">
-        <div className="flex items-center gap-2 text-zinc-500 mb-4">
+        <div className="flex items-center gap-2 text-muted-foreground mb-4">
           <ArrowLeft className="h-4 w-4" />
           <a href="/decisions" className="hover:text-zinc-700">
             Back to Decisions
           </a>
         </div>
-        <p className="text-zinc-500">Decision not found</p>
+        <p className="text-muted-foreground">Decision not found</p>
       </div>
     );
   }
@@ -55,7 +55,7 @@ export default function DecisionDetailPage() {
   return (
     <div className="p-6 max-w-4xl">
       <div className="mb-6">
-        <div className="flex items-center gap-2 text-zinc-500 mb-4">
+        <div className="flex items-center gap-2 text-muted-foreground mb-4">
           <ArrowLeft className="h-4 w-4" />
           <a href="/decisions" className="hover:text-zinc-700">
             Back to Decisions

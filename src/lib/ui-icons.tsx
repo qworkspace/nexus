@@ -39,8 +39,8 @@ export const StatusCircle = ({
   className?: string;
 }) => {
   const colorMap = {
-    online: "fill-green-500 text-zinc-600",
-    busy: "fill-blue-500 text-zinc-600",
+    online: "fill-green-500 text-green-500",
+    busy: "fill-blue-500 text-blue-500",
     error: "fill-red-500 text-red-500",
     warning: "fill-yellow-500 text-yellow-500",
     offline: "fill-zinc-500 text-zinc-500",

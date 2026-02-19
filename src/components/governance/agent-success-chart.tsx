@@ -24,7 +24,7 @@ export function AgentSuccessChart({ agents }: AgentSuccessChartProps) {
   if (!data || data.length === 0) {
     return (
       <div className="flex items-center justify-center h-48">
-        <p className="text-zinc-500 text-sm">No agent performance data available</p>
+        <p className="text-muted-foreground text-sm">No agent performance data available</p>
       </div>
     );
   }

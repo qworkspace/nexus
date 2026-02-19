@@ -5,7 +5,7 @@ export default function LogsPage() {
     <div className="container mx-auto p-6 space-y-6">
       <div>
         <h1 className="text-3xl font-bold mb-2">System Logs</h1>
-        <p className="text-zinc-400">
+        <p className="text-muted-foreground">
           Real-time view of OpenClaw gateway logs with filtering and search
         </p>
       </div>

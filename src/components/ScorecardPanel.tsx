@@ -52,17 +52,17 @@ export default function ScorecardPanel() {
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
+      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground">
             Loop 0 Scorecard
           </h3>
         </div>
         <div className="animate-pulse space-y-3">
-          <div className="h-4 bg-zinc-100 dark:bg-zinc-800 rounded w-3/4" />
-          <div className="h-2 bg-zinc-100 dark:bg-zinc-800 rounded w-full" />
-          <div className="h-2 bg-zinc-100 dark:bg-zinc-800 rounded w-full" />
-          <div className="h-2 bg-zinc-100 dark:bg-zinc-800 rounded w-full" />
+          <div className="h-4 bg-zinc-100 dark:bg-secondary rounded w-3/4" />
+          <div className="h-2 bg-zinc-100 dark:bg-secondary rounded w-full" />
+          <div className="h-2 bg-zinc-100 dark:bg-secondary rounded w-full" />
+          <div className="h-2 bg-zinc-100 dark:bg-secondary rounded w-full" />
         </div>
       </div>
     );
@@ -70,9 +70,9 @@ export default function ScorecardPanel() {
 
   if (error) {
     return (
-      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
+      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground">
             Loop 0 Scorecard
           </h3>
         </div>
@@ -83,13 +83,13 @@ export default function ScorecardPanel() {
 
   if (!data?.current) {
     return (
-      <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
+      <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground">
             Loop 0 Scorecard
           </h3>
         </div>
-        <p className="text-xs text-zinc-500">No assessment data available yet.</p>
+        <p className="text-xs text-muted-foreground">No assessment data available yet.</p>
       </div>
     );
   }
@@ -97,31 +97,31 @@ export default function ScorecardPanel() {
   const { current, previous } = data;
 
   return (
-    <Card className="border-zinc-200 dark:border-zinc-800">
+    <Card className="border-zinc-200 dark:border-border">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <CardTitle className="text-base">Loop 0 Scorecard</CardTitle>
           <Link
-            href={`file:///Users/paulvillanueva/shared/research/self-improvement/${current.assessmentFile}`}
+            href={`file:///Users/paulvillanueva/.openclaw/shared/research/self-improvement/${current.assessmentFile}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-[10px] text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 flex items-center gap-1"
+            className="text-[10px] text-muted-foreground hover:text-zinc-700 dark:hover:text-foreground flex items-center gap-1"
           >
             <FileText size={10} />
             View Full
           </Link>
         </div>
-        <p className="text-[10px] text-zinc-500">
+        <p className="text-[10px] text-muted-foreground">
           Assessment: {formatDate(current.date)}
         </p>
       </CardHeader>
       <CardContent className="space-y-3">
         {/* Overall Score */}
-        <div className="text-center pb-3 border-b border-zinc-100 dark:border-zinc-800">
-          <div className="text-3xl font-bold text-zinc-600 dark:text-zinc-500">
+        <div className="text-center pb-3 border-b border-zinc-100 dark:border-border">
+          <div className="text-3xl font-bold text-emerald-600 dark:text-[#FFE135]">
             {current.overall.toFixed(1)}
           </div>
-          <div className="text-[10px] text-zinc-500 uppercase tracking-wide">Overall</div>
+          <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Overall</div>
         </div>
 
         {/* Metrics */}
@@ -132,14 +132,14 @@ export default function ScorecardPanel() {
               <MetricTooltip key={metric.name} content={tooltipContent}>
                 <div className="space-y-1 cursor-help">
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="text-xs font-medium text-zinc-700 dark:text-foreground">
                       {metric.name}
                     </span>
                     <div className="flex items-center gap-1">
                       {metric.delta !== undefined && (
                         <DeltaIndicator delta={metric.delta} />
                       )}
-                      <span className="text-xs font-mono font-bold text-zinc-900 dark:text-zinc-100">
+                      <span className="text-xs font-mono font-bold text-zinc-900 dark:text-foreground">
                         {metric.score}/10
                       </span>
                     </div>
@@ -152,8 +152,8 @@ export default function ScorecardPanel() {
         </div>
       </CardContent>
       {previous && (
-        <CardFooter className="pt-3 border-t border-zinc-100 dark:border-zinc-800">
-          <p className="text-[10px] text-zinc-500 text-center w-full">
+        <CardFooter className="pt-3 border-t border-zinc-100 dark:border-border">
+          <p className="text-[10px] text-muted-foreground text-center w-full">
             Previous: {formatDate(previous.date)} — {previous.overall.toFixed(1)}/10
           </p>
         </CardFooter>
@@ -164,15 +164,15 @@ export default function ScorecardPanel() {
 
 function ProgressBar({ value, max }: { value: number; max: number }) {
   const percentage = (value / max) * 100;
-  let colorClass = "bg-zinc-900";
+  let colorClass = "bg-foreground";
   
-  if (value >= 8) colorClass = "bg-zinc-800";
-  else if (value >= 6) colorClass = "bg-zinc-900";
+  if (value >= 8) colorClass = "bg-[#FFE135]";
+  else if (value >= 6) colorClass = "bg-foreground";
   else if (value >= 4) colorClass = "bg-[#FFE135]";
   else colorClass = "bg-red-500";
 
   return (
-    <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+    <div className="h-1.5 bg-zinc-100 dark:bg-secondary rounded-full overflow-hidden">
       <div
         className={`h-full rounded-full ${colorClass} transition-all duration-500`}
         style={{ width: `${percentage}%` }}
@@ -184,7 +184,7 @@ function ProgressBar({ value, max }: { value: number; max: number }) {
 function DeltaIndicator({ delta }: { delta: number }) {
   if (delta > 0) {
     return (
-      <TrendingUp size={12} className="text-zinc-600" aria-label={`+${delta} from previous`} />
+      <TrendingUp size={12} className="text-foreground" aria-label={`+${delta} from previous`} />
     );
   } else if (delta < 0) {
     return (
@@ -192,7 +192,7 @@ function DeltaIndicator({ delta }: { delta: number }) {
     );
   } else {
     return (
-      <Minus size={12} className="text-zinc-400" aria-label="no change" />
+      <Minus size={12} className="text-muted-foreground" aria-label="no change" />
     );
   }
 }

@@ -26,20 +26,20 @@ interface PillarCardProps {
 
 const statusColors: Record<Pillar["status"], string> = {
   learning: "bg-yellow-100 text-yellow-800",
-  ready: "bg-zinc-100 text-zinc-800",
-  active: "bg-zinc-100 text-zinc-800",
-  vibing: "bg-zinc-100 text-zinc-700",
-  building: "bg-zinc-100 text-[#FFE135]",
+  ready: "bg-blue-100 text-blue-800",
+  active: "bg-green-100 text-green-800",
+  vibing: "bg-purple-100 text-purple-800",
+  building: "bg-orange-100 text-orange-800",
 };
 
 const itemStatusColors: Record<PillarItem["status"], string> = {
-  done: "text-zinc-600",
+  done: "text-green-600",
   "in-progress": "text-yellow-600",
   "not-started": "text-red-600",
 };
 
 const itemStatusIcons: Record<PillarItem["status"], JSX.Element> = {
-  done: <CheckCircle size={14} className="text-zinc-600" />,
+  done: <CheckCircle size={14} className="text-green-600" />,
   "in-progress": <Circle size={14} className="fill-yellow-500 text-yellow-500" />,
   "not-started": <Circle size={14} className="fill-red-500 text-red-500" />,
 };
@@ -76,7 +76,7 @@ export function PillarCard({ pillar }: PillarCardProps) {
         <CardContent>
           {/* Progress bar */}
           <div className="mb-4">
-            <div className="flex items-center justify-between text-xs text-zinc-500 mb-1">
+            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
               <span>Progress</span>
               <span>{percentage}%</span>
             </div>
@@ -85,7 +85,7 @@ export function PillarCard({ pillar }: PillarCardProps) {
                 className={cn(
                   "h-2 rounded-full transition-all",
                   percentage >= 80
-                    ? "bg-zinc-800"
+                    ? "bg-green-500"
                     : percentage >= 50
                     ? "bg-yellow-500"
                     : "bg-red-500"
@@ -120,12 +120,12 @@ export function PillarCard({ pillar }: PillarCardProps) {
                       {item.name}
                     </div>
                     {item.owner && (
-                      <div className="text-xs text-zinc-500">
+                      <div className="text-xs text-muted-foreground">
                         Owner: {item.owner}
                       </div>
                     )}
                     {item.notes && (
-                      <div className="text-xs text-zinc-400 mt-0.5">
+                      <div className="text-xs text-muted-foreground mt-0.5">
                         {item.notes}
                       </div>
                     )}
@@ -136,7 +136,7 @@ export function PillarCard({ pillar }: PillarCardProps) {
           )}
 
           {pillar.items.length === 0 && !pillar.description && (
-            <div className="text-center text-sm text-zinc-400 py-4">
+            <div className="text-center text-sm text-muted-foreground py-4">
               No items yet
             </div>
           )}

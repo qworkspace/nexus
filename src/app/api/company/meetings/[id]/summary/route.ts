@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
 import { join } from "path";
 
-const SHARED = process.env.HOME ? join(process.env.HOME, ".openclaw/shared") : "/Users/paulvillanueva/.openclaw/shared";
-const MEETINGS_DIR = join(SHARED, "meetings");
-const SUMMARIES_DIR = join(SHARED, "meetings", "summaries");
+const SHARED = process.env.HOME ? join(process.env.HOME, ".openclaw", "shared") : "/Users/paulvillanueva/.openclaw/shared";
+const RETROS_DIR = join(SHARED, "retros");
+const SUMMARIES_DIR = join(SHARED, "retros", "summaries");
 
 // Generate summary using Ollama
 async function generateSummary(meetingId: string, content: string): Promise<string> {
@@ -104,7 +104,7 @@ export async function POST(
     }
 
     // Load meeting content
-    const meetingPath = join(MEETINGS_DIR, `${id}.md`);
+    const meetingPath = join(RETROS_DIR, `${id}.md`);
     const content = readFileSync(meetingPath, "utf-8");
 
     // Generate summary

@@ -76,36 +76,36 @@ export function SessionInsightsPanel() {
       <CardContent className="space-y-3">
         {/* Stats Grid - Compact */}
         <div className="grid grid-cols-4 gap-2">
-          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 text-center">
-            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-card/80 text-center">
+            <p className="text-lg font-bold text-zinc-900 dark:text-foreground">
               {data?.today.sessions || 0}
             </p>
-            <p className="text-[10px] text-zinc-500 uppercase">Sessions</p>
+            <p className="text-[10px] text-muted-foreground uppercase">Sessions</p>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 text-center">
-            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-card/80 text-center">
+            <p className="text-lg font-bold text-zinc-900 dark:text-foreground">
               {formatTokens(data?.today.totalTokens || 0)}
             </p>
-            <p className="text-[10px] text-zinc-500 uppercase">Tokens</p>
+            <p className="text-[10px] text-muted-foreground uppercase">Tokens</p>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 text-center">
-            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-card/80 text-center">
+            <p className="text-lg font-bold text-zinc-900 dark:text-foreground">
               ${data?.today.totalCost.toFixed(2) || '0.00'}
             </p>
-            <p className="text-[10px] text-zinc-500 uppercase">Cost</p>
+            <p className="text-[10px] text-muted-foreground uppercase">Cost</p>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-zinc-900/50 text-center">
-            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+          <div className="p-2 rounded-lg bg-zinc-50 dark:bg-card/80 text-center">
+            <p className="text-lg font-bold text-zinc-900 dark:text-foreground">
               {formatDuration(data?.current.durationMs || 0)}
             </p>
-            <p className="text-[10px] text-zinc-500 uppercase">Duration</p>
+            <p className="text-[10px] text-muted-foreground uppercase">Duration</p>
           </div>
         </div>
 
         {/* Session Timeline - Compact */}
         {data?.today?.summaries && data?.today?.summaries?.length > 0 && (
           <div className="space-y-1">
-            <h4 className="text-[10px] font-medium text-zinc-500 uppercase tracking-wide">
+            <h4 className="text-[10px] font-medium text-muted-foreground uppercase tracking-wide">
               Today&apos;s Sessions
             </h4>
             <div className="space-y-1 max-h-[160px] overflow-y-auto">
@@ -114,18 +114,18 @@ export function SessionInsightsPanel() {
                   key={session.id}
                   className="flex items-center gap-2 py-1 text-xs"
                 >
-                  <span className="text-zinc-400 w-12 text-right font-mono">
+                  <span className="text-muted-foreground w-12 text-right font-mono">
                     {formatTime(session.startedAt)}
                   </span>
-                  <div className="flex-1 h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+                  <div className="flex-1 h-1.5 bg-zinc-200 dark:bg-secondary rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-zinc-900 rounded-full"
+                      className="h-full bg-foreground rounded-full"
                       style={{
                         width: `${Math.min((session.tokensUsed / (data?.today?.totalTokens || 1)) * 100, 100)}%`,
                       }}
                     />
                   </div>
-                  <span className="text-zinc-500 w-10 text-right">
+                  <span className="text-muted-foreground w-10 text-right">
                     {formatTokens(session.tokensUsed)}
                   </span>
                 </div>

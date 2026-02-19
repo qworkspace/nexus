@@ -80,8 +80,7 @@ export async function GET(req: NextRequest) {
 
 async function pollAgentStates(): Promise<AgentState[]> {
   const agentIds = [
-    'main', 'creative', 'design', 'growth', 'research',
-    'dev', 'testing', 'events', 'support', 'luna',
+    'main', 'research', 'dev', 'testing', 'luna',
   ];
 
   const states: AgentState[] = [];
@@ -150,7 +149,7 @@ async function fetchLunaSessions(): Promise<LunaSession[]> {
   const sessions: LunaSession[] = [];
 
   try {
-    const lunaAgentsDir = path.join(process.env.HOME!, '.openclaw', 'luna', 'agents');
+    const lunaAgentsDir = path.join(process.env.HOME!, '.openclaw', 'agents');
     const agentDirs = await fs.readdir(lunaAgentsDir);
 
     for (const agentId of agentDirs) {
@@ -228,7 +227,7 @@ async function getLastMessage(sessionFile: string): Promise<string> {
 }
 
 async function checkHandoffs(): Promise<Array<{ from: string; to: string; task: string }>> {
-  const handoffsDir = path.join(process.env.HOME!, '.openclaw/shared', 'handoffs');
+  const handoffsDir = path.join(process.env.HOME!, '.openclaw', 'shared', 'handoffs');
   const handoffs: Array<{ from: string; to: string; task: string }> = [];
 
   try {
@@ -253,7 +252,7 @@ async function checkHandoffs(): Promise<Array<{ from: string; to: string; task: 
 }
 
 async function checkBuilds(): Promise<Array<{ agentId: string; buildName: string }>> {
-  const buildsLog = path.join(process.env.HOME!, '.openclaw/shared', 'overnight-builds.log');
+  const buildsLog = path.join(process.env.HOME!, '.openclaw', 'shared', 'overnight-builds.log');
   const builds: Array<{ agentId: string; buildName: string }> = [];
 
   try {

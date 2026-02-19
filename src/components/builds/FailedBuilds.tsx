@@ -41,12 +41,12 @@ export function FailedBuilds({ builds }: FailedBuildsProps) {
                     FAILED
                   </Badge>
                 </div>
-                <p className="text-sm text-zinc-500 line-clamp-2">
+                <p className="text-sm text-muted-foreground line-clamp-2">
                   {build.task}
                 </p>
               </div>
               {build.completedAt && (
-                <div className="text-xs text-zinc-500 shrink-0 text-right">
+                <div className="text-xs text-muted-foreground shrink-0 text-right">
                   {build.completedAt.toLocaleTimeString('en-US', {
                     hour: '2-digit',
                     minute: '2-digit',

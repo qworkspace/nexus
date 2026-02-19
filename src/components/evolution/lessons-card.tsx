@@ -39,7 +39,7 @@ export function LessonsCard({ lessons }: LessonsCardProps) {
                 <div className="text-sm font-medium text-zinc-900 mb-1">
                   {lesson.title}
                 </div>
-                <div className="flex items-center justify-between text-xs text-zinc-500">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span className="px-2 py-0.5 bg-zinc-200 rounded text-zinc-700">
                     {lesson.category}
                   </span>
@@ -49,13 +49,13 @@ export function LessonsCard({ lessons }: LessonsCardProps) {
             ))}
           </div>
         ) : (
-          <div className="text-center text-sm text-zinc-400 py-8">
+          <div className="text-center text-sm text-muted-foreground py-8">
             No lessons recorded yet
           </div>
         )}
         {lessons.total > lessons.recent.length && (
           <div className="mt-4 text-center">
-            <span className="text-sm text-zinc-500">
+            <span className="text-sm text-muted-foreground">
               View all {lessons.total} lessons in LESSONS.md
             </span>
           </div>

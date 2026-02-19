@@ -6,17 +6,17 @@ import type { PipelineStage, PipelineItem } from '@/types/builds';
 import { GitBranch, Zap, Shield } from 'lucide-react';
 
 const AGENT_COLORS = {
-  cipher: { bg: 'bg-zinc-100', text: 'text-zinc-700', border: 'border-zinc-300' },
-  spark: { bg: 'bg-zinc-100', text: 'text-zinc-700', border: 'border-zinc-300' },
-  flux: { bg: 'bg-zinc-100', text: 'text-[#FFE135]', border: 'border-zinc-300' },
+  cipher: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200' },
+  spark: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200' },
+  flux: { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200' },
 };
 
 const STATUS_COLORS = {
-  queued: 'bg-zinc-100 text-zinc-600',
-  speccing: 'bg-zinc-100 text-zinc-700',
-  building: 'bg-zinc-100 text-zinc-700',
-  qa: 'bg-zinc-100 text-[#FFE135]',
-  shipped: 'bg-zinc-100 text-zinc-700',
+  queued: 'bg-zinc-100 text-muted-foreground',
+  speccing: 'bg-purple-100 text-purple-700',
+  building: 'bg-blue-100 text-blue-700',
+  qa: 'bg-orange-100 text-orange-700',
+  shipped: 'bg-green-100 text-green-700',
   failed: 'bg-red-100 text-red-700',
 };
 
@@ -77,7 +77,7 @@ export function PipelineView() {
         <CardTitle className="flex items-center gap-2">
           <GitBranch className="h-4 w-4" />
           Pipeline
-          <span className="ml-2 text-xs text-zinc-500 font-normal">
+          <span className="ml-2 text-xs text-muted-foreground font-normal">
             Cipher → Spark → Flux
           </span>
         </CardTitle>
@@ -97,7 +97,7 @@ export function PipelineView() {
                 </div>
                 <div className="p-2 space-y-2 max-h-64 overflow-y-auto">
                   {stage.items.length === 0 ? (
-                    <p className="text-xs text-zinc-400 text-center py-2">Empty</p>
+                    <p className="text-xs text-muted-foreground text-center py-2">Empty</p>
                   ) : (
                     stage.items.map((item: PipelineItem) => (
                       <div key={item.id} className="space-y-1">
@@ -108,7 +108,7 @@ export function PipelineView() {
                           <span className={`text-[10px] px-1.5 py-0.5 rounded ${STATUS_COLORS[item.status]}`}>
                             {item.status}
                           </span>
-                          <span className="text-[10px] text-zinc-400">{item.priority}</span>
+                          <span className="text-[10px] text-muted-foreground">{item.priority}</span>
                         </div>
                       </div>
                     ))

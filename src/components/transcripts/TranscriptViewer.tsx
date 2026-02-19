@@ -52,14 +52,14 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
         <div className="flex items-center gap-4 mb-4">
           <Link href="/transcripts">
             <button className="p-2 hover:bg-zinc-100 rounded-lg transition-colors">
-              <ArrowLeft className="w-5 h-5 text-zinc-600" />
+              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
             </button>
           </Link>
           <div className="flex-1">
             <h1 className="text-xl font-semibold text-zinc-900">
               {transcript.label}
             </h1>
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-muted-foreground">
               {new Date(transcript.startedAt).toLocaleDateString('en-US', {
                 month: 'short',
                 day: 'numeric',
@@ -71,19 +71,19 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
 
         {/* Stats */}
         <div className="flex flex-wrap items-center gap-6 text-sm mb-4">
-          <div className="flex items-center gap-2 text-zinc-600">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <MessageSquare className="w-4 h-4" />
             <span>{transcript.messageCount} messages</span>
           </div>
-          <div className="flex items-center gap-2 text-zinc-600">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <Hash className="w-4 h-4" />
             <span>{formatTokens(transcript.tokenCount)} tokens</span>
           </div>
-          <div className="flex items-center gap-2 text-zinc-600">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <Clock className="w-4 h-4" />
             <span>{formatDuration(transcript.duration)}</span>
           </div>
-          <div className="flex items-center gap-2 text-zinc-600">
+          <div className="flex items-center gap-2 text-muted-foreground">
             <span className="px-2 py-0.5 bg-zinc-100 rounded text-xs font-mono">
               {transcript.model}
             </span>
@@ -92,7 +92,7 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search in this transcript..."
@@ -101,7 +101,7 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
             className="pl-9"
           />
           {searchQuery && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-400">
+            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
               {filteredMessages.length} of {transcript.messageCount} messages
             </span>
           )}
@@ -111,7 +111,7 @@ export function TranscriptViewer({ transcript }: TranscriptViewerProps) {
       {/* Messages */}
       <div className="flex-1 overflow-auto p-6 space-y-4 bg-zinc-50">
         {filteredMessages.length === 0 ? (
-          <div className="text-center py-12 text-zinc-400">
+          <div className="text-center py-12 text-muted-foreground">
             No messages match your search
           </div>
         ) : (

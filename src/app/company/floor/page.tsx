@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Calendar, MessageSquare, X as XIcon, CheckCircle, Send, Clapperboard } from "lucide-react";
+import { Calendar, MessageSquare, X as XIcon } from "lucide-react";
 
 interface Agent {
   id: string;
@@ -1379,11 +1379,11 @@ export default function FloorPage() {
       }
     } catch {
       setMeetingLines([
-        { speaker: "Q", emoji: "", text: "Right, morning everyone. Quick round — what's happening?" },
-        { speaker: "Spark", emoji: "", text: "Shipped the latest feature. All tests passing." },
-        { speaker: "Aura", emoji: "", text: "Content calendar locked for this week." },
-        { speaker: "Surge", emoji: "", text: "Engagement up 12% — BTS content performing." },
-        { speaker: "Q", emoji: "", text: "Sick. Let's keep that momentum going." },
+        { speaker: "Q", emoji: "🦾", text: "Right, morning everyone. Quick round — what's happening?" },
+        { speaker: "Spark", emoji: "🔥", text: "Shipped the latest feature. All tests passing." },
+        { speaker: "Aura", emoji: "🎨", text: "Content calendar locked for this week." },
+        { speaker: "Surge", emoji: "⚡", text: "Engagement up 12% — BTS content performing." },
+        { speaker: "Q", emoji: "🦾", text: "Sick. Let's keep that momentum going." },
       ]);
     }
   };
@@ -1521,15 +1521,15 @@ export default function FloorPage() {
       <div className="p-4 max-w-[1200px] mx-auto">
         <div className="flex items-center justify-between mb-3">
           <div>
-            <h1 className="text-xl font-bold text-zinc-100 flex items-center gap-2">
+            <h1 className="text-xl font-bold text-foreground flex items-center gap-2">
               The Floor
             </h1>
-            <p className="text-zinc-500 text-xs">{agents.length} agents • Villanueva Creative HQ • Live</p>
+            <p className="text-muted-foreground text-xs">{agents.length} agents • Villanueva Creative HQ • Live</p>
           </div>
           <div className="flex items-center gap-3">
             <button
               onClick={meetingMode ? endMeeting : startMeeting}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${meetingMode ? "bg-red-500 text-white hover:bg-red-600" : "bg-zinc-900 text-white hover:bg-zinc-700"}`}
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${meetingMode ? "bg-red-500 text-foreground hover:bg-red-600" : "bg-foreground text-foreground hover:bg-foreground"}`}
             >
               {meetingMode ? (
                 <>
@@ -1549,26 +1549,26 @@ export default function FloorPage() {
               onClick={() => setDemoMode(!demoMode)}
               className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
                 demoMode
-                  ? "bg-zinc-800 text-white hover:bg-zinc-700"
-                  : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
+                  ? "bg-purple-500 text-foreground hover:bg-purple-600"
+                  : "bg-muted text-foreground hover:bg-zinc-600"
               }`}
             >
               {demoMode ? (
                 <>
-                  <Clapperboard className="h-4 w-4 animate-pulse" />
+                  <span className="animate-pulse">🎬</span>
                   Demo On
                 </>
               ) : (
-                <><Clapperboard className="h-4 w-4" /> Demo</>
+                <>🎬 Demo</>
               )}
             </button>
 
             {demoMode && (
-              <div className="flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-1">
+              <div className="flex items-center gap-2 bg-secondary rounded-lg px-3 py-1">
                 <select
                   value={demoSpeed}
                   onChange={(e) => setDemoSpeed(parseFloat(e.target.value))}
-                  className="bg-zinc-700 text-xs text-zinc-200 rounded px-2 py-1 border border-zinc-600"
+                  className="bg-muted text-xs text-zinc-200 rounded px-2 py-1 border border-border"
                 >
                   <option value={0.5}>0.5x (cinematic)</option>
                   <option value={1}>1x (realistic)</option>
@@ -1577,7 +1577,7 @@ export default function FloorPage() {
                 <select
                   value={demoIntensity}
                   onChange={(e) => setDemoIntensity(e.target.value as 'calm' | 'normal' | 'busy')}
-                  className="bg-zinc-700 text-xs text-zinc-200 rounded px-2 py-1 border border-zinc-600"
+                  className="bg-muted text-xs text-zinc-200 rounded px-2 py-1 border border-border"
                 >
                   <option value="calm">Calm</option>
                   <option value="normal">Normal</option>
@@ -1586,13 +1586,13 @@ export default function FloorPage() {
               </div>
             )}
 
-            <Link href="/company" className="text-xs text-zinc-500 hover:underline">HQ →</Link>
+            <Link href="/company" className="text-xs text-foreground hover:underline">HQ →</Link>
           </div>
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
           {/* The Energy Blob Office */}
-          <div className="xl:col-span-2 relative rounded-xl overflow-hidden border-2 border-zinc-700" style={{ height: 640, background: "#0a0a1a" }}>
+          <div className="xl:col-span-2 relative rounded-xl overflow-hidden border-2 border-border" style={{ height: 640, background: "#0a0a1a" }}>
             {/* Cosmic starfield background */}
             <div className="absolute inset-0" style={{
               backgroundImage: `
@@ -1613,11 +1613,11 @@ export default function FloorPage() {
             }} />
 
             {/* Wall - cosmic gradient */}
-            <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-zinc-800/50 to-transparent backdrop-blur-sm border-b border-zinc-700/30" />
+            <div className="absolute top-0 left-0 right-0 h-12 bg-gradient-to-b from-zinc-800/50 to-transparent backdrop-blur-sm border-b border-border/30" />
 
             {/* Meeting table - subtle ring of light */}
             <div className="absolute" style={{ left: 340, top: 445 }}>
-              <div className={`w-[160px] h-[90px] rounded-[50%] border transition-all duration-500 ${meetingMode ? "border-[#FFE135]/60 shadow-[0_0_30px_rgba(255,225,53,0.3)] bg-[#FFE135]/5" : "border-zinc-600/30 bg-zinc-700/10"}`}>
+              <div className={`w-[160px] h-[90px] rounded-[50%] border transition-all duration-500 ${meetingMode ? "border-amber-400/60 shadow-[0_0_30px_rgba(251,191,36,0.3)] bg-[#FFE135]/5" : "border-border/30 bg-muted/10"}`}>
                 {/* Inner glow ring */}
                 {meetingMode && (
                   <div className="absolute inset-0 rounded-[50%]" style={{
@@ -1753,8 +1753,8 @@ export default function FloorPage() {
                   {agentState?.buildCelebration && (
                     <>
                       <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-50">
-                        <div className="bg-zinc-900 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap animate-bounce">
-                          <CheckCircle className="h-3 w-3 inline mr-0.5" />{agentState.buildCelebration.buildName}
+                        <div className="bg-green-500 text-foreground text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap animate-bounce">
+                          ✅ {agentState.buildCelebration.buildName}
                         </div>
                       </div>
                       {/* Supernova particles */}
@@ -1781,8 +1781,8 @@ export default function FloorPage() {
                   {/* Handoff badge */}
                   {agentState?.handoff && (
                     <div className="absolute -top-20 left-1/2 -translate-x-1/2 z-40">
-                      <div className="bg-zinc-900 text-white text-[9px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1 whitespace-nowrap">
-                        <Send className="h-3 w-3 inline mr-0.5" />Handoff: {agentState.handoff.task.substring(0, 30)}...
+                      <div className="bg-foreground text-foreground text-[9px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1 whitespace-nowrap">
+                        📤 Handoff: {agentState.handoff.task.substring(0, 30)}...
                       </div>
                     </div>
                   )}
@@ -1790,8 +1790,8 @@ export default function FloorPage() {
                   {/* Conversation snippet (speech bubble) */}
                   {agentState?.lastMessage && isWorking && !meetingMode && (
                     <div className="absolute -top-16 left-1/2 -translate-x-1/2 whitespace-nowrap z-30">
-                      <div className="bg-zinc-800/90 border border-zinc-600/50 rounded-lg px-2 py-1 relative backdrop-blur-sm">
-                        <p className="text-[9px] text-zinc-300 max-w-[200px] truncate">
+                      <div className="bg-secondary/90 border border-border/50 rounded-lg px-2 py-1 relative backdrop-blur-sm">
+                        <p className="text-[9px] text-foreground max-w-[200px] truncate">
                           {agentState.lastMessage}
                         </p>
                         {/* Speech bubble tail */}
@@ -1838,8 +1838,8 @@ export default function FloorPage() {
                   {/* Activity bubble (when at desk and selected) */}
                   {!meetingMode && (isSelected || isChatSelected) && agentState && !agentState.lastMessage && (
                     <div className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap z-30">
-                      <div className="bg-zinc-800/90 border border-zinc-600/50 rounded px-2 py-1 backdrop-blur-sm">
-                        <p className="text-[9px] text-zinc-300">{agentState.activity}</p>
+                      <div className="bg-secondary/90 border border-border/50 rounded px-2 py-1 backdrop-blur-sm">
+                        <p className="text-[9px] text-foreground">{agentState.activity}</p>
                       </div>
                     </div>
                   )}
@@ -1849,7 +1849,7 @@ export default function FloorPage() {
 
             {/* Timeline scrubber */}
             {timelineMode && timelineSnapshots.length > 0 && (
-              <div className="absolute bottom-4 left-4 right-4 bg-zinc-800/90 rounded-lg p-3 border border-zinc-600/50 z-50 backdrop-blur-sm">
+              <div className="absolute bottom-4 left-4 right-4 bg-secondary/90 rounded-lg p-3 border border-border/50 z-50 backdrop-blur-sm">
                 <div className="flex items-center gap-2 mb-2">
                   <button
                     onClick={() => setTimelineMode(false)}
@@ -1857,7 +1857,7 @@ export default function FloorPage() {
                   >
                     Exit Replay
                   </button>
-                  <span className="text-[10px] text-zinc-500">
+                  <span className="text-[10px] text-muted-foreground">
                     {new Date(timelinePosition).toLocaleTimeString()}
                   </span>
                 </div>
@@ -1877,26 +1877,26 @@ export default function FloorPage() {
             {!timelineMode && !meetingMode && (
               <button
                 onClick={loadTimeline}
-                className="absolute bottom-4 right-4 px-3 py-1 bg-zinc-900 hover:bg-zinc-700 text-white text-xs font-bold rounded z-50"
+                className="absolute bottom-4 right-4 px-3 py-1 bg-foreground hover:bg-foreground text-foreground text-xs font-bold rounded z-50"
               >
-                <BarChart3 className="h-3 w-3 inline mr-1" />Timeline
+                📊 Timeline
               </button>
             )}
             */}
 
             {/* Room label */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
-              <span className="text-[10px] text-zinc-600 uppercase tracking-widest flex items-center gap-1">
-                {meetingMode ? <><Calendar size={10} /> Standup In Progress</> : timelineMode ? "Replay Mode" : "Villanueva Creative HQ"}
+              <span className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-1">
+                {meetingMode ? <><Calendar size={10} /> Standup In Progress</> : timelineMode ? "⏮️ Replay Mode" : "Villanueva Creative HQ"}
               </span>
             </div>
 
             {/* Demo mode indicator */}
             {demoMode && (
               <div className="absolute top-2 left-2 z-40">
-                <div className="bg-[#FFE135]/20 border border-[#FFE135]/40 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-2">
-                  <span className="w-2 h-2 bg-zinc-700 rounded-full animate-pulse" />
-                  <span className="text-[10px] text-zinc-800 font-bold uppercase tracking-wide">
+                <div className="bg-purple-500/20 border border-purple-500/40 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-2">
+                  <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
+                  <span className="text-[10px] text-purple-300 font-bold uppercase tracking-wide">
                     Demo Mode • {demoIntensity} • {demoSpeed}x
                   </span>
                 </div>
@@ -1907,9 +1907,9 @@ export default function FloorPage() {
           {/* Chat Panel */}
           <div className="xl:col-span-1 flex flex-col gap-4">
             {/* Meeting chat / Agent chat */}
-            <div className="bg-zinc-900 rounded-xl border border-zinc-700 flex flex-col" style={{ height: meetingMode ? 420 : 420 }}>
-              <div className="px-4 py-3 border-b border-zinc-700 flex items-center justify-between">
-                <h3 className="text-sm font-bold text-zinc-100 flex items-center gap-1.5">
+            <div className="bg-card rounded-xl border border-border flex flex-col" style={{ height: meetingMode ? 420 : 420 }}>
+              <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
                   {meetingMode ? (
                     <><Calendar size={14} /> Standup Chat</>
                   ) : chatMessages.length > 0 ? (
@@ -1921,7 +1921,7 @@ export default function FloorPage() {
                 {selectedAgents.length === 2 && !meetingMode && (
                   <button
                     onClick={startAgentChat}
-                    className="px-3 py-1 bg-zinc-900 hover:bg-zinc-700 text-white text-xs font-bold rounded transition-colors flex items-center gap-1"
+                    className="px-3 py-1 bg-foreground hover:bg-foreground text-foreground text-xs font-bold rounded transition-colors flex items-center gap-1"
                   >
                     <MessageSquare size={12} />
                     Start Chat
@@ -1943,7 +1943,7 @@ export default function FloorPage() {
                     return (
                       <div key={i} className="animate-fade-in">
                         <span className="text-xs font-bold" style={{ color: colors.label }}>{line.speaker}:</span>
-                        <span className="text-xs text-zinc-300 ml-1">{line.text}</span>
+                        <span className="text-xs text-foreground ml-1">{line.text}</span>
                       </div>
                     );
                   })
@@ -1955,7 +1955,7 @@ export default function FloorPage() {
                         <span className="text-xs font-bold" style={{ color: AGENT_COLORS[typingIndicator.agentId]?.label || '#888' }}>
                           {AGENT_DISPLAY_NAMES[typingIndicator.agentId] || typingIndicator.agentId}:
                         </span>
-                        <span className="text-xs text-zinc-400 ml-1">
+                        <span className="text-xs text-muted-foreground ml-1">
                           <span className="inline-flex gap-1">
                             <span className="w-1 h-1 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                             <span className="w-1 h-1 bg-zinc-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -1970,7 +1970,7 @@ export default function FloorPage() {
                       return (
                         <div key={i} className="animate-fade-in">
                           <span className="text-xs font-bold" style={{ color: colors.label }}>{agent?.name || msg.name}:</span>
-                          <span className="text-xs text-zinc-300 ml-1">{msg.text}</span>
+                          <span className="text-xs text-foreground ml-1">{msg.text}</span>
                         </div>
                       );
                     })}
@@ -1984,48 +1984,48 @@ export default function FloorPage() {
                     const toAgent = agents.find(a => a.id === msg.to);
 
                     return (
-                      <div key={i} className="animate-fade-in p-2 bg-zinc-800/50 rounded-lg">
+                      <div key={i} className="animate-fade-in p-2 bg-secondary/50 rounded-lg">
                         <div className="flex items-center gap-2 mb-1">
                           <span className="text-xs font-bold" style={{ color: fromColors.label }}>
                             {fromAgent?.name || msg.from}
                           </span>
-                          <span className="text-[10px] text-zinc-600">→</span>
+                          <span className="text-[10px] text-muted-foreground">→</span>
                           <span className="text-xs font-bold" style={{ color: toColors.label }}>
                             {toAgent?.name || msg.to}
                           </span>
                         </div>
-                        <p className="text-[10px] text-zinc-400 truncate">{msg.task}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">{msg.task}</p>
                       </div>
                     );
                   })
                 ) : selectedAgents.length === 1 && !meetingMode ? (
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-xs text-zinc-600 text-center">
+                    <p className="text-xs text-muted-foreground text-center">
                       Shift+click another agent to start a chat
                     </p>
                   </div>
                 ) : selectedAgents.length === 2 && !meetingMode ? (
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-xs text-zinc-600 text-center flex items-center gap-1 justify-center">
+                    <p className="text-xs text-muted-foreground text-center flex items-center gap-1 justify-center">
                       Click <MessageSquare size={10} /> Start Chat above to begin conversation
                     </p>
                   </div>
                 ) : !meetingMode ? (
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-xs text-zinc-600 text-center">
+                    <p className="text-xs text-muted-foreground text-center">
                       Shift+click two agents to start a chat<br/>or &quot;Start Meeting&quot; for standup
                     </p>
                   </div>
                 ) : (
                   <div className="flex items-center justify-center h-full">
-                    <p className="text-xs text-zinc-500">Loading meeting transcript...</p>
+                    <p className="text-xs text-muted-foreground">Loading meeting transcript...</p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Agent info */}
-            <div className="bg-zinc-900 rounded-xl border border-zinc-700 p-4">
+            <div className="bg-card rounded-xl border border-border p-4">
               {selectedAgent && agents.find(a => a.id === selectedAgent) ? (() => {
                 const agent = agents.find(a => a.id === selectedAgent)!;
                 const colors = AGENT_COLORS[agent.id] || { body: "#888", label: "#888" };
@@ -2036,54 +2036,54 @@ export default function FloorPage() {
                       <div className="w-8 h-8 rounded-full" style={{ background: `radial-gradient(circle at 30% 30%, ${colors.body}, ${colors.accent})`, boxShadow: `0 0 12px ${colors.body}` }} />
                       <div>
                         <h4 className="font-bold text-sm" style={{ color: colors.label }}>{agent.name}</h4>
-                        <p className="text-[10px] text-zinc-500">{agent.role}</p>
+                        <p className="text-[10px] text-muted-foreground">{agent.role}</p>
                       </div>
                     </div>
-                    <p className="text-xs text-zinc-400">{agent.personality}</p>
-                    <p className="text-[10px] text-zinc-600">Model: {agent.model.primary.split("/").pop()}</p>
+                    <p className="text-xs text-muted-foreground">{agent.personality}</p>
+                    <p className="text-[10px] text-muted-foreground">Model: {agent.model.primary.split("/").pop()}</p>
                     {/* Token counter */}
                     {agentState && agentState.tokens && agentState.tokens > 0 && (
-                      <div className="text-[10px] text-zinc-600">
+                      <div className="text-[10px] text-green-400">
                         {agentState.tokens.toLocaleString()} tokens
                       </div>
                     )}
-                    <Link href={`/company/agents/${agent.id}`} className="text-[10px] text-zinc-500 hover:underline block">Full profile →</Link>
+                    <Link href={`/company/agents/${agent.id}`} className="text-[10px] text-foreground hover:underline block">Full profile →</Link>
                   </div>
                 );
               })() : (
-                <p className="text-xs text-zinc-600 text-center py-4">Click an agent to inspect</p>
+                <p className="text-xs text-muted-foreground text-center py-4">Click an agent to inspect</p>
               )}
             </div>
 
             {/* Status Legend */}
-            <div className="bg-zinc-900 rounded-xl border border-zinc-700 p-3">
-              <h4 className="text-xs font-bold text-zinc-300 mb-2">Ecosystem Status</h4>
+            <div className="bg-card rounded-xl border border-border p-3">
+              <h4 className="text-xs font-bold text-foreground mb-2">Ecosystem Status</h4>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-zinc-700 animate-pulse" />
-                  <span className="text-[10px] text-zinc-400">The Forge (Building)</span>
+                  <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                  <span className="text-[10px] text-muted-foreground">The Forge (Building)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-zinc-700 animate-pulse" />
-                  <span className="text-[10px] text-zinc-400">The Stream (Research)</span>
+                  <div className="w-2 h-2 rounded-full bg-foreground animate-pulse" />
+                  <span className="text-[10px] text-muted-foreground">The Stream (Research)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-zinc-700 animate-pulse" />
-                  <span className="text-[10px] text-zinc-400">The Pulse (Comms)</span>
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-[10px] text-muted-foreground">The Pulse (Comms)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-zinc-600" />
-                  <span className="text-[10px] text-zinc-400">The Void (Idle)</span>
+                  <span className="text-[10px] text-muted-foreground">The Void (Idle)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-[10px] text-zinc-400">Error</span>
+                  <span className="text-[10px] text-muted-foreground">Error</span>
                 </div>
               </div>
             </div>
 
             {/* Agent Color Legend */}
-            <div className="bg-zinc-900 rounded-xl border border-zinc-700 p-3">
+            <div className="bg-card rounded-xl border border-border p-3">
               <div className="grid grid-cols-3 gap-1">
                 {agents.slice(0, 12).map(a => {
                   const colors = AGENT_COLORS[a.id] || { label: "#888" };
@@ -2277,7 +2277,7 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
           />
           {/* Subtle orbiting speck */}
           <div
-            className="absolute w-1 h-1 bg-zinc-300 rounded-full opacity-60"
+            className="absolute w-1 h-1 bg-green-300 rounded-full opacity-60"
             style={{
               left: '50%',
               top: '50%',
@@ -2302,9 +2302,9 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
           }}
         >
           {/* Leaves */}
-          <div className="absolute -left-2 top-4 w-3 h-2 bg-zinc-400 rounded-full opacity-40" />
-          <div className="absolute right-0 top-8 w-3 h-2 bg-zinc-400 rounded-full opacity-40" />
-          <div className="absolute -left-3 top-12 w-2 h-2 bg-zinc-500 rounded-full opacity-50" />
+          <div className="absolute -left-2 top-4 w-3 h-2 bg-green-400 rounded-full opacity-40" />
+          <div className="absolute right-0 top-8 w-3 h-2 bg-green-400 rounded-full opacity-40" />
+          <div className="absolute -left-3 top-12 w-2 h-2 bg-green-500 rounded-full opacity-50" />
         </div>
       </div>
     );
@@ -2344,9 +2344,9 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
 function parseMeetingDialogue(content: string): MeetingLine[] {
   const lines: MeetingLine[] = [];
   const agentEmojis: Record<string, string> = {
-    Q: "", Aura: "", Surge: "", Spark: "", Cipher: "",
-    Volt: "", Echo: "", Flux: "", Prism: "", Luna: "",
-    Ella: "", Arty: "",
+    Q: "🦾", Aura: "🎨", Surge: "⚡", Spark: "🔥", Cipher: "🔮",
+    Volt: "🏹", Echo: "💬", Flux: "🌊", Prism: "💎", Luna: "🌙",
+    Ella: "👩‍🎨", Arty: "🏹",
   };
 
   for (const line of content.split("\n")) {
@@ -2358,7 +2358,7 @@ function parseMeetingDialogue(content: string): MeetingLine[] {
       if (text && speaker) {
         lines.push({
           speaker,
-          emoji: agentEmojis[speaker] || "",
+          emoji: agentEmojis[speaker] || "💬",
           text,
         });
       }

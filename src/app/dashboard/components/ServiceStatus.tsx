@@ -46,7 +46,7 @@ const formatUptime = (seconds: number): string => {
 const getStatusIcon = (status: string): React.ReactNode => {
   switch (status) {
     case "running":
-      return <CheckCircle className="h-4 w-4 text-zinc-600" />;
+      return <CheckCircle className="h-4 w-4 text-green-500" />;
     case "stopped":
       return <XCircle className="h-4 w-4 text-red-500" />;
     default:
@@ -57,7 +57,7 @@ const getStatusIcon = (status: string): React.ReactNode => {
 const getStatusColor = (status: string): string => {
   switch (status) {
     case "running":
-      return "text-zinc-600 dark:text-zinc-500";
+      return "text-green-600 dark:text-green-400";
     case "stopped":
       return "text-red-600 dark:text-red-400";
     default:
@@ -68,7 +68,7 @@ const getStatusColor = (status: string): string => {
 const getStatusBg = (status: string): string => {
   switch (status) {
     case "running":
-      return "bg-zinc-50 dark:bg-green-950 border-zinc-300 dark:border-zinc-300";
+      return "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800";
     case "stopped":
       return "bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800";
     default:
@@ -122,7 +122,7 @@ export function ServiceStatus() {
               <div className={`flex items-center justify-between p-2 rounded-lg border ${getStatusBg(allRunning ? "running" : "stopped")}`}>
                 <div className="flex items-center gap-2">
                   {allRunning ? (
-                    <CheckCircle className="h-4 w-4 text-zinc-600" />
+                    <CheckCircle className="h-4 w-4 text-green-500" />
                   ) : (
                     <AlertCircle className="h-4 w-4 text-yellow-500" />
                   )}
@@ -159,7 +159,7 @@ interface ActivityIconProps {
 
 function ActivityIcon({ allRunning, anyStopped }: ActivityIconProps) {
   if (allRunning) {
-    return <CheckCircle className="h-5 w-5 text-zinc-600" />;
+    return <CheckCircle className="h-5 w-5 text-green-500" />;
   }
   if (anyStopped) {
     return <XCircle className="h-5 w-5 text-red-500" />;

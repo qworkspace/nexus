@@ -11,7 +11,7 @@ export function AgentStats({ totalAgents, activeNow, tasksToday }: AgentStatsPro
     <div className="grid grid-cols-3 gap-4">
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-zinc-500">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             Total Agents
           </CardTitle>
         </CardHeader>
@@ -23,7 +23,7 @@ export function AgentStats({ totalAgents, activeNow, tasksToday }: AgentStatsPro
       </Card>
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-zinc-500">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             Active Now
           </CardTitle>
         </CardHeader>
@@ -35,7 +35,7 @@ export function AgentStats({ totalAgents, activeNow, tasksToday }: AgentStatsPro
       </Card>
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium text-zinc-500">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             Tasks Today
           </CardTitle>
         </CardHeader>

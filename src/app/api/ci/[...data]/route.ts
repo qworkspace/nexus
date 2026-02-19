@@ -4,7 +4,7 @@ import path from 'path';
 import { homedir } from 'os';
 import type { CIDashboardData, CIBuild, CIQueueItem, CIPipelineHealth } from '@/types/ci';
 
-const SHARED_DIR = path.join(homedir(), 'shared');
+const SHARED_DIR = path.join(homedir(), '.openclaw', 'shared');
 const SPECS_DIR = path.join(SHARED_DIR, 'research', 'ai-intel', 'specs');
 const BUILDS_LOG = path.join(SHARED_DIR, 'overnight-builds.log');
 

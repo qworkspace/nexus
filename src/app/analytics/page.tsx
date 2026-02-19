@@ -42,7 +42,7 @@ export default function AnalyticsPage() {
       <div className="p-6 max-w-7xl">
         <div className="mb-6">
           <h1 className="text-2xl font-semibold text-zinc-900">Analytics</h1>
-          <p className="text-zinc-500 text-sm">Loading metrics...</p>
+          <p className="text-muted-foreground text-sm">Loading metrics...</p>
         </div>
       </div>
     );
@@ -54,14 +54,14 @@ export default function AnalyticsPage() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold text-zinc-900">Analytics</h1>
-          <p className="text-zinc-500 text-sm">
+          <p className="text-muted-foreground text-sm">
             Performance metrics and usage insights
           </p>
         </div>
         <div className="flex items-center gap-2">
           <TimePeriodSelector value={period} onChange={setPeriod} />
           {dataSource === 'error' && (
-            <span className="text-xs text-[#FFE135] bg-zinc-50 px-2 py-1 rounded">
+            <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
               Using cached data
             </span>
           )}

@@ -135,7 +135,7 @@ export default function ActivityPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-zinc-900">Activity Feed</h1>
-            <p className="text-zinc-500 text-sm">
+            <p className="text-muted-foreground text-sm">
               Complete history of Q&apos;s actions {total > 0 && `(${total} total)`}
             </p>
           </div>
@@ -166,7 +166,7 @@ export default function ActivityPage() {
       <div className="flex flex-wrap gap-3 mb-6 p-4 bg-zinc-50 rounded-lg">
         {/* Search */}
         <div className="flex-1 min-w-[200px] relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search activities..."
@@ -204,7 +204,7 @@ export default function ActivityPage() {
 
         {/* Date range */}
         <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-500">From:</span>
+          <span className="text-sm text-muted-foreground">From:</span>
           <Input
             type="date"
             value={dateFrom}
@@ -214,7 +214,7 @@ export default function ActivityPage() {
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-500">To:</span>
+          <span className="text-sm text-muted-foreground">To:</span>
           <Input
             type="date"
             value={dateTo}
@@ -271,7 +271,7 @@ export default function ActivityPage() {
           )}
 
           {!loading && activities.length === 0 && (
-            <div className="text-center py-12 text-zinc-500">
+            <div className="text-center py-12 text-muted-foreground">
               <p className="text-lg mb-2">No activities found</p>
               <p className="text-sm">
                 Q will log actions here as they happen.
@@ -307,7 +307,7 @@ function TimelineView({ activities, loading }: { activities: Activity[]; loading
 
   if (activities.length === 0) {
     return (
-      <div className="text-center py-12 text-zinc-500">
+      <div className="text-center py-12 text-muted-foreground">
         <p className="text-lg mb-2">No activities found</p>
         <p className="text-sm">Q will log actions here as they happen.</p>
       </div>
@@ -328,7 +328,7 @@ function TimelineView({ activities, loading }: { activities: Activity[]; loading
                 ? "bg-red-500 border-red-500"
                 : activity.status === "pending"
                 ? "bg-yellow-500 border-yellow-500"
-                : "bg-zinc-800 border-zinc-300"
+                : "bg-green-500 border-green-500"
             }`}
           />
 
@@ -338,20 +338,20 @@ function TimelineView({ activities, loading }: { activities: Activity[]; loading
                 <Badge variant="secondary" className="text-xs">
                   {activity.type}
                 </Badge>
-                <span className="text-xs text-zinc-500">
+                <span className="text-xs text-muted-foreground">
                   {new Date(activity.timestamp).toLocaleString()}
                 </span>
               </div>
-              <span className="text-xs text-zinc-400">{activity.action}</span>
+              <span className="text-xs text-muted-foreground">{activity.action}</span>
             </div>
 
             <h3 className="font-medium text-zinc-900 mb-1">{activity.title}</h3>
 
             {activity.description && (
-              <p className="text-sm text-zinc-600 mb-2">{activity.description}</p>
+              <p className="text-sm text-muted-foreground mb-2">{activity.description}</p>
             )}
 
-            <div className="flex items-center gap-4 text-xs text-zinc-400">
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
               {activity.model && (
                 <span>
                   Model: {activity.model}

@@ -40,10 +40,10 @@ export default function MemoryPage() {
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center gap-3 mb-2">
-          <Brain className="w-6 h-6 text-zinc-600" />
+          <Brain className="w-6 h-6 text-muted-foreground" />
           <h1 className="text-2xl font-semibold text-zinc-900">Memory</h1>
         </div>
-        <p className="text-zinc-500 text-sm ml-9">
+        <p className="text-muted-foreground text-sm ml-9">
           Semantic search and browse through Q&apos;s indexed memories
         </p>
       </div>
@@ -56,7 +56,7 @@ export default function MemoryPage() {
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               view === 'search'
                 ? 'bg-white text-zinc-900 shadow-sm'
-                : 'text-zinc-600 hover:text-zinc-900'
+                : 'text-muted-foreground hover:text-zinc-900'
             }`}
           >
             <Search className="w-4 h-4" />
@@ -67,7 +67,7 @@ export default function MemoryPage() {
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               view === 'browser'
                 ? 'bg-white text-zinc-900 shadow-sm'
-                : 'text-zinc-600 hover:text-zinc-900'
+                : 'text-muted-foreground hover:text-zinc-900'
             }`}
           >
             <FolderTree className="w-4 h-4" />
@@ -78,7 +78,7 @@ export default function MemoryPage() {
             className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
               view === 'stats'
                 ? 'bg-white text-zinc-900 shadow-sm'
-                : 'text-zinc-600 hover:text-zinc-900'
+                : 'text-muted-foreground hover:text-zinc-900'
             }`}
           >
             <BarChart3 className="w-4 h-4" />
@@ -98,14 +98,14 @@ export default function MemoryPage() {
         {view === 'browser' && (
           <div className="border border-zinc-200 rounded-lg bg-white p-6">
             <div className="flex items-center gap-2 mb-4">
-              <FolderTree className="w-5 h-5 text-zinc-600" />
+              <FolderTree className="w-5 h-5 text-muted-foreground" />
               <h3 className="font-semibold text-zinc-900">Source Files</h3>
             </div>
 
             {sourcesLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
-                <span className="ml-2 text-sm text-zinc-500">Loading sources...</span>
+                <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
+                <span className="ml-2 text-sm text-muted-foreground">Loading sources...</span>
               </div>
             ) : sourcesData && sourcesData.files.length > 0 ? (
               <div className="space-y-2">
@@ -118,7 +118,7 @@ export default function MemoryPage() {
                       <p className="text-sm font-medium text-zinc-900 truncate">
                         {file.name}
                       </p>
-                      <p className="text-xs text-zinc-500 truncate font-mono">
+                      <p className="text-xs text-muted-foreground truncate font-mono">
                         {file.path}
                       </p>
                     </div>
@@ -126,7 +126,7 @@ export default function MemoryPage() {
                       <p className="text-sm font-semibold text-zinc-700">
                         {file.chunkCount}
                       </p>
-                      <p className="text-xs text-zinc-500">chunks</p>
+                      <p className="text-xs text-muted-foreground">chunks</p>
                     </div>
                   </div>
                 ))}
@@ -134,7 +134,7 @@ export default function MemoryPage() {
             ) : (
               <div className="text-center py-12">
                 <FolderTree className="w-12 h-12 text-zinc-200 mx-auto mb-4" />
-                <p className="text-sm text-zinc-500">No source files indexed</p>
+                <p className="text-sm text-muted-foreground">No source files indexed</p>
               </div>
             )}
           </div>

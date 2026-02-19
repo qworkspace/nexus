@@ -30,13 +30,13 @@ export function AgentDetails({ agent }: AgentDetailsProps) {
       {/* Description */}
       <div>
         <h4 className="text-sm font-medium text-zinc-700 mb-1">Description</h4>
-        <p className="text-sm text-zinc-600">{agent.description}</p>
+        <p className="text-sm text-muted-foreground">{agent.description}</p>
       </div>
 
       {/* Workspace */}
       <div>
         <h4 className="text-sm font-medium text-zinc-700 mb-1">Workspace</h4>
-        <code className="text-xs bg-zinc-50 px-2 py-1 rounded text-zinc-600">
+        <code className="text-xs bg-zinc-50 px-2 py-1 rounded text-muted-foreground">
           {agent.workspace}
         </code>
       </div>
@@ -57,20 +57,20 @@ export function AgentDetails({ agent }: AgentDetailsProps) {
       <div>
         <h4 className="text-sm font-medium text-zinc-700 mb-2">Recent Activity</h4>
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-sm text-zinc-600">
-            <Check size={14} className="text-zinc-600" />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Check size={14} className="text-green-500" />
             <span>Completed code review task</span>
-            <span className="text-xs text-zinc-400 ml-auto">2m ago</span>
+            <span className="text-xs text-muted-foreground ml-auto">2m ago</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-zinc-600">
-            <Check size={14} className="text-zinc-600" />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Check size={14} className="text-green-500" />
             <span>Updated documentation</span>
-            <span className="text-xs text-zinc-400 ml-auto">15m ago</span>
+            <span className="text-xs text-muted-foreground ml-auto">15m ago</span>
           </div>
-          <div className="flex items-center gap-2 text-sm text-zinc-600">
-            <Check size={14} className="text-zinc-600" />
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Check size={14} className="text-green-500" />
             <span>Fixed bug in auth module</span>
-            <span className="text-xs text-zinc-400 ml-auto">1h ago</span>
+            <span className="text-xs text-muted-foreground ml-auto">1h ago</span>
           </div>
         </div>
       </div>

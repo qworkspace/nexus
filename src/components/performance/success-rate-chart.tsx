@@ -30,7 +30,7 @@ export function SuccessRateChart({ data }: { data: DailyData[] }) {
 
   if (formattedData.every((d) => d.taskCount === 0)) {
     return (
-      <div className="flex items-center justify-center h-64 text-zinc-400 text-sm">
+      <div className="flex items-center justify-center h-64 text-muted-foreground text-sm">
         No activity data yet
       </div>
     );

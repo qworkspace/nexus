@@ -108,7 +108,7 @@ export default function SearchPage() {
     <div className="p-6 max-w-4xl">
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-zinc-900">Global Search</h1>
-        <p className="text-zinc-500 text-sm">
+        <p className="text-muted-foreground text-sm">
           Search across memory, docs, projects, and activity
         </p>
       </div>
@@ -116,7 +116,7 @@ export default function SearchPage() {
       {/* Search Input */}
       <div className="mb-6">
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
             ⌕
           </span>
           <Input
@@ -158,7 +158,7 @@ export default function SearchPage() {
       {/* Recent Searches */}
       {!query && recentSearches.length > 0 && (
         <div className="mb-6">
-          <h3 className="text-sm font-medium text-zinc-500 mb-2">
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">
             Recent Searches
           </h3>
           <div className="flex flex-wrap gap-2">
@@ -185,7 +185,7 @@ export default function SearchPage() {
         </div>
       ) : query ? (
         <>
-          <div className="text-sm text-zinc-500 mb-4">
+          <div className="text-sm text-muted-foreground mb-4">
             {results.length} result{results.length !== 1 ? "s" : ""} for &quot;
             {query}&quot;
           </div>
@@ -196,7 +196,7 @@ export default function SearchPage() {
           />
         </>
       ) : (
-        <div className="text-center py-12 text-zinc-500">
+        <div className="text-center py-12 text-muted-foreground">
           <p className="text-lg mb-2">Start typing to search</p>
           <p className="text-sm">
             Search across memory files, docs, projects, and activity history

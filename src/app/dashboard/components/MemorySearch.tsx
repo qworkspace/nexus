@@ -147,7 +147,7 @@ export function MemorySearch({ initialQuery = "" }: MemorySearchProps) {
                           {getSourceName(result.metadata.source)}
                         </span>
                       </div>
-                      <span className="text-xs px-2 py-1 bg-zinc-100 dark:bg-zinc-900 text-zinc-700 dark:text-zinc-400 rounded-full font-medium">
+                      <span className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full font-medium">
                         {formatSimilarity(result.similarity)}
                       </span>
                     </div>

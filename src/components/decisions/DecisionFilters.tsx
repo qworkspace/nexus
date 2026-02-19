@@ -41,7 +41,7 @@ export function DecisionFilters({
     <div className="flex flex-wrap gap-3 mb-6 p-4 bg-zinc-50 rounded-lg">
       {/* Date Range */}
       <div className="flex items-center gap-2">
-        <span className="text-sm text-zinc-500">Period:</span>
+        <span className="text-sm text-muted-foreground">Period:</span>
         <select
           value={dateRange}
           onChange={(e) => setDateRange(e.target.value as DateRangeFilter)}
@@ -56,7 +56,7 @@ export function DecisionFilters({
       {/* Agent filter */}
       {agents.length > 1 && (
         <div className="flex items-center gap-2">
-          <span className="text-sm text-zinc-500">Agent:</span>
+          <span className="text-sm text-muted-foreground">Agent:</span>
           <select
             value={agent}
             onChange={(e) => setAgent(e.target.value)}
@@ -74,7 +74,7 @@ export function DecisionFilters({
 
       {/* Action type filter */}
       <div className="flex items-center gap-2">
-        <span className="text-sm text-zinc-500">Action:</span>
+        <span className="text-sm text-muted-foreground">Action:</span>
         <select
           value={action}
           onChange={(e) => setAction(e.target.value)}
@@ -91,7 +91,7 @@ export function DecisionFilters({
 
       {/* Outcome filter */}
       <div className="flex items-center gap-2">
-        <span className="text-sm text-zinc-500">Outcome:</span>
+        <span className="text-sm text-muted-foreground">Outcome:</span>
         <select
           value={outcome}
           onChange={(e) => setOutcome(e.target.value as OutcomeFilter)}

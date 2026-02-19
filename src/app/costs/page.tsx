@@ -121,7 +121,7 @@ export default async function CostsPage() {
     <div className="p-6 max-w-6xl">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-zinc-900">Token Costs</h1>
-        <p className="text-zinc-500 text-sm">
+        <p className="text-muted-foreground text-sm">
           Track spending across models and activities
         </p>
       </div>
@@ -130,7 +130,7 @@ export default async function CostsPage() {
       <div className="grid grid-cols-3 gap-4 mb-8">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Today
             </CardTitle>
           </CardHeader>
@@ -142,7 +142,7 @@ export default async function CostsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               This Week
             </CardTitle>
           </CardHeader>
@@ -154,7 +154,7 @@ export default async function CostsPage() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               This Month
             </CardTitle>
           </CardHeader>
@@ -183,12 +183,12 @@ export default async function CostsPage() {
       <div className="grid grid-cols-2 gap-4 mb-8">
         <CostBreakdown
           title="By Model"
-          icon=""
+          icon="🤖"
           items={data.byModel}
         />
         <CostBreakdown
           title="By Activity Type"
-          icon=""
+          icon="📁"
           items={data.byType}
         />
       </div>

@@ -14,7 +14,7 @@ export function ThinkingBlock({ content }: ThinkingBlockProps) {
     <div className="my-2">
       <button
         onClick={() => setExpanded(!expanded)}
-        className="flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-700 transition-colors"
+        className="flex items-center gap-2 text-xs text-muted-foreground hover:text-zinc-700 transition-colors"
       >
         {expanded ? (
           <ChevronDown className="w-3 h-3" />
@@ -25,7 +25,7 @@ export function ThinkingBlock({ content }: ThinkingBlockProps) {
         <span>Thinking</span>
       </button>
       {expanded && (
-        <div className="mt-2 ml-1 p-3 bg-zinc-100 rounded-lg text-sm text-zinc-600 italic border-l-2 border-zinc-300">
+        <div className="mt-2 ml-1 p-3 bg-zinc-100 rounded-lg text-sm text-muted-foreground italic border-l-2 border-zinc-300">
           <pre className="whitespace-pre-wrap font-sans">{content}</pre>
         </div>
       )}

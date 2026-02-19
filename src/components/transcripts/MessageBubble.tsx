@@ -63,7 +63,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         isSystem
           ? 'bg-yellow-50 border border-yellow-200 text-yellow-900'
           : isUser
-          ? 'bg-zinc-50 border border-zinc-300'
+          ? 'bg-blue-50 border border-blue-200'
           : 'bg-white border border-zinc-200'
       }`}
     >
@@ -72,24 +72,24 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         {isSystem ? (
           <AlertCircle className="w-4 h-4 text-yellow-600" />
         ) : isUser ? (
-          <User className="w-4 h-4 text-zinc-600" />
+          <User className="w-4 h-4 text-blue-600" />
         ) : (
-          <Bot className="w-4 h-4 text-zinc-600" />
+          <Bot className="w-4 h-4 text-muted-foreground" />
         )}
         <span className={`text-xs font-medium ${
           isSystem
             ? 'text-yellow-900'
             : isUser
-            ? 'text-zinc-900'
+            ? 'text-blue-900'
             : 'text-zinc-900'
         }`}>
           {isSystem ? 'System' : isUser ? 'User' : 'Assistant'}
         </span>
-        <span className="text-xs text-zinc-400">
+        <span className="text-xs text-muted-foreground">
           {formatTimestamp(message.timestamp)}
         </span>
         {message.usage && (
-          <span className="ml-auto text-xs text-zinc-400">
+          <span className="ml-auto text-xs text-muted-foreground">
             {message.usage.totalTokens} tokens
           </span>
         )}

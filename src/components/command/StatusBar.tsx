@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Bot, Monitor, Timer } from "lucide-react";
+import { Bot, Monitor} from "lucide-react";
 
 interface StatusBarData {
   model: string;
@@ -53,31 +53,31 @@ export function StatusBar() {
   }, []);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-8 bg-zinc-900 text-zinc-300 text-xs flex items-center px-4 gap-6 z-50">
+    <div className="fixed bottom-0 left-0 right-0 h-8 bg-card text-foreground text-xs flex items-center px-4 gap-6 z-50">
       <div className="flex items-center gap-1.5">
         <Bot size={16} />
-        <span className="text-zinc-400">Q:</span>
-        <span className="text-white">{data.model}</span>
+        <span className="text-muted-foreground">Q:</span>
+        <span className="text-foreground">{data.model}</span>
       </div>
 
       <div className="flex items-center gap-1.5">
         <Monitor size={12} />
-        <span className="text-zinc-400">Dev:</span>
-        <span className="text-white">{data.activeAgents} building</span>
+        <span className="text-muted-foreground">Dev:</span>
+        <span className="text-foreground">{data.activeAgents} building</span>
       </div>
 
       <div className="flex items-center gap-1.5">
-        <Timer size={13} className="text-zinc-400" />
-        <span className="text-zinc-400">Next cron:</span>
-        <span className="text-white">{data.nextCron}</span>
+        <span>⏰</span>
+        <span className="text-muted-foreground">Next cron:</span>
+        <span className="text-foreground">{data.nextCron}</span>
       </div>
 
       <div className="flex items-center gap-1.5 ml-auto">
-        <span className="text-zinc-500">{data.todayCost}</span>
+        <span className="text-green-400">{data.todayCost}</span>
       </div>
 
-      <div className="text-zinc-600">
-        <kbd className="px-1.5 py-0.5 bg-zinc-800 rounded text-[10px]">⌘K</kbd>
+      <div className="text-muted-foreground">
+        <kbd className="px-1.5 py-0.5 bg-secondary rounded text-[10px]">⌘K</kbd>
       </div>
     </div>
   );

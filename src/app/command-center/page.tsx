@@ -64,23 +64,23 @@ export default function CommandCenterPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-zinc-900 dark:text-zinc-100">
+            <h1 className="text-3xl font-bold text-zinc-900 dark:text-foreground">
               Command Center
             </h1>
-            <p className="text-zinc-500 dark:text-zinc-400 mt-1">
+            <p className="text-muted-foreground dark:text-muted-foreground mt-1">
               Q&apos;s mission control dashboard
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-400">
+            <span className="text-xs text-muted-foreground">
               {new Date().toLocaleDateString('en-AU', { 
                 weekday: 'short', 
                 day: 'numeric', 
                 month: 'short' 
               })}
             </span>
-            <div className="w-2 h-2 rounded-full bg-zinc-800 animate-pulse-soft" />
-            <span className="text-xs text-zinc-600 dark:text-zinc-400">Live</span>
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse-soft" />
+            <span className="text-xs text-green-600 dark:text-green-400">Live</span>
           </div>
         </div>
 

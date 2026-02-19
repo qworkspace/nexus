@@ -17,7 +17,7 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span className="flex items-center gap-2">
-            <CheckCircle size={18} className="text-zinc-600" />
+            <CheckCircle size={18} className="text-green-600" />
             Recent Completions (Today)
           </span>
           <Badge variant="secondary" className="text-xs">{builds.length}</Badge>
@@ -25,7 +25,7 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
       </CardHeader>
       <CardContent>
         {builds.length === 0 ? (
-          <p className="text-sm text-zinc-500">No completed builds today</p>
+          <p className="text-sm text-muted-foreground">No completed builds today</p>
         ) : (
           <div className="space-y-2">
             {builds.map((build) => (
@@ -34,7 +34,7 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
                 className="flex items-center gap-3 py-2 px-3 rounded-lg hover:bg-zinc-50 transition-colors"
               >
                 {/* Time */}
-                <div className="w-20 text-sm text-zinc-500 shrink-0">
+                <div className="w-20 text-sm text-muted-foreground shrink-0">
                   {build.completedAt?.toLocaleTimeString('en-US', {
                     hour: '2-digit',
                     minute: '2-digit',
@@ -47,7 +47,7 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
                     {build.label}
                   </div>
                   {build.result && (
-                    <div className="text-xs text-zinc-500 truncate">
+                    <div className="text-xs text-muted-foreground truncate">
                       {build.result}
                     </div>
                   )}
@@ -55,11 +55,11 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
 
                 {/* Status and Duration */}
                 <div className="flex items-center gap-4 shrink-0">
-                  <Badge className="bg-zinc-100 text-zinc-800 text-xs flex items-center gap-1">
+                  <Badge className="bg-green-100 text-green-800 text-xs flex items-center gap-1">
                     <Check size={12} />
                     SUCCESS
                   </Badge>
-                  <div className="text-sm text-zinc-600 w-20 text-right">
+                  <div className="text-sm text-muted-foreground w-20 text-right">
                     {build.duration && formatDuration(build.duration)}
                   </div>
                 </div>
@@ -68,7 +68,7 @@ export function RecentBuilds({ builds }: RecentBuildsProps) {
 
             {/* View All Link */}
             <div className="pt-3 mt-3 border-t border-zinc-200">
-              <Button variant="ghost" className="w-full text-sm text-zinc-600 hover:text-zinc-900">
+              <Button variant="ghost" className="w-full text-sm text-muted-foreground hover:text-zinc-900">
                 View All History →
               </Button>
             </div>

@@ -50,7 +50,7 @@ export function CronHealth() {
   const getStatusColor = (status: string): string => {
     switch (status) {
       case "success":
-        return "text-zinc-600";
+        return "text-green-600";
       case "slow":
         return "text-yellow-600";
       case "error":
@@ -69,7 +69,7 @@ export function CronHealth() {
     if (healthStatus === "warning") {
       return <span className="text-yellow-600 font-semibold">Warning</span>;
     }
-    return <span className="text-zinc-600 font-semibold">OK</span>;
+    return <span className="text-green-600 font-semibold">OK</span>;
   };
 
   return (

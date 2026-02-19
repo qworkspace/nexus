@@ -12,10 +12,10 @@ export interface LogEntry {
 }
 
 const LEVEL_COLORS = {
-  info: "bg-zinc-900/10 text-zinc-600 border-zinc-300/20",
+  info: "bg-foreground/10 text-foreground border-blue-500/20",
   warn: "bg-yellow-500/10 text-yellow-500 border-yellow-500/20",
   error: "bg-red-500/10 text-red-500 border-red-500/20",
-  debug: "bg-zinc-500/10 text-zinc-400 border-zinc-500/20",
+  debug: "bg-zinc-500/10 text-muted-foreground border-zinc-500/20",
 };
 
 interface LogEntryProps {
@@ -42,9 +42,9 @@ export function LogEntry({ log }: LogEntryProps) {
   };
 
   return (
-    <div className="flex items-start gap-3 py-2 px-3 hover:bg-zinc-900/50 rounded-lg group transition-colors font-mono text-sm">
+    <div className="flex items-start gap-3 py-2 px-3 hover:bg-card/80 rounded-lg group transition-colors font-mono text-sm">
       {/* Timestamp */}
-      <span className="text-zinc-500 text-xs shrink-0 w-20">
+      <span className="text-muted-foreground text-xs shrink-0 w-20">
         {formatTimestamp(log.timestamp)}
       </span>
 
@@ -59,13 +59,13 @@ export function LogEntry({ log }: LogEntryProps) {
       {/* Source Badge */}
       <Badge
         variant="outline"
-        className="shrink-0 capitalize bg-zinc-500/10 text-zinc-400 border-zinc-500/20"
+        className="shrink-0 capitalize bg-zinc-500/10 text-muted-foreground border-zinc-500/20"
       >
         {log.source}
       </Badge>
 
       {/* Message */}
-      <span className="text-zinc-300 flex-1 break-words">
+      <span className="text-foreground flex-1 break-words">
         {log.message}
       </span>
     </div>

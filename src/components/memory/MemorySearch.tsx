@@ -71,7 +71,7 @@ export function MemorySearch({ initialQuery = '', onResultsChange }: MemorySearc
     <div className="space-y-6">
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
         <Input
           type="text"
           placeholder="Search memories..."
@@ -82,7 +82,7 @@ export function MemorySearch({ initialQuery = '', onResultsChange }: MemorySearc
         {query && (
           <button
             onClick={handleClear}
-            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-zinc-400 hover:text-zinc-600 transition-colors"
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-muted-foreground hover:text-muted-foreground transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -92,8 +92,8 @@ export function MemorySearch({ initialQuery = '', onResultsChange }: MemorySearc
       {/* Loading State */}
       {isLoading && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
-          <span className="ml-2 text-sm text-zinc-500">Searching...</span>
+          <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
+          <span className="ml-2 text-sm text-muted-foreground">Searching...</span>
         </div>
       )}
 
@@ -113,7 +113,7 @@ export function MemorySearch({ initialQuery = '', onResultsChange }: MemorySearc
           <h3 className="text-lg font-semibold text-zinc-900 mb-2">
             Search Your Memory
           </h3>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-muted-foreground">
             Enter a query to search through indexed memories using semantic search.
           </p>
         </div>
@@ -122,7 +122,7 @@ export function MemorySearch({ initialQuery = '', onResultsChange }: MemorySearc
       {/* No Results State */}
       {data && data.count === 0 && debouncedQuery && !isLoading && (
         <div className="text-center py-12">
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-muted-foreground">
             No memories found for &quot;{debouncedQuery}&quot;
           </p>
         </div>
@@ -133,7 +133,7 @@ export function MemorySearch({ initialQuery = '', onResultsChange }: MemorySearc
         <div className="space-y-4">
           {/* Results Count */}
           <div className="flex items-center justify-between">
-            <p className="text-sm text-zinc-500">
+            <p className="text-sm text-muted-foreground">
               {data.count} result{data.count !== 1 ? 's' : ''} found
             </p>
           </div>

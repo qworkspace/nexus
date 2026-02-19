@@ -51,7 +51,7 @@ export default async function EvolutionPage() {
           <Bot size={24} />
           Q Evolution
         </h1>
-        <p className="text-zinc-500 text-sm">
+        <p className="text-muted-foreground text-sm">
           Continuous improvement tracking — Is Q getting better?
         </p>
       </div>
@@ -89,7 +89,7 @@ export default async function EvolutionPage() {
       )}
 
       {/* Footer */}
-      <div className="mt-12 text-center text-xs text-zinc-400">
+      <div className="mt-12 text-center text-xs text-muted-foreground">
         Last updated: {lastUpdated} • Built for PJ by Q
       </div>
     </div>

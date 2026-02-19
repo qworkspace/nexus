@@ -23,14 +23,14 @@ interface Activity {
 }
 
 const typeColors: Record<string, string> = {
-  task: "bg-zinc-100 text-zinc-800",
-  message: "bg-zinc-100 text-zinc-700",
-  cron: "bg-zinc-100 text-[#FFE135]",
-  file: "bg-zinc-100 text-zinc-800",
-  search: "bg-zinc-100 text-zinc-700",
+  task: "bg-blue-100 text-blue-800",
+  message: "bg-purple-100 text-purple-800",
+  cron: "bg-orange-100 text-orange-800",
+  file: "bg-green-100 text-green-800",
+  search: "bg-cyan-100 text-cyan-800",
   spawn: "bg-pink-100 text-pink-800",
   tool: "bg-gray-100 text-gray-800",
-  model: "bg-zinc-100 text-zinc-700",
+  model: "bg-indigo-100 text-indigo-800",
 };
 
 const typeIcons: Record<string, string> = {
@@ -51,7 +51,7 @@ const statusIcons: Record<string, string> = {
 };
 
 const statusColors: Record<string, string> = {
-  success: "text-zinc-600",
+  success: "text-green-600",
   error: "text-red-600",
   pending: "text-yellow-600",
 };
@@ -135,9 +135,9 @@ export function ActivityCard({ activity }: { activity: Activity }) {
                 )}
                 {activity.type}
               </Badge>
-              <span className="text-xs text-zinc-400">{activity.action}</span>
+              <span className="text-xs text-muted-foreground">{activity.action}</span>
               {activity.duration && (
-                <span className="text-xs text-zinc-400">
+                <span className="text-xs text-muted-foreground">
                   · {formatDuration(activity.duration)}
                 </span>
               )}
@@ -146,7 +146,7 @@ export function ActivityCard({ activity }: { activity: Activity }) {
             <h3 className="font-medium text-zinc-900 mb-1">{activity.title}</h3>
 
             {activity.description && !expanded && (
-              <p className="text-sm text-zinc-500 truncate">
+              <p className="text-sm text-muted-foreground truncate">
                 {activity.description}
               </p>
             )}
@@ -154,14 +154,14 @@ export function ActivityCard({ activity }: { activity: Activity }) {
             {expanded && (
               <div className="mt-3 space-y-2">
                 {activity.description && (
-                  <p className="text-sm text-zinc-600">{activity.description}</p>
+                  <p className="text-sm text-muted-foreground">{activity.description}</p>
                 )}
                 {metadata && (
-                  <pre className="text-xs bg-zinc-50 p-2 rounded-md overflow-x-auto text-zinc-600">
+                  <pre className="text-xs bg-zinc-50 p-2 rounded-md overflow-x-auto text-muted-foreground">
                     {JSON.stringify(metadata, null, 2)}
                   </pre>
                 )}
-                <p className="text-xs text-zinc-400">
+                <p className="text-xs text-muted-foreground">
                   {new Date(activity.timestamp).toLocaleString()}
                 </p>
               </div>
@@ -175,11 +175,11 @@ export function ActivityCard({ activity }: { activity: Activity }) {
                 ${activity.cost.toFixed(2)}
               </div>
             )}
-            <div className="text-xs text-zinc-400 whitespace-nowrap">
+            <div className="text-xs text-muted-foreground whitespace-nowrap">
               {formatRelativeTime(activity.timestamp)}
             </div>
             {activity.model && (
-              <div className="text-xs text-zinc-400 mt-0.5">
+              <div className="text-xs text-muted-foreground mt-0.5">
                 {activity.model}
               </div>
             )}
@@ -188,7 +188,7 @@ export function ActivityCard({ activity }: { activity: Activity }) {
 
         {/* Token info when expanded */}
         {expanded && (activity.tokensIn || activity.tokensOut) && (
-          <div className="mt-2 pt-2 border-t border-zinc-100 flex items-center gap-4 text-xs text-zinc-500">
+          <div className="mt-2 pt-2 border-t border-zinc-100 flex items-center gap-4 text-xs text-muted-foreground">
             <span>Tokens: {formatTokens(activity.tokensIn)} in / {formatTokens(activity.tokensOut)} out</span>
           </div>
         )}

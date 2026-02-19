@@ -38,22 +38,22 @@ export default function UsageAndCostsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-zinc-950">
+    <div className="min-h-screen bg-white dark:bg-background">
       {/* Header */}
-      <div className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-6 py-4">
+      <div className="border-b border-zinc-200 dark:border-border bg-white dark:bg-background px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+            <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground flex items-center gap-2">
               <DollarSign className="h-6 w-6" />
               Usage & Costs
             </h1>
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm">
+            <p className="text-muted-foreground dark:text-muted-foreground text-sm">
               Track token consumption and spending across all sessions
             </p>
           </div>
           <button
             onClick={handleRefresh}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 hover:bg-zinc-100 dark:hover:bg-zinc-900 rounded-lg transition-colors"
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-muted-foreground dark:text-muted-foreground hover:text-zinc-900 dark:hover:text-foreground hover:bg-zinc-100 dark:hover:bg-card rounded-lg transition-colors"
           >
             <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
             Refresh
@@ -66,12 +66,12 @@ export default function UsageAndCostsPage() {
         {isLoading ? (
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-500 dark:border-zinc-400 mx-auto mb-4" />
-            <p className="text-zinc-500 dark:text-zinc-400">Loading usage data...</p>
+            <p className="text-muted-foreground dark:text-muted-foreground">Loading usage data...</p>
           </div>
         ) : error || !data ? (
           <div className="text-center py-12">
             <p className="text-red-600 dark:text-red-400 mb-2">Error loading usage data</p>
-            <p className="text-zinc-500 dark:text-zinc-400 text-sm">Please try refreshing the page</p>
+            <p className="text-muted-foreground dark:text-muted-foreground text-sm">Please try refreshing the page</p>
           </div>
         ) : (
           <div className="space-y-6">
@@ -86,9 +86,9 @@ export default function UsageAndCostsPage() {
             />
 
             {/* Daily Chart - Shows both tokens and cost */}
-            <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
+            <Card className="dark:border-border dark:bg-card/80">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-foreground">
                   Daily Usage & Cost (Last 14 Days)
                 </CardTitle>
               </CardHeader>
@@ -99,9 +99,9 @@ export default function UsageAndCostsPage() {
 
             {/* Model and Session Type Breakdowns */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
+              <Card className="dark:border-border dark:bg-card/80">
                 <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-foreground">
                     Model Breakdown
                   </CardTitle>
                 </CardHeader>
@@ -109,16 +109,16 @@ export default function UsageAndCostsPage() {
                   {data.byModel.length > 0 ? (
                     <ModelBreakdownChart data={data.byModel} />
                   ) : (
-                    <div className="flex items-center justify-center h-[280px] text-sm text-zinc-500 dark:text-zinc-400">
+                    <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground dark:text-muted-foreground">
                       No model data yet
                     </div>
                   )}
                 </CardContent>
               </Card>
 
-              <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
+              <Card className="dark:border-border dark:bg-card/80">
                 <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-foreground">
                     Session Type Breakdown
                   </CardTitle>
                 </CardHeader>
@@ -126,7 +126,7 @@ export default function UsageAndCostsPage() {
                   {data.bySessionType.length > 0 ? (
                     <SessionTypeBreakdownChart data={data.bySessionType} />
                   ) : (
-                    <div className="flex items-center justify-center h-[280px] text-sm text-zinc-500 dark:text-zinc-400">
+                    <div className="flex items-center justify-center h-[280px] text-sm text-muted-foreground dark:text-muted-foreground">
                       No session type data yet
                     </div>
                   )}
@@ -137,9 +137,9 @@ export default function UsageAndCostsPage() {
             {/* Cost Breakdown and Top Consumers */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Cost Breakdown by Type */}
-              <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
+              <Card className="dark:border-border dark:bg-card/80">
                 <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-foreground">
                     Cost Breakdown by Token Type (Today)
                   </CardTitle>
                 </CardHeader>
@@ -154,9 +154,9 @@ export default function UsageAndCostsPage() {
 
             {/* Cost Breakdown by Model and Type */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
+              <Card className="dark:border-border dark:bg-card/80">
                 <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-foreground">
                     Cost by Model (This Month)
                   </CardTitle>
                 </CardHeader>
@@ -173,9 +173,9 @@ export default function UsageAndCostsPage() {
                 </CardContent>
               </Card>
 
-              <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
+              <Card className="dark:border-border dark:bg-card/80">
                 <CardHeader>
-                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                  <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-foreground">
                     Cost by Session Type (This Month)
                   </CardTitle>
                 </CardHeader>
@@ -197,7 +197,7 @@ export default function UsageAndCostsPage() {
             <ExpensiveActivitiesWrapper />
 
             {/* Cache Status Footer */}
-            <div className="text-center text-xs text-zinc-500 dark:text-zinc-400">
+            <div className="text-center text-xs text-muted-foreground dark:text-muted-foreground">
               {data.cached ? (
                 <span>Cached at {new Date(data.cacheTime || "").toLocaleTimeString()}</span>
               ) : (
@@ -235,9 +235,9 @@ function ExpensiveActivitiesWrapper() {
   }, { revalidateOnFocus: false });
 
   return (
-    <Card className="dark:border-zinc-800 dark:bg-zinc-900/50">
+    <Card className="dark:border-border dark:bg-card/80">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+        <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-foreground">
           Most Expensive Activities (All Time)
         </CardTitle>
       </CardHeader>
@@ -245,7 +245,7 @@ function ExpensiveActivitiesWrapper() {
         {data && data.length > 0 ? (
           <ExpensiveActivities activities={data} />
         ) : (
-          <div className="text-center text-sm text-zinc-500 dark:text-zinc-400 py-4">
+          <div className="text-center text-sm text-muted-foreground dark:text-muted-foreground py-4">
             No cost data yet
           </div>
         )}

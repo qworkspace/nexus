@@ -47,7 +47,7 @@ export function BackupHistory({ commits }: BackupHistoryProps) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-zinc-500">No recent commits found</p>
+          <p className="text-sm text-muted-foreground">No recent commits found</p>
         </CardContent>
       </Card>
     );
@@ -76,7 +76,7 @@ export function BackupHistory({ commits }: BackupHistoryProps) {
               }`}
             >
               <div className="mt-1">
-                <GitCommit className="h-4 w-4 text-zinc-400" />
+                <GitCommit className="h-4 w-4 text-muted-foreground" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-2 mb-1">
@@ -87,11 +87,11 @@ export function BackupHistory({ commits }: BackupHistoryProps) {
                     {commit.shortHash}
                   </Badge>
                 </div>
-                <div className="flex items-center gap-3 text-xs text-zinc-500">
+                <div className="flex items-center gap-3 text-xs text-muted-foreground">
                   <span>{commit.author}</span>
                   <span>•</span>
                   <span>{formatDate(commit.timestamp)}</span>
-                  <span className="text-zinc-400">
+                  <span className="text-muted-foreground">
                     ({formatTimeAgo(commit.timestamp)})
                   </span>
                 </div>
@@ -102,7 +102,7 @@ export function BackupHistory({ commits }: BackupHistoryProps) {
 
         {/* Summary */}
         <div className="mt-4 pt-3 border-t border-zinc-200">
-          <p className="text-xs text-zinc-500 text-center">
+          <p className="text-xs text-muted-foreground text-center">
             {commits.length} commit{commits.length !== 1 ? 's' : ''} in the last 7 days
           </p>
         </div>

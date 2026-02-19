@@ -1,11 +1,10 @@
 "use client";
-import { AlertTriangle } from "lucide-react";
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   return (
     <div className="flex items-center justify-center min-h-[400px]">
       <div className="text-center space-y-4">
-        <AlertTriangle className="h-10 w-10 text-zinc-500" />
+        <div className="text-4xl">⚠️</div>
         <h2 className="text-lg font-semibold text-zinc-200">Cron Jobs Error</h2>
         <p className="text-sm text-zinc-400 max-w-md">{error.message || "An unexpected error occurred"}</p>
         <button

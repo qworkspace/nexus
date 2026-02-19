@@ -33,12 +33,12 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
             {decision.title || decision.decision.action}
           </h1>
           <div className="flex flex-wrap items-center gap-3 text-sm">
-            <span className="text-zinc-500">{relativeTime}</span>
+            <span className="text-muted-foreground">{relativeTime}</span>
             <Badge variant="secondary">{decision.agent}</Badge>
             <Badge>{formatStatus(status)}</Badge>
             <Badge variant="outline">{formatImpactLevel(impactLevel)}</Badge>
             {successScore > 0 && (
-              <Badge className="bg-zinc-100 text-zinc-700">
+              <Badge className="bg-blue-100 text-blue-700">
                 Score: {successScore}/100
               </Badge>
             )}
@@ -70,7 +70,7 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
             {extendedContext.reasoning && (
               <div>
                 <h4 className="text-sm font-medium text-zinc-700 mb-2">Why This Decision?</h4>
-                <p className="text-sm text-zinc-600 bg-zinc-50 p-3 rounded-lg">
+                <p className="text-sm text-muted-foreground bg-zinc-50 p-3 rounded-lg">
                   {extendedContext.reasoning}
                 </p>
               </div>
@@ -80,7 +80,7 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
             {extendedContext.alternatives && extendedContext.alternatives.length > 0 && (
               <div>
                 <h4 className="text-sm font-medium text-zinc-700 mb-2">Alternatives Considered</h4>
-                <ul className="list-disc list-inside space-y-1 text-sm text-zinc-600">
+                <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground">
                   {extendedContext.alternatives.map((alt, i) => (
                     <li key={i}>{alt}</li>
                   ))}
@@ -101,19 +101,19 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
             <div className="grid grid-cols-2 gap-4">
               {implementation.spec && (
                 <div>
-                  <h4 className="text-sm font-medium text-zinc-500 mb-1">Spec</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-1">Spec</h4>
                   <p className="text-sm text-zinc-700 font-mono">{implementation.spec}</p>
                 </div>
               )}
               {implementation.buildId && (
                 <div>
-                  <h4 className="text-sm font-medium text-zinc-500 mb-1">Build</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-1">Build</h4>
                   <p className="text-sm text-zinc-700 font-mono">#{implementation.buildId}</p>
                 </div>
               )}
               {implementation.deployedAt && (
                 <div className="col-span-2">
-                  <h4 className="text-sm font-medium text-zinc-500 mb-1">Deployed</h4>
+                  <h4 className="text-sm font-medium text-muted-foreground mb-1">Deployed</h4>
                   <p className="text-sm text-zinc-700">
                     {new Date(implementation.deployedAt).toLocaleString()}
                   </p>
@@ -132,7 +132,7 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
         </CardHeader>
         <CardContent>
           {outcomes.length === 0 ? (
-            <div className="text-center py-8 text-zinc-500">
+            <div className="text-center py-8 text-muted-foreground">
               <p className="mb-2">No outcomes defined</p>
               <p className="text-sm">Expected outcomes will be added during implementation.</p>
             </div>
@@ -150,19 +150,19 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
 
                   <div className="grid grid-cols-3 gap-4 text-sm">
                     <div>
-                      <p className="text-zinc-500">Target</p>
+                      <p className="text-muted-foreground">Target</p>
                       <p className="font-medium text-zinc-900">
                         {outcome.target} {outcome.unit}
                       </p>
                     </div>
                     <div>
-                      <p className="text-zinc-500">Actual</p>
+                      <p className="text-muted-foreground">Actual</p>
                       <p className="font-medium text-zinc-900">
                         {outcome.status === 'pending' ? '—' : `${outcome.value} ${outcome.unit}`}
                       </p>
                     </div>
                     <div>
-                      <p className="text-zinc-500">Measured</p>
+                      <p className="text-muted-foreground">Measured</p>
                       <p className="text-zinc-700">
                         {new Date(outcome.measuredAt).toLocaleDateString()}
                       </p>
@@ -175,13 +175,13 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
               <div className="mt-4 p-4 bg-zinc-50 rounded-lg">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-zinc-500">Overall Success Score</p>
+                    <p className="text-sm text-muted-foreground">Overall Success Score</p>
                     <p className="text-2xl font-semibold text-zinc-900">
                       {successScore}/100
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm text-zinc-500">
+                    <p className="text-sm text-muted-foreground">
                       {outcomes.filter(o => o.status === 'passed').length} of {outcomes.length} passed
                     </p>
                   </div>
@@ -197,8 +197,8 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
 
 function OutcomeStatusBadge({ status }: { status: ExtendedOutcome['status'] }) {
   const config = {
-    pending: { icon: Clock, label: 'Pending', className: 'bg-zinc-100 text-[#FFE135]' },
-    passed: { icon: CheckCircle, label: 'Passed', className: 'bg-zinc-100 text-zinc-700' },
+    pending: { icon: Clock, label: 'Pending', className: 'bg-amber-100 text-amber-700' },
+    passed: { icon: CheckCircle, label: 'Passed', className: 'bg-green-100 text-green-700' },
     failed: { icon: XCircle, label: 'Failed', className: 'bg-red-100 text-red-700' },
   };
 

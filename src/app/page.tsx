@@ -52,14 +52,14 @@ export default async function Dashboard() {
     <div className="p-6 max-w-6xl">
       <div className="mb-8">
         <h1 className="text-2xl font-semibold text-zinc-900">Dashboard</h1>
-        <p className="text-zinc-500 text-sm">Overview of Q&apos;s activity</p>
+        <p className="text-muted-foreground text-sm">Overview of Q&apos;s activity</p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-4 gap-4 mb-8">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Total Activities
             </CardTitle>
           </CardHeader>
@@ -71,7 +71,7 @@ export default async function Dashboard() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Today
             </CardTitle>
           </CardHeader>
@@ -83,7 +83,7 @@ export default async function Dashboard() {
         </Card>
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-zinc-500">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               Errors
             </CardTitle>
           </CardHeader>
@@ -96,7 +96,7 @@ export default async function Dashboard() {
         <Link href="/costs">
           <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-zinc-500 flex items-center justify-between">
+              <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
                 <span className="flex items-center gap-1.5">
                   <DollarSign size={14} />
                   Token Costs
@@ -108,7 +108,7 @@ export default async function Dashboard() {
               <div className="text-2xl font-bold text-zinc-900">
                 ${stats.todayCost.toFixed(2)}
               </div>
-              <p className="text-xs text-zinc-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 ${stats.weekCost.toFixed(2)} this week
               </p>
             </CardContent>
@@ -127,14 +127,14 @@ export default async function Dashboard() {
           <CardTitle className="text-lg font-semibold">Recent Activity</CardTitle>
           <Link
             href="/activity"
-            className="text-sm text-zinc-500 hover:text-zinc-900"
+            className="text-sm text-muted-foreground hover:text-zinc-900"
           >
             View all →
           </Link>
         </CardHeader>
         <CardContent>
           {recentActivity.length === 0 ? (
-            <p className="text-zinc-500 text-sm py-8 text-center">
+            <p className="text-muted-foreground text-sm py-8 text-center">
               No activity yet. Q will log actions here.
             </p>
           ) : (
@@ -149,7 +149,7 @@ export default async function Dashboard() {
                     <p className="text-sm font-medium text-zinc-900 truncate">
                       {activity.title}
                     </p>
-                    <p className="text-xs text-zinc-500">
+                    <p className="text-xs text-muted-foreground">
                       {activity.type} · {formatTime(activity.timestamp)}
                     </p>
                   </div>
@@ -165,7 +165,7 @@ export default async function Dashboard() {
 
 function StatusDot({ status }: { status: string }) {
   const colors = {
-    success: "bg-zinc-800",
+    success: "bg-green-500",
     error: "bg-red-500",
     pending: "bg-yellow-500",
   };

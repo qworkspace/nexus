@@ -5,7 +5,7 @@ import path from 'path';
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
-  const handoffsDir = path.join(process.env.HOME!, '.openclaw/shared', 'handoffs');
+  const handoffsDir = path.join(process.env.HOME!, '.openclaw', 'shared', 'handoffs');
 
   try {
     const files = await fs.readdir(handoffsDir);

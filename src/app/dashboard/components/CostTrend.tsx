@@ -156,7 +156,7 @@ export function CostTrend() {
                         <div
                           className={`
                             w-full rounded-t transition-all duration-300
-                            ${isToday ? 'bg-zinc-900' : isWeekend ? 'bg-zinc-400 dark:bg-zinc-600' : 'bg-zinc-500 dark:bg-zinc-500'}
+                            ${isToday ? 'bg-indigo-500' : isWeekend ? 'bg-zinc-400 dark:bg-zinc-600' : 'bg-zinc-500 dark:bg-zinc-500'}
                             hover:opacity-80
                           `}
                           style={{ height: `${Math.max(height, 2)}%` }}
@@ -169,7 +169,7 @@ export function CostTrend() {
                       </div>
                       {/* Date label for first, last, and today */}
                       {day.date === daily[0].date || day.date === daily[daily.length - 1].date || isToday ? (
-                        <span className={`text-[10px] mt-1 ${isToday ? 'font-semibold text-zinc-700 dark:text-zinc-500' : 'text-zinc-400'}`}>
+                        <span className={`text-[10px] mt-1 ${isToday ? 'font-semibold text-indigo-600 dark:text-indigo-400' : 'text-zinc-400'}`}>
                           {formatDate(day.date)}
                         </span>
                       ) : null}

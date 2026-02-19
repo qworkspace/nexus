@@ -22,33 +22,33 @@ export function AgentStatsCard({ agent, onSelect, isSelected }: AgentStatsCardPr
     <div
       onClick={onSelect}
       className={`
-        bg-white dark:bg-zinc-900 rounded-xl border p-4 cursor-pointer transition-all hover:shadow-md
-        ${isSelected ? "ring-2 ring-zinc-300 border-zinc-300" : "border-zinc-200 dark:border-zinc-800"}
+        bg-white dark:bg-card rounded-xl border p-4 cursor-pointer transition-all hover:shadow-md
+        ${isSelected ? "ring-2 ring-blue-500 border-blue-500" : "border-zinc-200 dark:border-border"}
       `}
     >
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">{agent.id}</h3>
-        <span className="text-xs bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded text-zinc-600 dark:text-zinc-400">
+        <h3 className="font-semibold text-zinc-900 dark:text-foreground">{agent.id}</h3>
+        <span className="text-xs bg-zinc-100 dark:bg-secondary px-2 py-1 rounded text-muted-foreground dark:text-muted-foreground">
           {agent.type}
         </span>
       </div>
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
             <Activity size={14} />
             Runs
           </div>
-          <span className="font-medium text-zinc-900 dark:text-zinc-100">{agent.totalRuns}</span>
+          <span className="font-medium text-zinc-900 dark:text-foreground">{agent.totalRuns}</span>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
             <CheckCircle size={14} />
             Success
           </div>
           <span className={`font-medium ${
-            agent.successRate >= 0.8 ? "text-zinc-600" :
+            agent.successRate >= 0.8 ? "text-green-600" :
             agent.successRate >= 0.5 ? "text-yellow-600" : "text-red-600"
           }`}>
             {(agent.successRate * 100).toFixed(1)}%
@@ -56,19 +56,19 @@ export function AgentStatsCard({ agent, onSelect, isSelected }: AgentStatsCardPr
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
             <XCircle size={14} />
             Avg Time
           </div>
-          <span className="font-medium text-zinc-900 dark:text-zinc-100">{(agent.avgDuration / 1000).toFixed(1)}s</span>
+          <span className="font-medium text-zinc-900 dark:text-foreground">{(agent.avgDuration / 1000).toFixed(1)}s</span>
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground dark:text-muted-foreground">
             <DollarSign size={14} />
             Cost/Success
           </div>
-          <span className="font-medium text-zinc-900 dark:text-zinc-100">${agent.costPerSuccess.toFixed(4)}</span>
+          <span className="font-medium text-zinc-900 dark:text-foreground">${agent.costPerSuccess.toFixed(4)}</span>
         </div>
       </div>
     </div>

@@ -11,7 +11,8 @@ export async function GET() {
     // Read latest scorecard
     const selfImprovementDir = path.join(
       homeDir,
-      '.openclaw/shared',
+      '.openclaw',
+      'shared',
       'research',
       'self-improvement'
     );
@@ -99,7 +100,7 @@ export async function GET() {
     // Read build success rate from overnight-builds.log
     const buildStats = { success: 0, failed: 0, total: 0, rate: 0 };
     try {
-      const buildsLog = path.join(homeDir, '.openclaw/shared', 'overnight-builds.log');
+      const buildsLog = path.join(homeDir, '.openclaw', 'shared', 'overnight-builds.log');
       const logContent = await fs.readFile(buildsLog, 'utf-8');
       const lines = logContent.split('\n').filter(l => l.includes('BUILD:'));
       const last20 = lines.slice(-20);

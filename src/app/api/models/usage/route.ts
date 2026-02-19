@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { aggregateUsageFromTranscripts } from '@/lib/data-utils';
+import { aggregateUsageFromTranscripts, fetchOpenClawSessions } from '@/lib/data-utils';
 import { fetchCostData } from '@/lib/cost-data-service';
+import { toSydneyDateStr, getSydneyDayStart } from '@/lib/timezone';
 
 interface ModelUsage {
   model: string;
@@ -29,7 +30,7 @@ interface ModelsUsageResponse {
 
 export async function GET(): Promise<NextResponse<ModelsUsageResponse>> {
   try {
-    const todayStart = new Date(new Date().setHours(0, 0, 0, 0));
+    const todayStart = getSydneyDayStart();
     const now = new Date();
 
     // Fetch CLI cost data for accurate totals
@@ -38,7 +39,7 @@ export async function GET(): Promise<NextResponse<ModelsUsageResponse>> {
 
     try {
       const cliData = await fetchCostData();
-      const todayStr = now.toISOString().split('T')[0];
+      const todayStr = toSydneyDateStr(now);
       const todayCliData = cliData.daily.find(d => d.date === todayStr);
 
       if (todayCliData) {
@@ -192,8 +193,21 @@ export async function GET(): Promise<NextResponse<ModelsUsageResponse>> {
     // Generate recommendations
     const recommendations = generateRecommendations(usage);
 
-    // Current model (default to Opus if unknown)
-    const currentModel = 'claude-opus-4-6';
+    // Dynamically fetch current model from active main session
+    let currentModel = 'claude-sonnet-4-6';
+    try {
+      const sessionsData = await fetchOpenClawSessions(5);
+      const mainSession = sessionsData.sessions.find(
+        (s) => (s.key as string) === 'agent:main:main'
+      );
+      if (mainSession?.model) {
+        currentModel = (mainSession.model as string)
+          .replace('anthropic/', '')
+          .replace('claude-', '');
+      }
+    } catch {
+      // Keep default
+    }
 
     return NextResponse.json({
       source,

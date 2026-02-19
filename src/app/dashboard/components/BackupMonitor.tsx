@@ -51,7 +51,7 @@ export function BackupMonitor() {
     if (error || isLoading || !backup) return 'text-zinc-400';
     switch (status) {
       case 'success':
-        return 'text-zinc-600';
+        return 'text-green-500';
       case 'warning':
         return 'text-yellow-500';
       case 'error':
@@ -120,10 +120,10 @@ export function BackupMonitor() {
 
           {/* All healthy message */}
           {!alertMessage && backup && !isStale && (
-            <div className="mb-4 p-3 bg-zinc-50 dark:bg-green-950 border border-zinc-300 dark:border-zinc-300 rounded-lg">
+            <div className="mb-4 p-3 bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-lg">
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-4 w-4 text-zinc-600" />
-                <span className="text-sm font-medium text-zinc-800 dark:text-zinc-400">
+                <CheckCircle className="h-4 w-4 text-green-500" />
+                <span className="text-sm font-medium text-green-800 dark:text-green-200">
                   Backup current: {formatTimeAgo(backup.lastBackupTime)}
                 </span>
               </div>
@@ -188,7 +188,7 @@ export function BackupMonitor() {
                   <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-500">
                     <span>Source</span>
                     <span className={`font-medium ${
-                      data.source === 'live' ? 'text-zinc-600 dark:text-zinc-500' :
+                      data.source === 'live' ? 'text-green-600 dark:text-green-400' :
                       data.source === 'mock' ? 'text-yellow-600 dark:text-yellow-400' :
                       'text-red-600 dark:text-red-400'
                     }`}>
@@ -251,10 +251,10 @@ function AlertMessage({ type, message }: AlertMessageProps) {
         };
       default:
         return {
-          bg: 'bg-zinc-50 dark:bg-blue-950',
-          border: 'border-zinc-300 dark:border-zinc-300',
-          text: 'text-zinc-800 dark:text-zinc-400',
-          icon: 'text-zinc-600',
+          bg: 'bg-blue-50 dark:bg-blue-950',
+          border: 'border-blue-200 dark:border-blue-800',
+          text: 'text-blue-800 dark:text-blue-200',
+          icon: 'text-blue-500',
         };
     }
   };

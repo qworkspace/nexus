@@ -149,7 +149,7 @@ export default async function PerformancePage() {
         <h1 className="text-2xl font-semibold text-zinc-900">
           Agent Performance
         </h1>
-        <p className="text-zinc-500 text-sm">
+        <p className="text-muted-foreground text-sm">
           Success rates, response times, and error patterns
         </p>
       </div>

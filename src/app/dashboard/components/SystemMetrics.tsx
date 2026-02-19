@@ -69,13 +69,13 @@ const formatUptime = (seconds: number): string => {
 const getUsageColor = (usage: number): string => {
   if (usage >= 90) return "text-red-600 dark:text-red-400";
   if (usage >= 70) return "text-yellow-600 dark:text-yellow-400";
-  return "text-zinc-600 dark:text-zinc-500";
+  return "text-green-600 dark:text-green-400";
 };
 
 const getUsageBg = (usage: number): string => {
   if (usage >= 90) return "bg-red-500";
   if (usage >= 70) return "bg-yellow-500";
-  return "bg-zinc-800";
+  return "bg-green-500";
 };
 
 export function SystemMetrics() {

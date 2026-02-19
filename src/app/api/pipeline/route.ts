@@ -4,7 +4,7 @@ import path from 'path';
 import { homedir } from 'os';
 import { PipelineStage } from '@/types/builds';
 
-const HANDOFFS_DIR = path.join(homedir(), '.openclaw/shared', 'pipeline', 'handoffs');
+const HANDOFFS_DIR = path.join(homedir(), '.openclaw', 'shared', 'pipeline', 'handoffs');
 
 export async function GET() {
   try {

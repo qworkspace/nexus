@@ -5,8 +5,8 @@ import { randomUUID } from "crypto";
 
 export const dynamic = "force-dynamic";
 
-const SPEC_BRIEFS_DIR = "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/spec-briefs";
-const STATUS_FILE = "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/idea-status.json";
+const SPEC_BRIEFS_DIR = "/Users/paulvillanueva/shared/research/ai-intel/spec-briefs";
+const STATUS_FILE = "/Users/paulvillanueva/shared/research/ai-intel/idea-status.json";
 
 type BriefStatus = "new" | "approved" | "parked" | "rejected" | "specced" | "building" | "shipped" | "review";
 

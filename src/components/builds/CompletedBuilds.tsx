@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CompletedBuild } from '@/types/builds';
-import { CheckCircle, Star, ThumbsUp, Meh, ThumbsDown, Trash2, HelpCircle, Clock } from 'lucide-react';
+import { CheckCircle } from 'lucide-react';
 
 interface FeedbackRating {
   commit: string;
@@ -71,25 +71,25 @@ export function CompletedBuilds() {
     }
   };
 
-  const getRatingIcon = (rating: string) => {
+  const getRatingEmoji = (rating: string) => {
     switch (rating) {
-      case 'great': return <Star className="h-3 w-3 inline" />;
-      case 'good': return <ThumbsUp className="h-3 w-3 inline" />;
-      case 'meh': return <Meh className="h-3 w-3 inline" />;
-      case 'bad': return <ThumbsDown className="h-3 w-3 inline" />;
-      case 'useless': return <Trash2 className="h-3 w-3 inline" />;
-      default: return <HelpCircle className="h-3 w-3 inline" />;
+      case 'great': return '⭐';
+      case 'good': return '👍';
+      case 'meh': return '😐';
+      case 'bad': return '👎';
+      case 'useless': return '🗑';
+      default: return '❓';
     }
   };
 
   const getRatingColor = (rating: string) => {
     switch (rating) {
       case 'great':
-      case 'good': return 'text-zinc-600 bg-zinc-50';
+      case 'good': return 'text-green-600 bg-green-50';
       case 'meh': return 'text-yellow-600 bg-yellow-50';
       case 'bad':
       case 'useless': return 'text-red-600 bg-red-50';
-      default: return 'text-zinc-400';
+      default: return 'text-muted-foreground';
     }
   };
 
@@ -117,14 +117,14 @@ export function CompletedBuilds() {
         <CardTitle className="flex items-center gap-2">
           <CheckCircle className="h-4 w-4" />
           Completed Builds
-          <span className="ml-2 text-xs text-zinc-500 font-normal">
+          <span className="ml-2 text-xs text-muted-foreground font-normal">
             Last 10
           </span>
         </CardTitle>
       </CardHeader>
       <CardContent>
         {builds.length === 0 ? (
-          <div className="text-center py-8 text-zinc-500">
+          <div className="text-center py-8 text-muted-foreground">
             <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-50" />
             <p className="text-sm">No completed builds yet</p>
           </div>
@@ -135,16 +135,16 @@ export function CompletedBuilds() {
               return (
                 <div
                   key={build.hash}
-                  className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg group hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                  className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-card rounded-lg group hover:bg-zinc-100 dark:hover:bg-secondary transition-colors"
                 >
                   <div className="flex-shrink-0 mt-0.5">
-                    <CheckCircle className="h-4 w-4 text-zinc-600" />
+                    <CheckCircle className="h-4 w-4 text-green-500" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 line-clamp-2">
+                    <p className="text-sm font-medium text-zinc-900 dark:text-foreground line-clamp-2">
                       {build.message}
                     </p>
-                    <div className="flex items-center gap-3 mt-1 text-xs text-zinc-500">
+                    <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                       <span className="font-mono">{build.hash}</span>
                       <span>•</span>
                       <span>{formatRelativeTime(build.timestamp)}</span>
@@ -153,7 +153,7 @@ export function CompletedBuilds() {
                     </div>
                     {build.specName && (
                       <div className="mt-1">
-                        <span className="text-xs text-zinc-600 hover:underline cursor-pointer">
+                        <span className="text-xs text-blue-600 hover:underline cursor-pointer">
                           → {build.specName}
                         </span>
                       </div>
@@ -164,9 +164,9 @@ export function CompletedBuilds() {
                       <div className="mt-2">
                         <div className={`px-2 py-1 rounded text-xs ${getRatingColor(feedbackForBuild.rating)}`}>
                           <span className="font-medium">
-                            {getRatingIcon(feedbackForBuild.rating)} {feedbackForBuild.rating.toUpperCase()}
+                            {getRatingEmoji(feedbackForBuild.rating)} {feedbackForBuild.rating.toUpperCase()}
                           </span>
-                          <span className="text-zinc-400 ml-2">
+                          <span className="text-muted-foreground ml-2">
                             by {feedbackForBuild.ratedBy} • {formatRelativeTime(feedbackForBuild.ratedAt)}
                           </span>
                           {feedbackForBuild.issues.length > 0 && (
@@ -184,15 +184,15 @@ export function CompletedBuilds() {
                                 detail: { spec: feedbackForBuild.spec }
                               }));
                             }}
-                            className="mt-1 text-xs text-zinc-600 hover:text-zinc-800 hover:underline"
+                            className="mt-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
                           >
                             → View in Fix Log
                           </button>
                         )}
                       </div>
                     ) : (
-                      <div className="mt-2 text-xs text-zinc-400 italic">
-                        <Clock className="h-3 w-3 inline mr-1" />Awaiting review
+                      <div className="mt-2 text-xs text-muted-foreground italic">
+                        ⏳ Awaiting review
                       </div>
                     )}
                   </div>

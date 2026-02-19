@@ -54,10 +54,10 @@ export function KeyboardShortcuts() {
       <div className="flex items-center gap-1">
         {keyParts.map((part, idx) => (
           <span key={idx} className="inline-flex items-center gap-1">
-            <kbd className="px-2 py-1 text-xs font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded border border-zinc-200 dark:border-zinc-700 shadow-sm min-w-[1.5rem] text-center">
+            <kbd className="px-2 py-1 text-xs font-medium bg-zinc-100 dark:bg-secondary text-zinc-700 dark:text-foreground rounded border border-zinc-200 dark:border-border shadow-sm min-w-[1.5rem] text-center">
               {part}
             </kbd>
-            {idx < keyParts.length - 1 && <span className="text-zinc-400">then</span>}
+            {idx < keyParts.length - 1 && <span className="text-muted-foreground">then</span>}
           </span>
         ))}
       </div>
@@ -79,7 +79,7 @@ export function KeyboardShortcuts() {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             type="text"
             placeholder="Search shortcuts..."
@@ -99,8 +99,8 @@ export function KeyboardShortcuts() {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap transition-colors ${
                   selectedCategory === cat
-                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                    : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-700'
+                    ? 'bg-card text-foreground dark:bg-zinc-100 dark:text-zinc-900'
+                    : 'bg-zinc-100 text-muted-foreground hover:bg-zinc-200 dark:bg-secondary dark:text-muted-foreground dark:hover:bg-muted'
                 }`}
               >
                 {cat === 'all' ? 'All' : categoryLabels[cat]}
@@ -120,24 +120,24 @@ export function KeyboardShortcuts() {
 
                 return (
                   <div key={cat}>
-                    <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                    <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2">
                       {categoryLabels[cat]}
                     </h3>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+                    <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-3">
                       {categoryDescriptions[cat]}
                     </p>
                     <div className="space-y-2">
                       {catShortcuts.map((shortcut, idx) => (
                         <div
                           key={idx}
-                          className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors"
+                          className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-50 dark:hover:bg-card/80 transition-colors"
                         >
                           <div className="flex-1">
-                            <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                            <p className="text-sm font-medium text-zinc-700 dark:text-foreground">
                               {shortcut.description}
                             </p>
                             {shortcut.context && (
-                              <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-0.5">
+                              <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-0.5">
                                 {shortcut.context}
                               </p>
                             )}
@@ -153,24 +153,24 @@ export function KeyboardShortcuts() {
             ) : (
               // Show single category
               <div>
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2">
                   {categoryLabels[selectedCategory]}
                 </h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-3">
+                <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-3">
                   {categoryDescriptions[selectedCategory]}
                 </p>
                 <div className="space-y-2">
                   {getShortcutsByCategory(selectedCategory).map((shortcut, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors"
+                      className="flex items-center justify-between py-2 px-3 rounded-lg hover:bg-zinc-50 dark:hover:bg-card/80 transition-colors"
                     >
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                        <p className="text-sm font-medium text-zinc-700 dark:text-foreground">
                           {shortcut.description}
                         </p>
                         {shortcut.context && (
-                          <p className="text-xs text-zinc-500 dark:text-zinc-500 mt-0.5">
+                          <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-0.5">
                             {shortcut.context}
                           </p>
                         )}
@@ -184,9 +184,9 @@ export function KeyboardShortcuts() {
           </div>
 
           {/* Footer hint */}
-          <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-zinc-800">
-            <p className="text-xs text-center text-zinc-500 dark:text-zinc-400">
-              Press <kbd className="px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-800 rounded text-zinc-600 dark:text-zinc-300">ESC</kbd> or click outside to close
+          <div className="mt-6 pt-4 border-t border-zinc-200 dark:border-border">
+            <p className="text-xs text-center text-muted-foreground dark:text-muted-foreground">
+              Press <kbd className="px-1.5 py-0.5 bg-zinc-100 dark:bg-secondary rounded text-muted-foreground dark:text-foreground">ESC</kbd> or click outside to close
             </p>
           </div>
         </ScrollArea>

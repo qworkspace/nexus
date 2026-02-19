@@ -159,15 +159,15 @@ export default function CompanyPage() {
 
   // Agent colour mapping for visual distinction
   const agentColours: Record<string, { border: string; glow: string }> = {
-    q: { border: "border-l-[#FFE135]", glow: "shadow-[0_0_20px_-5px_rgba(245,158,11,0.15)]" },
+    q: { border: "border-l-amber-500", glow: "shadow-[0_0_20px_-5px_rgba(245,158,11,0.15)]" },
     aura: { border: "border-l-pink-400", glow: "shadow-[0_0_20px_-5px_rgba(244,114,182,0.15)]" },
     surge: { border: "border-l-green-500", glow: "shadow-[0_0_20px_-5px_rgba(34,197,94,0.15)]" },
-    spark: { border: "border-l-zinc-500", glow: "shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)]" },
-    cipher: { border: "border-l-zinc-700", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.15)]" },
+    spark: { border: "border-l-blue-500", glow: "shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)]" },
+    cipher: { border: "border-l-purple-500", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.15)]" },
     volt: { border: "border-l-red-500", glow: "shadow-[0_0_20px_-5px_rgba(239,68,68,0.15)]" },
     echo: { border: "border-l-teal-500", glow: "shadow-[0_0_20px_-5px_rgba(20,184,166,0.15)]" },
     flux: { border: "border-l-orange-500", glow: "shadow-[0_0_20px_-5px_rgba(249,115,22,0.15)]" },
-    prism: { border: "border-l-transparent bg-gradient-to-b from-red-500 via-zinc-500 to-zinc-800", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.2)]" },
+    prism: { border: "border-l-transparent bg-gradient-to-b from-red-500 via-green-500 to-blue-500", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.2)]" },
     luna: { border: "border-l-slate-400", glow: "shadow-[0_0_20px_-5px_rgba(148,163,184,0.15)]" },
   };
 
@@ -208,18 +208,18 @@ export default function CompanyPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <HeartPulse size={24} className="text-foreground" />
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground flex items-center gap-2">
+            <HeartPulse size={24} className="text-[#FFE135]" />
             The Core
           </h1>
-          <p className="text-zinc-500 text-sm">Villanueva Creative — {agents.length} team members</p>
+          <p className="text-muted-foreground text-sm">Villanueva Creative — {agents.length} team members</p>
         </div>
         <div className="flex gap-2">
-          <Link href="/company/floor" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-xs hover:bg-zinc-200 dark:hover:bg-zinc-700 transition flex items-center gap-1.5">
+          <Link href="/company/floor" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-secondary text-xs hover:bg-zinc-200 dark:hover:bg-muted transition flex items-center gap-1.5">
             <LayoutGrid size={14} />
             The Floor
           </Link>
-          <Link href="/company/org" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-xs hover:bg-zinc-200 dark:hover:bg-zinc-700 transition flex items-center gap-1.5">
+          <Link href="/company/org" className="px-3 py-1.5 rounded-lg bg-zinc-100 dark:bg-secondary text-xs hover:bg-zinc-200 dark:hover:bg-muted transition flex items-center gap-1.5">
             <GitBranch size={14} />
             Org Chart
           </Link>
@@ -231,9 +231,9 @@ export default function CompanyPage() {
         <div className="lg:col-span-2 space-y-6">
           {/* Health Score */}
           {status && (
-            <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6">
+            <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-6">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Company Health</h2>
+                <h2 className="text-lg font-semibold text-zinc-900 dark:text-foreground">Company Health</h2>
                 <HealthBadge score={status.health.score} />
               </div>
               <div className="grid grid-cols-4 gap-4">
@@ -267,8 +267,8 @@ export default function CompanyPage() {
           )}
 
           {/* Agent Grid */}
-          <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6">
-            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 mb-4">Team</h2>
+          <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-6">
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-foreground mb-4">Team</h2>
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
               {localAgents.map(agent => {
                 const sparkline = agentSparklines[agent.id] || [];
@@ -280,14 +280,14 @@ export default function CompanyPage() {
                   <Link
                     key={agent.id}
                     href={`/company/agents/${agent.id}`}
-                    className={`p-3 rounded-lg border border-zinc-100 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition text-center group border-l-4 ${colours.border} ${colours.glow}`}
+                    className={`p-3 rounded-lg border border-zinc-100 dark:border-border hover:bg-zinc-50 dark:hover:bg-secondary transition text-center group border-l-4 ${colours.border} ${colours.glow}`}
                   >
                     <div className="flex items-center justify-center mb-1">
-                      <AgentIcon emoji={agent.emoji} size={28} className="text-zinc-600 dark:text-zinc-300" />
+                      <AgentIcon emoji={agent.emoji} size={28} className="text-muted-foreground dark:text-foreground" />
                     </div>
-                    <p className="text-xs font-bold text-zinc-900 dark:text-zinc-100 mt-1">{agent.name}</p>
-                    <p className="text-[10px] text-zinc-500 truncate">{agent.role}</p>
-                    <p className="text-[9px] text-zinc-400 font-mono mt-0.5">{modelDisplay}</p>
+                    <p className="text-xs font-bold text-zinc-900 dark:text-foreground mt-1">{agent.name}</p>
+                    <p className="text-[10px] text-muted-foreground truncate">{agent.role}</p>
+                    <p className="text-[9px] text-muted-foreground font-mono mt-0.5">{modelDisplay}</p>
                     {/* Sparkline */}
                     {sparkline.length > 0 && (
                       <div className="mt-2 flex items-center justify-center gap-1">
@@ -308,45 +308,45 @@ export default function CompanyPage() {
           {/* Quick Stats Row */}
           <div className="grid grid-cols-2 gap-4">
             {/* Recent Meetings */}
-            <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
+            <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
                   <Calendar size={14} />
                   Recent Meetings
                 </h3>
-                <Link href="/company/meetings" className="text-[10px] text-zinc-500 hover:text-foreground hover:underline">View all →</Link>
+                <Link href="/company/meetings" className="text-[10px] text-foreground hover:underline">View all →</Link>
               </div>
               <div className="space-y-2">
                 {meetings.slice(0, 5).map(m => (
-                  <Link key={m.id} href={`/company/meetings?selected=${m.id}`} className="flex items-center justify-between p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs">
-                    <span className="text-zinc-700 dark:text-zinc-300 truncate">{m.title}</span>
-                    <span className="text-[10px] text-zinc-400 ml-2 shrink-0">{m.date}</span>
+                  <Link key={m.id} href={`/company/meetings?selected=${m.id}`} className="flex items-center justify-between p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs">
+                    <span className="text-zinc-700 dark:text-foreground truncate">{m.title}</span>
+                    <span className="text-[10px] text-muted-foreground ml-2 shrink-0">{m.date}</span>
                   </Link>
                 ))}
-                {meetings.length === 0 && <p className="text-zinc-500 text-xs py-4 text-center">No meetings yet — first standup at 10am</p>}
+                {meetings.length === 0 && <p className="text-muted-foreground text-xs py-4 text-center">No meetings yet — first standup at 10am</p>}
               </div>
             </div>
 
             {/* Action Items */}
-            <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
+            <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
                   <Inbox size={14} />
                   Action Items
                 </h3>
-                <Link href="/company/actions" className="text-[10px] text-zinc-500 hover:text-foreground hover:underline">View board →</Link>
+                <Link href="/company/actions" className="text-[10px] text-foreground hover:underline">View board →</Link>
               </div>
               <div className="space-y-2">
                 {openActions.slice(0, 5).map(a => (
-                  <div key={a.id} className="flex items-center gap-2 p-2 rounded bg-zinc-50 dark:bg-zinc-800 text-xs">
+                  <div key={a.id} className="flex items-center gap-2 p-2 rounded bg-zinc-50 dark:bg-secondary text-xs">
                     <StatusDot status={a.status} />
-                    <span className="text-zinc-700 dark:text-zinc-300 truncate flex-1">{a.task}</span>
-                    <span className="text-[10px] text-zinc-400">{a.assignee}</span>
+                    <span className="text-zinc-700 dark:text-foreground truncate flex-1">{a.task}</span>
+                    <span className="text-[10px] text-muted-foreground">{a.assignee}</span>
                   </div>
                 ))}
-                {openActions.length === 0 && <p className="text-zinc-500 text-xs py-4 text-center">No open action items</p>}
+                {openActions.length === 0 && <p className="text-muted-foreground text-xs py-4 text-center">No open action items</p>}
               </div>
-              <div className="mt-2 text-[10px] text-zinc-400 text-center">
+              <div className="mt-2 text-[10px] text-muted-foreground text-center">
                 {doneActions.length} completed • {openActions.length} open
               </div>
             </div>
@@ -355,16 +355,16 @@ export default function CompanyPage() {
 
         {/* Right column — Activity Feed */}
         <div className="space-y-6">
-          <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
+          <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-1.5">
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground flex items-center gap-1.5">
                 <Activity size={14} />
                 Activity Feed
               </h3>
               {newActivityCount > 0 && (
                 <button
                   onClick={resetActivityScroll}
-                  className="px-2 py-1 bg-zinc-900 hover:bg-zinc-700 text-white text-[10px] font-bold rounded-full transition-colors"
+                  className="px-2 py-1 bg-foreground hover:bg-foreground text-foreground text-[10px] font-bold rounded-full transition-colors"
                 >
                   {newActivityCount} new
                 </button>
@@ -377,42 +377,42 @@ export default function CompanyPage() {
             >
               {(status?.recentActivity || activity).slice(0, 20).map((entry, i) => (
                 <div key={entry.id || i} className="flex gap-2 text-xs">
-                  <AgentIcon emoji={entry.emoji} size={16} className="text-zinc-600 dark:text-zinc-300 shrink-0 mt-0.5" />
+                  <AgentIcon emoji={entry.emoji} size={16} className="text-muted-foreground dark:text-foreground shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-medium text-zinc-700 dark:text-zinc-300">{entry.agentName}</span>
-                    <span className="text-zinc-500 ml-1">{entry.message}</span>
+                    <span className="font-medium text-zinc-700 dark:text-foreground">{entry.agentName}</span>
+                    <span className="text-muted-foreground ml-1">{entry.message}</span>
                     {entry.timestamp && (
-                      <p className="text-[9px] text-zinc-400 mt-0.5">{formatRelativeTime(entry.timestamp)}</p>
+                      <p className="text-[9px] text-muted-foreground mt-0.5">{formatRelativeTime(entry.timestamp)}</p>
                     )}
                   </div>
                 </div>
               ))}
               {activity.length === 0 && !status?.recentActivity?.length && (
-                <p className="text-zinc-500 text-xs text-center py-8">Activity will appear here as agents work</p>
+                <p className="text-muted-foreground text-xs text-center py-8">Activity will appear here as agents work</p>
               )}
             </div>
           </div>
 
           {/* Quick Links */}
-          <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4 space-y-2">
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">Quick Links</h3>
-            <Link href="/company/floor" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+          <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4 space-y-2">
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2">Quick Links</h3>
+            <Link href="/company/floor" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
               <LayoutGrid size={14} className="shrink-0" />
               The Floor — Watch agents work
             </Link>
-            <Link href="/company/org" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+            <Link href="/company/org" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
               <GitBranch size={14} className="shrink-0" />
               Org Chart — Company structure
             </Link>
-            <Link href="/company/relationships" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+            <Link href="/company/relationships" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
               <LinkIcon size={14} className="shrink-0" />
               Relationships — Trust matrix
             </Link>
-            <Link href="/company/meetings" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+            <Link href="/company/meetings" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
               <Calendar size={14} className="shrink-0" />
               Meetings — Transcripts & history
             </Link>
-            <Link href="/company/actions" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-zinc-800 text-xs text-zinc-600 dark:text-zinc-400">
+            <Link href="/company/actions" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 dark:hover:bg-secondary text-xs text-muted-foreground dark:text-muted-foreground">
               <Inbox size={14} className="shrink-0" />
               Actions — Task board
             </Link>
@@ -422,8 +422,8 @@ export default function CompanyPage() {
           <ScorecardPanel />
 
           {/* Loop Status Panel */}
-          <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
-            <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3 flex items-center gap-1.5">
+          <div className="bg-white dark:bg-card rounded-xl border border-zinc-200 dark:border-border p-4">
+            <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-3 flex items-center gap-1.5">
               <Repeat size={14} />
               Loop Status
             </h3>
@@ -466,10 +466,10 @@ export default function CompanyPage() {
 
                 {/* Skill Proficiency */}
                 {loopStatus.skills.total > 0 && (
-                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                  <div className="pt-2 border-t border-zinc-100 dark:border-border">
                     <div className="flex items-center justify-between text-[10px] mb-1">
-                      <span className="text-zinc-500">Avg Proficiency</span>
-                      <span className="text-zinc-400">{loopStatus.skills.proficiency_avg.toFixed(1)}/5</span>
+                      <span className="text-muted-foreground">Avg Proficiency</span>
+                      <span className="text-muted-foreground">{loopStatus.skills.proficiency_avg.toFixed(1)}/5</span>
                     </div>
                     <div className="flex gap-0.5">
                       {[1, 2, 3, 4, 5].map(level => (
@@ -477,8 +477,8 @@ export default function CompanyPage() {
                           key={level}
                           className={`h-1.5 flex-1 rounded-full ${
                             level <= Math.round(loopStatus.skills.proficiency_avg)
-                              ? "bg-zinc-800"
-                              : "bg-zinc-200 dark:bg-zinc-700"
+                              ? "bg-purple-500"
+                              : "bg-zinc-200 dark:bg-muted"
                           }`}
                         />
                       ))}
@@ -488,13 +488,13 @@ export default function CompanyPage() {
 
                 {/* Skill Categories */}
                 {Object.keys(loopStatus.skills.by_category).length > 0 && (
-                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                    <p className="text-[10px] text-zinc-500 mb-2">Skills by Category</p>
+                  <div className="pt-2 border-t border-zinc-100 dark:border-border">
+                    <p className="text-[10px] text-muted-foreground mb-2">Skills by Category</p>
                     <div className="grid grid-cols-2 gap-1">
                       {Object.entries(loopStatus.skills.by_category).map(([cat, count]) => (
-                        <div key={cat} className="flex items-center justify-between text-[10px] px-1.5 py-1 rounded bg-zinc-50 dark:bg-zinc-800">
-                          <span className="text-zinc-500 capitalize">{cat}</span>
-                          <span className="font-mono text-zinc-700 dark:text-zinc-300">{count}</span>
+                        <div key={cat} className="flex items-center justify-between text-[10px] px-1.5 py-1 rounded bg-zinc-50 dark:bg-secondary">
+                          <span className="text-muted-foreground capitalize">{cat}</span>
+                          <span className="font-mono text-zinc-700 dark:text-foreground">{count}</span>
                         </div>
                       ))}
                     </div>
@@ -503,7 +503,7 @@ export default function CompanyPage() {
 
                 {/* Regression Alerts */}
                 {loopStatus.regressions && loopStatus.regressions.length > 0 && (
-                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
+                  <div className="pt-2 border-t border-zinc-100 dark:border-border">
                     <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-lg p-2">
                       <p className="text-[10px] font-bold text-red-600 dark:text-red-400 mb-1 flex items-center gap-1">
                         <AlertTriangle size={10} />
@@ -512,13 +512,13 @@ export default function CompanyPage() {
                       <div className="space-y-1">
                         {loopStatus.regressions.slice(0, 3).map((reg, i) => (
                           <div key={i} className="text-[10px] flex items-start gap-1">
-                            <span className={reg.severity === "high" ? "text-red-500" : "text-[#8a7000]"}>
-                              {reg.severity === "high" ? "HIGH" : "MED"}
+                            <span className={reg.severity === "high" ? "text-red-500" : "text-[#FFE135]"}>
+                              {reg.severity === "high" ? "🔴" : "🟡"}
                             </span>
-                            <span className="text-zinc-600 dark:text-zinc-400 truncate flex-1">
+                            <span className="text-muted-foreground dark:text-muted-foreground truncate flex-1">
                               {reg.pattern.slice(0, 40)}...
                             </span>
-                            <span className="text-zinc-400 shrink-0">×{reg.count}</span>
+                            <span className="text-muted-foreground shrink-0">×{reg.count}</span>
                           </div>
                         ))}
                       </div>
@@ -528,15 +528,15 @@ export default function CompanyPage() {
 
                 {/* Core Scorecard (if available) */}
                 {loopStatus.scorecard && Object.keys(loopStatus.scorecard).length > 0 && (
-                  <div className="pt-2 border-t border-zinc-100 dark:border-zinc-800">
-                    <p className="text-[10px] text-zinc-500 mb-2">Weekly Scorecard</p>
+                  <div className="pt-2 border-t border-zinc-100 dark:border-border">
+                    <p className="text-[10px] text-muted-foreground mb-2">Weekly Scorecard</p>
                     <div className="grid grid-cols-5 gap-1">
                       {["autonomy", "quality", "speed", "alignment", "energy"].map(metric => (
                         <div key={metric} className="text-center">
                           <div className="text-sm font-bold text-foreground">
                             {loopStatus.scorecard?.[metric] || 0}
                           </div>
-                          <div className="text-[8px] text-zinc-400 uppercase">
+                          <div className="text-[8px] text-muted-foreground uppercase">
                             {metric.slice(0, 3)}
                           </div>
                         </div>
@@ -546,7 +546,7 @@ export default function CompanyPage() {
                 )}
               </div>
             ) : (
-              <p className="text-xs text-zinc-500 text-center py-4">Loading loop status...</p>
+              <p className="text-xs text-muted-foreground text-center py-4">Loading loop status...</p>
             )}
           </div>
         </div>
@@ -558,9 +558,9 @@ export default function CompanyPage() {
 function HealthBadge({ score }: { score: number }) {
   const color = score >= 70 ? "emerald" : score >= 40 ? "amber" : "red";
   const colors: Record<string, string> = {
-    emerald: "bg-zinc-100 text-zinc-800",
-    amber: "bg-[#FFE135]/40 text-[#7a6200]",
-    red: "bg-red-100 text-red-700",
+    emerald: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-[#FFE135]",
+    amber: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-[#FFE135]",
+    red: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
   };
   const labels: Record<string, string> = { emerald: "Healthy", amber: "Needs Attention", red: "Critical" };
   return (
@@ -572,47 +572,47 @@ function HealthBadge({ score }: { score: number }) {
 
 function TooltipStatCard({ label, value, suffix, sub, color }: { label: string; value: string; suffix?: string; sub?: string; color: string }) {
   const textColors: Record<string, string> = {
-    emerald: "text-zinc-800",
-    amber: "text-[#7a6200]",
-    red: "text-red-600",
-    blue: "text-zinc-700",
+    emerald: "text-emerald-600 dark:text-[#FFE135]",
+    amber: "text-amber-600 dark:text-[#FFE135]",
+    red: "text-red-600 dark:text-red-400",
+    blue: "text-blue-600 dark:text-foreground",
   };
   return (
-    <div className="p-3 rounded-lg bg-zinc-50 text-center cursor-help">
-      <p className={`text-2xl font-bold ${textColors[color] || "text-zinc-900 dark:text-zinc-100"}`}>
-        {value}<span className="text-sm font-normal text-zinc-400">{suffix}</span>
+    <div className="p-3 rounded-lg bg-zinc-50 dark:bg-secondary text-center cursor-help">
+      <p className={`text-2xl font-bold ${textColors[color] || "text-zinc-900 dark:text-foreground"}`}>
+        {value}<span className="text-sm font-normal text-muted-foreground">{suffix}</span>
       </p>
-      <p className="text-[10px] text-zinc-500 mt-0.5">{label}</p>
-      {sub && <p className="text-[9px] text-zinc-400">{sub}</p>}
+      <p className="text-[10px] text-muted-foreground mt-0.5">{label}</p>
+      {sub && <p className="text-[9px] text-muted-foreground">{sub}</p>}
     </div>
   );
 }
 
 function TooltipHealthBar({ label, value }: { label: string; value: number }) {
-  const color = value >= 70 ? "bg-zinc-900" : value >= 40 ? "bg-[#FFE135]" : "bg-red-600";
+  const color = value >= 70 ? "bg-[#FFE135]" : value >= 40 ? "bg-[#FFE135]" : "bg-red-500";
   return (
     <div className="flex items-center gap-3 text-xs cursor-help">
-      <span className="text-zinc-500 w-28 text-right shrink-0">{label}</span>
-      <div className="flex-1 h-2 rounded-full bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
+      <span className="text-muted-foreground w-28 text-right shrink-0">{label}</span>
+      <div className="flex-1 h-2 rounded-full bg-zinc-100 dark:bg-secondary overflow-hidden">
         <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${value}%` }} />
       </div>
-      <span className="text-zinc-400 w-8">{value}</span>
+      <span className="text-muted-foreground w-8">{value}</span>
     </div>
   );
 }
 
 function StatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
-    todo: "bg-zinc-300",
-    "in-progress": "bg-zinc-700",
-    blocked: "bg-red-600",
-    done: "bg-zinc-900",
+    todo: "bg-zinc-400",
+    "in-progress": "bg-foreground",
+    blocked: "bg-red-500",
+    done: "bg-[#FFE135]",
   };
   return <div className={`w-2 h-2 rounded-full shrink-0 ${colors[status] || "bg-zinc-400"}`} />;
 }
 
 function Sparkline({ data, color }: { data: number[]; color: "emerald" | "red" | "amber" | "blue" }) {
-  const colorClass = color === "emerald" ? "stroke-zinc-800" : color === "red" ? "stroke-red-500" : "stroke-zinc-500";
+  const colorClass = color === "emerald" ? "stroke-emerald-500" : color === "red" ? "stroke-red-500" : "stroke-zinc-500";
   const max = Math.max(...data, 1);
   const width = 60;
   const height = 16;
@@ -677,24 +677,24 @@ function TooltipLoopMetricBar({
 }) {
   const percentage = Math.min((value / max) * 100, 100);
   const colorClasses: Record<string, string> = {
-    emerald: "bg-zinc-900",
+    emerald: "bg-[#FFE135]",
     amber: "bg-[#FFE135]",
-    red: "bg-red-600",
-    blue: "bg-zinc-600",
-    purple: "bg-zinc-700",
+    red: "bg-red-500",
+    blue: "bg-foreground",
+    purple: "bg-purple-500",
   };
   const textColors: Record<string, string> = {
-    emerald: "text-zinc-700",
-    amber: "text-[#7a6200]",
-    red: "text-red-600",
-    blue: "text-zinc-700",
-    purple: "text-zinc-700",
+    emerald: "text-emerald-600 dark:text-[#FFE135]",
+    amber: "text-amber-600 dark:text-[#FFE135]",
+    red: "text-red-600 dark:text-red-400",
+    blue: "text-blue-600 dark:text-foreground",
+    purple: "text-purple-600 dark:text-muted-foreground",
   };
 
   return (
     <div className="cursor-help">
       <div className="flex items-center justify-between mb-1">
-        <span className="text-[10px] text-zinc-500 flex items-center gap-1">
+        <span className="text-[10px] text-muted-foreground flex items-center gap-1">
           <span className={textColors[color]}>{icon}</span>
           {label}
         </span>
@@ -702,7 +702,7 @@ function TooltipLoopMetricBar({
           {typeof value === "number" && value % 1 !== 0 ? value.toFixed(1) : value} {unit}
         </span>
       </div>
-      <div className="h-1.5 bg-zinc-100 dark:bg-zinc-800 rounded-full overflow-hidden">
+      <div className="h-1.5 bg-zinc-100 dark:bg-secondary rounded-full overflow-hidden">
         <div
           className={`h-full rounded-full ${colorClasses[color]} transition-all duration-500`}
           style={{ width: `${percentage}%` }}

@@ -49,7 +49,7 @@ function parseCheckpoint(content: string, filename: string, dateDir: string): Ch
     timestamp,
     error,
     status,
-    fullPath: path.join(homedir(), 'shared', 'checkpoints', dateDir, filename),
+    fullPath: path.join(homedir(), '.openclaw', 'shared', 'checkpoints', dateDir, filename),
     dateDir,
     content,
   };
@@ -60,7 +60,7 @@ function parseCheckpoint(content: string, filename: string, dateDir: string): Ch
 // ============================================================================
 
 async function getAllCheckpoints(): Promise<CheckpointFile[]> {
-  const CHECKPOINT_BASE_DIR = path.join(homedir(), 'shared', 'checkpoints');
+  const CHECKPOINT_BASE_DIR = path.join(homedir(), '.openclaw', 'shared', 'checkpoints');
 
   try {
     const dates = await fs.readdir(CHECKPOINT_BASE_DIR);
@@ -142,7 +142,7 @@ export async function GET(request: Request) {
       }
 
       // Read full content
-      const fullPath = path.join(homedir(), 'shared', 'checkpoints', checkpoint.dateDir, checkpoint.filename);
+      const fullPath = path.join(homedir(), '.openclaw', 'shared', 'checkpoints', checkpoint.dateDir, checkpoint.filename);
       const content = await fs.readFile(fullPath, 'utf-8');
       checkpoint.content = content;
 

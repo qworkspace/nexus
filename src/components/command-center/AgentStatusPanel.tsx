@@ -30,9 +30,9 @@ interface AgentStatusData {
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
 const statusConfig = {
-  active: { color: "bg-zinc-800", glow: "status-glow-green", label: "Active" },
+  active: { color: "bg-green-500", glow: "status-glow-green", label: "Active" },
   idle: { color: "bg-yellow-500", glow: "status-glow-yellow", label: "Idle" },
-  completed: { color: "bg-zinc-900", glow: "status-glow-blue", label: "Done" },
+  completed: { color: "bg-foreground", glow: "status-glow-blue", label: "Done" },
   error: { color: "bg-red-500", glow: "status-glow-red", label: "Error" },
 };
 
@@ -63,7 +63,7 @@ export function AgentStatusPanel() {
     <Card className="dark:glass-panel">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <Bot size={20} className="text-zinc-600 dark:text-zinc-300" />
+          <Bot size={20} className="text-muted-foreground dark:text-foreground" />
           Live Agents
         </CardTitle>
         <Button 
@@ -80,7 +80,7 @@ export function AgentStatusPanel() {
         {isLoading ? (
           <div className="space-y-3">
             {[1, 2].map(i => (
-              <div key={i} className="h-20 rounded-lg bg-zinc-100 dark:bg-zinc-800 shimmer" />
+              <div key={i} className="h-20 rounded-lg bg-zinc-100 dark:bg-secondary shimmer" />
             ))}
           </div>
         ) : (
@@ -91,37 +91,37 @@ export function AgentStatusPanel() {
                 <div
                   key={agent.id}
                   className={cn(
-                    "p-3 rounded-lg border bg-white dark:bg-zinc-900/50 dark:border-zinc-800",
-                    agent.status === 'active' && "border-zinc-300 dark:border-zinc-300/50"
+                    "p-3 rounded-lg border bg-white dark:bg-card/80 dark:border-border",
+                    agent.status === 'active' && "border-green-200 dark:border-green-900/50"
                   )}
                 >
                   <div className="flex items-start justify-between mb-2">
                     <div className="flex items-center gap-2">
                       <div className={cn("w-2 h-2 rounded-full", status.color, agent.status === 'active' && "animate-pulse-soft")} />
-                      <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                      <span className="font-medium text-zinc-900 dark:text-foreground">
                         {agent.label}
                       </span>
                       <Badge variant="secondary" className="text-xs font-mono">
                         {agent.model.replace('claude-', '').replace('anthropic/', '')}
                       </Badge>
                     </div>
-                    <span className="text-xs text-zinc-500">
+                    <span className="text-xs text-muted-foreground">
                       {formatDuration(agent.startedAt)}
                     </span>
                   </div>
                   
                   {agent.currentTask && (
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-2 truncate">
+                    <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-2 truncate">
                       {agent.currentTask}
                     </p>
                   )}
                   
-                  <div className="flex items-center gap-4 text-xs text-zinc-500">
+                  <div className="flex items-center gap-4 text-xs text-muted-foreground">
                     {agent.progress !== undefined && (
                       <div className="flex-1">
-                        <div className="h-1.5 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+                        <div className="h-1.5 bg-zinc-200 dark:bg-secondary rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-zinc-800 rounded-full transition-all duration-500"
+                            className="h-full bg-green-500 rounded-full transition-all duration-500"
                             style={{ width: `${agent.progress}%` }}
                           />
                         </div>
@@ -129,7 +129,7 @@ export function AgentStatusPanel() {
                     )}
                     <span>{formatTokens(agent.tokensUsed)} tokens</span>
                     {agent.channel && (
-                      <span className="text-zinc-400">via {agent.channel}</span>
+                      <span className="text-muted-foreground">via {agent.channel}</span>
                     )}
                   </div>
                 </div>
@@ -140,15 +140,15 @@ export function AgentStatusPanel() {
 
         {/* Pending Queue */}
         {data?.queue && data?.queue?.length > 0 && (
-          <div className="pt-3 border-t dark:border-zinc-800">
-            <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-2">
+          <div className="pt-3 border-t dark:border-border">
+            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
               Queue ({data?.queue?.length || 0})
             </h4>
             <div className="space-y-1">
               {(data?.queue || []).slice(0, 3).map((item, i) => (
                 <div key={item.id} className="flex items-center gap-2 text-sm">
-                  <span className="text-zinc-400">{i + 1}.</span>
-                  <span className="text-zinc-600 dark:text-zinc-400 truncate">
+                  <span className="text-muted-foreground">{i + 1}.</span>
+                  <span className="text-muted-foreground dark:text-muted-foreground truncate">
                     {item.spec}
                   </span>
                 </div>
@@ -159,15 +159,15 @@ export function AgentStatusPanel() {
 
         {/* Recent Completions */}
         {data?.recentCompletions && data?.recentCompletions?.length > 0 && (
-          <div className="pt-3 border-t dark:border-zinc-800">
-            <h4 className="text-xs font-medium text-zinc-500 uppercase tracking-wide mb-2">
+          <div className="pt-3 border-t dark:border-border">
+            <h4 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
               Recent Completions
             </h4>
             <div className="space-y-1">
               {(data?.recentCompletions || []).slice(0, 3).map(completion => (
                 <div key={completion.id} className="flex items-center gap-2 text-sm">
                   <Check size={16} />
-                  <span className="text-zinc-600 dark:text-zinc-400 truncate flex-1">
+                  <span className="text-muted-foreground dark:text-muted-foreground truncate flex-1">
                     {completion.label}
                   </span>
                   {completion.commitUrl && (
@@ -175,7 +175,7 @@ export function AgentStatusPanel() {
                       href={completion.commitUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-zinc-600 hover:text-zinc-600 text-xs"
+                      className="text-foreground hover:text-blue-600 text-xs"
                     >
                       commit →
                     </a>

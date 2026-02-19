@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import type { CheckpointData, CheckpointFile } from '@/types/checkpoints';
-import { ClipboardList, RefreshCw, Clock, AlertTriangle, FileText, Trash2, Eye, Filter } from 'lucide-react';
+import { RefreshCw, Clock, AlertTriangle, FileText, Trash2, Eye, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -99,9 +99,9 @@ export default function CheckpointsPage() {
       case 'failed':
         return 'text-red-600 bg-red-50 border-red-200';
       case 'success':
-        return 'text-zinc-600 bg-zinc-50 border-zinc-300';
+        return 'text-green-600 bg-green-50 border-green-200';
       default:
-        return 'text-zinc-600 bg-zinc-50 border-zinc-200';
+        return 'text-muted-foreground bg-zinc-50 border-zinc-200';
     }
   };
 
@@ -111,19 +111,19 @@ export default function CheckpointsPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900"><ClipboardList className="h-6 w-6 inline mr-2" />Agent Checkpoints</h1>
-            <p className="text-zinc-500 text-sm mt-1">
+            <h1 className="text-2xl font-semibold text-zinc-900">📋 Agent Checkpoints</h1>
+            <p className="text-muted-foreground text-sm mt-1">
               Session checkpoints for debugging failed builds
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 text-xs text-zinc-400">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
               <RefreshCw className={cn('h-3.5 w-3.5', loading && 'animate-spin')} />
               <span>Auto-refreshes on date change</span>
             </div>
             <button
               onClick={fetchCheckpoints}
-              className="px-3 py-1.5 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
+              className="px-3 py-1.5 text-sm bg-card text-foreground rounded-md hover:bg-secondary transition-colors"
             >
               Refresh
             </button>
@@ -133,7 +133,7 @@ export default function CheckpointsPage() {
 
       {loading && !data ? (
         <div className="flex items-center justify-center h-64">
-          <div className="flex items-center gap-3 text-zinc-500">
+          <div className="flex items-center gap-3 text-muted-foreground">
             <RefreshCw className="h-5 w-5 animate-spin" />
             <span>Loading checkpoints...</span>
           </div>
@@ -146,7 +146,7 @@ export default function CheckpointsPage() {
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center gap-3">
-                  <Filter className="h-4 w-4 text-zinc-500" />
+                  <Filter className="h-4 w-4 text-muted-foreground" />
                   <label htmlFor="date-filter" className="text-sm font-medium text-zinc-700">
                     Filter by date:
                   </label>
@@ -175,7 +175,7 @@ export default function CheckpointsPage() {
                 </h2>
 
                 {data.checkpoints.length === 0 ? (
-                  <div className="text-center py-8 text-zinc-500">
+                  <div className="text-center py-8 text-muted-foreground">
                     <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
                     <p className="text-sm">No checkpoints found</p>
                   </div>
@@ -188,8 +188,8 @@ export default function CheckpointsPage() {
                         className={cn(
                           'flex items-start gap-3 p-3 rounded-lg border transition-colors cursor-pointer',
                           selectedCheckpoint?.filename === checkpoint.filename
-                            ? 'bg-zinc-100 dark:bg-zinc-800 border-zinc-400'
-                            : 'bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-800'
+                            ? 'bg-zinc-100 dark:bg-secondary border-zinc-400'
+                            : 'bg-zinc-50 dark:bg-card border-zinc-200 dark:border-border hover:bg-zinc-100 dark:hover:bg-secondary'
                         )}
                       >
                         <div className="flex-shrink-0 mt-0.5">
@@ -203,17 +203,17 @@ export default function CheckpointsPage() {
                             )}>
                               {checkpoint.status.toUpperCase()}
                             </span>
-                            <span className="text-xs text-zinc-500">
+                            <span className="text-xs text-muted-foreground">
                               {checkpoint.agentType}
                             </span>
                           </div>
-                          <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate">
+                          <p className="text-sm font-medium text-zinc-900 dark:text-foreground truncate">
                             {checkpoint.sessionKey}
                           </p>
-                          <p className="text-xs text-zinc-500 truncate mt-0.5">
+                          <p className="text-xs text-muted-foreground truncate mt-0.5">
                             {formatError(checkpoint.error)}
                           </p>
-                          <div className="flex items-center gap-2 mt-1 text-xs text-zinc-400">
+                          <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
                             <Clock className="h-3 w-3" />
                             <span>{formatDate(checkpoint.timestamp)}</span>
                           </div>
@@ -223,7 +223,7 @@ export default function CheckpointsPage() {
                             e.stopPropagation();
                             fetchCheckpointDetail(checkpoint);
                           }}
-                          className="p-1.5 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200 rounded transition-colors"
+                          className="p-1.5 text-muted-foreground hover:text-zinc-900 hover:bg-zinc-200 rounded transition-colors"
                           title="View details"
                         >
                           <Eye className="h-4 w-4" />
@@ -246,7 +246,7 @@ export default function CheckpointsPage() {
 
                 {loadingDetail ? (
                   <div className="flex items-center justify-center h-40">
-                    <div className="flex items-center gap-2 text-zinc-500">
+                    <div className="flex items-center gap-2 text-muted-foreground">
                       <RefreshCw className="h-5 w-5 animate-spin" />
                       <span className="text-sm">Loading...</span>
                     </div>
@@ -255,28 +255,28 @@ export default function CheckpointsPage() {
                   <div className="space-y-4">
                     {/* Session Info */}
                     <div>
-                      <h3 className="text-xs font-semibold text-zinc-500 uppercase mb-2">
+                      <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
                         Session Info
                       </h3>
                       <div className="space-y-2 text-sm">
                         <div>
-                          <span className="text-zinc-500">Session Key:</span>
+                          <span className="text-muted-foreground">Session Key:</span>
                           <p className="font-medium text-zinc-900 break-all">
                             {selectedCheckpoint.sessionKey}
                           </p>
                         </div>
                         <div>
-                          <span className="text-zinc-500">Agent Type:</span>
+                          <span className="text-muted-foreground">Agent Type:</span>
                           <p className="font-medium text-zinc-900">
                             {selectedCheckpoint.agentType}
                           </p>
                         </div>
                         <div>
-                          <span className="text-zinc-500">Timestamp:</span>
+                          <span className="text-muted-foreground">Timestamp:</span>
                           <p className="text-zinc-900">{formatDate(selectedCheckpoint.timestamp)}</p>
                         </div>
                         <div>
-                          <span className="text-zinc-500">Status:</span>
+                          <span className="text-muted-foreground">Status:</span>
                           <span className={cn(
                             'ml-2 px-2 py-0.5 text-xs font-medium rounded border',
                             getStatusColor(selectedCheckpoint.status)
@@ -289,7 +289,7 @@ export default function CheckpointsPage() {
 
                     {/* Error Details */}
                     <div>
-                      <h3 className="text-xs font-semibold text-zinc-500 uppercase mb-2">
+                      <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
                         Error Details
                       </h3>
                       <div className="p-3 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-md">
@@ -301,13 +301,13 @@ export default function CheckpointsPage() {
 
                     {/* Actions */}
                     <div>
-                      <h3 className="text-xs font-semibold text-zinc-500 uppercase mb-2">
+                      <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
                         Actions
                       </h3>
                       <div className="space-y-2">
                         <button
                           onClick={() => window.open(`/api/checkpoints?id=${selectedCheckpoint.filename}`, '_blank')}
-                          className="w-full px-3 py-2 text-sm bg-zinc-100 dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors flex items-center justify-center gap-2"
+                          className="w-full px-3 py-2 text-sm bg-zinc-100 dark:bg-secondary text-zinc-900 dark:text-foreground rounded-md hover:bg-zinc-200 dark:hover:bg-muted transition-colors flex items-center justify-center gap-2"
                         >
                           <Eye className="h-4 w-4" />
                           View Full Checkpoint
@@ -333,17 +333,17 @@ export default function CheckpointsPage() {
 
                     {/* File Info */}
                     <div>
-                      <h3 className="text-xs font-semibold text-zinc-500 uppercase mb-2">
+                      <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
                         File Info
                       </h3>
-                      <div className="space-y-1 text-xs text-zinc-500">
+                      <div className="space-y-1 text-xs text-muted-foreground">
                         <p>Filename: {selectedCheckpoint.filename}</p>
                         <p>Date: {selectedCheckpoint.dateDir}</p>
                       </div>
                     </div>
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-zinc-500">
+                  <div className="text-center py-8 text-muted-foreground">
                     <FileText className="h-12 w-12 mx-auto mb-3 opacity-50" />
                     <p className="text-sm">Select a checkpoint to view details</p>
                   </div>
@@ -353,13 +353,13 @@ export default function CheckpointsPage() {
           </div>
         </div>
       ) : (
-        <div className="text-center py-8 text-zinc-500">
+        <div className="text-center py-8 text-muted-foreground">
           <p className="text-sm">Failed to load checkpoints</p>
         </div>
       )}
 
       {/* Last updated */}
-      <div className="mt-6 text-center text-xs text-zinc-400">
+      <div className="mt-6 text-center text-xs text-muted-foreground">
         Last updated: {lastRefresh.toLocaleTimeString()}
       </div>
     </div>

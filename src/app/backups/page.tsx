@@ -71,7 +71,7 @@ export default function BackupsPage() {
       <div className="p-6 max-w-7xl">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-zinc-900">Backup Monitor</h1>
-          <p className="text-zinc-500 text-sm">Loading backup status...</p>
+          <p className="text-muted-foreground text-sm">Loading backup status...</p>
         </div>
         <div className="animate-pulse space-y-6">
           <div className="h-64 bg-zinc-100 rounded-lg" />
@@ -86,7 +86,7 @@ export default function BackupsPage() {
       <div className="p-6 max-w-7xl">
         <div className="mb-8">
           <h1 className="text-2xl font-semibold text-zinc-900">Backup Monitor</h1>
-          <p className="text-zinc-500 text-sm">An error occurred</p>
+          <p className="text-muted-foreground text-sm">An error occurred</p>
         </div>
         <div className="bg-red-50 border border-red-200 rounded-lg p-6">
           <p className="text-red-700 mb-4">{error}</p>
@@ -103,13 +103,13 @@ export default function BackupsPage() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-semibold text-zinc-900">Backup Monitor</h1>
-            <p className="text-zinc-500 text-sm">
+            <p className="text-muted-foreground text-sm">
               Monitor Git backup status across all repositories
             </p>
           </div>
           <div className="flex items-center gap-3">
             {data && (
-              <span className="text-xs text-zinc-500">
+              <span className="text-xs text-muted-foreground">
                 Last updated: {formatLastUpdate(data.timestamp)}
               </span>
             )}

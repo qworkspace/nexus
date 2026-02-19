@@ -119,8 +119,8 @@ export function LessonsDashboard() {
   };
 
   const getEffectivenessColor = (effectiveness: number | null) => {
-    if (effectiveness === null) return "text-zinc-500";
-    if (effectiveness >= 90) return "text-zinc-600";
+    if (effectiveness === null) return "text-muted-foreground";
+    if (effectiveness >= 90) return "text-green-600";
     if (effectiveness >= 80) return "text-yellow-600";
     return "text-red-600";
   };
@@ -201,32 +201,32 @@ export function LessonsDashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-4 gap-4">
-            <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+            <div className="bg-zinc-50 dark:bg-card rounded-lg p-4">
+              <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-1">
                 Total Lessons
               </p>
-              <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+              <p className="text-2xl font-semibold text-zinc-900 dark:text-foreground">
                 {stats.total}
               </p>
             </div>
-            <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+            <div className="bg-zinc-50 dark:bg-card rounded-lg p-4">
+              <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-1">
                 Applied Today
               </p>
-              <p className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+              <p className="text-2xl font-semibold text-zinc-900 dark:text-foreground">
                 {stats.appliedToday}
               </p>
             </div>
-            <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+            <div className="bg-zinc-50 dark:bg-card rounded-lg p-4">
+              <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-1">
                 Avg Effectiveness
               </p>
               <p className={`text-2xl font-semibold ${getEffectivenessColor(stats.avgEffectiveness)}`}>
                 {stats.avgEffectiveness}%
               </p>
             </div>
-            <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4">
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+            <div className="bg-zinc-50 dark:bg-card rounded-lg p-4">
+              <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-1">
                 Needs Review
               </p>
               <p className="text-2xl font-semibold text-red-600">
@@ -237,8 +237,8 @@ export function LessonsDashboard() {
 
           {/* Session Start Reminder */}
           {topLessons.length > 0 && (
-            <div className="mt-6 bg-zinc-50 dark:bg-blue-950 border border-zinc-300 dark:border-zinc-300 rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-300 mb-3 flex items-center gap-2">
+            <div className="mt-6 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+              <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
                 <BookOpen className="h-4 w-4" />
                 Top Lessons to Review (Session Start)
               </h3>
@@ -246,7 +246,7 @@ export function LessonsDashboard() {
                 {topLessons.map((lesson, i) => (
                   <div
                     key={lesson.id}
-                    className="text-sm text-zinc-800 dark:text-zinc-400"
+                    className="text-sm text-blue-800 dark:text-blue-200"
                   >
                     <span className="font-medium">{i + 1}.</span> [
                     {lesson.category}] {lesson.pattern} →{" "}
@@ -273,7 +273,7 @@ export function LessonsDashboard() {
               return (
                 <div key={category}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                    <span className="text-sm font-medium text-zinc-700 dark:text-foreground">
                       {category} ({data.count})
                     </span>
                     <span
@@ -282,11 +282,11 @@ export function LessonsDashboard() {
                       {data.effectiveness || 0}%
                     </span>
                   </div>
-                  <div className="h-2 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+                  <div className="h-2 bg-zinc-200 dark:bg-secondary rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
                         data.effectiveness >= 90
-                          ? "bg-zinc-800"
+                          ? "bg-green-500"
                           : data.effectiveness >= 80
                           ? "bg-yellow-500"
                           : data.effectiveness > 0
@@ -343,7 +343,7 @@ export function LessonsDashboard() {
           {/* Search and Filter */}
           <div className="flex gap-2 mt-4">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search lessons..."
                 value={searchQuery}
@@ -354,7 +354,7 @@ export function LessonsDashboard() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-3 py-2 border border-zinc-300 dark:border-zinc-700 rounded-md bg-transparent text-sm"
+              className="px-3 py-2 border border-zinc-300 dark:border-border rounded-md bg-transparent text-sm"
             >
               <option value="all">All Categories</option>
               {categories.map((cat) => (
@@ -377,7 +377,7 @@ export function LessonsDashboard() {
             {displayLessons.map((lesson) => (
               <div
                 key={lesson.id}
-                className="border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 hover:bg-zinc-50 dark:hover:bg-zinc-900 cursor-pointer transition-colors"
+                className="border border-zinc-200 dark:border-border rounded-lg p-4 hover:bg-zinc-50 dark:hover:bg-card cursor-pointer transition-colors"
                 onClick={() => setSelectedLesson(lesson)}
               >
                 <div className="flex items-start justify-between">
@@ -398,19 +398,19 @@ export function LessonsDashboard() {
                         </Badge>
                       )}
                       {lesson.applications === 0 && (
-                        <Badge variant="outline" className="text-zinc-500">
+                        <Badge variant="outline" className="text-muted-foreground">
                           New
                         </Badge>
                       )}
                     </div>
-                    <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100 mb-1">
+                    <h3 className="text-sm font-medium text-zinc-900 dark:text-foreground mb-1">
                       {lesson.pattern}
                     </h3>
-                    <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2">
+                    <p className="text-xs text-muted-foreground dark:text-muted-foreground line-clamp-2">
                       {lesson.rule}
                     </p>
                   </div>
-                  <div className="text-xs text-zinc-500 dark:text-zinc-400 text-right ml-4">
+                  <div className="text-xs text-muted-foreground dark:text-muted-foreground text-right ml-4">
                     <div className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
                       {formatRelativeTime(lesson.lastApplied)}
@@ -425,7 +425,7 @@ export function LessonsDashboard() {
           </div>
 
           {displayLessons.length === 0 && (
-            <div className="text-center py-12 text-zinc-500 dark:text-zinc-400">
+            <div className="text-center py-12 text-muted-foreground dark:text-muted-foreground">
               <BookOpen className="h-12 w-12 mx-auto mb-3 opacity-50" />
               <p>No lessons found matching your criteria</p>
             </div>
@@ -449,7 +449,7 @@ export function LessonsDashboard() {
                   <CardTitle className="text-xl">
                     {selectedLesson.category}
                   </CardTitle>
-                  <p className="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+                  <p className="text-sm text-muted-foreground dark:text-muted-foreground mt-1">
                     {selectedLesson.pattern}
                   </p>
                 </div>
@@ -466,11 +466,11 @@ export function LessonsDashboard() {
             <CardContent className="space-y-6">
               {/* Rule */}
               <div>
-                <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2">
                   Rule
                 </h3>
-                <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-4">
-                  <p className="text-sm text-zinc-700 dark:text-zinc-300 whitespace-pre-wrap">
+                <div className="bg-zinc-50 dark:bg-card rounded-lg p-4">
+                  <p className="text-sm text-zinc-700 dark:text-foreground whitespace-pre-wrap">
                     {selectedLesson.rule}
                   </p>
                 </div>
@@ -488,16 +488,16 @@ export function LessonsDashboard() {
 
               {/* Stats */}
               <div className="grid grid-cols-4 gap-4">
-                <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-3">
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+                <div className="bg-zinc-50 dark:bg-card rounded-lg p-3">
+                  <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-1">
                     Applications
                   </p>
-                  <p className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+                  <p className="text-xl font-semibold text-zinc-900 dark:text-foreground">
                     {selectedLesson.applications}
                   </p>
                 </div>
-                <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-3">
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+                <div className="bg-zinc-50 dark:bg-card rounded-lg p-3">
+                  <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-1">
                     Success Rate
                   </p>
                   <p
@@ -506,19 +506,19 @@ export function LessonsDashboard() {
                     {selectedLesson.effectiveness || 0}%
                   </p>
                 </div>
-                <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-3">
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+                <div className="bg-zinc-50 dark:bg-card rounded-lg p-3">
+                  <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-1">
                     Added
                   </p>
-                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  <p className="text-sm font-medium text-zinc-900 dark:text-foreground">
                     {formatDate(selectedLesson.added)}
                   </p>
                 </div>
-                <div className="bg-zinc-50 dark:bg-zinc-900 rounded-lg p-3">
-                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mb-1">
+                <div className="bg-zinc-50 dark:bg-card rounded-lg p-3">
+                  <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-1">
                     Last Applied
                   </p>
-                  <p className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  <p className="text-sm font-medium text-zinc-900 dark:text-foreground">
                     {formatRelativeTime(selectedLesson.lastApplied)}
                   </p>
                 </div>
@@ -527,33 +527,33 @@ export function LessonsDashboard() {
               {/* Applications Log */}
               {selectedLesson.applicationLog.length > 0 && (
                 <div>
-                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-2">
+                  <h3 className="text-sm font-semibold text-zinc-900 dark:text-foreground mb-2">
                     Applications Log
                   </h3>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
                     {selectedLesson.applicationLog.map((log, i) => (
                       <div
                         key={i}
-                        className="flex items-start gap-2 text-sm bg-zinc-50 dark:bg-zinc-900 rounded-lg p-3"
+                        className="flex items-start gap-2 text-sm bg-zinc-50 dark:bg-card rounded-lg p-3"
                       >
                         <div className="mt-0.5">
                           {log.success ? (
-                            <CheckCircle className="h-4 w-4 text-zinc-600" />
+                            <CheckCircle className="h-4 w-4 text-green-600" />
                           ) : (
                             <AlertTriangle className="h-4 w-4 text-red-600" />
                           )}
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
-                            <p className="text-zinc-700 dark:text-zinc-300">
+                            <p className="text-zinc-700 dark:text-foreground">
                               {log.context}
                             </p>
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                            <p className="text-xs text-muted-foreground dark:text-muted-foreground">
                               {formatRelativeTime(log.timestamp)}
                             </p>
                           </div>
                           {log.notes && (
-                            <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                            <p className="text-xs text-muted-foreground dark:text-muted-foreground mt-1">
                               {log.notes}
                             </p>
                           )}

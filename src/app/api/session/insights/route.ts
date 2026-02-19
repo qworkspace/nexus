@@ -7,6 +7,7 @@ import {
   getAgentInfo,
   parseAgentFromKey,
 } from '@/lib/data-utils';
+import { getSydneyDayStart } from '@/lib/timezone';
 
 interface SessionSummary {
   id: string;
@@ -43,8 +44,7 @@ interface SessionInsightsResponse {
 
 export async function GET(): Promise<NextResponse<SessionInsightsResponse>> {
   try {
-    const todayStart = new Date();
-    todayStart.setHours(0, 0, 0, 0);
+    const todayStart = getSydneyDayStart();
     const now = new Date();
 
     // Try to get real data from transcripts

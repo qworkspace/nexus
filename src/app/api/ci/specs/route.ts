@@ -3,7 +3,8 @@ import { promises as fs } from 'fs';
 import path from 'path';
 import { homedir } from 'os';
 
-const SPECS_DIR = path.join(homedir(), 'shared', 'research', 'ai-intel', 'specs');
+const SPECS_DIR = path.join(homedir(), '.openclaw', 'shared', 'research', 'ai-intel', 'specs');
+const BRIEFS_DIR = path.join(homedir(), '.openclaw', 'shared', 'research', 'ai-intel', 'spec-briefs');
 
 export interface SpecQueueItem {
   id: string;
@@ -14,19 +15,21 @@ export interface SpecQueueItem {
 
 async function getSpecQueue(): Promise<SpecQueueItem[]> {
   try {
-    const files = await fs.readdir(SPECS_DIR);
+    const specsFiles = await fs.readdir(SPECS_DIR).catch(() => [] as string[]);
+    const briefsFiles = await fs.readdir(BRIEFS_DIR).catch(() => [] as string[]);
+    const files = [...specsFiles.map(f => ({ f, dir: SPECS_DIR })), ...briefsFiles.map(f => ({ f, dir: BRIEFS_DIR }))];
     const queueItems: SpecQueueItem[] = [];
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-    for (const file of files) {
+    for (const { f: file, dir } of files) {
       // Skip processed, parked, and stuck files
       if (file.includes('.processed') || file.includes('.parked') || file.includes('.stuck')) {
         continue;
       }
       if (!file.endsWith('.md')) continue;
 
-      const filePath = path.join(SPECS_DIR, file);
+      const filePath = path.join(dir, file);
       const content = await fs.readFile(filePath, 'utf-8');
 
       // Extract metadata
@@ -45,7 +48,7 @@ async function getSpecQueue(): Promise<SpecQueueItem[]> {
         ? new Date(createdMatch[1].trim()) 
         : new Date(0);
       
-      const isQueued = status === 'queued';
+      const isQueued = status === 'queued' || status === 'pending-approval' || status === 'pending';
       const isRecent = !status && createdAt >= sevenDaysAgo;
       
       if (!isQueued && !isRecent) {
