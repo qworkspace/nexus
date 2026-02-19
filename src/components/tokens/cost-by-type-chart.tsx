@@ -20,10 +20,10 @@ const formatCost = (cost: number): string => {
 };
 
 const COST_TYPES = [
-  { key: "inputCost" as const, label: "Input", color: "#8b5cf6" },
-  { key: "outputCost" as const, label: "Output", color: "#3b82f6" },
-  { key: "cacheReadCost" as const, label: "Cache Read", color: "#10b981" },
-  { key: "cacheWriteCost" as const, label: "Cache Write", color: "#f59e0b" },
+  { key: "inputCost" as const, label: "Input", color: "#3D3D3D" },
+  { key: "outputCost" as const, label: "Output", color: "#F5D547" },
+  { key: "cacheReadCost" as const, label: "Cache Read", color: "#A8B5A0" },
+  { key: "cacheWriteCost" as const, label: "Cache Write", color: "#B8B0C8" },
 ] as const;
 
 export function CostByTypeChart({ data }: CostByTypeChartProps) {
@@ -40,12 +40,12 @@ export function CostByTypeChart({ data }: CostByTypeChartProps) {
         layout="vertical"
         margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
       >
-        <CartesianGrid strokeDasharray="3 3" stroke="#27272a" />
+        <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" />
         <XAxis
           type="number"
           tick={{ fontSize: 11, fill: "#71717a" }}
           tickLine={false}
-          axisLine={{ stroke: "#27272a" }}
+          axisLine={{ stroke: "#e4e4e7" }}
           tickFormatter={(value) => formatCost(value)}
         />
         <YAxis
@@ -57,10 +57,10 @@ export function CostByTypeChart({ data }: CostByTypeChartProps) {
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: "#18181b",
-            border: "none",
+            backgroundColor: "#ffffff",
+            border: "1px solid #e4e4e7",
             borderRadius: "8px",
-            color: "#fff",
+            color: "#18181b",
             fontSize: "12px",
           }}
           formatter={(value) => formatCost(typeof value === 'number' ? value : 0)}

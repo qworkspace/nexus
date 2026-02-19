@@ -56,10 +56,10 @@ export function CacheChart({ data }: CacheChartProps) {
             }}
           />
           <Legend />
-          <Bar dataKey="cacheRead" stackId="tokens" fill="#22c55e" name="Cache Read" opacity={0.8} />
-          <Bar dataKey="cacheWrite" stackId="tokens" fill="#3b82f6" name="Cache Write" opacity={0.8} />
-          <Bar dataKey="input" stackId="tokens" fill="#a855f7" name="Input" opacity={0.8} />
-          <Bar dataKey="output" stackId="tokens" fill="#71717a" name="Output" opacity={0.8} />
+          <Bar dataKey="cacheRead" stackId="tokens" fill="#A8B5A0" name="Cache Read" opacity={0.8} />
+          <Bar dataKey="cacheWrite" stackId="tokens" fill="#B8B0C8" name="Cache Write" opacity={0.8} />
+          <Bar dataKey="input" stackId="tokens" fill="#3D3D3D" name="Input" opacity={0.8} />
+          <Bar dataKey="output" stackId="tokens" fill="#F5D547" name="Output" opacity={0.8} />
         </BarChart>
       </ResponsiveContainer>
     </div>

@@ -133,7 +133,7 @@ export function BuildSpeedMetrics() {
               />
               <Bar dataKey="count" fill="currentColor" className="text-foreground">
                 {metrics.buildsPerDay.map((entry, index) => (
-                  <Cell key={index} fill={index === metrics.buildsPerDay.length - 1 ? '#3b82f6' : '#e2e8f0'} />
+                  <Cell key={index} fill={index === metrics.buildsPerDay.length - 1 ? '#F5D547' : '#e2e8f0'} />
                 ))}
               </Bar>
             </BarChart>

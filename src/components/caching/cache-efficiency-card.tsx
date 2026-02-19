@@ -24,10 +24,10 @@ export function CacheEfficiencyCard({
   };
 
   const getGaugeColor = () => {
-    if (hitRate >= 85) return "#22c55e";
-    if (hitRate >= 70) return "#3b82f6";
-    if (hitRate >= 50) return "#eab308";
-    return "#ef4444";
+    if (hitRate >= 85) return "#A8B5A0";
+    if (hitRate >= 70) return "#F5D547";
+    if (hitRate >= 50) return "#D4C5A9";
+    return "#8E99A4";
   };
 
   const strokeWidth = 8;

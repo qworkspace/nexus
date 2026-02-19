@@ -60,10 +60,10 @@ export function UsageChart({ data }: UsageChartProps) {
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: "#18181b",
-            border: "none",
+            backgroundColor: "#ffffff",
+            border: "1px solid #e4e4e7",
             borderRadius: "8px",
-            color: "#fff",
+            color: "#18181b",
             fontSize: "12px",
           }}
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,9 +84,9 @@ export function UsageChart({ data }: UsageChartProps) {
           yAxisId="messages"
           type="monotone"
           dataKey="messages"
-          stroke="#3b82f6"
+          stroke="#F5D547"
           strokeWidth={2}
-          dot={{ fill: "#3b82f6", strokeWidth: 2, r: 4 }}
+          dot={{ fill: "#F5D547", strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
           name="Messages"
         />
@@ -94,9 +94,9 @@ export function UsageChart({ data }: UsageChartProps) {
           yAxisId="cost"
           type="monotone"
           dataKey="cost"
-          stroke="#10b981"
+          stroke="#A8B5A0"
           strokeWidth={2}
-          dot={{ fill: "#10b981", strokeWidth: 2, r: 4 }}
+          dot={{ fill: "#A8B5A0", strokeWidth: 2, r: 4 }}
           activeDot={{ r: 6 }}
           name="Cost ($)"
         />

@@ -18,9 +18,9 @@ const formatTokens = (tokens: number): string => {
 };
 
 const SESSION_TYPE_COLORS: Record<string, string> = {
-  main: "#8b5cf6", // purple
-  cron: "#3b82f6", // blue
-  subagent: "#10b981", // green
+  main: "#F5D547", // yellow
+  cron: "#3D3D3D", // charcoal
+  subagent: "#A8B5A0", // sage
 };
 
 const SESSION_TYPE_LABELS: Record<string, string> = {
@@ -34,7 +34,7 @@ export function SessionTypeBreakdownChart({ data }: SessionTypeBreakdownChartPro
 
   const chartData = data.map((d) => ({
     ...d,
-    fill: SESSION_TYPE_COLORS[d.type] || "#6b7280",
+    fill: SESSION_TYPE_COLORS[d.type] || "#8E99A4",
     percentage: totalTokens > 0 ? ((d.totalTokens / totalTokens) * 100).toFixed(1) : "0",
   }));
 
@@ -56,10 +56,10 @@ export function SessionTypeBreakdownChart({ data }: SessionTypeBreakdownChartPro
         </Pie>
         <Tooltip
           contentStyle={{
-            backgroundColor: "#18181b",
-            border: "none",
+            backgroundColor: "#ffffff",
+            border: "1px solid #e4e4e7",
             borderRadius: "8px",
-            color: "#fff",
+            color: "#18181b",
             fontSize: "12px",
           }}
           formatter={(value) => formatTokens(typeof value === 'number' ? value : 0)}

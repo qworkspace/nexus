@@ -20,14 +20,13 @@ const formatTokens = (tokens: number): string => {
 const getModelColor = (provider: string, index: number): string => {
   switch (provider) {
     case "anthropic":
-      return "#8b5cf6"; // purple
+      return "#F5D547"; // yellow
     case "zai":
-      return "#3b82f6"; // blue
+      return "#3D3D3D"; // charcoal
     case "openai":
-      return "#10b981"; // green
+      return "#A8B5A0"; // sage
     default:
-      // Fallback colors for different models
-      const fallbackColors = ["#f59e0b", "#ef4444", "#ec4899", "#6366f1"];
+      const fallbackColors = ["#B8B0C8", "#D4C5A9", "#8E99A4", "#F5D547"];
       return fallbackColors[index % fallbackColors.length];
   }
 };
@@ -59,10 +58,10 @@ export function ModelBreakdownChart({ data }: ModelBreakdownChartProps) {
         </Pie>
         <Tooltip
           contentStyle={{
-            backgroundColor: "#18181b",
-            border: "none",
+            backgroundColor: "#ffffff",
+            border: "1px solid #e4e4e7",
             borderRadius: "8px",
-            color: "#fff",
+            color: "#18181b",
             fontSize: "12px",
           }}
           formatter={(value) => formatTokens(typeof value === 'number' ? value : 0)}

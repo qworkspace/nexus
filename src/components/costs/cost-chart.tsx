@@ -52,10 +52,10 @@ export function CostChart({ data }: { data: DailyData[] }) {
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: "#18181b",
-            border: "none",
+            backgroundColor: "#ffffff",
+            border: "1px solid #e4e4e7",
             borderRadius: "8px",
-            color: "#fff",
+            color: "#18181b",
             fontSize: "12px",
           }}
           formatter={(value) => [`$${Number(value).toFixed(2)}`, "Cost"]}

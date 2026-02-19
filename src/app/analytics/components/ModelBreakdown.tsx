@@ -19,7 +19,7 @@ interface ModelBreakdownProps {
   data: ModelUsage[];
 }
 
-const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#8b5cf6", "#ec4899"];
+const COLORS = ["#F5D547", "#3D3D3D", "#A8B5A0", "#B8B0C8", "#D4C5A9"];
 
 export function ModelBreakdown({ data }: ModelBreakdownProps) {
   const chartData = data.map((item) => ({
@@ -52,10 +52,10 @@ export function ModelBreakdown({ data }: ModelBreakdownProps) {
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: "#18181b",
-                border: "none",
+                backgroundColor: "#ffffff",
+                border: "1px solid #e4e4e7",
                 borderRadius: "8px",
-                color: "#fff",
+                color: "#18181b",
                 fontSize: "12px",
               }}
             />

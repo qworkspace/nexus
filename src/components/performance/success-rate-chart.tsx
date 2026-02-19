@@ -58,10 +58,10 @@ export function SuccessRateChart({ data }: { data: DailyData[] }) {
         />
         <Tooltip
           contentStyle={{
-            backgroundColor: "#18181b",
-            border: "none",
+            backgroundColor: "#ffffff",
+            border: "1px solid #e4e4e7",
             borderRadius: "8px",
-            color: "#fff",
+            color: "#18181b",
             fontSize: "12px",
           }}
           formatter={(value, name) => {
@@ -72,9 +72,9 @@ export function SuccessRateChart({ data }: { data: DailyData[] }) {
         />
         <ReferenceLine
           y={95}
-          stroke="#22c55e"
+          stroke="#A8B5A0"
           strokeDasharray="5 5"
-          label={{ value: "95% target", position: "right", fill: "#22c55e", fontSize: 10 }}
+          label={{ value: "95% target", position: "right", fill: "#A8B5A0", fontSize: 10 }}
         />
         <Line
           type="monotone"
