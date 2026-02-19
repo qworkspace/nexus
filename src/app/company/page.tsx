@@ -512,7 +512,7 @@ export default function CompanyPage() {
                       <div className="space-y-1">
                         {loopStatus.regressions.slice(0, 3).map((reg, i) => (
                           <div key={i} className="text-[10px] flex items-start gap-1">
-                            <span className={reg.severity === "high" ? "text-red-500" : "text-[#7a6200]"}>
+                            <span className={reg.severity === "high" ? "text-red-500" : "text-[#8a7000]"}>
                               {reg.severity === "high" ? "🔴" : "🟡"}
                             </span>
                             <span className="text-zinc-600 dark:text-zinc-400 truncate flex-1">
@@ -680,8 +680,8 @@ function TooltipLoopMetricBar({
     emerald: "bg-zinc-900",
     amber: "bg-[#FFE135]",
     red: "bg-red-600",
-    blue: "bg-zinc-700",
-    purple: "bg-zinc-800",
+    blue: "bg-blue-500",
+    purple: "bg-zinc-700",
   };
   const textColors: Record<string, string> = {
     emerald: "text-zinc-700",
