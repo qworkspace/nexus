@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 
-const FEED_PATH = join(process.env.HOME || '', 'shared/activity-feed.json');
+const FEED_PATH = join(process.env.HOME || '', '.openclaw/shared/activity-feed.json');
 
 export async function GET(request: Request) {
   try {

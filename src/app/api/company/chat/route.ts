@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { readFileSync } from "fs";
 import { join } from "path";
 
-const ROSTER_PATH = join(process.env.HOME || "", "shared/agent-roster.json");
+const ROSTER_PATH = join(process.env.HOME || "", ".openclaw/shared/agent-roster.json");
 
 interface Agent {
   id: string;

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 
-const INDEX_PATH = join(process.env.HOME || '', 'shared/action-items/index.json');
+const INDEX_PATH = join(process.env.HOME || '', '.openclaw/shared/action-items/index.json');
 
 export async function PATCH(
   request: Request,
