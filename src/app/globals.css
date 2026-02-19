@@ -28,27 +28,7 @@
   --radius: 0.75rem;
 }
 
-.dark {
-  --background: 222 25% 8%;
-  --foreground: 220 15% 95%;
-  --card: 222 25% 11%;
-  --card-foreground: 220 15% 95%;
-  --popover: 222 25% 11%;
-  --popover-foreground: 220 15% 95%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 222 25% 8%;
-  --secondary: 222 25% 15%;
-  --secondary-foreground: 220 15% 95%;
-  --muted: 222 25% 15%;
-  --muted-foreground: 220 10% 55%;
-  --accent: 52 100% 60%;
-  --accent-foreground: 222 25% 8%;
-  --destructive: 0 62% 30%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 222 25% 18%;
-  --input: 222 25% 18%;
-  --ring: 220 15% 95%;
-}
+/* Dark theme removed — Weavy is light-only */
 
 @layer base {
   * {
