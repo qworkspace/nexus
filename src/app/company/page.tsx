@@ -157,20 +157,6 @@ export default function CompanyPage() {
   const doneActions = actions.filter(a => a.status === "done");
   const localAgents = agents.filter(a => !a.isHuman && a.id !== "ella" && a.id !== "arty");
 
-  // Agent colour mapping for visual distinction
-  const agentColours: Record<string, { border: string; glow: string }> = {
-    q: { border: "border-l-[#F5D547] border-b-2 border-b-[#F5D547]", glow: "" },
-    aura: { border: "border-l-[#A8B5A0] border-b-2 border-b-[#A8B5A0]", glow: "" },
-    surge: { border: "border-l-[#B8B0C8] border-b-2 border-b-[#B8B0C8]", glow: "" },
-    spark: { border: "border-l-[#D4C5A9] border-b-2 border-b-[#D4C5A9]", glow: "" },
-    cipher: { border: "border-l-[#8E99A4] border-b-2 border-b-[#8E99A4]", glow: "" },
-    volt: { border: "border-l-[#F5D547] border-b-2 border-b-[#F5D547]", glow: "" },
-    echo: { border: "border-l-[#A8B5A0] border-b-2 border-b-[#A8B5A0]", glow: "" },
-    flux: { border: "border-l-[#B8B0C8] border-b-2 border-b-[#B8B0C8]", glow: "" },
-    prism: { border: "border-l-[#D4C5A9] border-b-2 border-b-[#D4C5A9]", glow: "" },
-    luna: { border: "border-l-[#8E99A4] border-b-2 border-b-[#8E99A4]", glow: "" },
-  };
-
   // Calculate sparkline data for each agent (last 7 days of task completions)
   const agentSparklines: Record<string, number[]> = {};
 
@@ -272,14 +258,13 @@ export default function CompanyPage() {
               {localAgents.map(agent => {
                 const sparkline = agentSparklines[agent.id] || [];
                 const trendingUp = sparkline.length >= 2 && sparkline[sparkline.length - 1] > sparkline[sparkline.length - 2];
-                const colours = agentColours[agent.id.toLowerCase()] || { border: "border-l-zinc-300", glow: "" };
                 // Use qModelDisplay for Q agent, otherwise use roster data
                 const modelDisplay = agent.name === "Q" ? qModelDisplay : agent.model.primary.split("/").pop();
                 return (
                   <Link
                     key={agent.id}
                     href={`/company/agents/${agent.id}`}
-                    className={`p-3 rounded-lg border border-zinc-100 hover:bg-zinc-50 transition text-center group border-l-4 ${colours.border} ${colours.glow}`}
+                    className="p-3 rounded-lg border border-zinc-100 hover:bg-zinc-50 transition text-center group"
                   >
                     <div className="flex items-center justify-center mb-1">
                       <AgentIcon emoji={agent.emoji} size={28} className="text-muted-foreground" />
@@ -354,7 +339,7 @@ export default function CompanyPage() {
 
         {/* Right column — Activity Feed */}
         <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-zinc-200 border-l-2 border-l-[#D4C5A9] p-4">
+          <div className="bg-white rounded-xl border border-zinc-200 p-4">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-sm font-semibold text-zinc-900 flex items-center gap-1.5">
                 <Activity size={14} />
@@ -393,7 +378,7 @@ export default function CompanyPage() {
           </div>
 
           {/* Quick Links */}
-          <div className="bg-white rounded-xl border border-zinc-200 border-l-2 border-l-[#8E99A4] p-4 space-y-2">
+          <div className="bg-white rounded-xl border border-zinc-200 p-4 space-y-2">
             <h3 className="text-sm font-semibold text-zinc-900 mb-2">Quick Links</h3>
             <Link href="/company/floor" className="flex items-center gap-2 p-2 rounded hover:bg-zinc-50 text-xs text-muted-foreground">
               <LayoutGrid size={14} className="shrink-0" />
@@ -421,7 +406,7 @@ export default function CompanyPage() {
           <ScorecardPanel />
 
           {/* Loop Status Panel */}
-          <div className="bg-white rounded-xl border border-zinc-200 border-l-2 border-l-[#D4C5A9] p-4">
+          <div className="bg-white rounded-xl border border-zinc-200 p-4">
             <h3 className="text-sm font-semibold text-zinc-900 mb-3 flex items-center gap-1.5">
               <Repeat size={14} />
               Loop Status
