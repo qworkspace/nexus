@@ -109,7 +109,7 @@ export function BuildSpeedMetrics() {
               <RefreshCw className="h-3 w-3" />
               <span>Rework Rate</span>
             </div>
-            <div className={`text-lg font-semibold ${metrics.reworkRate > 20 ? 'text-orange-600' : 'text-zinc-900 dark:text-foreground'}`}>
+            <div className={`text-lg font-semibold ${metrics.reworkRate > 20 ? 'text-zinc-500' : 'text-zinc-900 dark:text-foreground'}`}>
               {metrics.reworkRate}%
             </div>
           </div>

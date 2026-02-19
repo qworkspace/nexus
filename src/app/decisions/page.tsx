@@ -58,7 +58,7 @@ export default function DecisionsPage() {
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2 bg-foreground text-foreground rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
+          className="px-4 py-2 bg-foreground text-foreground rounded-lg hover:bg-zinc-700 transition-colors text-sm font-medium"
         >
           + Add Decision
         </button>

@@ -104,7 +104,7 @@ export function CronDetails({ job }: CronDetailsProps) {
                       {formatRelativeTime(run.timestamp)}
                     </p>
                     {run.error && (
-                      <p className="text-xs text-red-600 mt-1">{run.error}</p>
+                      <p className="text-xs text-zinc-500 mt-1">{run.error}</p>
                     )}
                   </div>
                 </div>
@@ -127,7 +127,7 @@ export function CronDetails({ job }: CronDetailsProps) {
             "w-full px-4 py-2 border text-sm font-medium rounded-lg transition-colors",
             job.enabled
               ? "border-zinc-300 text-zinc-700 hover:bg-zinc-50"
-              : "border-green-500 text-green-700 hover:bg-green-50"
+              : "border-zinc-500 text-zinc-700 hover:bg-zinc-50"
           )}>
             {job.enabled ? 'Disable' : 'Enable'}
           </button>
@@ -155,8 +155,8 @@ function StatusBadge({ status, enabled }: { status: 'ok' | 'error' | null; enabl
   }
 
   const variants = {
-    ok: "bg-green-100 text-green-700",
-    error: "bg-red-100 text-red-700",
+    ok: "bg-zinc-100 text-zinc-700",
+    error: "bg-zinc-100 text-zinc-700",
   };
 
   return (
@@ -168,8 +168,8 @@ function StatusBadge({ status, enabled }: { status: 'ok' | 'error' | null; enabl
 
 function StatusDot({ status }: { status: 'ok' | 'error' }) {
   const colors = {
-    ok: "bg-green-500",
-    error: "bg-red-500",
+    ok: "bg-zinc-500",
+    error: "bg-zinc-500",
   };
 
   return <span className={cn("w-2 h-2 rounded-full", colors[status])} />;

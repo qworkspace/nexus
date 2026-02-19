@@ -57,7 +57,7 @@ const config: Config = {
   			}
   		},
   		'weavy': {
-  			yellow: '#FFE135',
+  			yellow: '#F5D547',
   			black: '#0A0B0F',
   			gray: '#F5F6F8',
   			border: '#E0E3EC',

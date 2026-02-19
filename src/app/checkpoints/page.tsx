@@ -97,9 +97,9 @@ export default function CheckpointsPage() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'failed':
-        return 'text-red-600 bg-red-50 border-red-200';
+        return 'text-zinc-500 bg-zinc-50 border-zinc-200';
       case 'success':
-        return 'text-green-600 bg-green-50 border-green-200';
+        return 'text-zinc-900 bg-zinc-50 border-zinc-200';
       default:
         return 'text-muted-foreground bg-zinc-50 border-zinc-200';
     }
@@ -292,8 +292,8 @@ export default function CheckpointsPage() {
                       <h3 className="text-xs font-semibold text-muted-foreground uppercase mb-2">
                         Error Details
                       </h3>
-                      <div className="p-3 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900 rounded-md">
-                        <p className="text-sm text-red-900 dark:text-red-100 break-all">
+                      <div className="p-3 bg-zinc-50 dark:bg-zinc-950/20 border border-zinc-200 dark:border-zinc-900 rounded-md">
+                        <p className="text-sm text-zinc-900 dark:text-zinc-100 break-all">
                           {selectedCheckpoint.error || 'No error'}
                         </p>
                       </div>
@@ -319,7 +319,7 @@ export default function CheckpointsPage() {
                             }
                           }}
                           disabled={deleting}
-                          className="w-full px-3 py-2 text-sm bg-red-50 dark:bg-red-950/20 text-red-900 dark:text-red-100 border border-red-200 dark:border-red-900 rounded-md hover:bg-red-100 dark:hover:bg-red-950/30 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full px-3 py-2 text-sm bg-zinc-50 dark:bg-zinc-950/20 text-zinc-900 dark:text-zinc-100 border border-zinc-200 dark:border-zinc-900 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-950/30 transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {deleting ? (
                             <RefreshCw className="h-4 w-4 animate-spin" />

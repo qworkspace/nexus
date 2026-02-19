@@ -27,10 +27,10 @@ async function fetcher(url: string): Promise<BugStatsResponse> {
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
-  critical: "bg-red-500",
-  high: "bg-orange-500",
+  critical: "bg-zinc-500",
+  high: "bg-zinc-500",
   medium: "bg-yellow-500",
-  low: "bg-green-500",
+  low: "bg-zinc-500",
 };
 
 export function BugStats() {
@@ -66,19 +66,19 @@ export function BugStats() {
           <div className="space-y-5">
             {/* Summary Stats */}
             <div className="grid grid-cols-3 gap-3">
-              <div className="text-center p-3 bg-red-50 dark:bg-red-950 rounded-lg border border-red-200 dark:border-red-800">
-                <p className="text-2xl font-bold text-red-600 dark:text-red-400">
+              <div className="text-center p-3 bg-zinc-50 dark:bg-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800">
+                <p className="text-2xl font-bold text-zinc-500 dark:text-zinc-400">
                   {stats.open}
                 </p>
-                <p className="text-xs text-red-700 dark:text-red-400 font-medium">
+                <p className="text-xs text-zinc-700 dark:text-zinc-400 font-medium">
                   Open
                 </p>
               </div>
-              <div className="text-center p-3 bg-green-50 dark:bg-green-950 rounded-lg border border-green-200 dark:border-green-800">
-                <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+              <div className="text-center p-3 bg-zinc-50 dark:bg-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800">
+                <p className="text-2xl font-bold text-zinc-900 dark:text-zinc-400">
                   {stats.resolved}
                 </p>
-                <p className="text-xs text-green-700 dark:text-green-400 font-medium">
+                <p className="text-xs text-zinc-700 dark:text-zinc-400 font-medium">
                   Resolved
                 </p>
               </div>

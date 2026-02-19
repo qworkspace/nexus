@@ -148,19 +148,19 @@ export function BuildMonitor() {
     switch (status) {
       case 'building':
       case 'processing':
-        return <Badge variant="outline" className="text-xs text-blue-600 border-blue-200">BUILDING</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-900 border-zinc-200">BUILDING</Badge>;
       case 'ready':
-        return <Badge variant="outline" className="text-xs text-green-600 border-green-200">READY</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-900 border-zinc-200">READY</Badge>;
       case 'success':
-        return <Badge variant="outline" className="text-xs text-green-600 border-green-200">SUCCESS</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-900 border-zinc-200">SUCCESS</Badge>;
       case 'error':
-        return <Badge variant="outline" className="text-xs text-red-600 border-red-200">ERROR</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">ERROR</Badge>;
       case 'cancelled':
         return <Badge variant="outline" className="text-xs text-yellow-600 border-yellow-200">CANCELLED</Badge>;
       case 'completed':
         return <Badge variant="outline" className="text-xs text-zinc-600">DONE</Badge>;
       case 'blocked':
-        return <Badge variant="outline" className="text-xs text-red-600 border-red-200">BLOCKED</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">BLOCKED</Badge>;
       default:
         return <Badge variant="outline" className="text-xs">{status.toUpperCase()}</Badge>;
     }
@@ -169,7 +169,7 @@ export function BuildMonitor() {
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case 'high':
-        return <Badge variant="outline" className="text-xs text-red-600 border-red-200">HIGH</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">HIGH</Badge>;
       case 'medium':
         return <Badge variant="outline" className="text-xs text-yellow-600 border-yellow-200">MED</Badge>;
       case 'low':
@@ -216,7 +216,7 @@ export function BuildMonitor() {
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <Activity className="h-5 w-5 text-blue-500" />
+            <Activity className="h-5 w-5 text-zinc-500" />
             BUILD MONITOR
           </CardTitle>
           <p className="text-xs text-zinc-500 mt-1">

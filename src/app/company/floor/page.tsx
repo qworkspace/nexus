@@ -1529,7 +1529,7 @@ export default function FloorPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={meetingMode ? endMeeting : startMeeting}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${meetingMode ? "bg-red-500 text-foreground hover:bg-red-600" : "bg-foreground text-foreground hover:bg-foreground"}`}
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${meetingMode ? "bg-zinc-100 text-zinc-900 border border-zinc-200 hover:bg-zinc-200" : "bg-zinc-100 text-zinc-900 border border-zinc-200 hover:bg-zinc-200"}`}
             >
               {meetingMode ? (
                 <>
@@ -1549,18 +1549,11 @@ export default function FloorPage() {
               onClick={() => setDemoMode(!demoMode)}
               className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
                 demoMode
-                  ? "bg-purple-500 text-foreground hover:bg-purple-600"
-                  : "bg-muted text-foreground hover:bg-zinc-600"
+                  ? "bg-[#F5D547] text-zinc-900"
+                  : "bg-zinc-100 text-zinc-900 border border-zinc-200 hover:bg-zinc-200"
               }`}
             >
-              {demoMode ? (
-                <>
-                  <span className="animate-pulse">🎬</span>
-                  Demo On
-                </>
-              ) : (
-                <>🎬 Demo</>
-              )}
+              {demoMode ? "Demo On" : "Demo"}
             </button>
 
             {demoMode && (
@@ -1617,7 +1610,7 @@ export default function FloorPage() {
 
             {/* Meeting table - subtle ring of light */}
             <div className="absolute" style={{ left: 340, top: 445 }}>
-              <div className={`w-[160px] h-[90px] rounded-[50%] border transition-all duration-500 ${meetingMode ? "border-amber-400/60 shadow-[0_0_30px_rgba(251,191,36,0.3)] bg-[#FFE135]/5" : "border-border/30 bg-muted/10"}`}>
+              <div className={`w-[160px] h-[90px] rounded-[50%] border transition-all duration-500 ${meetingMode ? "border-[#F5D547]/60 shadow-[0_0_30px_rgba(245,213,71,0.3)] bg-[#F5D547]/5" : "border-border/30 bg-muted/10"}`}>
                 {/* Inner glow ring */}
                 {meetingMode && (
                   <div className="absolute inset-0 rounded-[50%]" style={{
@@ -1753,8 +1746,8 @@ export default function FloorPage() {
                   {agentState?.buildCelebration && (
                     <>
                       <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-50">
-                        <div className="bg-green-500 text-foreground text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap animate-bounce">
-                          ✅ {agentState.buildCelebration.buildName}
+                        <div className="bg-zinc-100 text-zinc-700 border border-zinc-200 text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap animate-bounce">
+                          {agentState.buildCelebration.buildName}
                         </div>
                       </div>
                       {/* Supernova particles */}
@@ -1781,8 +1774,8 @@ export default function FloorPage() {
                   {/* Handoff badge */}
                   {agentState?.handoff && (
                     <div className="absolute -top-20 left-1/2 -translate-x-1/2 z-40">
-                      <div className="bg-foreground text-foreground text-[9px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1 whitespace-nowrap">
-                        📤 Handoff: {agentState.handoff.task.substring(0, 30)}...
+                      <div className="bg-zinc-100 text-zinc-700 border border-zinc-200 text-[9px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1 whitespace-nowrap">
+                        Handoff: {agentState.handoff.task.substring(0, 30)}...
                       </div>
                     </div>
                   )}
@@ -1853,7 +1846,7 @@ export default function FloorPage() {
                 <div className="flex items-center gap-2 mb-2">
                   <button
                     onClick={() => setTimelineMode(false)}
-                    className="text-xs text-red-400 hover:text-red-300"
+                    className="text-xs text-zinc-400 hover:text-zinc-300"
                   >
                     Exit Replay
                   </button>
@@ -1887,16 +1880,16 @@ export default function FloorPage() {
             {/* Room label */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
               <span className="text-[10px] text-muted-foreground uppercase tracking-widest flex items-center gap-1">
-                {meetingMode ? <><Calendar size={10} /> Standup In Progress</> : timelineMode ? "⏮️ Replay Mode" : "Villanueva Creative HQ"}
+                {meetingMode ? <><Calendar size={10} /> Standup In Progress</> : timelineMode ? "Replay Mode" : "Villanueva Creative HQ"}
               </span>
             </div>
 
             {/* Demo mode indicator */}
             {demoMode && (
               <div className="absolute top-2 left-2 z-40">
-                <div className="bg-purple-500/20 border border-purple-500/40 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-2">
-                  <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-                  <span className="text-[10px] text-purple-300 font-bold uppercase tracking-wide">
+                <div className="bg-zinc-900/80 border border-zinc-700 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-2">
+                  <span className="w-2 h-2 bg-[#F5D547] rounded-full animate-pulse" />
+                  <span className="text-[10px] text-zinc-300 font-bold uppercase tracking-wide">
                     Demo Mode • {demoIntensity} • {demoSpeed}x
                   </span>
                 </div>
@@ -1921,15 +1914,15 @@ export default function FloorPage() {
                 {selectedAgents.length === 2 && !meetingMode && (
                   <button
                     onClick={startAgentChat}
-                    className="px-3 py-1 bg-foreground hover:bg-foreground text-foreground text-xs font-bold rounded transition-colors flex items-center gap-1"
+                    className="px-3 py-1 bg-zinc-900 text-white text-xs font-bold rounded transition-colors flex items-center gap-1 hover:bg-zinc-800"
                   >
                     <MessageSquare size={12} />
                     Start Chat
                   </button>
                 )}
                 {meetingMode && (
-                  <span className="text-[10px] text-red-400 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" /> LIVE
+                  <span className="text-[10px] text-zinc-400 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 bg-[#F5D547] rounded-full animate-pulse" /> LIVE
                   </span>
                 )}
               </div>
@@ -2043,7 +2036,7 @@ export default function FloorPage() {
                     <p className="text-[10px] text-muted-foreground">Model: {agent.model.primary.split("/").pop()}</p>
                     {/* Token counter */}
                     {agentState && agentState.tokens && agentState.tokens > 0 && (
-                      <div className="text-[10px] text-green-400">
+                      <div className="text-[10px] text-[#F5D547]">
                         {agentState.tokens.toLocaleString()} tokens
                       </div>
                     )}
@@ -2060,23 +2053,23 @@ export default function FloorPage() {
               <h4 className="text-xs font-bold text-foreground mb-2">Ecosystem Status</h4>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-[#F5D547] animate-pulse" />
                   <span className="text-[10px] text-muted-foreground">The Forge (Building)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-foreground animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-[#F5D547] animate-pulse" />
                   <span className="text-[10px] text-muted-foreground">The Stream (Research)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-[#F5D547] animate-pulse" />
                   <span className="text-[10px] text-muted-foreground">The Pulse (Comms)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-400" />
                   <span className="text-[10px] text-muted-foreground">The Void (Idle)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
                   <span className="text-[10px] text-muted-foreground">Error</span>
                 </div>
               </div>
@@ -2277,7 +2270,7 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
           />
           {/* Subtle orbiting speck */}
           <div
-            className="absolute w-1 h-1 bg-green-300 rounded-full opacity-60"
+            className="absolute w-1 h-1 bg-zinc-300 rounded-full opacity-60"
             style={{
               left: '50%',
               top: '50%',
@@ -2302,9 +2295,9 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
           }}
         >
           {/* Leaves */}
-          <div className="absolute -left-2 top-4 w-3 h-2 bg-green-400 rounded-full opacity-40" />
-          <div className="absolute right-0 top-8 w-3 h-2 bg-green-400 rounded-full opacity-40" />
-          <div className="absolute -left-3 top-12 w-2 h-2 bg-green-500 rounded-full opacity-50" />
+          <div className="absolute -left-2 top-4 w-3 h-2 bg-zinc-400 rounded-full opacity-40" />
+          <div className="absolute right-0 top-8 w-3 h-2 bg-zinc-400 rounded-full opacity-40" />
+          <div className="absolute -left-3 top-12 w-2 h-2 bg-zinc-500 rounded-full opacity-50" />
         </div>
       </div>
     );

@@ -63,13 +63,13 @@ export function LiveAgentStatusPanel() {
   const getStatusColor = (status: string): string => {
     switch (status) {
       case 'active':
-        return 'bg-green-500';
+        return 'bg-zinc-500';
       case 'idle':
         return 'bg-zinc-400';
       case 'completed':
-        return 'bg-blue-500';
+        return 'bg-zinc-500';
       case 'error':
-        return 'bg-red-500';
+        return 'bg-zinc-500';
       default:
         return 'bg-zinc-400';
     }
@@ -78,13 +78,13 @@ export function LiveAgentStatusPanel() {
   const getStatusDot = (status: string): JSX.Element => {
     switch (status) {
       case 'active':
-        return <Circle size={8} className="fill-green-500 text-green-500" />;
+        return <Circle size={8} className="fill-[#F5D547] text-zinc-500" />;
       case 'idle':
         return <Circle size={8} className="fill-zinc-400 text-zinc-400" />;
       case 'completed':
-        return <Circle size={8} className="fill-blue-500 text-blue-500" />;
+        return <Circle size={8} className="fill-zinc-500 text-zinc-500" />;
       case 'error':
-        return <Circle size={8} className="fill-red-500 text-red-500" />;
+        return <Circle size={8} className="fill-zinc-500 text-zinc-500" />;
       default:
         return <Circle size={8} className="fill-zinc-400 text-zinc-400" />;
     }
@@ -221,7 +221,7 @@ export function LiveAgentStatusPanel() {
                       {agent.progress !== undefined && (
                         <div className="mt-2 w-full bg-zinc-200 dark:bg-zinc-700 rounded-full h-1.5">
                           <div
-                            className="bg-blue-500 h-1.5 rounded-full transition-all"
+                            className="bg-zinc-500 h-1.5 rounded-full transition-all"
                             style={{ width: `${agent.progress}%` }}
                           />
                         </div>
@@ -242,7 +242,7 @@ export function LiveAgentStatusPanel() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                      className="h-7 px-2 text-xs text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-950"
                       onClick={() => handleKillAgent(agent.id)}
                     >
                       <X className="h-3 w-3 mr-1" />
@@ -296,7 +296,7 @@ export function LiveAgentStatusPanel() {
                           <Button
                             variant="link"
                             size="sm"
-                            className="h-auto p-0 text-xs text-blue-600"
+                            className="h-auto p-0 text-xs text-zinc-900"
                             onClick={() => window.open(completion.commitUrl, '_blank')}
                           >
                             View Commit

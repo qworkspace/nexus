@@ -35,9 +35,9 @@ export function BackupStats({
               {hasIssues ? (
                 <AlertTriangle className="h-4 w-4 text-yellow-500" />
               ) : (
-                <CheckCircle className="h-4 w-4 text-green-500" />
+                <CheckCircle className="h-4 w-4 text-zinc-500" />
               )}
-              <span className={`text-sm font-semibold ${hasIssues ? 'text-yellow-600' : 'text-green-600'}`}>
+              <span className={`text-sm font-semibold ${hasIssues ? 'text-yellow-600' : 'text-zinc-900'}`}>
                 {hasIssues ? 'Attention Needed' : 'All Good'}
               </span>
             </div>
@@ -47,8 +47,8 @@ export function BackupStats({
           <div className="h-2 bg-zinc-200 rounded-full overflow-hidden mb-2">
             <div
               className={`h-full transition-all duration-500 ${
-                healthPercentage === 100 ? 'bg-green-500' :
-                healthPercentage >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+                healthPercentage === 100 ? 'bg-zinc-500' :
+                healthPercentage >= 50 ? 'bg-yellow-500' : 'bg-zinc-500'
               }`}
               style={{ width: `${healthPercentage}%` }}
             />
@@ -61,20 +61,20 @@ export function BackupStats({
 
         {/* Status Counts */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-green-50 border border-green-100 rounded-lg p-3">
-            <div className="flex items-center gap-2 text-green-700 mb-1">
+          <div className="bg-zinc-50 border border-zinc-100 rounded-lg p-3">
+            <div className="flex items-center gap-2 text-zinc-700 mb-1">
               <CheckCircle className="h-4 w-4" />
               <span className="text-sm font-medium">Healthy</span>
             </div>
-            <div className="text-2xl font-bold text-green-900">{healthy}</div>
+            <div className="text-2xl font-bold text-zinc-900">{healthy}</div>
           </div>
 
-          <div className="bg-red-50 border border-red-100 rounded-lg p-3">
-            <div className="flex items-center gap-2 text-red-700 mb-1">
+          <div className="bg-zinc-50 border border-zinc-100 rounded-lg p-3">
+            <div className="flex items-center gap-2 text-zinc-700 mb-1">
               <AlertTriangle className="h-4 w-4" />
               <span className="text-sm font-medium">Issues</span>
             </div>
-            <div className="text-2xl font-bold text-red-900">{error + warning}</div>
+            <div className="text-2xl font-bold text-zinc-900">{error + warning}</div>
           </div>
         </div>
 

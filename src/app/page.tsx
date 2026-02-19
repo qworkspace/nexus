@@ -88,7 +88,7 @@ export default async function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold text-red-600">
+            <div className="text-3xl font-bold text-zinc-500">
               {stats.errorCount}
             </div>
           </CardContent>
@@ -165,8 +165,8 @@ export default async function Dashboard() {
 
 function StatusDot({ status }: { status: string }) {
   const colors = {
-    success: "bg-green-500",
-    error: "bg-red-500",
+    success: "bg-zinc-500",
+    error: "bg-zinc-500",
     pending: "bg-yellow-500",
   };
   return (

@@ -31,7 +31,7 @@ export function CIDashboard() {
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <Cpu className="h-5 w-5 text-blue-500" />
+            <Cpu className="h-5 w-5 text-zinc-500" />
             CI PIPELINE DASHBOARD
           </CardTitle>
           <p className="text-xs text-zinc-500 mt-1">
@@ -66,10 +66,10 @@ export function CIDashboard() {
                   Active Build
                 </h3>
                 {data.activeBuild ? (
-                  <div className="border border-blue-200 bg-blue-50 dark:bg-blue-950/30 dark:border-blue-900 rounded-lg p-3">
+                  <div className="border border-zinc-200 bg-zinc-50 dark:bg-zinc-950/30 dark:border-zinc-900 rounded-lg p-3">
                     <div className="flex items-center gap-2 mb-2">
-                      <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-                      <Badge variant="outline" className="text-xs text-blue-600 border-blue-200">
+                      <div className="h-2 w-2 rounded-full bg-zinc-500 animate-pulse" />
+                      <Badge variant="outline" className="text-xs text-zinc-900 border-zinc-200">
                         RUNNING
                       </Badge>
                       {data.activeBuild.agent && (
@@ -142,7 +142,7 @@ export function CIDashboard() {
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-zinc-600">Success</span>
-                      <span className="font-medium text-green-600">{data.health.successCount}</span>
+                      <span className="font-medium text-zinc-900">{data.health.successCount}</span>
                     </div>
                   </div>
                   {Object.keys(data.health.failuresByProject).length > 0 && (
@@ -152,7 +152,7 @@ export function CIDashboard() {
                         {Object.entries(data.health.failuresByProject).map(([project, count]) => (
                           <div key={project} className="flex items-center justify-between text-xs">
                             <span className="text-zinc-600">{project}</span>
-                            <span className="font-medium text-red-600">{count}</span>
+                            <span className="font-medium text-zinc-500">{count}</span>
                           </div>
                         ))}
                       </div>
@@ -204,15 +204,15 @@ export function CIDashboard() {
 
 function QueueItem({ item }: { item: CIQueueItem }) {
   const priorityColors = {
-    HIGH: 'bg-red-100 text-red-700 border-red-200',
+    HIGH: 'bg-zinc-100 text-zinc-700 border-zinc-200',
     MED: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    LOW: 'bg-green-100 text-green-700 border-green-200',
+    LOW: 'bg-zinc-100 text-zinc-700 border-zinc-200',
   };
 
   const riskColors = {
-    LOW: 'text-green-600',
+    LOW: 'text-zinc-900',
     MEDIUM: 'text-yellow-600',
-    HIGH: 'text-red-600',
+    HIGH: 'text-zinc-500',
   };
 
   return (
@@ -244,9 +244,9 @@ function BuildRow({ build }: { build: CIBuild }) {
       <div className="flex items-start gap-2">
         <div className="flex-shrink-0 mt-0.5">
           {isSuccess ? (
-            <span className="text-green-500">✓</span>
+            <span className="text-zinc-500">✓</span>
           ) : isFailed ? (
-            <span className="text-red-500">✗</span>
+            <span className="text-zinc-500">✗</span>
           ) : (
             <AlertTriangle className="h-4 w-4 text-yellow-500" />
           )}
@@ -260,7 +260,7 @@ function BuildRow({ build }: { build: CIBuild }) {
             {build.testStatus && (
               <>
                 <span>•</span>
-                <span className={build.testStatus === 'pass' ? 'text-green-600' : 'text-red-600'}>
+                <span className={build.testStatus === 'pass' ? 'text-zinc-900' : 'text-zinc-500'}>
                   TEST: {build.testStatus.toUpperCase()}
                 </span>
               </>

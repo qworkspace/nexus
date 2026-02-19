@@ -75,11 +75,11 @@ export function ModelIntelligenceDashboard() {
   };
 
   const getModelBadgeColor = (model: string): string => {
-    if (model.includes('opus')) return 'bg-purple-100 text-purple-700 border-purple-200';
-    if (model.includes('sonnet')) return 'bg-blue-100 text-blue-700 border-blue-200';
-    if (model.includes('haiku')) return 'bg-green-100 text-green-700 border-green-200';
+    if (model.includes('opus')) return 'bg-zinc-100 text-zinc-700 border-zinc-200';
+    if (model.includes('sonnet')) return 'bg-zinc-100 text-zinc-700 border-zinc-200';
+    if (model.includes('haiku')) return 'bg-zinc-100 text-zinc-700 border-zinc-200';
     if (model.includes('glm')) return 'bg-yellow-100 text-yellow-700 border-yellow-200';
-    if (model.includes('gpt')) return 'bg-orange-100 text-orange-700 border-orange-200';
+    if (model.includes('gpt')) return 'bg-zinc-100 text-zinc-700 border-zinc-200';
     return 'bg-zinc-100 text-zinc-700 border-zinc-200';
   };
 

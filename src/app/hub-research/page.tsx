@@ -52,19 +52,19 @@ interface PipelineItem {
 
 const fetcher = (url: string) => fetch(url, { cache: 'no-store' }).then(r => r.json());
 
-const SOURCE_BADGES: Record<string, { emoji: string; label: string; className: string }> = {
-  'research':        { emoji: '🔍', label: 'Research',        className: 'bg-blue-900/30 text-foreground border-blue-800' },
-  'deep-focus':      { emoji: '🎯', label: 'Deep Focus',      className: 'bg-purple-900/30 text-muted-foreground border-purple-800' },
-  'innovation-think':{ emoji: '💡', label: 'Innovation Think', className: 'bg-amber-900/30 text-[#FFE135] border-amber-800' },
-  'retro':           { emoji: '🔄', label: 'Retro',            className: 'bg-cyan-900/30 text-muted-foreground border-cyan-800' },
-  'pj-request':      { emoji: '💬', label: 'PJ Request',       className: 'bg-indigo-900/30 text-muted-foreground border-indigo-700' },
-  'manual':          { emoji: '✍️', label: 'Manual',           className: 'bg-muted/30 text-muted-foreground border-border' },
+const SOURCE_BADGES: Record<string, { label: string; className: string }> = {
+  'research':        { label: 'Research',        className: 'bg-zinc-100 text-zinc-700 border border-zinc-200' },
+  'deep-focus':      { label: 'Deep Focus',      className: 'bg-zinc-100 text-zinc-700 border border-zinc-200' },
+  'innovation-think':{ label: 'Innovation Think', className: 'bg-zinc-100 text-zinc-700 border border-zinc-200' },
+  'retro':           { label: 'Retro',            className: 'bg-zinc-100 text-zinc-700 border border-zinc-200' },
+  'pj-request':      { label: 'PJ Request',       className: 'bg-zinc-100 text-zinc-700 border border-zinc-200' },
+  'manual':          { label: 'Manual',           className: 'bg-zinc-100 text-zinc-700 border border-zinc-200' },
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
-  HIGH: 'bg-red-900/40 text-red-400 border-red-700',
-  MED:  'bg-amber-900/40 text-[#FFE135] border-amber-700',
-  LOW:  'bg-green-900/40 text-green-400 border-green-700',
+  HIGH: 'bg-zinc-100 text-zinc-700 border-zinc-200',
+  MED:  'bg-zinc-100 text-zinc-700 border-zinc-200',
+  LOW:  'bg-zinc-100 text-zinc-700 border-zinc-200',
 };
 
 const PIPELINE_STAGES = ['queued', 'speccing', 'building', 'qa'] as const;
@@ -246,8 +246,8 @@ export default function HubResearchPage() {
           <div key={stage} className="flex items-center">
             <div className={`flex flex-col items-center ${i <= idx ? '' : 'opacity-40'}`}>
               <div className={`w-3 h-3 rounded-full border-2 transition-all ${
-                i < idx ? 'bg-[#FFE135] border-[#FFE135]' :
-                i === idx ? 'bg-foreground border-blue-500 animate-pulse' :
+                i < idx ? 'bg-[#F5D547] border-[#F5D547]' :
+                i === idx ? 'bg-foreground border-zinc-400 animate-pulse' :
                 'bg-muted border-border'
               }`} />
               <span className={`text-[10px] mt-0.5 ${i === idx ? 'text-foreground font-semibold' : 'text-muted-foreground'}`}>
@@ -255,7 +255,7 @@ export default function HubResearchPage() {
               </span>
             </div>
             {i < PIPELINE_STAGES.length - 1 && (
-              <div className={`w-6 h-0.5 mx-0.5 mb-3 ${i < idx ? 'bg-[#FFE135]' : 'bg-muted'}`} />
+              <div className={`w-6 h-0.5 mx-0.5 mb-3 ${i < idx ? 'bg-[#F5D547]' : 'bg-muted'}`} />
             )}
           </div>
         ))}
@@ -273,12 +273,12 @@ export default function HubResearchPage() {
       <Card className="dark:bg-card dark:border-border">
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-2">
-            <CardTitle className="text-base dark:text-foreground">📋 {item.title}</CardTitle>
+            <CardTitle className="text-base dark:text-foreground">{item.title}</CardTitle>
             <Badge className={`border ${PRIORITY_COLORS[item.priority]}`}>{item.priority}</Badge>
           </div>
           <div className="flex items-center gap-2 mt-1 text-xs flex-wrap">
             <span className="text-muted-foreground dark:text-muted-foreground">{formatDate(item.createdAt)}</span>
-            <Badge variant="outline" className={`text-xs border ${src.className}`}>{src.emoji} {src.label}</Badge>
+            <Badge variant="outline" className={`text-xs ${src.className}`}>{src.label}</Badge>
             <Badge variant="outline" className="text-xs text-muted-foreground dark:text-muted-foreground border-border">Complexity: {item.complexity}</Badge>
           </div>
         </CardHeader>
@@ -292,9 +292,9 @@ export default function HubResearchPage() {
             <p className="text-sm dark:text-foreground">{item.solution || '—'}</p>
           </div>
           {item.impact && (
-            <div className="bg-emerald-950/30 dark:bg-emerald-950/30 px-3 py-2 rounded border border-emerald-800/40">
-              <p className="text-xs font-semibold uppercase tracking-wider text-[#FFE135] mb-1">Impact</p>
-              <p className="text-sm text-emerald-300/90">{item.impact}</p>
+            <div className="bg-zinc-100 px-3 py-2 rounded border border-zinc-200">
+              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-900 mb-1">Impact</p>
+              <p className="text-sm text-zinc-700">{item.impact}</p>
             </div>
           )}
           <div className="flex gap-2 pt-2 border-t border-zinc-200 dark:border-border justify-between items-center">
@@ -302,13 +302,13 @@ export default function HubResearchPage() {
               <Pencil className="h-3.5 w-3.5 mr-1.5" />Edit
             </Button>
             <div className="flex gap-2">
-              <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-foreground" disabled={acting} onClick={() => approve(item.id)}>
+              <Button size="sm" className="bg-zinc-900 hover:bg-zinc-800 text-white" disabled={acting} onClick={() => approve(item.id)}>
                 <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
               </Button>
-              <Button size="sm" variant="outline" className="dark:text-muted-foreground dark:border-border" disabled={acting} onClick={() => park(item.id)}>
+              <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200" disabled={acting} onClick={() => park(item.id)}>
                 <PauseCircle className="h-3.5 w-3.5 mr-1" />Park
               </Button>
-              <Button size="sm" variant="outline" className="text-red-500 hover:text-red-400 border-red-800" disabled={acting} onClick={() => openRejectDialog(item.id)}>
+              <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200" disabled={acting} onClick={() => openRejectDialog(item.id)}>
                 <XCircle className="h-3.5 w-3.5 mr-1" />Reject
               </Button>
             </div>
@@ -344,7 +344,7 @@ export default function HubResearchPage() {
           <CardContent className="space-y-1">
             {Object.entries(bySource).map(([src, n]) => (
               <div key={src} className="flex justify-between text-sm dark:text-foreground">
-                <span>{SOURCE_BADGES[src]?.emoji} {SOURCE_BADGES[src]?.label || src}</span><span className="font-medium">{n}</span>
+                <span>{SOURCE_BADGES[src]?.label || src}</span><span className="font-medium">{n}</span>
               </div>
             ))}
             {Object.keys(bySource).length === 0 && <p className="text-xs text-muted-foreground">None</p>}
@@ -369,7 +369,7 @@ export default function HubResearchPage() {
           <Card className="dark:bg-card dark:border-border">
             <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">Parked</CardTitle></CardHeader>
             <CardContent>
-              <p className="text-lg font-bold text-[#FFE135]">{parked.length}</p>
+              <p className="text-lg font-bold text-[#F5D547]">{parked.length}</p>
             </CardContent>
           </Card>
         )}
@@ -433,11 +433,11 @@ export default function HubResearchPage() {
         </Card>
         <Card className="dark:bg-card dark:border-border">
           <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">👍 Rate</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold text-green-400">{rated.length > 0 ? Math.round((good / rated.length) * 100) : 0}%</p></CardContent>
+          <CardContent><p className="text-2xl font-bold text-zinc-900">{rated.length > 0 ? Math.round((good / rated.length) * 100) : 0}%</p></CardContent>
         </Card>
         <Card className="dark:bg-card dark:border-border">
           <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">👎 Rate</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold text-red-400">{rated.length > 0 ? Math.round((bad / rated.length) * 100) : 0}%</p></CardContent>
+          <CardContent><p className="text-2xl font-bold text-zinc-900">{rated.length > 0 ? Math.round((bad / rated.length) * 100) : 0}%</p></CardContent>
         </Card>
         {avgDays !== null && (
           <Card className="dark:bg-card dark:border-border">
@@ -447,7 +447,7 @@ export default function HubResearchPage() {
         )}
         <Card className="dark:bg-card dark:border-border">
           <CardHeader className="pb-2"><CardTitle className="text-sm dark:text-zinc-200">Feedback Pending</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold text-[#FFE135]">{pending}</p></CardContent>
+          <CardContent><p className="text-2xl font-bold text-[#F5D547]">{pending}</p></CardContent>
         </Card>
       </div>
     );
@@ -475,10 +475,10 @@ export default function HubResearchPage() {
           {/* Tabs */}
           <Tabs defaultValue="briefs" className="flex-1 overflow-hidden">
             <TabsList className="grid w-full max-w-2xl grid-cols-4 dark:bg-card">
-              <TabsTrigger value="briefs">📋 Briefs {pendingReview.length > 0 && <Badge className="ml-1.5 h-5 px-1.5 text-xs bg-red-600 text-foreground">{pendingReview.length}</Badge>}</TabsTrigger>
-              <TabsTrigger value="in-progress">⚡ In Progress {inProgress.length > 0 && <Badge className="ml-1.5 h-5 px-1.5 text-xs bg-foreground text-foreground">{inProgress.length}</Badge>}</TabsTrigger>
-              <TabsTrigger value="shipped">🚀 Shipped</TabsTrigger>
-              <TabsTrigger value="performance">📊 Performance</TabsTrigger>
+              <TabsTrigger value="briefs">Briefs {pendingReview.length > 0 && <Badge className="ml-1.5 h-5 px-1.5 text-xs bg-zinc-900 text-white">{pendingReview.length}</Badge>}</TabsTrigger>
+              <TabsTrigger value="in-progress">In Progress {inProgress.length > 0 && <Badge className="ml-1.5 h-5 px-1.5 text-xs bg-zinc-100 text-zinc-700 border border-zinc-200">{inProgress.length}</Badge>}</TabsTrigger>
+              <TabsTrigger value="shipped">Shipped</TabsTrigger>
+              <TabsTrigger value="performance">Performance</TabsTrigger>
             </TabsList>
 
             {/* ── Briefs Tab ── */}
@@ -569,9 +569,9 @@ export default function HubResearchPage() {
                 <div className="space-y-3 pr-4">
                   <div className="flex items-center justify-between mb-2">
                     <h2 className="text-lg font-semibold dark:text-zinc-200 flex items-center gap-2">
-                      <Rocket className="h-5 w-5 text-green-500" />Shipped
+                      <Rocket className="h-5 w-5 text-zinc-900" />Shipped
                     </h2>
-                    <Badge className="bg-green-900/40 text-green-400 border border-green-700">{shipped.length} shipped</Badge>
+                    <Badge className="bg-zinc-100 text-zinc-700 border border-zinc-200">{shipped.length} shipped</Badge>
                   </div>
                   {shipped.length === 0 ? (
                     <div className="text-center py-16 text-muted-foreground">
@@ -581,10 +581,10 @@ export default function HubResearchPage() {
                     </div>
                   ) : (
                     shipped.map(item => (
-                      <Card key={item.id} className="border-l-4 border-l-green-500 dark:bg-card dark:border-border">
+                      <Card key={item.id} className="border-l-4 border-l-[#F5D547] dark:bg-card dark:border-border">
                         <CardHeader className="pb-2">
                           <div className="flex items-start justify-between gap-2">
-                            <CardTitle className="text-base dark:text-foreground">✅ {item.title}</CardTitle>
+                            <CardTitle className="text-base dark:text-foreground">{item.title}</CardTitle>
                             <Badge className={`border ${PRIORITY_COLORS[item.priority]}`}>{item.priority}</Badge>
                           </div>
                           <div className="flex items-center gap-2 text-xs text-muted-foreground dark:text-muted-foreground">
@@ -599,7 +599,7 @@ export default function HubResearchPage() {
                           <p className="text-sm text-muted-foreground dark:text-muted-foreground line-clamp-2">{item.description}</p>
                           {item.feedback && (
                             <div className="mt-2">
-                              <Badge className={item.feedback.rating === 'good' ? 'bg-green-900/40 text-green-400' : item.feedback.rating === 'bad' ? 'bg-red-900/40 text-red-400' : 'bg-muted text-foreground'}>
+                              <Badge className="bg-zinc-100 text-zinc-700 border border-zinc-200">
                                 {item.feedback.rating === 'good' ? '👍' : item.feedback.rating === 'bad' ? '👎' : '💬'} {item.feedback.rating}
                               </Badge>
                               {item.feedback.comment && <p className="text-xs text-muted-foreground mt-1">{item.feedback.comment}</p>}
@@ -639,11 +639,11 @@ export default function HubResearchPage() {
                                 <CardContent>
                                   <p className="text-sm text-muted-foreground dark:text-muted-foreground mb-3 line-clamp-2">{item.description}</p>
                                   <div className="flex gap-2">
-                                    <Button size="sm" variant="outline" className="dark:border-green-800 dark:text-green-400 dark:hover:bg-green-900/30"
+                                    <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200"
                                       disabled={actioningIds.has(item.id)} onClick={() => submitFeedback(item.id, 'good')}>
                                       <ThumbsUp className="h-3.5 w-3.5 mr-1" />Nailed it
                                     </Button>
-                                    <Button size="sm" variant="outline" className="dark:border-red-800 dark:text-red-400 dark:hover:bg-red-900/30"
+                                    <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200"
                                       disabled={actioningIds.has(item.id)} onClick={() => submitFeedback(item.id, 'bad')}>
                                       <ThumbsDown className="h-3.5 w-3.5 mr-1" />Needs work
                                     </Button>
@@ -671,7 +671,7 @@ export default function HubResearchPage() {
                                 <CardHeader className="pb-2">
                                   <div className="flex items-start justify-between">
                                     <CardTitle className="text-sm dark:text-foreground">
-                                      {item.feedback?.rating === 'good' ? '👍' : item.feedback?.rating === 'bad' ? '👎' : '💬'} {item.title}
+                                      {item.title}
                                     </CardTitle>
                                     <span className="text-xs text-muted-foreground">Shipped {item.shippedAt ? formatDate(item.shippedAt) : '—'}</span>
                                   </div>
@@ -774,7 +774,7 @@ export default function HubResearchPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectDialogId(null)}>Cancel</Button>
-            <Button variant="destructive" onClick={confirmReject}>Reject Brief</Button>
+            <Button variant="outline" className="bg-zinc-900 text-white hover:bg-zinc-800" onClick={confirmReject}>Reject Brief</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -58,7 +58,7 @@ export function AuditLog({ logs, selectedAgent, onAgentFilter }: AuditLogProps) 
           Filtered by: <span className="font-medium">{selectedAgent}</span>
           <button
             onClick={() => onAgentFilter(null)}
-            className="ml-2 text-blue-600 hover:text-blue-700"
+            className="ml-2 text-zinc-900 hover:text-zinc-700"
           >
             Clear filter
           </button>
@@ -74,9 +74,9 @@ export function AuditLog({ logs, selectedAgent, onAgentFilter }: AuditLogProps) 
               : AlertCircle;
           const iconColor =
             log.result === "success"
-              ? "text-green-500"
+              ? "text-zinc-500"
               : log.result === "error"
-              ? "text-red-500"
+              ? "text-zinc-500"
               : "text-yellow-500";
 
           return (

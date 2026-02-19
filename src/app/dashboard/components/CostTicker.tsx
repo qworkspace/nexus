@@ -35,7 +35,7 @@ export function CostTicker() {
               <span>
                 {costs.budgetPercent}% of {formatCurrency(costs.budget)} budget
               </span>
-              <span className={costs.withinBudget ? "text-green-600" : "text-red-600"}>
+              <span className={costs.withinBudget ? "text-zinc-900" : "text-zinc-500"}>
                 {costs.withinBudget ? <Check size={14} /> : <AlertTriangle size={14} />}
               </span>
             </div>
@@ -95,11 +95,11 @@ export function CostTicker() {
           <div className="pt-3 border-t border-zinc-200">
             <div className="flex items-center justify-between text-sm">
               <span className="text-zinc-600">Projection by midnight:</span>
-              <span className={`font-semibold ${costs.withinBudget ? "text-green-600" : "text-red-600"}`}>
+              <span className={`font-semibold ${costs.withinBudget ? "text-zinc-900" : "text-zinc-500"}`}>
                 {formatCurrency(costs.projection)}
               </span>
             </div>
-            <p className={`text-xs mt-1 flex items-center gap-1 ${costs.withinBudget ? "text-green-600" : "text-red-600"}`}>
+            <p className={`text-xs mt-1 flex items-center gap-1 ${costs.withinBudget ? "text-zinc-900" : "text-zinc-500"}`}>
               {costs.withinBudget ? <Check size={12} /> : <AlertTriangle size={12} />}
               {costs.withinBudget ? "within budget" : "exceeds budget"}
             </p>

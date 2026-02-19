@@ -52,10 +52,10 @@ export function AgentPerformance({ data }: AgentPerformanceProps) {
                   <span
                     className={`font-medium ${
                       agent.successRate >= 90
-                        ? "text-emerald-600"
+                        ? "text-zinc-900"
                         : agent.successRate >= 80
-                        ? "text-amber-600"
-                        : "text-rose-600"
+                        ? "text-zinc-500"
+                        : "text-zinc-500"
                     }`}
                   >
                     {agent.successRate}%

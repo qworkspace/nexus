@@ -31,7 +31,7 @@ export function AgentActivity() {
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <Bot className="h-5 w-5 text-purple-500" />
+            <Bot className="h-5 w-5 text-zinc-500" />
             AGENT ACTIVITY
           </CardTitle>
           <p className="text-xs text-zinc-500 mt-1">
@@ -75,7 +75,7 @@ export function AgentActivity() {
                       <Users className="h-4 w-4 text-zinc-500" />
                       <span className="text-sm text-zinc-600">Active Agents</span>
                     </div>
-                    <span className="text-xl font-bold text-green-600">
+                    <span className="text-xl font-bold text-zinc-900">
                       {data.stats.activeAgents}
                     </span>
                   </div>
@@ -144,10 +144,10 @@ function SessionRow({ session }: { session: AgentSession }) {
   const isIdle = session.status === 'idle';
 
   const statusColors = isActive
-    ? 'bg-green-100 text-green-700 border-green-200'
+    ? 'bg-zinc-100 text-zinc-700 border-zinc-200'
     : isIdle
     ? 'bg-yellow-100 text-yellow-700 border-yellow-200'
-    : 'bg-red-100 text-red-700 border-red-200';
+    : 'bg-zinc-100 text-zinc-700 border-zinc-200';
 
   return (
     <div className="px-3 py-3 border-b border-zinc-200 dark:border-zinc-800 last:border-b-0 hover:bg-zinc-50 dark:hover:bg-zinc-900">
@@ -211,11 +211,11 @@ function SessionRow({ session }: { session: AgentSession }) {
         {/* Status Indicator */}
         <div className="flex-shrink-0">
           {isActive ? (
-            <div className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse" />
+            <div className="h-2.5 w-2.5 rounded-full bg-zinc-500 animate-pulse" />
           ) : isIdle ? (
             <div className="h-2.5 w-2.5 rounded-full bg-yellow-500" />
           ) : (
-            <div className="h-2.5 w-2.5 rounded-full bg-red-500" />
+            <div className="h-2.5 w-2.5 rounded-full bg-zinc-500" />
           )}
         </div>
       </div>

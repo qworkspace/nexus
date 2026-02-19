@@ -109,6 +109,6 @@
 .animate-spin-slow { animation: spin-slow 8s linear infinite; }
 
 /* Weavy yellow accent */
-.bg-weavy-yellow { background-color: #FFE135; color: #0A0B0F; }
-.text-weavy-yellow { color: #FFE135; }
-.border-weavy-yellow { border-color: #FFE135; }
+.bg-weavy-yellow { background-color: #F5D547; color: #0A0B0F; }
+.text-weavy-yellow { color: #F5D547; }
+.border-weavy-yellow { border-color: #F5D547; }

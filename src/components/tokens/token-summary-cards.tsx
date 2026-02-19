@@ -56,7 +56,7 @@ export function TokenSummaryCards({ today, yesterday, thisWeek }: TokenSummaryCa
           </p>
           {yesterday.totalTokens > 0 && (
             <div className={`flex items-center text-xs mt-2 ${
-              tokenChange >= 0 ? "text-red-600 dark:text-red-400" : "text-green-600 dark:text-green-400"
+              tokenChange >= 0 ? "text-zinc-500 dark:text-zinc-400" : "text-zinc-900 dark:text-zinc-400"
             }`}>
               {tokenChange >= 0 ? (
                 <TrendingUp className="h-3 w-3 mr-1" />

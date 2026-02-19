@@ -37,13 +37,13 @@ const modelIcons: Record<string, JSX.Element> = {
 };
 
 const modelColors: Record<string, string> = {
-  'claude-opus-4-5': 'bg-purple-500',
+  'claude-opus-4-5': 'bg-zinc-500',
   'claude-sonnet-4': 'bg-foreground',
   'claude-3-5-sonnet': 'bg-foreground',
-  'claude-3-5-haiku': 'bg-green-500',
+  'claude-3-5-haiku': 'bg-zinc-500',
   'glm-4-flash': 'bg-[#FFE135]',
   'gpt-4o': 'bg-[#FFE135]',
-  'gpt-4o-mini': 'bg-teal-500',
+  'gpt-4o-mini': 'bg-zinc-500',
 };
 
 function formatTokens(tokens: number): string {
@@ -98,7 +98,7 @@ export function ModelIntelligencePanel() {
               <span className="font-semibold text-zinc-900 dark:text-foreground">
                 {formatModelName(data?.currentModel || 'Loading...')}
               </span>
-              <Badge variant="secondary" className="text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400">
+              <Badge variant="secondary" className="text-xs bg-zinc-100 dark:bg-zinc-900/30 text-zinc-700 dark:text-zinc-400">
                 Active
               </Badge>
             </div>
@@ -176,13 +176,13 @@ export function ModelIntelligencePanel() {
                 className={cn(
                   "p-2 rounded-lg text-sm",
                   rec.model
-                    ? "bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-900/30"
-                    : "bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-900/30"
+                    ? "bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-100 dark:border-zinc-900/30"
+                    : "bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-100 dark:border-zinc-900/30"
                 )}
               >
                 <p className={cn(
                   "font-medium",
-                  rec.model ? "text-blue-700 dark:text-foreground" : "text-green-700 dark:text-green-400"
+                  rec.model ? "text-zinc-700 dark:text-foreground" : "text-zinc-700 dark:text-zinc-400"
                 )}>
                   {rec.message}
                 </p>

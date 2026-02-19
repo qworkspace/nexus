@@ -30,10 +30,10 @@ interface AgentStatusData {
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
 const statusConfig = {
-  active: { color: "bg-green-500", glow: "status-glow-green", label: "Active" },
+  active: { color: "bg-zinc-500", glow: "status-glow", label: "Active" },
   idle: { color: "bg-yellow-500", glow: "status-glow-yellow", label: "Idle" },
   completed: { color: "bg-foreground", glow: "status-glow-blue", label: "Done" },
-  error: { color: "bg-red-500", glow: "status-glow-red", label: "Error" },
+  error: { color: "bg-zinc-500", glow: "status-glow", label: "Error" },
 };
 
 function formatDuration(startedAt: string): string {
@@ -92,7 +92,7 @@ export function AgentStatusPanel() {
                   key={agent.id}
                   className={cn(
                     "p-3 rounded-lg border bg-white dark:bg-card/80 dark:border-border",
-                    agent.status === 'active' && "border-green-200 dark:border-green-900/50"
+                    agent.status === 'active' && "border-zinc-200 dark:border-zinc-900/50"
                   )}
                 >
                   <div className="flex items-start justify-between mb-2">
@@ -121,7 +121,7 @@ export function AgentStatusPanel() {
                       <div className="flex-1">
                         <div className="h-1.5 bg-zinc-200 dark:bg-secondary rounded-full overflow-hidden">
                           <div 
-                            className="h-full bg-green-500 rounded-full transition-all duration-500"
+                            className="h-full bg-zinc-500 rounded-full transition-all duration-500"
                             style={{ width: `${agent.progress}%` }}
                           />
                         </div>
@@ -175,7 +175,7 @@ export function AgentStatusPanel() {
                       href={completion.commitUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-foreground hover:text-blue-600 text-xs"
+                      className="text-foreground hover:text-zinc-900 text-xs"
                     >
                       commit →
                     </a>

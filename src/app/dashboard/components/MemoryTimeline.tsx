@@ -83,7 +83,7 @@ export function MemoryTimeline() {
       {/* Timeline */}
       <div className="space-y-4">
         {error && (
-          <div className="text-center py-8 text-red-500">
+          <div className="text-center py-8 text-zinc-500">
             Failed to load timeline
           </div>
         )}
@@ -107,7 +107,7 @@ export function MemoryTimeline() {
                 {/* Date Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white text-sm font-medium">
+                    <div className="w-8 h-8 rounded-full bg-zinc-500 flex items-center justify-center text-white text-sm font-medium">
                       {new Date(event.date).getDate()}
                     </div>
                     <div>

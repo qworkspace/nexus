@@ -66,8 +66,8 @@ export function CronTimeline({ jobs }: CronTimelineProps) {
                       key={`${job.id}-${idx}`}
                       className={cn(
                         "absolute w-3 h-3 rounded-full border-2 border-white cursor-pointer hover:scale-110 transition-transform",
-                        job.lastStatus === 'ok' && 'bg-green-500',
-                        job.lastStatus === 'error' && 'bg-red-500',
+                        job.lastStatus === 'ok' && 'bg-zinc-500',
+                        job.lastStatus === 'error' && 'bg-zinc-500',
                         !job.lastStatus && 'bg-zinc-400'
                       )}
                       style={{

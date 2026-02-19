@@ -135,8 +135,8 @@ export default function OrgChartPage() {
           <div className="relative flex flex-col items-center gap-6" style={{ zIndex: 2 }}>
             {/* Company */}
             <div data-node-id="company">
-              <div className="px-8 py-4 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 border-2 border-amber-300 dark:border-amber-700 text-center shadow-lg">
-                <p className="text-sm font-bold text-amber-700 dark:text-amber-300">Villanueva Creative Pty Ltd</p>
+              <div className="px-8 py-4 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100 dark:from-amber-900/20 dark:to-amber-800/20 border-2 border-zinc-300 dark:border-amber-700 text-center shadow-lg">
+                <p className="text-sm font-bold text-zinc-700 dark:text-zinc-300">Villanueva Creative Pty Ltd</p>
                 <p className="text-[10px] text-[#FFE135] mt-0.5">Est. Sydney, Australia</p>
               </div>
             </div>
@@ -251,15 +251,15 @@ export default function OrgChartPage() {
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-6 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-[#FFE135] text-[10px] font-medium">Mac Mini</span>
+                <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900/30 text-zinc-900 dark:text-[#FFE135] text-[10px] font-medium">Mac Mini</span>
                 <span>M4 32GB — Primary</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-1.5 py-0.5 rounded bg-violet-100 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 text-[10px] font-medium">VPS</span>
+                <span className="px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-zinc-900/30 text-zinc-500 dark:text-zinc-400 text-[10px] font-medium">VPS</span>
                 <span>Ella&apos;s instance</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-amber-400 border-2 border-white dark:border-zinc-900" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#F5D547] border-2 border-white dark:border-zinc-900" />
                 <span>Human</span>
               </div>
               <div className="flex items-center gap-2">
@@ -300,9 +300,9 @@ export default function OrgChartPage() {
                           }
                           const rel = agent.relationships?.[other.agentId];
                           const trust = rel?.trust ?? 50;
-                          const color = trust >= 60 ? "text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 dark:text-[#FFE135]"
-                            : trust >= 40 ? "text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-[#FFE135]"
-                            : "text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400";
+                          const color = trust >= 60 ? "text-zinc-900 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#FFE135]"
+                            : trust >= 40 ? "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#FFE135]"
+                            : "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400";
                           return (
                             <td
                               key={other.agentId}
@@ -445,14 +445,14 @@ function OrgCard({
   const textSize = size === "lg" ? "text-sm" : size === "sm" ? "text-xs" : "text-xs";
 
   const colorClasses: Record<string, string> = {
-    amber: "border-amber-300 dark:border-amber-600 bg-white dark:bg-card",
+    amber: "border-zinc-300 dark:border-amber-600 bg-white dark:bg-card",
     gold: "border-yellow-400 dark:border-yellow-600 bg-white dark:bg-card",
-    pink: "border-pink-300 dark:border-pink-600 bg-white dark:bg-card",
-    mint: "border-emerald-300 dark:border-emerald-600 bg-white dark:bg-card",
-    emerald: "border-emerald-300 dark:border-emerald-600 bg-white dark:bg-card",
+    pink: "border-zinc-300 dark:border-pink-600 bg-white dark:bg-card",
+    mint: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
+    emerald: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
     cyan: "border-cyan-300 dark:border-cyan-600 bg-white dark:bg-card",
-    blue: "border-blue-300 dark:border-blue-600 bg-white dark:bg-card",
-    orange: "border-orange-300 dark:border-orange-600 bg-white dark:bg-card",
+    blue: "border-zinc-300 dark:border-zinc-600 bg-white dark:bg-card",
+    orange: "border-zinc-300 dark:border-orange-600 bg-white dark:bg-card",
     sky: "border-sky-300 dark:border-sky-600 bg-white dark:bg-card",
     zinc: "border-zinc-300 dark:border-border bg-white dark:bg-card",
   };
@@ -460,11 +460,11 @@ function OrgCard({
   const inner = (
     <div className={`relative rounded-xl border-2 shadow-md hover:shadow-lg transition-all ${colorClasses[color] || colorClasses.zinc} ${sizeClass} text-center`}>
       {isHuman && (
-        <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-amber-400 border-2 border-white dark:border-zinc-900" title="Human" />
+        <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-[#F5D547] border-2 border-white dark:border-zinc-900" title="Human" />
       )}
       {badge && (
         <div className="absolute -top-2.5 left-1/2 -translate-x-1/2">
-          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold shadow-sm ${badge === "VPS" ? "bg-violet-100 dark:bg-violet-900/40 text-violet-600 dark:text-violet-400 border border-violet-200 dark:border-violet-800" : "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-[#FFE135] border border-emerald-200 dark:border-emerald-800"}`}>
+          <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold shadow-sm ${badge === "VPS" ? "bg-zinc-100 dark:bg-zinc-900/40 text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-800" : "bg-zinc-100 dark:bg-zinc-900/40 text-zinc-900 dark:text-[#FFE135] border border-zinc-200 dark:border-zinc-800"}`}>
             {badge}
           </span>
         </div>
@@ -489,8 +489,8 @@ function OrgCard({
 
 function DeptBadge({ name, color, members }: { name: string; color: string; members: string[] }) {
   const dotColors: Record<string, string> = {
-    amber: "bg-amber-400", pink: "bg-pink-400", emerald: "bg-emerald-400",
-    cyan: "bg-cyan-400", blue: "bg-blue-400", orange: "bg-orange-400",
+    amber: "bg-[#F5D547]", pink: "bg-zinc-400", emerald: "bg-zinc-400",
+    cyan: "bg-zinc-400", blue: "bg-zinc-400", orange: "bg-zinc-400",
     sky: "bg-sky-400", zinc: "bg-zinc-400",
   };
   return (

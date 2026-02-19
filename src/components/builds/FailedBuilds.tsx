@@ -19,7 +19,7 @@ export function FailedBuilds({ builds }: FailedBuildsProps) {
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <XCircle size={18} className="text-red-600" />
+          <XCircle size={18} className="text-zinc-500" />
           Failed Builds
         </CardTitle>
       </CardHeader>
@@ -27,7 +27,7 @@ export function FailedBuilds({ builds }: FailedBuildsProps) {
         {builds.map((build) => (
           <div
             key={build.id}
-            className="border border-red-200 bg-red-50 rounded-lg p-4 space-y-3"
+            className="border border-zinc-200 bg-zinc-50 rounded-lg p-4 space-y-3"
           >
             {/* Header */}
             <div className="flex items-start gap-3">
@@ -36,7 +36,7 @@ export function FailedBuilds({ builds }: FailedBuildsProps) {
                   <h3 className="font-semibold text-zinc-900">
                     {build.label}
                   </h3>
-                  <Badge className="bg-red-500 hover:bg-red-600 text-xs flex items-center gap-1">
+                  <Badge className="bg-zinc-500 hover:bg-zinc-600 text-xs flex items-center gap-1">
                     <X size={12} />
                     FAILED
                   </Badge>
@@ -57,8 +57,8 @@ export function FailedBuilds({ builds }: FailedBuildsProps) {
 
             {/* Error message */}
             {build.error && (
-              <div className="bg-red-100 border border-red-200 rounded p-3">
-                <p className="text-sm text-red-800 font-mono text-xs">
+              <div className="bg-zinc-100 border border-zinc-200 rounded p-3">
+                <p className="text-sm text-zinc-800 font-mono text-xs">
                   {build.error}
                 </p>
               </div>

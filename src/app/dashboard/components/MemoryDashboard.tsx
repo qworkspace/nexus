@@ -136,7 +136,7 @@ export function MemoryDashboard() {
 
       <CardContent>
         {error && (
-          <div className="text-center py-8 text-red-500">
+          <div className="text-center py-8 text-zinc-500">
             Failed to load memory data
           </div>
         )}

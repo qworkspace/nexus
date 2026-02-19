@@ -346,7 +346,7 @@ export default function RelationshipsPage() {
               <div className="space-y-2 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#FFE135]" /> High trust (60+)</div>
                 <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#FFE135]" /> Neutral (40-59)</div>
-                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-red-500" /> Low trust (&lt;40)</div>
+                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-zinc-500" /> Low trust (&lt;40)</div>
                 <div className="flex items-center gap-2"><span className="text-muted-foreground">Line thickness</span> = trust level</div>
               </div>
             </div>
@@ -567,9 +567,9 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
                   <span
                     className={`text-xs font-bold ${
                       evt.delta > 0
-                        ? 'text-emerald-600'
+                        ? 'text-zinc-900'
                         : evt.delta < 0
-                        ? 'text-red-600'
+                        ? 'text-zinc-500'
                         : 'text-muted-foreground'
                     }`}
                   >
@@ -590,8 +590,8 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
 }
 
 function TrustBadge({ trust }: { trust: number }) {
-  const color = trust >= 60 ? "text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 dark:text-[#FFE135]"
-    : trust >= 40 ? "text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-[#FFE135]"
-    : "text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400";
+  const color = trust >= 60 ? "text-zinc-900 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#FFE135]"
+    : trust >= 40 ? "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-[#FFE135]"
+    : "text-zinc-500 bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-400";
   return <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${color}`}>{trust}</span>;
 }

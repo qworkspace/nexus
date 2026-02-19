@@ -99,8 +99,8 @@ export function MemorySearch({ initialQuery = '', onResultsChange }: MemorySearc
 
       {/* Error State */}
       {error && !isLoading && (
-        <div className="p-4 border border-red-200 bg-red-50 rounded-lg">
-          <p className="text-sm text-red-700">
+        <div className="p-4 border border-zinc-200 bg-zinc-50 rounded-lg">
+          <p className="text-sm text-zinc-700">
             Failed to search memories. Please try again.
           </p>
         </div>

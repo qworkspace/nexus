@@ -17,12 +17,12 @@ interface ResearchItem {
 }
 
 const SOURCE_CONFIG: Record<string, { label: string; color: string; bgColor: string }> = {
-  'think_session': { label: 'Think Session', color: 'text-violet-700 dark:text-violet-400', bgColor: 'bg-violet-100 dark:bg-violet-900/30' },
-  'research_scan': { label: 'Research Scan', color: 'text-blue-700 dark:text-foreground', bgColor: 'bg-blue-100 dark:bg-blue-900/30' },
-  'ai_intel': { label: 'AI Intel', color: 'text-emerald-700 dark:text-[#FFE135]', bgColor: 'bg-emerald-100 dark:bg-emerald-900/30' },
-  'memo': { label: 'Memo', color: 'text-amber-700 dark:text-[#FFE135]', bgColor: 'bg-amber-100 dark:bg-amber-900/30' },
+  'think_session': { label: 'Think Session', color: 'text-zinc-700 dark:text-zinc-400', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
+  'research_scan': { label: 'Research Scan', color: 'text-zinc-700 dark:text-foreground', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
+  'ai_intel': { label: 'AI Intel', color: 'text-zinc-700 dark:text-[#FFE135]', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
+  'memo': { label: 'Memo', color: 'text-zinc-700 dark:text-[#FFE135]', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
   'morning_brief': { label: 'Morning Brief', color: 'text-sky-700 dark:text-sky-400', bgColor: 'bg-sky-100 dark:bg-sky-900/30' },
-  'evening_brief': { label: 'Evening Brief', color: 'text-indigo-700 dark:text-muted-foreground', bgColor: 'bg-indigo-100 dark:bg-indigo-900/30' },
+  'evening_brief': { label: 'Evening Brief', color: 'text-zinc-700 dark:text-muted-foreground', bgColor: 'bg-zinc-100 dark:bg-zinc-900/30' },
 };
 
 export default function ResearchPage() {
@@ -246,11 +246,11 @@ export default function ResearchPage() {
               {/* Critical Items - Raw content, no bullet transform */}
               {selectedItem.critical.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 font-medium text-sm mb-2">
                     <AlertTriangle className="h-4 w-4" />
                     <span>Critical</span>
                   </div>
-                  <div className="bg-red-50 dark:bg-red-950/20 rounded-lg p-3 space-y-1">
+                  <div className="bg-zinc-50 dark:bg-zinc-950/20 rounded-lg p-3 space-y-1">
                     {selectedItem.critical.map((item, i) => (
                       <p key={i} className="text-sm text-zinc-700 dark:text-foreground">{item}</p>
                     ))}
@@ -261,11 +261,11 @@ export default function ResearchPage() {
               {/* Notable Items */}
               {selectedItem.notable.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-amber-600 dark:text-[#FFE135] font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-500 dark:text-[#FFE135] font-medium text-sm mb-2">
                     <Lightbulb className="h-4 w-4" />
                     <span>Notable</span>
                   </div>
-                  <div className="bg-amber-50 dark:bg-amber-950/20 rounded-lg p-3 space-y-1">
+                  <div className="bg-zinc-50 dark:bg-zinc-950/20 rounded-lg p-3 space-y-1">
                     {selectedItem.notable.map((item, i) => (
                       <p key={i} className="text-sm text-zinc-700 dark:text-foreground">{item}</p>
                     ))}
@@ -276,11 +276,11 @@ export default function ResearchPage() {
               {/* Highlights */}
               {selectedItem.highlights.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-blue-600 dark:text-foreground font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-900 dark:text-foreground font-medium text-sm mb-2">
                     <CheckCircle className="h-4 w-4" />
                     <span>Highlights</span>
                   </div>
-                  <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-3 space-y-1">
+                  <div className="bg-zinc-50 dark:bg-zinc-950/20 rounded-lg p-3 space-y-1">
                     {selectedItem.highlights.map((item, i) => (
                       <p key={i} className="text-sm text-zinc-700 dark:text-foreground">{item}</p>
                     ))}
@@ -291,11 +291,11 @@ export default function ResearchPage() {
               {/* Actions */}
               {selectedItem.actions.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 text-emerald-600 dark:text-[#FFE135] font-medium text-sm mb-2">
+                  <div className="flex items-center gap-2 text-zinc-900 dark:text-[#FFE135] font-medium text-sm mb-2">
                     <CheckCircle className="h-4 w-4" />
                     <span>Actions</span>
                   </div>
-                  <div className="bg-emerald-50 dark:bg-emerald-950/20 rounded-lg p-3 space-y-1">
+                  <div className="bg-zinc-50 dark:bg-zinc-950/20 rounded-lg p-3 space-y-1">
                     {selectedItem.actions.map((item, i) => (
                       <p key={i} className="text-sm text-zinc-700 dark:text-foreground">{item}</p>
                     ))}
@@ -371,7 +371,7 @@ function ResearchCard({
         {/* Critical Items - Raw content, no bullet transform */}
         {item.critical.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-medium text-sm">
+            <div className="flex items-center gap-2 text-zinc-500 dark:text-zinc-400 font-medium text-sm">
               <AlertTriangle className="h-4 w-4" />
               <span>Critical</span>
             </div>
@@ -388,7 +388,7 @@ function ResearchCard({
         {/* Notable Items */}
         {item.notable.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-amber-600 dark:text-[#FFE135] font-medium text-sm">
+            <div className="flex items-center gap-2 text-zinc-500 dark:text-[#FFE135] font-medium text-sm">
               <Lightbulb className="h-4 w-4" />
               <span>Notable</span>
             </div>
@@ -405,7 +405,7 @@ function ResearchCard({
         {/* Highlights */}
         {item.highlights.length > 0 && (
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-blue-600 dark:text-foreground font-medium text-sm">
+            <div className="flex items-center gap-2 text-zinc-900 dark:text-foreground font-medium text-sm">
               <CheckCircle className="h-4 w-4" />
               <span>Highlights</span>
             </div>
@@ -422,7 +422,7 @@ function ResearchCard({
         {/* Actions */}
         {item.actions.length > 0 && (
           <div className="pt-2 border-t border-zinc-200 dark:border-border">
-            <div className="flex items-center gap-2 text-emerald-600 dark:text-[#FFE135] font-medium text-sm mb-2">
+            <div className="flex items-center gap-2 text-zinc-900 dark:text-[#FFE135] font-medium text-sm mb-2">
               <CheckCircle className="h-4 w-4" />
               <span>Actions</span>
             </div>

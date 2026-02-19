@@ -31,17 +31,17 @@ async function fetcher(url: string): Promise<BugsResponse> {
 }
 
 const PRIORITY_COLORS: Record<BugPriority, string> = {
-  critical: "bg-red-500",
-  high: "bg-orange-500",
+  critical: "bg-zinc-500",
+  high: "bg-zinc-500",
   medium: "bg-yellow-500",
-  low: "bg-green-500",
+  low: "bg-zinc-500",
 };
 
 const STATUS_COLORS: Record<BugStatus, string> = {
-  open: "bg-red-100 dark:bg-red-950 text-red-700 dark:text-red-400",
-  "in-progress": "bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400",
-  testing: "bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-400",
-  resolved: "bg-green-100 dark:bg-green-950 text-green-700 dark:text-green-400",
+  open: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400",
+  "in-progress": "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400",
+  testing: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400",
+  resolved: "bg-zinc-100 dark:bg-zinc-950 text-zinc-700 dark:text-zinc-400",
   closed: "bg-gray-100 dark:bg-gray-950 text-gray-700 dark:text-gray-400",
 };
 
@@ -197,7 +197,7 @@ export function BugList({ onBugClick }: BugListProps) {
                   Loading bugs...
                 </div>
               ) : error ? (
-                <div className="text-center py-8 text-sm text-red-500">
+                <div className="text-center py-8 text-sm text-zinc-500">
                   Error loading bugs
                 </div>
               ) : bugs.length === 0 ? (
@@ -211,7 +211,7 @@ export function BugList({ onBugClick }: BugListProps) {
                   <button
                     key={bug.id}
                     onClick={() => handleBugClick(bug)}
-                    className="w-full text-left p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-blue-300 dark:hover:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors"
+                    className="w-full text-left p-3 rounded-lg border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-950/30 transition-colors"
                   >
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div className={`flex-1 min-w-0`}>

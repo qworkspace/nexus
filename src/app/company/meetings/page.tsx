@@ -39,7 +39,7 @@ interface Agent {
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "bg-red-500",
+  high: "bg-zinc-500",
   medium: "bg-[#FFE135]",
   low: "bg-[#FFE135]",
 };
@@ -209,12 +209,12 @@ export default function MeetingsPage() {
                   </div>
                 )}
                 {summary && (
-                  <div className="mb-3 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                    <h3 className="text-xs font-bold text-amber-900 dark:text-[#FFE135] mb-1.5 flex items-center gap-1">
+                  <div className="mb-3 p-3 bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-200 dark:border-zinc-800 rounded-lg">
+                    <h3 className="text-xs font-bold text-zinc-900 dark:text-[#FFE135] mb-1.5 flex items-center gap-1">
                       <FileText size={12} />
                       TL;DR
                     </h3>
-                    <div className="text-xs text-amber-800 dark:text-amber-200 whitespace-pre-line leading-relaxed">
+                    <div className="text-xs text-zinc-800 dark:text-zinc-200 whitespace-pre-line leading-relaxed">
                       {summary}
                     </div>
                   </div>
@@ -225,7 +225,7 @@ export default function MeetingsPage() {
                   <div className="mb-3">
                     <div className="flex gap-1 flex-wrap">
                       {meetingTopics[selectedId!].map(t => (
-                        <span key={t} className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-foreground rounded-full text-[10px]">
+                        <span key={t} className="px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-900/30 text-zinc-700 dark:text-foreground rounded-full text-[10px]">
                           {t}
                         </span>
                       ))}
@@ -339,7 +339,7 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
         </p>
       )}
       {item.blockedBy && (
-        <p className="text-[10px] text-red-500 mt-1 flex items-center gap-0.5">
+        <p className="text-[10px] text-zinc-500 mt-1 flex items-center gap-0.5">
           <XCircle size={10} /> {item.blockedBy}
         </p>
       )}
@@ -366,7 +366,7 @@ function MeetingContent({ content }: { content: string }) {
           );
         }
         if (line.startsWith("- [ ] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><Square size={11} className="text-muted-foreground" /><span className="text-zinc-700 dark:text-foreground">{line.slice(6)}</span></div>;
-        if (line.startsWith("- [x] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><CheckSquare size={11} className="text-green-600" /><span className="text-muted-foreground line-through">{line.slice(6)}</span></div>;
+        if (line.startsWith("- [x] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><CheckSquare size={11} className="text-zinc-900" /><span className="text-muted-foreground line-through">{line.slice(6)}</span></div>;
         if (line.startsWith("- ")) return <div key={i} className="text-xs text-zinc-700 dark:text-foreground pl-3">• {line.slice(2)}</div>;
         if (line.startsWith("---")) return <hr key={i} className="border-zinc-200 dark:border-border my-3" />;
         if (line.trim() === "") return <div key={i} className="h-1" />;

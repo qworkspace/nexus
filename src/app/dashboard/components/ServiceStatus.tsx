@@ -46,9 +46,9 @@ const formatUptime = (seconds: number): string => {
 const getStatusIcon = (status: string): React.ReactNode => {
   switch (status) {
     case "running":
-      return <CheckCircle className="h-4 w-4 text-green-500" />;
+      return <CheckCircle className="h-4 w-4 text-zinc-500" />;
     case "stopped":
-      return <XCircle className="h-4 w-4 text-red-500" />;
+      return <XCircle className="h-4 w-4 text-zinc-500" />;
     default:
       return <AlertCircle className="h-4 w-4 text-yellow-500" />;
   }
@@ -57,9 +57,9 @@ const getStatusIcon = (status: string): React.ReactNode => {
 const getStatusColor = (status: string): string => {
   switch (status) {
     case "running":
-      return "text-green-600 dark:text-green-400";
+      return "text-zinc-900 dark:text-zinc-400";
     case "stopped":
-      return "text-red-600 dark:text-red-400";
+      return "text-zinc-500 dark:text-zinc-400";
     default:
       return "text-yellow-600 dark:text-yellow-400";
   }
@@ -68,9 +68,9 @@ const getStatusColor = (status: string): string => {
 const getStatusBg = (status: string): string => {
   switch (status) {
     case "running":
-      return "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800";
+      return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
     case "stopped":
-      return "bg-red-50 dark:bg-red-950 border-red-200 dark:border-red-800";
+      return "bg-zinc-50 dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800";
     default:
       return "bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800";
   }
@@ -122,7 +122,7 @@ export function ServiceStatus() {
               <div className={`flex items-center justify-between p-2 rounded-lg border ${getStatusBg(allRunning ? "running" : "stopped")}`}>
                 <div className="flex items-center gap-2">
                   {allRunning ? (
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <CheckCircle className="h-4 w-4 text-zinc-500" />
                   ) : (
                     <AlertCircle className="h-4 w-4 text-yellow-500" />
                   )}
@@ -159,10 +159,10 @@ interface ActivityIconProps {
 
 function ActivityIcon({ allRunning, anyStopped }: ActivityIconProps) {
   if (allRunning) {
-    return <CheckCircle className="h-5 w-5 text-green-500" />;
+    return <CheckCircle className="h-5 w-5 text-zinc-500" />;
   }
   if (anyStopped) {
-    return <XCircle className="h-5 w-5 text-red-500" />;
+    return <XCircle className="h-5 w-5 text-zinc-500" />;
   }
   return <AlertCircle className="h-5 w-5 text-yellow-500" />;
 }

@@ -20,10 +20,10 @@ export function ToolCallBlock({ name, input, isResult, isError }: ToolCallBlockP
         onClick={() => setExpanded(!expanded)}
         className={`flex items-center gap-2 text-xs font-mono transition-colors ${
           isError
-            ? 'text-red-600 hover:text-red-700'
+            ? 'text-zinc-500 hover:text-zinc-700'
             : isResult
-            ? 'text-emerald-600 hover:text-emerald-700'
-            : 'text-violet-600 hover:text-violet-700'
+            ? 'text-zinc-900 hover:text-zinc-700'
+            : 'text-zinc-500 hover:text-zinc-700'
         }`}
       >
         {expanded ? (
@@ -46,9 +46,9 @@ export function ToolCallBlock({ name, input, isResult, isError }: ToolCallBlockP
         <div
           className={`mt-2 rounded-lg border font-mono text-xs overflow-x-auto ${
             isError
-              ? 'bg-red-50 border-red-200 text-red-800'
+              ? 'bg-zinc-50 border-zinc-200 text-zinc-800'
               : isResult
-              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              ? 'bg-zinc-50 border-zinc-200 text-zinc-800'
               : 'bg-card border-border text-foreground'
           }`}
         >

@@ -39,11 +39,11 @@ const formatTimestamp = (timestamp: string): string => {
 const getSessionTypeColor = (type: string): string => {
   switch (type) {
     case "main":
-      return "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-muted-foreground";
+      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-muted-foreground";
     case "cron":
-      return "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-foreground";
+      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-foreground";
     case "subagent":
-      return "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400";
+      return "bg-zinc-100 text-zinc-700 dark:bg-zinc-900/30 dark:text-zinc-400";
     default:
       return "bg-zinc-100 text-zinc-700 dark:bg-card/30 dark:text-muted-foreground";
   }

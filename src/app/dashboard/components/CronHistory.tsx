@@ -76,9 +76,9 @@ export function CronHistory({ jobId, jobName, onClose }: CronHistoryProps) {
   const getStatusIcon = (status: RunEntry['status']) => {
     switch (status) {
       case 'ok':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-zinc-500" />;
       case 'error':
-        return <XCircle className="h-4 w-4 text-red-500" />;
+        return <XCircle className="h-4 w-4 text-zinc-500" />;
       case 'timeout':
         return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
     }
@@ -87,9 +87,9 @@ export function CronHistory({ jobId, jobName, onClose }: CronHistoryProps) {
   const getStatusBadge = (status: RunEntry['status']) => {
     switch (status) {
       case 'ok':
-        return <Badge variant="outline" className="text-xs text-green-600 border-green-200">SUCCESS</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-900 border-zinc-200">SUCCESS</Badge>;
       case 'error':
-        return <Badge variant="outline" className="text-xs text-red-600 border-red-200">ERROR</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">ERROR</Badge>;
       case 'timeout':
         return <Badge variant="outline" className="text-xs text-yellow-600 border-yellow-200">TIMEOUT</Badge>;
     }
@@ -195,7 +195,7 @@ export function CronHistory({ jobId, jobName, onClose }: CronHistoryProps) {
                 )}
 
                 {entry.error && (
-                  <div className="mt-2 text-xs text-red-600 bg-red-50 dark:bg-red-950/20 rounded p-2">
+                  <div className="mt-2 text-xs text-zinc-500 bg-zinc-50 dark:bg-zinc-950/20 rounded p-2">
                     {entry.error}
                   </div>
                 )}
@@ -219,7 +219,7 @@ export function CronHistory({ jobId, jobName, onClose }: CronHistoryProps) {
         )}
 
         {error && (
-          <div className="mt-4 text-xs text-red-600 text-center">
+          <div className="mt-4 text-xs text-zinc-500 text-center">
             Failed to load history: {error.message}
           </div>
         )}

@@ -49,9 +49,9 @@ export function LessonsSummary() {
   };
 
   const getEffectivenessColor = (effectiveness: number) => {
-    if (effectiveness >= 90) return "text-green-600";
+    if (effectiveness >= 90) return "text-zinc-900";
     if (effectiveness >= 80) return "text-yellow-600";
-    return "text-red-600";
+    return "text-zinc-500";
   };
 
   if (error) {
@@ -64,7 +64,7 @@ export function LessonsSummary() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-4 text-red-500 text-sm">
+          <div className="text-center py-4 text-zinc-500 text-sm">
             Failed to load lessons
           </div>
         </CardContent>
@@ -111,7 +111,7 @@ export function LessonsSummary() {
             </p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-semibold text-red-600">
+            <p className="text-2xl font-semibold text-zinc-500">
               {stats.needsReview}
             </p>
             <p className="text-xs text-muted-foreground dark:text-muted-foreground">
@@ -156,13 +156,13 @@ export function LessonsSummary() {
 
         {/* Needs Review Alert */}
         {stats.needsReview > 0 && (
-          <div className="mt-4 flex items-start gap-2 text-xs bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 rounded p-2">
-            <AlertTriangle className="h-3 w-3 text-red-600 mt-0.5 flex-shrink-0" />
+          <div className="mt-4 flex items-start gap-2 text-xs bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded p-2">
+            <AlertTriangle className="h-3 w-3 text-zinc-500 mt-0.5 flex-shrink-0" />
             <div>
-              <p className="font-medium text-red-800 dark:text-red-200">
+              <p className="font-medium text-zinc-800 dark:text-zinc-200">
                 {stats.needsReview} lesson{stats.needsReview > 1 ? "s" : ""} need review
               </p>
-              <p className="text-red-700 dark:text-red-300">
+              <p className="text-zinc-700 dark:text-zinc-300">
                 Effectiveness below 80%
               </p>
             </div>

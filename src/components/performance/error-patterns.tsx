@@ -33,7 +33,7 @@ export function ErrorPatterns({ errors }: { errors: ErrorPattern[] }) {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center py-8 text-green-600">
+          <div className="flex items-center justify-center py-8 text-zinc-900">
             <CheckCircle size={24} className="mr-2" />
             <span className="text-sm font-medium">No errors in the last 30 days!</span>
           </div>
@@ -57,7 +57,7 @@ export function ErrorPatterns({ errors }: { errors: ErrorPattern[] }) {
               key={i}
               className="flex items-start gap-3 py-2 border-b border-zinc-100 last:border-0"
             >
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-red-100 text-red-600 text-xs font-bold shrink-0">
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-zinc-100 text-zinc-500 text-xs font-bold shrink-0">
                 {error.count}
               </div>
               <div className="flex-1 min-w-0">

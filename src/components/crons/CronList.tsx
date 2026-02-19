@@ -60,8 +60,8 @@ function StatusDot({ status, enabled }: { status: 'ok' | 'error' | null; enabled
   }
 
   const colors = {
-    ok: "bg-green-500",
-    error: "bg-red-500",
+    ok: "bg-zinc-500",
+    error: "bg-zinc-500",
   };
 
   return (

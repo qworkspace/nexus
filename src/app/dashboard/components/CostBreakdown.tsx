@@ -42,11 +42,11 @@ async function fetcher(url: string): Promise<CostBreakdownResponse> {
 const getServiceColor = (service: string): string => {
   switch (service) {
     case "anthropic":
-      return "bg-orange-500";
+      return "bg-zinc-500";
     case "openai":
-      return "bg-emerald-500";
+      return "bg-zinc-500";
     case "local":
-      return "bg-blue-500";
+      return "bg-zinc-500";
     default:
       return "bg-zinc-500";
   }
@@ -188,7 +188,7 @@ export function CostBreakdown() {
                       label={item.model}
                       value={item.cost}
                       total={total}
-                      colorClass="bg-indigo-500"
+                      colorClass="bg-zinc-500"
                       subtitle={`${formatTokens(item.inputTokens + item.outputTokens)} tokens • ${item.count} requests`}
                     />
                   ))}

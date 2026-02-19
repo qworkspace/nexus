@@ -98,9 +98,9 @@ export function CronJobMonitor() {
   const getStatusIcon = (status?: string) => {
     switch (status) {
       case 'ok':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-zinc-500" />;
       case 'error':
-        return <XCircle className="h-4 w-4 text-red-500" />;
+        return <XCircle className="h-4 w-4 text-zinc-500" />;
       case 'timeout':
         return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
       default:
@@ -112,9 +112,9 @@ export function CronJobMonitor() {
   const getStatusBadge = (status?: string) => {
     switch (status) {
       case 'ok':
-        return <Badge variant="outline" className="text-xs text-green-600 border-green-200">SUCCESS</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-900 border-zinc-200">SUCCESS</Badge>;
       case 'error':
-        return <Badge variant="outline" className="text-xs text-red-600 border-red-200">ERROR</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">ERROR</Badge>;
       case 'timeout':
         return <Badge variant="outline" className="text-xs text-yellow-600 border-yellow-200">TIMEOUT</Badge>;
       default:
@@ -247,8 +247,8 @@ export function CronJobMonitor() {
                       size="sm"
                       className={`h-7 px-2 text-xs ${
                         job.enabled
-                          ? "text-zinc-500 hover:text-red-600"
-                          : "text-zinc-500 hover:text-green-600"
+                          ? "text-zinc-500 hover:text-zinc-500"
+                          : "text-zinc-500 hover:text-zinc-900"
                       }`}
                       onClick={() => handleDisable(job.id, job.enabled)}
                       title={job.enabled ? "Disable" : "Enable"}
@@ -259,7 +259,7 @@ export function CronJobMonitor() {
                 </div>
 
                 {job.state.lastStatus === 'error' && job.state.lastError && (
-                  <div className="mt-2 text-xs text-red-600 bg-red-50 dark:bg-red-950/20 rounded p-2">
+                  <div className="mt-2 text-xs text-zinc-500 bg-zinc-50 dark:bg-zinc-950/20 rounded p-2">
                     {job.state.lastError}
                   </div>
                 )}
@@ -273,12 +273,12 @@ export function CronJobMonitor() {
           <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-400">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <CheckCircle className="h-3 w-3 text-green-500" />
+                <CheckCircle className="h-3 w-3 text-zinc-500" />
                 {totalRuns - failedJobs.length} successful
               </span>
               {failedJobs.length > 0 && (
                 <span className="flex items-center gap-1">
-                  <XCircle className="h-3 w-3 text-red-500" />
+                  <XCircle className="h-3 w-3 text-zinc-500" />
                   {failedJobs.length} failed
                 </span>
               )}

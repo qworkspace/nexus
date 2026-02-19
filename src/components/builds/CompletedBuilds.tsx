@@ -85,10 +85,10 @@ export function CompletedBuilds() {
   const getRatingColor = (rating: string) => {
     switch (rating) {
       case 'great':
-      case 'good': return 'text-green-600 bg-green-50';
+      case 'good': return 'text-zinc-900 bg-zinc-50';
       case 'meh': return 'text-yellow-600 bg-yellow-50';
       case 'bad':
-      case 'useless': return 'text-red-600 bg-red-50';
+      case 'useless': return 'text-zinc-500 bg-zinc-50';
       default: return 'text-muted-foreground';
     }
   };
@@ -138,7 +138,7 @@ export function CompletedBuilds() {
                   className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-card rounded-lg group hover:bg-zinc-100 dark:hover:bg-secondary transition-colors"
                 >
                   <div className="flex-shrink-0 mt-0.5">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <CheckCircle className="h-4 w-4 text-zinc-500" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-zinc-900 dark:text-foreground line-clamp-2">
@@ -153,7 +153,7 @@ export function CompletedBuilds() {
                     </div>
                     {build.specName && (
                       <div className="mt-1">
-                        <span className="text-xs text-blue-600 hover:underline cursor-pointer">
+                        <span className="text-xs text-zinc-900 hover:underline cursor-pointer">
                           → {build.specName}
                         </span>
                       </div>
@@ -170,7 +170,7 @@ export function CompletedBuilds() {
                             by {feedbackForBuild.ratedBy} • {formatRelativeTime(feedbackForBuild.ratedAt)}
                           </span>
                           {feedbackForBuild.issues.length > 0 && (
-                            <div className="mt-1 text-red-600">
+                            <div className="mt-1 text-zinc-500">
                               Issues: {feedbackForBuild.issues.join(', ')}
                             </div>
                           )}
@@ -184,7 +184,7 @@ export function CompletedBuilds() {
                                 detail: { spec: feedbackForBuild.spec }
                               }));
                             }}
-                            className="mt-1 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                            className="mt-1 text-xs text-zinc-900 hover:text-zinc-800 hover:underline"
                           >
                             → View in Fix Log
                           </button>

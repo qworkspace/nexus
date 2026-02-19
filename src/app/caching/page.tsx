@@ -102,8 +102,8 @@ export default function CachingPage() {
           <h1 className="text-2xl font-semibold text-zinc-900 dark:text-foreground">Prompt Caching</h1>
           <p className="text-muted-foreground text-sm">Cache efficiency and cost savings visualization</p>
         </div>
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6">
-          <p className="text-red-700 dark:text-red-400 flex items-center gap-2">
+        <div className="bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-200 dark:border-zinc-800 rounded-xl p-6">
+          <p className="text-zinc-700 dark:text-zinc-400 flex items-center gap-2">
             <AlertTriangle size={16} />
             Unable to load cache data: {error}
           </p>

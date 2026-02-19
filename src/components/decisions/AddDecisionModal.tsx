@@ -277,7 +277,7 @@ export function AddDecisionModal({ onClose, onSuccess }: AddDecisionModalProps) 
                       variant="ghost"
                       size="sm"
                       onClick={() => removeOutcome(i)}
-                      className="text-red-600 hover:text-red-700"
+                      className="text-zinc-500 hover:text-zinc-700"
                     >
                       <Trash2 className="h-4 w-4 mr-1" />
                       Remove
@@ -292,7 +292,7 @@ export function AddDecisionModal({ onClose, onSuccess }: AddDecisionModalProps) 
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" className="bg-foreground hover:bg-blue-700">
+              <Button type="submit" className="bg-foreground hover:bg-zinc-700">
                 Create Decision
               </Button>
             </div>

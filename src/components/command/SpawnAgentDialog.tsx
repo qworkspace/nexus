@@ -110,7 +110,7 @@ export function SpawnAgentDialog() {
                     className={cn(
                       "p-3 rounded-lg border text-left transition-all",
                       model === m.id
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                        ? "border-zinc-500 bg-zinc-50 dark:bg-zinc-900/20"
                         : "border-zinc-200 dark:border-border hover:border-zinc-300 dark:hover:border-border"
                     )}
                   >
@@ -139,7 +139,7 @@ export function SpawnAgentDialog() {
 
           {/* Error */}
           {error && (
-            <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-900/30 text-red-700 dark:text-red-400 text-sm">
+            <div className="p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-200 dark:border-zinc-900/30 text-zinc-700 dark:text-zinc-400 text-sm">
               {error}
             </div>
           )}

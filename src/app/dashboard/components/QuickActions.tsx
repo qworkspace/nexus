@@ -64,12 +64,12 @@ export function QuickActions() {
 
           <Button 
             variant="outline" 
-            className="w-full justify-start h-auto py-3 px-4 hover:border-red-200 hover:bg-red-50"
+            className="w-full justify-start h-auto py-3 px-4 hover:border-zinc-200 hover:bg-zinc-50"
           >
-            <OctagonX className="h-4 w-4 mr-3 text-red-500" />
+            <OctagonX className="h-4 w-4 mr-3 text-zinc-500" />
             <div className="text-left">
-              <p className="text-sm font-medium text-red-600">Emergency Stop</p>
-              <p className="text-xs text-red-400 mt-0.5">Kill all spawned sessions</p>
+              <p className="text-sm font-medium text-zinc-500">Emergency Stop</p>
+              <p className="text-xs text-zinc-400 mt-0.5">Kill all spawned sessions</p>
             </div>
           </Button>
         </div>

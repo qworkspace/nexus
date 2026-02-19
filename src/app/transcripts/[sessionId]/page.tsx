@@ -38,7 +38,7 @@ export default function TranscriptDetailPage() {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
-          <p className="text-red-600 mb-2">Failed to load transcript</p>
+          <p className="text-zinc-500 mb-2">Failed to load transcript</p>
           <p className="text-sm text-muted-foreground">Session ID: {sessionId}</p>
           {data?.error && <p className="text-xs text-muted-foreground mt-2">{data.error}</p>}
         </div>

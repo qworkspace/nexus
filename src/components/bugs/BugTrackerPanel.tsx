@@ -68,8 +68,8 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
   const sources: BugSource[] = ['testing', 'manual', 'build', 'console', 'user'];
 
   const SEVERITY_COLORS: Record<Severity, string> = {
-    critical: 'bg-red-500',
-    high: 'bg-orange-500',
+    critical: 'bg-zinc-500',
+    high: 'bg-zinc-500',
     medium: 'bg-yellow-500',
     low: 'bg-gray-500',
   };
@@ -323,7 +323,7 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
           {hasActiveFilters && (
             <button
               onClick={handleClearFilters}
-              className="text-xs text-blue-600 dark:text-foreground hover:underline"
+              className="text-xs text-zinc-900 dark:text-foreground hover:underline"
             >
               Clear filters
             </button>
@@ -364,7 +364,7 @@ export function BugTrackerPanel({ bugs, stats, onCreateBug, isCreating = false }
               {hasActiveFilters && (
                 <button
                   onClick={handleClearFilters}
-                  className="mt-2 text-sm text-blue-600 dark:text-foreground hover:underline"
+                  className="mt-2 text-sm text-zinc-900 dark:text-foreground hover:underline"
                 >
                   Clear all filters
                 </button>

@@ -65,10 +65,10 @@ export function StatsBar({ stats }: StatsBarProps) {
             className={cn(
               "text-3xl font-bold",
               stats.successRate >= 95
-                ? "text-green-600"
+                ? "text-zinc-900"
                 : stats.successRate >= 80
                 ? "text-yellow-600"
-                : "text-red-600"
+                : "text-zinc-500"
             )}
           >
             {stats.successRate.toFixed(1)}%

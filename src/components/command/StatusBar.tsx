@@ -73,7 +73,7 @@ export function StatusBar() {
       </div>
 
       <div className="flex items-center gap-1.5 ml-auto">
-        <span className="text-green-400">{data.todayCost}</span>
+        <span className="text-zinc-400">{data.todayCost}</span>
       </div>
 
       <div className="text-muted-foreground">

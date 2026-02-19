@@ -159,16 +159,16 @@ export default function CompanyPage() {
 
   // Agent colour mapping for visual distinction
   const agentColours: Record<string, { border: string; glow: string }> = {
-    q: { border: "border-l-amber-500", glow: "shadow-[0_0_20px_-5px_rgba(245,158,11,0.15)]" },
-    aura: { border: "border-l-pink-400", glow: "shadow-[0_0_20px_-5px_rgba(244,114,182,0.15)]" },
-    surge: { border: "border-l-green-500", glow: "shadow-[0_0_20px_-5px_rgba(34,197,94,0.15)]" },
-    spark: { border: "border-l-blue-500", glow: "shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)]" },
-    cipher: { border: "border-l-purple-500", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.15)]" },
-    volt: { border: "border-l-red-500", glow: "shadow-[0_0_20px_-5px_rgba(239,68,68,0.15)]" },
-    echo: { border: "border-l-teal-500", glow: "shadow-[0_0_20px_-5px_rgba(20,184,166,0.15)]" },
-    flux: { border: "border-l-orange-500", glow: "shadow-[0_0_20px_-5px_rgba(249,115,22,0.15)]" },
-    prism: { border: "border-l-transparent bg-gradient-to-b from-red-500 via-green-500 to-blue-500", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.2)]" },
-    luna: { border: "border-l-slate-400", glow: "shadow-[0_0_20px_-5px_rgba(148,163,184,0.15)]" },
+    q: { border: "border-l-[#F5D547]", glow: "" },
+    aura: { border: "border-l-zinc-400", glow: "" },
+    surge: { border: "border-l-zinc-500", glow: "" },
+    spark: { border: "border-l-zinc-400", glow: "" },
+    cipher: { border: "border-l-zinc-500", glow: "" },
+    volt: { border: "border-l-zinc-400", glow: "" },
+    echo: { border: "border-l-zinc-500", glow: "" },
+    flux: { border: "border-l-zinc-400", glow: "" },
+    prism: { border: "border-l-zinc-300", glow: "" },
+    luna: { border: "border-l-zinc-400", glow: "" },
   };
 
   // Calculate sparkline data for each agent (last 7 days of task completions)
@@ -209,7 +209,7 @@ export default function CompanyPage() {
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-foreground flex items-center gap-2">
-            <HeartPulse size={24} className="text-[#FFE135]" />
+            <HeartPulse size={24} className="text-[#F5D547]" />
             The Core
           </h1>
           <p className="text-muted-foreground text-sm">Villanueva Creative — {agents.length} team members</p>
@@ -295,7 +295,7 @@ export default function CompanyPage() {
                         {trendingUp ? (
                           <TrendingUp size={10} className="text-foreground" />
                         ) : (
-                          <TrendingDown size={10} className="text-red-500" />
+                          <TrendingDown size={10} className="text-zinc-400" />
                         )}
                       </div>
                     )}
@@ -477,7 +477,7 @@ export default function CompanyPage() {
                           key={level}
                           className={`h-1.5 flex-1 rounded-full ${
                             level <= Math.round(loopStatus.skills.proficiency_avg)
-                              ? "bg-purple-500"
+                              ? "bg-[#F5D547]"
                               : "bg-zinc-200 dark:bg-muted"
                           }`}
                         />
@@ -504,15 +504,15 @@ export default function CompanyPage() {
                 {/* Regression Alerts */}
                 {loopStatus.regressions && loopStatus.regressions.length > 0 && (
                   <div className="pt-2 border-t border-zinc-100 dark:border-border">
-                    <div className="bg-red-50 dark:bg-red-950/30 border border-red-200 dark:border-red-900 rounded-lg p-2">
-                      <p className="text-[10px] font-bold text-red-600 dark:text-red-400 mb-1 flex items-center gap-1">
+                    <div className="bg-zinc-100 dark:bg-zinc-800/30 border border-zinc-200 dark:border-zinc-700 rounded-lg p-2">
+                      <p className="text-[10px] font-bold text-zinc-900 dark:text-zinc-400 mb-1 flex items-center gap-1">
                         <AlertTriangle size={10} />
                         Regressions Detected
                       </p>
                       <div className="space-y-1">
                         {loopStatus.regressions.slice(0, 3).map((reg, i) => (
                           <div key={i} className="text-[10px] flex items-start gap-1">
-                            <span className={reg.severity === "high" ? "text-red-500" : "text-[#FFE135]"}>
+                            <span className={reg.severity === "high" ? "text-zinc-600" : "text-[#F5D547]"}>
                               {reg.severity === "high" ? "🔴" : "🟡"}
                             </span>
                             <span className="text-muted-foreground dark:text-muted-foreground truncate flex-1">
@@ -558,9 +558,9 @@ export default function CompanyPage() {
 function HealthBadge({ score }: { score: number }) {
   const color = score >= 70 ? "emerald" : score >= 40 ? "amber" : "red";
   const colors: Record<string, string> = {
-    emerald: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-[#FFE135]",
-    amber: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-[#FFE135]",
-    red: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
+    emerald: "bg-zinc-100 text-zinc-700 border border-zinc-200",
+    amber: "bg-zinc-100 text-zinc-700 border border-zinc-200",
+    red: "bg-zinc-100 text-zinc-700 border border-zinc-200",
   };
   const labels: Record<string, string> = { emerald: "Healthy", amber: "Needs Attention", red: "Critical" };
   return (
@@ -572,10 +572,10 @@ function HealthBadge({ score }: { score: number }) {
 
 function TooltipStatCard({ label, value, suffix, sub, color }: { label: string; value: string; suffix?: string; sub?: string; color: string }) {
   const textColors: Record<string, string> = {
-    emerald: "text-emerald-600 dark:text-[#FFE135]",
-    amber: "text-amber-600 dark:text-[#FFE135]",
-    red: "text-red-600 dark:text-red-400",
-    blue: "text-blue-600 dark:text-foreground",
+    emerald: "text-zinc-900 dark:text-[#F5D547]",
+    amber: "text-zinc-900 dark:text-[#F5D547]",
+    red: "text-zinc-900 dark:text-zinc-400",
+    blue: "text-zinc-900 dark:text-foreground",
   };
   return (
     <div className="p-3 rounded-lg bg-zinc-50 dark:bg-secondary text-center cursor-help">
@@ -589,7 +589,7 @@ function TooltipStatCard({ label, value, suffix, sub, color }: { label: string; 
 }
 
 function TooltipHealthBar({ label, value }: { label: string; value: number }) {
-  const color = value >= 70 ? "bg-[#FFE135]" : value >= 40 ? "bg-[#FFE135]" : "bg-red-500";
+  const color = value >= 70 ? "bg-[#F5D547]" : value >= 40 ? "bg-[#F5D547]" : "bg-[#F5D547]";
   return (
     <div className="flex items-center gap-3 text-xs cursor-help">
       <span className="text-muted-foreground w-28 text-right shrink-0">{label}</span>
@@ -605,14 +605,14 @@ function StatusDot({ status }: { status: string }) {
   const colors: Record<string, string> = {
     todo: "bg-zinc-400",
     "in-progress": "bg-foreground",
-    blocked: "bg-red-500",
-    done: "bg-[#FFE135]",
+    blocked: "bg-zinc-600",
+    done: "bg-[#F5D547]",
   };
   return <div className={`w-2 h-2 rounded-full shrink-0 ${colors[status] || "bg-zinc-400"}`} />;
 }
 
 function Sparkline({ data, color }: { data: number[]; color: "emerald" | "red" | "amber" | "blue" }) {
-  const colorClass = color === "emerald" ? "stroke-emerald-500" : color === "red" ? "stroke-red-500" : "stroke-zinc-500";
+  const colorClass = color === "emerald" ? "stroke-zinc-900" : color === "red" ? "stroke-zinc-400" : "stroke-zinc-500";
   const max = Math.max(...data, 1);
   const width = 60;
   const height = 16;
@@ -677,18 +677,18 @@ function TooltipLoopMetricBar({
 }) {
   const percentage = Math.min((value / max) * 100, 100);
   const colorClasses: Record<string, string> = {
-    emerald: "bg-[#FFE135]",
-    amber: "bg-[#FFE135]",
-    red: "bg-red-500",
-    blue: "bg-foreground",
-    purple: "bg-purple-500",
+    emerald: "bg-[#F5D547]",
+    amber: "bg-[#F5D547]",
+    red: "bg-[#F5D547]",
+    blue: "bg-[#F5D547]",
+    purple: "bg-[#F5D547]",
   };
   const textColors: Record<string, string> = {
-    emerald: "text-emerald-600 dark:text-[#FFE135]",
-    amber: "text-amber-600 dark:text-[#FFE135]",
-    red: "text-red-600 dark:text-red-400",
-    blue: "text-blue-600 dark:text-foreground",
-    purple: "text-purple-600 dark:text-muted-foreground",
+    emerald: "text-zinc-900 dark:text-[#F5D547]",
+    amber: "text-zinc-900 dark:text-[#F5D547]",
+    red: "text-zinc-900 dark:text-zinc-400",
+    blue: "text-zinc-900 dark:text-foreground",
+    purple: "text-zinc-900 dark:text-muted-foreground",
   };
 
   return (

@@ -102,7 +102,7 @@ export function ModelSwitcher() {
             </div>
           </div>
 
-          <div className="flex items-start gap-2 text-xs text-amber-600 bg-amber-50 p-3 rounded-md">
+          <div className="flex items-start gap-2 text-xs text-zinc-500 bg-zinc-50 p-3 rounded-md">
             <AlertTriangle size={16} />
             <span>Model change affects main session only</span>
           </div>

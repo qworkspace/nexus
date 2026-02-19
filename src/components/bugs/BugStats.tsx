@@ -10,8 +10,8 @@ interface BugStatsProps {
 
 export function BugStats({ stats }: BugStatsProps) {
   const SEVERITY_COLORS = {
-    critical: 'text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950/50',
-    high: 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/50',
+    critical: 'text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/50',
+    high: 'text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-zinc-950/50',
     medium: 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-950/50',
     low: 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-950/50',
   };
@@ -48,7 +48,7 @@ export function BugStats({ stats }: BugStatsProps) {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-red-500" />
+                <AlertTriangle className="h-4 w-4 text-zinc-500" />
                 <span className="text-sm text-zinc-700 dark:text-foreground">Critical</span>
               </div>
               <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${SEVERITY_COLORS.critical}`}>
@@ -57,7 +57,7 @@ export function BugStats({ stats }: BugStatsProps) {
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-orange-500" />
+                <AlertCircle className="h-4 w-4 text-zinc-500" />
                 <span className="text-sm text-zinc-700 dark:text-foreground">High</span>
               </div>
               <span className={`text-sm font-semibold px-2 py-0.5 rounded-full ${SEVERITY_COLORS.high}`}>
@@ -92,7 +92,7 @@ export function BugStats({ stats }: BugStatsProps) {
               <span className="text-xs text-muted-foreground dark:text-muted-foreground">
                 Fixed this week
               </span>
-              <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+              <span className="text-sm font-semibold text-zinc-900 dark:text-zinc-400">
                 {stats.fixedThisWeek}
               </span>
             </div>

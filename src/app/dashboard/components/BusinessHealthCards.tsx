@@ -65,11 +65,11 @@ const BUSINESSES: Business[] = [
 const getStatusColor = (status: string): string => {
   switch (status) {
     case "healthy":
-      return "bg-green-500";
+      return "bg-zinc-500";
     case "attention":
       return "bg-yellow-500";
     case "critical":
-      return "bg-red-500";
+      return "bg-zinc-500";
     default:
       return "bg-zinc-400";
   }
@@ -78,11 +78,11 @@ const getStatusColor = (status: string): string => {
 const getStatusDot = (status: string): JSX.Element => {
   switch (status) {
     case "healthy":
-      return <Circle size={8} className="fill-green-500 text-green-500" />;
+      return <Circle size={8} className="fill-[#F5D547] text-zinc-500" />;
     case "attention":
       return <Circle size={8} className="fill-yellow-500 text-yellow-500" />;
     case "critical":
-      return <Circle size={8} className="fill-red-500 text-red-500" />;
+      return <Circle size={8} className="fill-zinc-500 text-zinc-500" />;
     default:
       return <Circle size={8} className="fill-zinc-400 text-zinc-400" />;
   }
@@ -103,9 +103,9 @@ const getTrendIcon = (trend?: string): string => {
 const getTrendColor = (trend?: string): string => {
   switch (trend) {
     case "up":
-      return "text-green-600";
+      return "text-zinc-900";
     case "down":
-      return "text-red-600";
+      return "text-zinc-500";
     default:
       return "text-zinc-400";
   }

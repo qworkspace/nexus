@@ -33,7 +33,7 @@ const COLUMNS = [
 ];
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "bg-red-500",
+  high: "bg-zinc-500",
   medium: "bg-[#FFE135]",
   low: "bg-[#FFE135]",
 };
@@ -161,7 +161,7 @@ export default function ActionsPage() {
                         </p>
                       )}
                       {item.blockedBy && (
-                        <p className="text-xs text-red-500 mt-1 flex items-center gap-1">
+                        <p className="text-xs text-zinc-500 mt-1 flex items-center gap-1">
                           <XCircle size={12} />
                           {item.blockedBy}
                         </p>

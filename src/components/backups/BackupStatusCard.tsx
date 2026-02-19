@@ -15,11 +15,11 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
   const getStatusIcon = () => {
     switch (backup.status) {
       case 'success':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-zinc-500" />;
       case 'warning':
         return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case 'error':
-        return <XCircle className="h-5 w-5 text-red-500" />;
+        return <XCircle className="h-5 w-5 text-zinc-500" />;
       default:
         return <Info className="h-5 w-5 text-muted-foreground" />;
     }
@@ -28,11 +28,11 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
   const getStatusBadge = () => {
     switch (backup.status) {
       case 'success':
-        return <Badge className="bg-green-500 hover:bg-green-600"><Check size={16} className="inline mr-1" /> Healthy</Badge>;
+        return <Badge className="bg-zinc-500 hover:bg-[#F5D547]"><Check size={16} className="inline mr-1" /> Healthy</Badge>;
       case 'warning':
         return <Badge className="bg-yellow-500 hover:bg-yellow-600"><AlertTriangle size={16} className="inline mr-1" /> Warning</Badge>;
       case 'error':
-        return <Badge className="bg-red-500 hover:bg-red-600"><X size={16} className="inline mr-1" /> Error</Badge>;
+        return <Badge className="bg-zinc-500 hover:bg-zinc-600"><X size={16} className="inline mr-1" /> Error</Badge>;
       default:
         return <Badge variant="secondary">Unknown</Badge>;
     }
@@ -68,7 +68,7 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
   };
 
   return (
-    <Card className={backup.status === 'error' ? 'border-red-200' : ''}>
+    <Card className={backup.status === 'error' ? 'border-zinc-200' : ''}>
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -93,8 +93,8 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
       <CardContent className="space-y-4">
         {/* Error message */}
         {backup.error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-            <p className="text-sm text-red-700">{backup.error}</p>
+          <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-3">
+            <p className="text-sm text-zinc-700">{backup.error}</p>
           </div>
         )}
 
@@ -146,7 +146,7 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
               </div>
               <div className="bg-zinc-50 rounded-lg p-3">
                 <div className="text-xs text-muted-foreground mb-1">Hours Since Backup</div>
-                <div className={`text-lg font-semibold ${backup.isStale ? 'text-red-600' : 'text-zinc-900'}`}>
+                <div className={`text-lg font-semibold ${backup.isStale ? 'text-zinc-500' : 'text-zinc-900'}`}>
                   {backup.hoursSinceBackup.toFixed(1)}h
                 </div>
               </div>
@@ -178,12 +178,12 @@ export function BackupStatusCard({ backup, onRefresh }: BackupStatusCardProps) {
                     </div>
                   )}
                   {backup.remoteStatus.isBehind > 0 && (
-                    <div className="text-orange-600">
+                    <div className="text-zinc-500">
                       ↓ {backup.remoteStatus.isBehind} commit{backup.remoteStatus.isBehind > 1 ? 's' : ''} behind
                     </div>
                   )}
                   {backup.remoteStatus.isAhead === 0 && backup.remoteStatus.isBehind === 0 && (
-                    <div className="text-green-600"><Check size={16} className="inline mr-1" /> Up to date with remote</div>
+                    <div className="text-zinc-900"><Check size={16} className="inline mr-1" /> Up to date with remote</div>
                   )}
                 </div>
               ) : (

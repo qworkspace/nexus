@@ -325,10 +325,10 @@ function TimelineView({ activities, loading }: { activities: Activity[]; loading
           <div
             className={`absolute left-[-20px] w-3 h-3 rounded-full border-2 ${
               activity.status === "error"
-                ? "bg-red-500 border-red-500"
+                ? "bg-zinc-500 border-zinc-500"
                 : activity.status === "pending"
                 ? "bg-yellow-500 border-yellow-500"
-                : "bg-green-500 border-green-500"
+                : "bg-zinc-500 border-zinc-500"
             }`}
           />
 

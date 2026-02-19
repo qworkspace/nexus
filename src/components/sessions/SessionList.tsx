@@ -316,12 +316,12 @@ export function SessionList({ showTitle = true }: SessionListProps) {
               <ScrollText className="w-6 h-6 text-muted-foreground" />
               <h1 className="text-2xl font-semibold text-zinc-900">Session Browser</h1>
               {data?.source === 'live' && (
-                <Badge variant="outline" className="text-green-600 border-green-600">
+                <Badge variant="outline" className="text-zinc-900 border-zinc-600">
                   Live
                 </Badge>
               )}
               {data?.source === 'mock' && (
-                <Badge variant="outline" className="text-amber-600 border-amber-600">
+                <Badge variant="outline" className="text-zinc-500 border-amber-600">
                   Mock Data
                 </Badge>
               )}
@@ -462,7 +462,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
               Loading sessions...
             </span>
           ) : error ? (
-            <span className="text-red-600">Error loading sessions</span>
+            <span className="text-zinc-500">Error loading sessions</span>
           ) : (
             <>
               Showing {filteredSessions.length} of {data?.data?.count || 0} session
@@ -471,7 +471,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
           )}
         </p>
         {data?.error && (
-          <p className="text-xs text-amber-600">{data.error}</p>
+          <p className="text-xs text-zinc-500">{data.error}</p>
         )}
       </div>
 
@@ -484,7 +484,7 @@ export function SessionList({ showTitle = true }: SessionListProps) {
           </div>
         ) : error ? (
           <div className="text-center py-12">
-            <p className="text-red-600 mb-2">Failed to load sessions</p>
+            <p className="text-zinc-500 mb-2">Failed to load sessions</p>
             <p className="text-sm text-muted-foreground">Please check console for details</p>
           </div>
         ) : filteredSessions.length === 0 ? (

@@ -120,9 +120,9 @@ export function LessonsDashboard() {
 
   const getEffectivenessColor = (effectiveness: number | null) => {
     if (effectiveness === null) return "text-muted-foreground";
-    if (effectiveness >= 90) return "text-green-600";
+    if (effectiveness >= 90) return "text-zinc-900";
     if (effectiveness >= 80) return "text-yellow-600";
-    return "text-red-600";
+    return "text-zinc-500";
   };
 
   const formatDate = (dateStr: string): string => {
@@ -229,7 +229,7 @@ export function LessonsDashboard() {
               <p className="text-xs text-muted-foreground dark:text-muted-foreground mb-1">
                 Needs Review
               </p>
-              <p className="text-2xl font-semibold text-red-600">
+              <p className="text-2xl font-semibold text-zinc-500">
                 {stats.needsReview}
               </p>
             </div>
@@ -237,8 +237,8 @@ export function LessonsDashboard() {
 
           {/* Session Start Reminder */}
           {topLessons.length > 0 && (
-            <div className="mt-6 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-              <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
+            <div className="mt-6 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-lg p-4">
+              <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3 flex items-center gap-2">
                 <BookOpen className="h-4 w-4" />
                 Top Lessons to Review (Session Start)
               </h3>
@@ -246,7 +246,7 @@ export function LessonsDashboard() {
                 {topLessons.map((lesson, i) => (
                   <div
                     key={lesson.id}
-                    className="text-sm text-blue-800 dark:text-blue-200"
+                    className="text-sm text-zinc-800 dark:text-zinc-200"
                   >
                     <span className="font-medium">{i + 1}.</span> [
                     {lesson.category}] {lesson.pattern} →{" "}
@@ -286,11 +286,11 @@ export function LessonsDashboard() {
                     <div
                       className={`h-full rounded-full ${
                         data.effectiveness >= 90
-                          ? "bg-green-500"
+                          ? "bg-zinc-500"
                           : data.effectiveness >= 80
                           ? "bg-yellow-500"
                           : data.effectiveness > 0
-                          ? "bg-red-500"
+                          ? "bg-zinc-500"
                           : "bg-zinc-400"
                       }`}
                       style={{ width: `${data.effectiveness || 0}%` }}
@@ -368,7 +368,7 @@ export function LessonsDashboard() {
 
         <CardContent>
           {error && (
-            <div className="text-center py-8 text-red-500">
+            <div className="text-center py-8 text-zinc-500">
               Failed to load lessons
             </div>
           )}
@@ -538,9 +538,9 @@ export function LessonsDashboard() {
                       >
                         <div className="mt-0.5">
                           {log.success ? (
-                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            <CheckCircle className="h-4 w-4 text-zinc-900" />
                           ) : (
-                            <AlertTriangle className="h-4 w-4 text-red-600" />
+                            <AlertTriangle className="h-4 w-4 text-zinc-500" />
                           )}
                         </div>
                         <div className="flex-1">

@@ -63,7 +63,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         isSystem
           ? 'bg-yellow-50 border border-yellow-200 text-yellow-900'
           : isUser
-          ? 'bg-blue-50 border border-blue-200'
+          ? 'bg-zinc-50 border border-zinc-200'
           : 'bg-white border border-zinc-200'
       }`}
     >
@@ -72,7 +72,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
         {isSystem ? (
           <AlertCircle className="w-4 h-4 text-yellow-600" />
         ) : isUser ? (
-          <User className="w-4 h-4 text-blue-600" />
+          <User className="w-4 h-4 text-zinc-900" />
         ) : (
           <Bot className="w-4 h-4 text-muted-foreground" />
         )}
@@ -80,7 +80,7 @@ export function MessageBubble({ message }: MessageBubbleProps) {
           isSystem
             ? 'text-yellow-900'
             : isUser
-            ? 'text-blue-900'
+            ? 'text-zinc-900'
             : 'text-zinc-900'
         }`}>
           {isSystem ? 'System' : isUser ? 'User' : 'Assistant'}

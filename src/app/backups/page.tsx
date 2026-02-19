@@ -88,8 +88,8 @@ export default function BackupsPage() {
           <h1 className="text-2xl font-semibold text-zinc-900">Backup Monitor</h1>
           <p className="text-muted-foreground text-sm">An error occurred</p>
         </div>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
-          <p className="text-red-700 mb-4">{error}</p>
+        <div className="bg-zinc-50 border border-zinc-200 rounded-lg p-6">
+          <p className="text-zinc-700 mb-4">{error}</p>
           <Button onClick={handleRefresh}>Retry</Button>
         </div>
       </div>

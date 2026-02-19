@@ -70,7 +70,7 @@ export default function UsageAndCostsPage() {
           </div>
         ) : error || !data ? (
           <div className="text-center py-12">
-            <p className="text-red-600 dark:text-red-400 mb-2">Error loading usage data</p>
+            <p className="text-zinc-600 dark:text-zinc-400 mb-2">Error loading usage data</p>
             <p className="text-muted-foreground dark:text-muted-foreground text-sm">Please try refreshing the page</p>
           </div>
         ) : (

@@ -35,10 +35,10 @@ export function PerformanceStats({
             className={cn(
               "text-3xl font-bold",
               successRate >= 95
-                ? "text-green-600"
+                ? "text-zinc-900"
                 : successRate >= 80
                 ? "text-yellow-600"
-                : "text-red-600"
+                : "text-zinc-500"
             )}
           >
             {successRate.toFixed(1)}%
@@ -83,7 +83,7 @@ export function PerformanceStats({
           <div
             className={cn(
               "text-3xl font-bold",
-              errorsToday === 0 ? "text-green-600" : "text-red-600"
+              errorsToday === 0 ? "text-zinc-900" : "text-zinc-500"
             )}
           >
             {errorsToday}

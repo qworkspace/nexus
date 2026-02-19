@@ -53,10 +53,10 @@ export function GoalsCard({ goals }: GoalsCardProps) {
                       className={cn(
                         "h-1.5 rounded-full transition-all",
                         progress >= 80
-                          ? "bg-green-500"
+                          ? "bg-zinc-500"
                           : progress >= 50
                           ? "bg-yellow-500"
-                          : "bg-red-500"
+                          : "bg-zinc-500"
                       )}
                       style={{ width: `${progress}%` }}
                     />
@@ -72,7 +72,7 @@ export function GoalsCard({ goals }: GoalsCardProps) {
                       )}
                     >
                       <span className="mt-0.5">
-                        {goal.done ? <CheckSquare size={14} className="text-green-600" /> : <Square size={14} className="text-muted-foreground" />}
+                        {goal.done ? <CheckSquare size={14} className="text-zinc-900" /> : <Square size={14} className="text-muted-foreground" />}
                       </span>
                       <span>{goal.text}</span>
                     </div>

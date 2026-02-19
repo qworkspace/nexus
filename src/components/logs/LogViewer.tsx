@@ -124,7 +124,7 @@ export function LogViewer() {
   const LEVEL_COLORS = {
     info: "bg-foreground",
     warn: "bg-yellow-500",
-    error: "bg-red-500",
+    error: "bg-zinc-500",
     debug: "bg-zinc-500",
   };
 
@@ -286,7 +286,7 @@ export function LogViewer() {
                 Loading logs...
               </div>
             ) : error ? (
-              <div className="text-center text-red-500 py-8">
+              <div className="text-center text-zinc-500 py-8">
                 Failed to load logs. Is the gateway running?
               </div>
             ) : filteredLogs.length === 0 ? (

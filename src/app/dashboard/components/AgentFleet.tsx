@@ -27,13 +27,13 @@ const AGENTS: Agent[] = [
 const getStatusDotColor = (status: string): string => {
   switch (status) {
     case "online":
-      return "fill-green-500 text-green-500";
+      return "fill-[#F5D547] text-zinc-500";
     case "busy":
       return "fill-yellow-500 text-yellow-500";
     case "idle":
       return "fill-zinc-400 text-zinc-400";
     case "error":
-      return "fill-red-500 text-red-500";
+      return "fill-zinc-500 text-zinc-500";
     default:
       return "fill-zinc-400 text-zinc-400";
   }
@@ -89,7 +89,7 @@ export function AgentFleet() {
             <span>Fleet Stats:</span>
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <Circle size={8} className="fill-green-500 text-green-500" />
+                <Circle size={8} className="fill-[#F5D547] text-zinc-500" />
                 {activeCount} active
               </span>
               <span className="flex items-center gap-1">
@@ -97,7 +97,7 @@ export function AgentFleet() {
                 {idleCount} idle
               </span>
               <span className="flex items-center gap-1">
-                <Circle size={8} className="fill-red-500 text-red-500" />
+                <Circle size={8} className="fill-zinc-500 text-zinc-500" />
                 {errorCount} errors
               </span>
               <span>{tasksToday} tasks today</span>

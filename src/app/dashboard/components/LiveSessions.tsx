@@ -33,13 +33,13 @@ export function LiveSessions() {
   const getStatusDot = (status: string): string => {
     switch (status) {
       case "active":
-        return "bg-green-500";
+        return "bg-zinc-500";
       case "building":
         return "bg-yellow-500";
       case "complete":
         return "bg-zinc-400";
       case "error":
-        return "bg-red-500";
+        return "bg-zinc-500";
       default:
         return "bg-zinc-400";
     }

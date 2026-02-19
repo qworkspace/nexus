@@ -76,7 +76,7 @@ export default function ScorecardPanel() {
             Loop 0 Scorecard
           </h3>
         </div>
-        <p className="text-xs text-red-500">{error}</p>
+        <p className="text-xs text-zinc-500">{error}</p>
       </div>
     );
   }
@@ -118,7 +118,7 @@ export default function ScorecardPanel() {
       <CardContent className="space-y-3">
         {/* Overall Score */}
         <div className="text-center pb-3 border-b border-zinc-100 dark:border-border">
-          <div className="text-3xl font-bold text-emerald-600 dark:text-[#FFE135]">
+          <div className="text-3xl font-bold text-zinc-900 dark:text-[#F5D547]">
             {current.overall.toFixed(1)}
           </div>
           <div className="text-[10px] text-muted-foreground uppercase tracking-wide">Overall</div>
@@ -169,7 +169,7 @@ function ProgressBar({ value, max }: { value: number; max: number }) {
   if (value >= 8) colorClass = "bg-[#FFE135]";
   else if (value >= 6) colorClass = "bg-foreground";
   else if (value >= 4) colorClass = "bg-[#FFE135]";
-  else colorClass = "bg-red-500";
+  else colorClass = "bg-zinc-500";
 
   return (
     <div className="h-1.5 bg-zinc-100 dark:bg-secondary rounded-full overflow-hidden">
@@ -188,7 +188,7 @@ function DeltaIndicator({ delta }: { delta: number }) {
     );
   } else if (delta < 0) {
     return (
-      <TrendingDown size={12} className="text-red-500" aria-label={`${delta} from previous`} />
+      <TrendingDown size={12} className="text-zinc-500" aria-label={`${delta} from previous`} />
     );
   } else {
     return (

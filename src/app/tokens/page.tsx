@@ -67,7 +67,7 @@ export default function TokenUsagePage() {
           </div>
         ) : error || !data ? (
           <div className="text-center py-12">
-            <p className="text-red-600 dark:text-red-400 mb-2">Error loading token data</p>
+            <p className="text-zinc-500 dark:text-zinc-400 mb-2">Error loading token data</p>
             <p className="text-muted-foreground dark:text-muted-foreground text-sm">Please try refreshing the page</p>
           </div>
         ) : (

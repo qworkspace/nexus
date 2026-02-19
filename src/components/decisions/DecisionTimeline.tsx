@@ -46,8 +46,8 @@ export function DecisionTimeline({ decisions, loading }: DecisionTimelineProps) 
                 !decision.outcome
                   ? "bg-[#FFE135]"
                   : decision.outcome.matched
-                  ? "bg-green-500"
-                  : "bg-red-500"
+                  ? "bg-zinc-500"
+                  : "bg-zinc-500"
               }`}
             />
             <DecisionCard decision={decision} />

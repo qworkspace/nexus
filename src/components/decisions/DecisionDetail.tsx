@@ -38,7 +38,7 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
             <Badge>{formatStatus(status)}</Badge>
             <Badge variant="outline">{formatImpactLevel(impactLevel)}</Badge>
             {successScore > 0 && (
-              <Badge className="bg-blue-100 text-blue-700">
+              <Badge className="bg-zinc-100 text-zinc-700">
                 Score: {successScore}/100
               </Badge>
             )}
@@ -197,9 +197,9 @@ export function DecisionDetail({ decision }: DecisionDetailProps) {
 
 function OutcomeStatusBadge({ status }: { status: ExtendedOutcome['status'] }) {
   const config = {
-    pending: { icon: Clock, label: 'Pending', className: 'bg-amber-100 text-amber-700' },
-    passed: { icon: CheckCircle, label: 'Passed', className: 'bg-green-100 text-green-700' },
-    failed: { icon: XCircle, label: 'Failed', className: 'bg-red-100 text-red-700' },
+    pending: { icon: Clock, label: 'Pending', className: 'bg-zinc-100 text-zinc-700' },
+    passed: { icon: CheckCircle, label: 'Passed', className: 'bg-zinc-100 text-zinc-700' },
+    failed: { icon: XCircle, label: 'Failed', className: 'bg-zinc-100 text-zinc-700' },
   };
 
   const { icon: Icon, label, className } = config[status];
