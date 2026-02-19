@@ -513,7 +513,7 @@ export default function CompanyPage() {
                         {loopStatus.regressions.slice(0, 3).map((reg, i) => (
                           <div key={i} className="text-[10px] flex items-start gap-1">
                             <span className={reg.severity === "high" ? "text-red-500" : "text-[#8a7000]"}>
-                              {reg.severity === "high" ? "🔴" : "🟡"}
+                              {reg.severity === "high" ? "HIGH" : "MED"}
                             </span>
                             <span className="text-zinc-600 dark:text-zinc-400 truncate flex-1">
                               {reg.pattern.slice(0, 40)}...

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import type { CheckpointData, CheckpointFile } from '@/types/checkpoints';
-import { RefreshCw, Clock, AlertTriangle, FileText, Trash2, Eye, Filter } from 'lucide-react';
+import { ClipboardList, RefreshCw, Clock, AlertTriangle, FileText, Trash2, Eye, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -111,7 +111,7 @@ export default function CheckpointsPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900">📋 Agent Checkpoints</h1>
+            <h1 className="text-2xl font-semibold text-zinc-900"><ClipboardList className="h-6 w-6 inline mr-2" />Agent Checkpoints</h1>
             <p className="text-zinc-500 text-sm mt-1">
               Session checkpoints for debugging failed builds
             </p>

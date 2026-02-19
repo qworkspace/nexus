@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { TranscriptMeta } from '@/types/transcripts';
-import { ArrowRight, MessageSquare } from 'lucide-react';
+import { ArrowRight, MessageSquare, CheckCircle, Clock, Wrench, BarChart3, Settings, Palette, FileText } from 'lucide-react';
 
 interface SessionCardProps {
   session: TranscriptMeta;
@@ -56,30 +56,30 @@ function getSessionType(session: TranscriptMeta): { type: string; icon: string }
   const label = (session.label || '').toLowerCase();
 
   if (agent.name === 'Dev' || label.includes('build') || label.includes('code')) {
-    return { type: 'BUILD', icon: '🛠️' };
+    return { type: 'BUILD', icon: 'build' };
   }
 
   if (agent.name === 'Research' || label.includes('research') || label.includes('analyz')) {
-    return { type: 'RESEARCH', icon: '📊' };
+    return { type: 'RESEARCH', icon: 'research' };
   }
 
   if (agent.name === 'Q' || label.includes('chat') || label.includes('briefing')) {
-    return { type: 'CHAT', icon: '💬' };
+    return { type: 'CHAT', icon: 'chat' };
   }
 
   if (session.kind === 'cron') {
-    return { type: 'MAINTENANCE', icon: '⚙️' };
+    return { type: 'MAINTENANCE', icon: 'maintenance' };
   }
 
   if (agent.name === 'Creative') {
-    return { type: 'CREATIVE', icon: '🎨' };
+    return { type: 'CREATIVE', icon: 'creative' };
   }
 
   if (agent.name === 'Luna') {
-    return { type: 'SUPPORT', icon: '💬' };
+    return { type: 'SUPPORT', icon: 'support' };
   }
 
-  return { type: 'OTHER', icon: '📝' };
+  return { type: 'OTHER', icon: 'other' };
 }
 
 function getSessionTitle(session: TranscriptMeta): string {
@@ -157,19 +157,27 @@ export function SessionCard({ session }: SessionCardProps) {
   const tokensFormatted = formatTokens(session.tokenCount);
   const duration = formatDurationFriendly(session.duration);
   const started = formatRelativeTime(session.startedAt);
-  const statusIcon = session.duration > 0 ? '✅' : '⏳';
+  const statusIcon = session.duration > 0 ? <CheckCircle className="h-4 w-4 text-zinc-600" /> : <Clock className="h-4 w-4 text-zinc-400" />;
 
   return (
     <Link href={`/sessions/${session.sessionId}`} className="block group">
       <div className="bg-zinc-900 border border-zinc-700 rounded-xl p-4 hover:border-zinc-600 hover:shadow-lg transition-all">
         {/* Header: Type + Title */}
         <div className="flex items-start gap-2 mb-2">
-          <span className="text-xl flex-shrink-0">{sessionType.icon}</span>
+          <span className="flex-shrink-0">
+            {sessionType.icon === 'build' && <Wrench className="h-5 w-5 text-zinc-400" />}
+            {sessionType.icon === 'research' && <BarChart3 className="h-5 w-5 text-zinc-400" />}
+            {sessionType.icon === 'chat' && <MessageSquare className="h-5 w-5 text-zinc-400" />}
+            {sessionType.icon === 'maintenance' && <Settings className="h-5 w-5 text-zinc-400" />}
+            {sessionType.icon === 'creative' && <Palette className="h-5 w-5 text-zinc-400" />}
+            {sessionType.icon === 'support' && <MessageSquare className="h-5 w-5 text-zinc-400" />}
+            {sessionType.icon === 'other' && <FileText className="h-5 w-5 text-zinc-400" />}
+          </span>
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-bold text-zinc-100">{sessionType.type}</h3>
             <p className="text-xs text-zinc-400 truncate">{title}</p>
           </div>
-          <span className="text-sm flex-shrink-0">{statusIcon}</span>
+          <span className="flex-shrink-0">{statusIcon}</span>
         </div>
 
         {/* Summary */}

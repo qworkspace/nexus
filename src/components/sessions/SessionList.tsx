@@ -85,7 +85,7 @@ export function resolveAgentName(sessionId: string): { name: string; model: stri
 
 /**
  * Determine session type based on agent and metadata
- * Returns type label and emoji icon
+ * Returns type label and icon key
  */
 export function getSessionType(session: TranscriptMeta): { type: string; icon: string } {
   const agent = resolveAgentName(session.agent);
@@ -93,36 +93,36 @@ export function getSessionType(session: TranscriptMeta): { type: string; icon: s
 
   // Dev agent = BUILD
   if (agent.name === 'Dev' || label.includes('build') || label.includes('code')) {
-    return { type: 'BUILD', icon: '🛠️' };
+    return { type: 'BUILD', icon: 'build' };
   }
 
   // Research agent = RESEARCH
   if (agent.name === 'Research' || label.includes('research') || label.includes('analyz')) {
-    return { type: 'RESEARCH', icon: '📊' };
+    return { type: 'RESEARCH', icon: 'research' };
   }
 
   // Q agent = CHAT
   if (agent.name === 'Q' || label.includes('chat') || label.includes('briefing')) {
-    return { type: 'CHAT', icon: '💬' };
+    return { type: 'CHAT', icon: 'chat' };
   }
 
   // Cron sessions = MAINTENANCE
   if (session.kind === 'cron') {
-    return { type: 'MAINTENANCE', icon: '⚙️' };
+    return { type: 'MAINTENANCE', icon: 'maintenance' };
   }
 
   // Creative agent = CREATIVE
   if (agent.name === 'Creative') {
-    return { type: 'CREATIVE', icon: '🎨' };
+    return { type: 'CREATIVE', icon: 'creative' };
   }
 
   // Luna agent = SUPPORT
   if (agent.name === 'Luna') {
-    return { type: 'SUPPORT', icon: '💬' };
+    return { type: 'SUPPORT', icon: 'support' };
   }
 
   // Default
-  return { type: 'OTHER', icon: '📝' };
+  return { type: 'OTHER', icon: 'other' };
 }
 
 /**

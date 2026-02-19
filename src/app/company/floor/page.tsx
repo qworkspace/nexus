@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Calendar, MessageSquare, X as XIcon } from "lucide-react";
+import { Calendar, MessageSquare, X as XIcon, CheckCircle, Send, Clapperboard } from "lucide-react";
 
 interface Agent {
   id: string;
@@ -1379,11 +1379,11 @@ export default function FloorPage() {
       }
     } catch {
       setMeetingLines([
-        { speaker: "Q", emoji: "🦾", text: "Right, morning everyone. Quick round — what's happening?" },
-        { speaker: "Spark", emoji: "🔥", text: "Shipped the latest feature. All tests passing." },
-        { speaker: "Aura", emoji: "🎨", text: "Content calendar locked for this week." },
-        { speaker: "Surge", emoji: "⚡", text: "Engagement up 12% — BTS content performing." },
-        { speaker: "Q", emoji: "🦾", text: "Sick. Let's keep that momentum going." },
+        { speaker: "Q", emoji: "", text: "Right, morning everyone. Quick round — what's happening?" },
+        { speaker: "Spark", emoji: "", text: "Shipped the latest feature. All tests passing." },
+        { speaker: "Aura", emoji: "", text: "Content calendar locked for this week." },
+        { speaker: "Surge", emoji: "", text: "Engagement up 12% — BTS content performing." },
+        { speaker: "Q", emoji: "", text: "Sick. Let's keep that momentum going." },
       ]);
     }
   };
@@ -1555,11 +1555,11 @@ export default function FloorPage() {
             >
               {demoMode ? (
                 <>
-                  <span className="animate-pulse">🎬</span>
+                  <Clapperboard className="h-4 w-4 animate-pulse" />
                   Demo On
                 </>
               ) : (
-                <>🎬 Demo</>
+                <><Clapperboard className="h-4 w-4" /> Demo</>
               )}
             </button>
 
@@ -1754,7 +1754,7 @@ export default function FloorPage() {
                     <>
                       <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-50">
                         <div className="bg-zinc-900 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap animate-bounce">
-                          ✅ {agentState.buildCelebration.buildName}
+                          <CheckCircle className="h-3 w-3 inline mr-0.5" />{agentState.buildCelebration.buildName}
                         </div>
                       </div>
                       {/* Supernova particles */}
@@ -1782,7 +1782,7 @@ export default function FloorPage() {
                   {agentState?.handoff && (
                     <div className="absolute -top-20 left-1/2 -translate-x-1/2 z-40">
                       <div className="bg-zinc-900 text-white text-[9px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1 whitespace-nowrap">
-                        📤 Handoff: {agentState.handoff.task.substring(0, 30)}...
+                        <Send className="h-3 w-3 inline mr-0.5" />Handoff: {agentState.handoff.task.substring(0, 30)}...
                       </div>
                     </div>
                   )}
@@ -1879,7 +1879,7 @@ export default function FloorPage() {
                 onClick={loadTimeline}
                 className="absolute bottom-4 right-4 px-3 py-1 bg-zinc-900 hover:bg-zinc-700 text-white text-xs font-bold rounded z-50"
               >
-                📊 Timeline
+                <BarChart3 className="h-3 w-3 inline mr-1" />Timeline
               </button>
             )}
             */}
@@ -1887,7 +1887,7 @@ export default function FloorPage() {
             {/* Room label */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
               <span className="text-[10px] text-zinc-600 uppercase tracking-widest flex items-center gap-1">
-                {meetingMode ? <><Calendar size={10} /> Standup In Progress</> : timelineMode ? "⏮️ Replay Mode" : "Villanueva Creative HQ"}
+                {meetingMode ? <><Calendar size={10} /> Standup In Progress</> : timelineMode ? "Replay Mode" : "Villanueva Creative HQ"}
               </span>
             </div>
 
@@ -2344,9 +2344,9 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
 function parseMeetingDialogue(content: string): MeetingLine[] {
   const lines: MeetingLine[] = [];
   const agentEmojis: Record<string, string> = {
-    Q: "🦾", Aura: "🎨", Surge: "⚡", Spark: "🔥", Cipher: "🔮",
-    Volt: "🏹", Echo: "💬", Flux: "🌊", Prism: "💎", Luna: "🌙",
-    Ella: "👩‍🎨", Arty: "🏹",
+    Q: "", Aura: "", Surge: "", Spark: "", Cipher: "",
+    Volt: "", Echo: "", Flux: "", Prism: "", Luna: "",
+    Ella: "", Arty: "",
   };
 
   for (const line of content.split("\n")) {
@@ -2358,7 +2358,7 @@ function parseMeetingDialogue(content: string): MeetingLine[] {
       if (text && speaker) {
         lines.push({
           speaker,
-          emoji: agentEmojis[speaker] || "💬",
+          emoji: agentEmojis[speaker] || "",
           text,
         });
       }

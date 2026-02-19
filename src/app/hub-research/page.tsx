@@ -16,7 +16,9 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   RefreshCw, Clock, CheckCircle, XCircle, PauseCircle,
-  TrendingUp, ExternalLink, Plus, Wrench, Hammer, Star, AlertTriangle
+  TrendingUp, ExternalLink, Plus, Wrench, Hammer, Star, AlertTriangle,
+  Microscope, MessageCircle, ClipboardList, Search, ThumbsUp, ThumbsDown,
+  Meh, Trash2, Timer, FileEdit, Rocket, CircleDot, ShieldCheck
 } from "lucide-react";
 import { ActiveBuilds } from '@/components/builds/ActiveBuilds';
 import { PipelineView } from '@/components/builds/PipelineView';
@@ -400,13 +402,13 @@ export default function HubResearchPage() {
   const getCategoryBadge = (category: 'research' | 'think' | 'request' | 'review') => {
     switch (category) {
       case 'research':
-        return { icon: '🔬', className: 'bg-zinc-800/40 text-zinc-300 border border-zinc-700' };
+        return { icon: <Microscope className="h-3 w-3" />, className: 'bg-zinc-800/40 text-zinc-300 border border-zinc-700' };
       case 'think':
-        return { icon: '💭', className: 'bg-zinc-800/40 text-zinc-300 border border-zinc-700' };
+        return { icon: <MessageCircle className="h-3 w-3" />, className: 'bg-zinc-800/40 text-zinc-300 border border-zinc-700' };
       case 'request':
-        return { icon: '📋', className: 'bg-[#FFE135]/10 text-[#8a7000] border border-[#FFE135]/30' };
+        return { icon: <ClipboardList className="h-3 w-3" />, className: 'bg-[#FFE135]/10 text-[#8a7000] border border-[#FFE135]/30' };
       case 'review':
-        return { icon: '🔍', className: 'bg-zinc-800/40 text-zinc-300 border border-zinc-700' };
+        return { icon: <Search className="h-3 w-3" />, className: 'bg-zinc-800/40 text-zinc-300 border border-zinc-700' };
     }
   };
 
@@ -465,18 +467,18 @@ export default function HubResearchPage() {
   // Rating badge component
   const RatingBadge = ({ rating }: { rating: string }) => {
     const config = {
-      great: { emoji: '⭐', label: 'Great', color: 'text-zinc-800 bg-zinc-100' },
-      good: { emoji: '👍', label: 'Good', color: 'text-zinc-800 bg-zinc-100' },
-      meh: { emoji: '😐', label: 'Meh', color: 'text-yellow-600 bg-yellow-50' },
-      bad: { emoji: '👎', label: 'Bad', color: 'text-red-600 bg-red-50' },
-      useless: { emoji: '🗑', label: 'Useless', color: 'text-red-600 bg-red-50' },
+      great: { icon: <Star className="h-3 w-3" />, label: 'Great', color: 'text-zinc-800 bg-zinc-100' },
+      good: { icon: <ThumbsUp className="h-3 w-3" />, label: 'Good', color: 'text-zinc-800 bg-zinc-100' },
+      meh: { icon: <Meh className="h-3 w-3" />, label: 'Meh', color: 'text-yellow-600 bg-yellow-50' },
+      bad: { icon: <ThumbsDown className="h-3 w-3" />, label: 'Bad', color: 'text-red-600 bg-red-50' },
+      useless: { icon: <Trash2 className="h-3 w-3" />, label: 'Useless', color: 'text-red-600 bg-red-50' },
     };
 
-    const c = config[rating as keyof typeof config] || { emoji: '⏳', label: 'Awaiting', color: 'text-zinc-400' };
+    const c = config[rating as keyof typeof config] || { icon: <Timer className="h-3 w-3" />, label: 'Awaiting', color: 'text-zinc-400' };
 
     return (
       <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs ${c.color}`}>
-        <span>{c.emoji}</span>
+        <span>{c.icon}</span>
         <span>{c.label}</span>
       </span>
     );
@@ -486,18 +488,18 @@ export default function HubResearchPage() {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const FixStatusBadge = ({ status }: { status: string }) => {
     const config = {
-      open: { color: 'bg-red-100 text-red-700', icon: '🔴' },
-      fix_briefed: { color: 'bg-yellow-100 text-yellow-700', icon: '📝' },
-      fix_building: { color: 'bg-zinc-100 text-zinc-700', icon: '🔨' },
-      fix_shipped: { color: 'bg-zinc-100 text-zinc-700', icon: '🚀' },
-      verified: { color: 'bg-zinc-100 text-zinc-800', icon: '✅' },
+      open: { color: 'bg-red-100 text-red-700', icon: <CircleDot className="h-3 w-3" /> },
+      fix_briefed: { color: 'bg-yellow-100 text-yellow-700', icon: <FileEdit className="h-3 w-3" /> },
+      fix_building: { color: 'bg-zinc-100 text-zinc-700', icon: <Hammer className="h-3 w-3" /> },
+      fix_shipped: { color: 'bg-zinc-100 text-zinc-700', icon: <Rocket className="h-3 w-3" /> },
+      verified: { color: 'bg-zinc-100 text-zinc-800', icon: <ShieldCheck className="h-3 w-3" /> },
     };
 
     const c = config[status as keyof typeof config] || config.open;
 
     return (
       <Badge className={c.color}>
-        {c.icon} {status.replace('_', ' ')}
+        <span className="inline-flex items-center gap-1">{c.icon} {status.replace('_', ' ')}</span>
       </Badge>
     );
   };
@@ -625,7 +627,7 @@ export default function HubResearchPage() {
               )}
               {brief.buildOutcome && (
                 <div className="bg-blue-900/30 p-2 rounded border border-blue-800">
-                  <p className="text-zinc-400 text-xs font-medium">🔨 Could build: {brief.buildOutcome}</p>
+                  <p className="text-zinc-400 text-xs font-medium flex items-center gap-1"><Hammer className="h-3 w-3" /> Could build: {brief.buildOutcome}</p>
                 </div>
               )}
             </div>
@@ -1107,7 +1109,7 @@ export default function HubResearchPage() {
                         <div className="space-y-2 max-h-80 overflow-y-auto">
                           {activeBuilds.map((build) => (
                             <div key={build.id} className="flex items-start gap-3 p-4 bg-zinc-800 rounded-lg border border-zinc-700">
-                              <span className="text-2xl">🛠️</span>
+                              <Wrench className="h-6 w-6 text-zinc-400" />
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center justify-between mb-2">
                                   <h4 className="font-bold text-white text-lg truncate">
@@ -1152,13 +1154,13 @@ export default function HubResearchPage() {
                             const isSuccess = build.status === 'SUCCESS';
                             const isFailed = build.status === 'FAILED';
 
-                            const icon = isSuccess ? '✅' : isFailed ? '❌' : '⚠️';
+                            const icon = isSuccess ? <CheckCircle className="h-5 w-5 text-zinc-600" /> : isFailed ? <XCircle className="h-5 w-5 text-red-500" /> : <AlertTriangle className="h-5 w-5 text-[#8a7000]" />;
                             const statusText = isSuccess ? 'SUCCESS' : isFailed ? 'FAILED' : 'STALLED';
                             const statusColor = isSuccess ? 'text-zinc-500' : isFailed ? 'text-red-500' : 'text-[#8a7000]';
 
                             return (
                               <div key={build.id} className="flex items-start gap-3 p-4 bg-zinc-800 rounded-lg border border-zinc-700">
-                                <span className="text-2xl">{icon}</span>
+                                {icon}
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-center gap-2 mb-1">
                                     <h4 className="font-bold text-white truncate">
@@ -1517,7 +1519,7 @@ export default function HubResearchPage() {
               className="h-16 flex-col gap-1"
               onClick={() => setSelectedRating('excellent')}
             >
-              <span className="text-2xl">⭐</span>
+              <Star className="h-5 w-5" />
               <span className="text-xs">Well-captured problem</span>
             </Button>
             <Button
@@ -1525,7 +1527,7 @@ export default function HubResearchPage() {
               className="h-16 flex-col gap-1"
               onClick={() => setSelectedRating('good')}
             >
-              <span className="text-2xl">👍</span>
+              <ThumbsUp className="h-5 w-5" />
               <span className="text-xs">Good enough</span>
             </Button>
             <Button
@@ -1533,7 +1535,7 @@ export default function HubResearchPage() {
               className="h-16 flex-col gap-1"
               onClick={() => setSelectedRating('neutral')}
             >
-              <span className="text-2xl">😐</span>
+              <Meh className="h-5 w-5" />
               <span className="text-xs">Not priority</span>
             </Button>
             <Button
@@ -1541,7 +1543,7 @@ export default function HubResearchPage() {
               className="h-16 flex-col gap-1"
               onClick={() => setSelectedRating('poor')}
             >
-              <span className="text-2xl">👎</span>
+              <ThumbsDown className="h-5 w-5" />
               <span className="text-xs">Wrong problem</span>
             </Button>
           </div>

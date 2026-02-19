@@ -100,7 +100,7 @@ export function Sidebar() {
               ⌘/
             </kbd>
           </div>
-          <p className="text-[11px] text-muted-foreground mt-2">Built for PJ by Q 🦾</p>
+          <p className="text-[11px] text-muted-foreground mt-2">Built for PJ by Q</p>
         </div>
       </aside>
 

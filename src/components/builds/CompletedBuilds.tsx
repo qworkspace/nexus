@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import type { CompletedBuild } from '@/types/builds';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Star, ThumbsUp, Meh, ThumbsDown, Trash2, HelpCircle, Clock } from 'lucide-react';
 
 interface FeedbackRating {
   commit: string;
@@ -71,14 +71,14 @@ export function CompletedBuilds() {
     }
   };
 
-  const getRatingEmoji = (rating: string) => {
+  const getRatingIcon = (rating: string) => {
     switch (rating) {
-      case 'great': return '⭐';
-      case 'good': return '👍';
-      case 'meh': return '😐';
-      case 'bad': return '👎';
-      case 'useless': return '🗑';
-      default: return '❓';
+      case 'great': return <Star className="h-3 w-3 inline" />;
+      case 'good': return <ThumbsUp className="h-3 w-3 inline" />;
+      case 'meh': return <Meh className="h-3 w-3 inline" />;
+      case 'bad': return <ThumbsDown className="h-3 w-3 inline" />;
+      case 'useless': return <Trash2 className="h-3 w-3 inline" />;
+      default: return <HelpCircle className="h-3 w-3 inline" />;
     }
   };
 
@@ -164,7 +164,7 @@ export function CompletedBuilds() {
                       <div className="mt-2">
                         <div className={`px-2 py-1 rounded text-xs ${getRatingColor(feedbackForBuild.rating)}`}>
                           <span className="font-medium">
-                            {getRatingEmoji(feedbackForBuild.rating)} {feedbackForBuild.rating.toUpperCase()}
+                            {getRatingIcon(feedbackForBuild.rating)} {feedbackForBuild.rating.toUpperCase()}
                           </span>
                           <span className="text-zinc-400 ml-2">
                             by {feedbackForBuild.ratedBy} • {formatRelativeTime(feedbackForBuild.ratedAt)}
@@ -192,7 +192,7 @@ export function CompletedBuilds() {
                       </div>
                     ) : (
                       <div className="mt-2 text-xs text-zinc-400 italic">
-                        ⏳ Awaiting review
+                        <Clock className="h-3 w-3 inline mr-1" />Awaiting review
                       </div>
                     )}
                   </div>
