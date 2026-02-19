@@ -62,7 +62,7 @@ const SOURCE_BADGES: Record<string, { label: string; className: string }> = {
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
-  HIGH: 'bg-[#3D3D3D] text-white border-[#3D3D3D]',
+  HIGH: 'bg-[#F5D547] text-zinc-900 border-[#F5D547]',
   MED:  'bg-[#8E99A4]/20 text-[#555D66] border-[#8E99A4]/30',
   LOW:  'bg-zinc-100 text-zinc-500 border-zinc-200',
 };
@@ -298,11 +298,11 @@ export default function HubResearchPage() {
             </div>
           )}
           <div className="flex gap-2 pt-2 border-t border-zinc-200 justify-between items-center">
-            <Button size="sm" variant="outline" className="text-muted-foreground hover:text-zinc-200" disabled={acting} onClick={() => openEditDialog(item)}>
+            <Button size="sm" variant="outline" className="text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50" disabled={acting} onClick={() => openEditDialog(item)}>
               <Pencil className="h-3.5 w-3.5 mr-1.5" />Edit
             </Button>
             <div className="flex gap-2">
-              <Button size="sm" className="bg-zinc-900 hover:bg-zinc-800 text-white" disabled={acting} onClick={() => approve(item.id)}>
+              <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting} onClick={() => approve(item.id)}>
                 <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
               </Button>
               <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200" disabled={acting} onClick={() => park(item.id)}>
@@ -473,7 +473,7 @@ export default function HubResearchPage() {
           {/* Tabs */}
           <Tabs defaultValue="briefs" className="flex-1 overflow-hidden">
             <TabsList className="grid w-full max-w-2xl grid-cols-4">
-              <TabsTrigger value="briefs">Briefs {pendingReview.length > 0 && <Badge className="ml-1.5 h-5 px-1.5 text-xs bg-zinc-900 text-white">{pendingReview.length}</Badge>}</TabsTrigger>
+              <TabsTrigger value="briefs">Briefs {pendingReview.length > 0 && <Badge className="ml-1.5 h-5 px-1.5 text-xs bg-zinc-700 text-white">{pendingReview.length}</Badge>}</TabsTrigger>
               <TabsTrigger value="in-progress">In Progress {inProgress.length > 0 && <Badge className="ml-1.5 h-5 px-1.5 text-xs bg-zinc-100 text-zinc-700 border border-zinc-200">{inProgress.length}</Badge>}</TabsTrigger>
               <TabsTrigger value="shipped">Shipped</TabsTrigger>
               <TabsTrigger value="performance">Performance</TabsTrigger>
@@ -772,7 +772,7 @@ export default function HubResearchPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectDialogId(null)}>Cancel</Button>
-            <Button variant="outline" className="bg-zinc-900 text-white hover:bg-zinc-800" onClick={confirmReject}>Reject Brief</Button>
+            <Button variant="outline" className="border-zinc-300 text-zinc-700 hover:bg-zinc-100" onClick={confirmReject}>Reject Brief</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
