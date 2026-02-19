@@ -43,7 +43,7 @@ function getKindIcon(kind: TranscriptMeta['kind']): string {
     case 'main':
       return 'smartphone';
     case 'cron':
-      return '⏰';
+      return 'C';
     case 'spawn':
       return 'monitor';
   }

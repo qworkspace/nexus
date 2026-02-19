@@ -93,36 +93,36 @@ export function getSessionType(session: TranscriptMeta): { type: string; icon: s
 
   // Dev agent = BUILD
   if (agent.name === 'Dev' || label.includes('build') || label.includes('code')) {
-    return { type: 'BUILD', icon: '🛠️' };
+    return { type: 'BUILD', icon: 'B' };
   }
 
   // Research agent = RESEARCH
   if (agent.name === 'Research' || label.includes('research') || label.includes('analyz')) {
-    return { type: 'RESEARCH', icon: '📊' };
+    return { type: 'RESEARCH', icon: 'R' };
   }
 
   // Q agent = CHAT
   if (agent.name === 'Q' || label.includes('chat') || label.includes('briefing')) {
-    return { type: 'CHAT', icon: '💬' };
+    return { type: 'CHAT', icon: 'C' };
   }
 
   // Cron sessions = MAINTENANCE
   if (session.kind === 'cron') {
-    return { type: 'MAINTENANCE', icon: '⚙️' };
+    return { type: 'MAINTENANCE', icon: 'M' };
   }
 
   // Creative agent = CREATIVE
   if (agent.name === 'Creative') {
-    return { type: 'CREATIVE', icon: '🎨' };
+    return { type: 'CREATIVE', icon: 'A' };
   }
 
   // Luna agent = SUPPORT
   if (agent.name === 'Luna') {
-    return { type: 'SUPPORT', icon: '💬' };
+    return { type: 'SUPPORT', icon: 'S' };
   }
 
   // Default
-  return { type: 'OTHER', icon: '📝' };
+  return { type: 'OTHER', icon: 'O' };
 }
 
 /**

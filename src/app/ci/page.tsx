@@ -190,9 +190,9 @@ export default function CIPage() {
 
 function QueueItem({ item }: { item: CIQueueItem }) {
   const priorityColors = {
-    HIGH: 'bg-zinc-100 text-zinc-700 border-zinc-200',
-    MED: 'bg-zinc-100 text-zinc-700 border-zinc-200',
-    LOW: 'bg-zinc-100 text-zinc-700 border-zinc-200',
+    HIGH: 'bg-[#8E99A4]/15 text-[#8E99A4] border-[#8E99A4]/30',
+    MED: 'bg-[#D4C5A9]/15 text-[#8B7D65] border-[#D4C5A9]/30',
+    LOW: 'bg-zinc-100 text-zinc-500 border-zinc-200',
   };
 
   const riskColors = {
@@ -270,9 +270,9 @@ function BuildRow({ build }: { build: CIBuild }) {
     <div className="flex items-start gap-3 p-3 bg-zinc-50 rounded-lg">
       <div className="flex-shrink-0 mt-0.5">
         {isSuccess ? (
-          <span className="text-zinc-500">✓</span>
+          <span className="w-3 h-3 rounded-full bg-[#A8B5A0] inline-block" />
         ) : isFailed ? (
-          <span className="text-zinc-500">✗</span>
+          <span className="w-3 h-3 rounded-full bg-[#8E99A4] inline-block" />
         ) : (
           <AlertTriangle className="h-4 w-4 text-zinc-400" />
         )}

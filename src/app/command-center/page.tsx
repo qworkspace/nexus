@@ -79,7 +79,7 @@ export default function CommandCenterPage() {
                 month: 'short' 
               })}
             </span>
-            <div className="w-2 h-2 rounded-full bg-zinc-500 animate-pulse-soft" />
+            <div className="w-2 h-2 rounded-full bg-[#A8B5A0] animate-pulse-soft" />
             <span className="text-xs text-zinc-900">Live</span>
           </div>
         </div>

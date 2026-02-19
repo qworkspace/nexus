@@ -67,7 +67,7 @@ export function StatusBar() {
       </div>
 
       <div className="flex items-center gap-1.5">
-        <span>⏰</span>
+        <span className="w-2 h-2 rounded-full bg-[#D4C5A9] inline-block" />
         <span className="text-muted-foreground">Next cron:</span>
         <span className="text-foreground">{data.nextCron}</span>
       </div>

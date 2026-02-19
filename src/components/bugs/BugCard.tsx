@@ -5,10 +5,10 @@ import { AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const SEVERITY_COLORS: Record<Severity, { bg: string; text: string; border: string }> = {
-  critical: { bg: 'bg-zinc-500', text: 'text-zinc-700', border: 'border-zinc-300' },
-  high: { bg: 'bg-zinc-500', text: 'text-zinc-700', border: 'border-zinc-300' },
-  medium: { bg: 'bg-zinc-500', text: 'text-zinc-700', border: 'border-yellow-300' },
-  low: { bg: 'bg-gray-500', text: 'text-gray-700', border: 'border-gray-300' },
+  critical: { bg: 'bg-[#3D3D3D]', text: 'text-white', border: 'border-[#3D3D3D]/30' },
+  high: { bg: 'bg-[#8E99A4]', text: 'text-white', border: 'border-[#8E99A4]/30' },
+  medium: { bg: 'bg-[#D4C5A9]', text: 'text-[#3D3D3D]', border: 'border-[#D4C5A9]/30' },
+  low: { bg: 'bg-zinc-300', text: 'text-zinc-600', border: 'border-zinc-200' },
 };
 
 const STATUS_COLORS: Record<string, string> = {

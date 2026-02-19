@@ -66,7 +66,7 @@ export function SessionInsightsPanel() {
   );
 
   return (
-    <Card className="">
+    <Card className="border-l-3 border-[#B8B0C8]">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <BarChart3 size={16} />
@@ -76,25 +76,25 @@ export function SessionInsightsPanel() {
       <CardContent className="space-y-3">
         {/* Stats Grid - Compact */}
         <div className="grid grid-cols-4 gap-2">
-          <div className="p-2 rounded-lg bg-zinc-50 text-center">
+          <div className="p-2 rounded-lg bg-[#F5D547]/10 text-center">
             <p className="text-lg font-bold text-zinc-900">
               {data?.today.sessions || 0}
             </p>
             <p className="text-[10px] text-muted-foreground uppercase">Sessions</p>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-50 text-center">
+          <div className="p-2 rounded-lg bg-[#A8B5A0]/10 text-center">
             <p className="text-lg font-bold text-zinc-900">
               {formatTokens(data?.today.totalTokens || 0)}
             </p>
             <p className="text-[10px] text-muted-foreground uppercase">Tokens</p>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-50 text-center">
+          <div className="p-2 rounded-lg bg-[#B8B0C8]/10 text-center">
             <p className="text-lg font-bold text-zinc-900">
               ${data?.today.totalCost.toFixed(2) || '0.00'}
             </p>
             <p className="text-[10px] text-muted-foreground uppercase">Cost</p>
           </div>
-          <div className="p-2 rounded-lg bg-zinc-50 text-center">
+          <div className="p-2 rounded-lg bg-[#D4C5A9]/10 text-center">
             <p className="text-lg font-bold text-zinc-900">
               {formatDuration(data?.current.durationMs || 0)}
             </p>
@@ -119,7 +119,7 @@ export function SessionInsightsPanel() {
                   </span>
                   <div className="flex-1 h-1.5 bg-zinc-200 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-foreground rounded-full"
+                      className="h-full bg-[#B8B0C8] rounded-full"
                       style={{
                         width: `${Math.min((session.tokensUsed / (data?.today?.totalTokens || 1)) * 100, 100)}%`,
                       }}

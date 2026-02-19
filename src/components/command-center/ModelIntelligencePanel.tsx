@@ -37,13 +37,13 @@ const modelIcons: Record<string, JSX.Element> = {
 };
 
 const modelColors: Record<string, string> = {
-  'claude-opus-4-5': 'bg-zinc-500',
-  'claude-sonnet-4': 'bg-foreground',
-  'claude-3-5-sonnet': 'bg-foreground',
-  'claude-3-5-haiku': 'bg-zinc-500',
-  'glm-4-flash': 'bg-[#F5D547]',
-  'gpt-4o': 'bg-[#F5D547]',
-  'gpt-4o-mini': 'bg-zinc-500',
+  'claude-opus-4-5': 'bg-[#F5D547]',
+  'claude-sonnet-4': 'bg-[#3D3D3D]',
+  'claude-3-5-sonnet': 'bg-[#3D3D3D]',
+  'claude-3-5-haiku': 'bg-[#B8B0C8]',
+  'glm-4-flash': 'bg-[#A8B5A0]',
+  'gpt-4o': 'bg-[#D4C5A9]',
+  'gpt-4o-mini': 'bg-[#8E99A4]',
 };
 
 function formatTokens(tokens: number): string {
@@ -72,7 +72,7 @@ export function ModelIntelligencePanel() {
   const maxTokens = Math.max(...(data?.usage.map(u => u.tokensIn + u.tokensOut) || [1]));
 
   return (
-    <Card className="">
+    <Card className="border-l-3 border-[#A8B5A0]">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Zap size={16} />
@@ -98,7 +98,7 @@ export function ModelIntelligencePanel() {
               <span className="font-semibold text-zinc-900">
                 {formatModelName(data?.currentModel || 'Loading...')}
               </span>
-              <Badge variant="secondary" className="text-xs bg-zinc-100 text-zinc-700">
+              <Badge variant="secondary" className="text-xs bg-[#A8B5A0]/20 text-[#5C6B56]">
                 Active
               </Badge>
             </div>

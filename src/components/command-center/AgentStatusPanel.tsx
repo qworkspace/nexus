@@ -30,10 +30,10 @@ interface AgentStatusData {
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
 const statusConfig = {
-  active: { color: "bg-zinc-500", glow: "status-glow", label: "Active" },
-  idle: { color: "bg-zinc-500", glow: "status-glow-yellow", label: "Idle" },
-  completed: { color: "bg-foreground", glow: "status-glow-blue", label: "Done" },
-  error: { color: "bg-zinc-500", glow: "status-glow", label: "Error" },
+  active: { color: "bg-[#A8B5A0]", glow: "status-glow", label: "Active" },
+  idle: { color: "bg-[#D4C5A9]", glow: "status-glow-yellow", label: "Idle" },
+  completed: { color: "bg-[#B8B0C8]", glow: "status-glow-blue", label: "Done" },
+  error: { color: "bg-[#8E99A4]", glow: "status-glow", label: "Error" },
 };
 
 function formatDuration(startedAt: string): string {
@@ -60,7 +60,7 @@ export function AgentStatusPanel() {
   const { openSpawn } = useCommandStore();
 
   return (
-    <Card className="">
+    <Card className="border-l-3 border-[#F5D547]">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-lg font-semibold flex items-center gap-2">
           <Bot size={20} className="text-muted-foreground" />

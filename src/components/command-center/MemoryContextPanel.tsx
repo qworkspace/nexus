@@ -36,9 +36,9 @@ function formatSize(bytes: number): string {
 }
 
 function getContextColor(percentage: number): string {
-  if (percentage < 50) return "bg-zinc-500";
-  if (percentage < 75) return "bg-zinc-500";
-  return "bg-zinc-500";
+  if (percentage < 50) return "bg-[#A8B5A0]";
+  if (percentage < 75) return "bg-[#B8B0C8]";
+  return "bg-[#D4C5A9]";
 }
 
 export function MemoryContextPanel() {
@@ -50,7 +50,7 @@ export function MemoryContextPanel() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <Card className="">
+    <Card className="border-l-3 border-[#8E99A4]">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
           <Brain size={16} />

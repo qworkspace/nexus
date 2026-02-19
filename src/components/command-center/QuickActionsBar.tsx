@@ -93,7 +93,7 @@ export function QuickActionsBar({ onRefresh }: QuickActionsBarProps) {
           onClick={action.action}
           className={cn(
             "h-8 px-3 gap-2 text-sm",
-            "hover:bg-zinc-200/80",
+            "hover:bg-[#D4C5A9]/20",
             "transition-all duration-150"
           )}
         >

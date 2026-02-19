@@ -56,30 +56,30 @@ function getSessionType(session: TranscriptMeta): { type: string; icon: string }
   const label = (session.label || '').toLowerCase();
 
   if (agent.name === 'Dev' || label.includes('build') || label.includes('code')) {
-    return { type: 'BUILD', icon: '🛠️' };
+    return { type: 'BUILD', icon: 'B' };
   }
 
   if (agent.name === 'Research' || label.includes('research') || label.includes('analyz')) {
-    return { type: 'RESEARCH', icon: '📊' };
+    return { type: 'RESEARCH', icon: 'R' };
   }
 
   if (agent.name === 'Q' || label.includes('chat') || label.includes('briefing')) {
-    return { type: 'CHAT', icon: '💬' };
+    return { type: 'CHAT', icon: 'C' };
   }
 
   if (session.kind === 'cron') {
-    return { type: 'MAINTENANCE', icon: '⚙️' };
+    return { type: 'MAINTENANCE', icon: 'M' };
   }
 
   if (agent.name === 'Creative') {
-    return { type: 'CREATIVE', icon: '🎨' };
+    return { type: 'CREATIVE', icon: 'A' };
   }
 
   if (agent.name === 'Luna') {
-    return { type: 'SUPPORT', icon: '💬' };
+    return { type: 'SUPPORT', icon: 'S' };
   }
 
-  return { type: 'OTHER', icon: '📝' };
+  return { type: 'OTHER', icon: 'O' };
 }
 
 function getSessionTitle(session: TranscriptMeta): string {
@@ -164,7 +164,15 @@ export function SessionCard({ session }: SessionCardProps) {
       <div className="bg-card border border-border rounded-xl p-4 hover:border-border hover:shadow-lg transition-all">
         {/* Header: Type + Title */}
         <div className="flex items-start gap-2 mb-2">
-          <span className="text-xl flex-shrink-0">{sessionType.icon}</span>
+          <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0 ${
+            sessionType.type === 'BUILD' ? 'bg-[#3D3D3D] text-white' :
+            sessionType.type === 'RESEARCH' ? 'bg-[#A8B5A0] text-white' :
+            sessionType.type === 'CHAT' ? 'bg-[#F5D547] text-[#3D3D3D]' :
+            sessionType.type === 'MAINTENANCE' ? 'bg-[#8E99A4] text-white' :
+            sessionType.type === 'CREATIVE' ? 'bg-[#B8B0C8] text-white' :
+            sessionType.type === 'SUPPORT' ? 'bg-[#D4C5A9] text-[#3D3D3D]' :
+            'bg-zinc-200 text-zinc-600'
+          }`}>{sessionType.icon}</span>
           <div className="flex-1 min-w-0">
             <h3 className="text-sm font-bold text-foreground">{sessionType.type}</h3>
             <p className="text-xs text-muted-foreground truncate">{title}</p>

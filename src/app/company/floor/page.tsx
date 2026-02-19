@@ -1872,7 +1872,7 @@ export default function FloorPage() {
                 onClick={loadTimeline}
                 className="absolute bottom-4 right-4 px-3 py-1 bg-foreground hover:bg-foreground text-foreground text-xs font-bold rounded z-50"
               >
-                📊 Timeline
+                Timeline
               </button>
             )}
             */}

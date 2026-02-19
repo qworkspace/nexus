@@ -49,7 +49,7 @@ export function CronRunDialog() {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            ⏰ RUN CRON JOB
+            RUN CRON JOB
             <span className="ml-auto text-xs text-muted-foreground font-normal">ESC</span>
           </DialogTitle>
         </DialogHeader>
@@ -83,7 +83,7 @@ export function CronRunDialog() {
                     type="button"
                   >
                     <div>
-                      <div className="font-medium text-zinc-900">⏰ {cron.name}</div>
+                      <div className="font-medium text-zinc-900">{cron.name}</div>
                       <div className="text-xs text-muted-foreground">Next: {cron.nextRun}</div>
                     </div>
                     {selectedCron?.id === cron.id && (

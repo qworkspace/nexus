@@ -64,8 +64,8 @@ function formatModelName(model: string): string {
 
 function DeliveryIcon({ mode }: { mode: 'none' | 'announce' }) {
   return mode === 'announce'
-    ? <span title="Announces to chat">🔔</span>
-    : <span title="Silent" className="opacity-40">🔕</span>;
+    ? <span title="Announces to chat" className="w-2 h-2 rounded-full bg-[#A8B5A0] inline-block" />
+    : <span title="Silent" className="w-2 h-2 rounded-full bg-zinc-300 inline-block" />;
 }
 
 function SessionBadge({ target }: { target: 'main' | 'isolated' }) {
@@ -82,9 +82,9 @@ function SessionBadge({ target }: { target: 'main' | 'isolated' }) {
 }
 
 const statusConfig = {
-  ok: { color: "bg-zinc-500", badge: "bg-zinc-100 text-zinc-700" },
-  error: { color: "bg-zinc-500", badge: "bg-zinc-100 text-zinc-700" },
-  timeout: { color: "bg-zinc-400", badge: "bg-zinc-100 text-zinc-700" },
+  ok: { color: "bg-[#A8B5A0]", badge: "bg-[#A8B5A0]/20 text-[#5C6B56]" },
+  error: { color: "bg-[#8E99A4]", badge: "bg-[#8E99A4]/20 text-[#8E99A4]" },
+  timeout: { color: "bg-[#D4C5A9]", badge: "bg-[#D4C5A9]/20 text-[#8B7D65]" },
 };
 
 function formatNextRun(ms: number): string {
@@ -184,10 +184,9 @@ export function CronMonitorPanel() {
   );
 
   return (
-    <Card className="">
+    <Card className="border-l-3 border-[#D4C5A9]">
       <CardHeader className="pb-2">
         <CardTitle className="text-base font-semibold flex items-center gap-2">
-          <span className="text-lg">⏰</span>
           Cron Jobs
         </CardTitle>
       </CardHeader>
@@ -211,7 +210,8 @@ export function CronMonitorPanel() {
                   className={cn(
                     "p-2 rounded-lg border bg-white",
                     !job.enabled && "opacity-50",
-                    job.state.lastStatus === 'error' && "border-zinc-200 bg-zinc-50/50"
+                    job.enabled && "bg-[#A8B5A0]/10",
+                    job.state.lastStatus === 'error' && "border-[#8E99A4]/30 bg-[#8E99A4]/5"
                   )}
                 >
                   <div className="flex items-center justify-between mb-1">
