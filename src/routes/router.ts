@@ -1,7 +1,6 @@
 import { Router, Request, Response } from 'express';
 import {
   routeTask,
-  getRouterStats,
   getTaskDistribution,
   classifyTask,
   recordOutcome,

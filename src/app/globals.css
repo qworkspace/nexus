@@ -3,48 +3,27 @@
 @tailwind utilities;
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+  /* Weavy-inspired palette */
+  --background: 220 14% 96%;       /* #F5F6F8 light blue-gray */
+  --foreground: 0 0% 4%;           /* #0A0A0A near black */
+  --card: 0 0% 100%;               /* #FFFFFF pure white */
+  --card-foreground: 0 0% 4%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
+  --popover-foreground: 0 0% 4%;
+  --primary: 0 0% 4%;              /* #0A0A0A black CTAs */
+  --primary-foreground: 0 0% 100%; /* white */
+  --secondary: 220 13% 95%;        /* #F0F1F3 hover bg */
+  --secondary-foreground: 0 0% 4%;
+  --muted: 220 13% 95%;
+  --muted-foreground: 220 9% 46%;  /* #6B7280 */
+  --accent: 220 13% 95%;
+  --accent-foreground: 0 0% 4%;
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --radius: 0.5rem;
-}
-
-.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
+  --border: 220 13% 89%;           /* #E2E4E7 */
+  --input: 220 13% 89%;
+  --ring: 0 0% 4%;
+  --radius: 0.75rem;               /* 12px */
 }
 
 @layer base {
@@ -53,19 +32,42 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: 
+      linear-gradient(rgba(226, 228, 231, 0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(226, 228, 231, 0.5) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 }
 
-/* Dark mode Apple aesthetic */
+/* Weavy clean card */
+.weavy-card {
+  @apply bg-white rounded-xl border border-border;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+/* Yellow accent badge */
+.badge-accent {
+  background-color: #FFE135;
+  color: #0A0A0A;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Glass panel — kept for compatibility, now light */
 .glass-panel {
-  @apply bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-2xl;
+  @apply bg-white border border-border rounded-2xl;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .glass-panel-light {
-  @apply bg-white/80 backdrop-blur-xl border border-zinc-200/50 rounded-2xl;
+  @apply bg-white/80 backdrop-blur-xl border border-border rounded-2xl;
 }
 
-/* Glow effects for status indicators */
+/* Status glow effects */
 .status-glow-green {
   box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
 }
@@ -82,9 +84,9 @@
   box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
 }
 
-/* Animated gradient background */
+/* Gradient bg — updated to Weavy light */
 .gradient-bg {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(135deg, #f5f6f8 0%, #eef0f5 50%, #e8eaf0 100%);
 }
 
 /* Pulse animation for live indicators */
@@ -104,7 +106,7 @@
 }
 
 .shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.04), transparent);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }

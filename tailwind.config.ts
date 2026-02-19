@@ -9,6 +9,11 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ["var(--font-dm-sans)", "var(--font-inter)", "sans-serif"],
+  			display: ["var(--font-dm-sans)", "sans-serif"],
+  			body: ["var(--font-inter)", "sans-serif"],
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
