@@ -63,27 +63,14 @@
   right: 0;
   bottom: 0;
   background-image:
-    radial-gradient(ellipse 80% 50% at 50% 0%, hsl(210, 55%, 97%) 0%, transparent 60%),
-    linear-gradient(rgba(80, 120, 180, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(80, 120, 180, 0.06) 1px, transparent 1px);
-  background-size: 100% 100%, 32px 32px, 32px 32px;
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0) 80%);
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0.6) 30%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0) 80%);
+    linear-gradient(rgba(255, 255, 255, 0.55) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.55) 1px, transparent 1px);
+  background-size: 32px 32px, 32px 32px;
   pointer-events: none;
   z-index: 0;
 }
 
-.weavy-grid::after {
-  content: '';
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 200px;
-  background: linear-gradient(to top, hsl(213, 28%, 92%) 0%, transparent 100%);
-  pointer-events: none;
-  z-index: 0;
-}
+/* ::after removed — no fade-out, grid is consistent across full page like Weavy reference */
 
 /* Glass panels */
 .glass-panel {
