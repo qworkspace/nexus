@@ -41,7 +41,7 @@ interface Agent {
 const PRIORITY_COLORS: Record<string, string> = {
   high: "bg-red-600",
   medium: "bg-[#FFE135]",
-  low: "bg-emerald-500",
+  low: "bg-zinc-900",
 };
 
 export default function MeetingsPage() {
@@ -122,7 +122,7 @@ export default function MeetingsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <Link href="/company" className="text-xs text-blue-500 hover:underline mb-2 inline-block">← The Core</Link>
+          <Link href="/company" className="text-xs text-zinc-500 hover:text-foreground hover:underline mb-2 inline-block">← The Core</Link>
           <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
             <Calendar size={20} />
             Meetings
@@ -292,8 +292,8 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
   const agent = agentMap[item.assignee] || agentMap[item.assignee?.toLowerCase()];
   const statusColors: Record<string, string> = {
     "new": "border-l-zinc-400",
-    "in-progress": "border-l-blue-500",
-    "done": "border-l-emerald-500",
+    "in-progress": "border-l-zinc-500",
+    "done": "border-l-zinc-700",
     "blocked": "border-l-red-500",
   };
 
@@ -313,17 +313,17 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
         </div>
         <div className="flex items-center gap-2">
           {item.status === "new" && (
-            <button onClick={() => onUpdateStatus(item.id, "in-progress")} className="text-[10px] text-blue-500 hover:underline">
+            <button onClick={() => onUpdateStatus(item.id, "in-progress")} className="text-[10px] text-zinc-500 hover:text-foreground hover:underline">
               Start →
             </button>
           )}
           {item.status === "in-progress" && (
-            <button onClick={() => onUpdateStatus(item.id, "done")} className="text-[10px] text-emerald-500 hover:underline flex items-center gap-0.5">
+            <button onClick={() => onUpdateStatus(item.id, "done")} className="text-[10px] text-zinc-500 hover:text-foreground hover:underline flex items-center gap-0.5">
               Done <Check size={10} />
             </button>
           )}
           {item.status === "blocked" && (
-            <button onClick={() => onUpdateStatus(item.id, "new")} className="text-[10px] text-amber-500 hover:underline">
+            <button onClick={() => onUpdateStatus(item.id, "new")} className="text-[10px] text-zinc-500 hover:text-foreground hover:underline">
               Unblock
             </button>
           )}
@@ -331,7 +331,7 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
       </div>
       <p className="text-[11px] text-zinc-700 dark:text-zinc-300 mt-1">{item.task}</p>
       {item.outcome && (
-        <p className="text-[10px] text-emerald-500 mt-1 flex items-center gap-0.5">
+        <p className="text-[10px] text-zinc-600 mt-1 flex items-center gap-0.5">
           <CheckCircle size={10} /> {item.outcome}
         </p>
       )}

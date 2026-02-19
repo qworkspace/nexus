@@ -1617,7 +1617,7 @@ export default function FloorPage() {
 
             {/* Meeting table - subtle ring of light */}
             <div className="absolute" style={{ left: 340, top: 445 }}>
-              <div className={`w-[160px] h-[90px] rounded-[50%] border transition-all duration-500 ${meetingMode ? "border-amber-400/60 shadow-[0_0_30px_rgba(251,191,36,0.3)] bg-amber-500/5" : "border-zinc-600/30 bg-zinc-700/10"}`}>
+              <div className={`w-[160px] h-[90px] rounded-[50%] border transition-all duration-500 ${meetingMode ? "border-[#FFE135]/60 shadow-[0_0_30px_rgba(255,225,53,0.3)] bg-[#FFE135]/5" : "border-zinc-600/30 bg-zinc-700/10"}`}>
                 {/* Inner glow ring */}
                 {meetingMode && (
                   <div className="absolute inset-0 rounded-[50%]" style={{
@@ -1781,7 +1781,7 @@ export default function FloorPage() {
                   {/* Handoff badge */}
                   {agentState?.handoff && (
                     <div className="absolute -top-20 left-1/2 -translate-x-1/2 z-40">
-                      <div className="bg-blue-500 text-white text-[9px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1 whitespace-nowrap">
+                      <div className="bg-zinc-900 text-white text-[9px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1 whitespace-nowrap">
                         📤 Handoff: {agentState.handoff.task.substring(0, 30)}...
                       </div>
                     </div>
@@ -1877,7 +1877,7 @@ export default function FloorPage() {
             {!timelineMode && !meetingMode && (
               <button
                 onClick={loadTimeline}
-                className="absolute bottom-4 right-4 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded z-50"
+                className="absolute bottom-4 right-4 px-3 py-1 bg-zinc-900 hover:bg-zinc-700 text-white text-xs font-bold rounded z-50"
               >
                 📊 Timeline
               </button>
@@ -1921,7 +1921,7 @@ export default function FloorPage() {
                 {selectedAgents.length === 2 && !meetingMode && (
                   <button
                     onClick={startAgentChat}
-                    className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded transition-colors flex items-center gap-1"
+                    className="px-3 py-1 bg-zinc-900 hover:bg-zinc-700 text-white text-xs font-bold rounded transition-colors flex items-center gap-1"
                   >
                     <MessageSquare size={12} />
                     Start Chat
@@ -2277,7 +2277,7 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
           />
           {/* Subtle orbiting speck */}
           <div
-            className="absolute w-1 h-1 bg-green-300 rounded-full opacity-60"
+            className="absolute w-1 h-1 bg-zinc-300 rounded-full opacity-60"
             style={{
               left: '50%',
               top: '50%',
@@ -2302,9 +2302,9 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
           }}
         >
           {/* Leaves */}
-          <div className="absolute -left-2 top-4 w-3 h-2 bg-green-400 rounded-full opacity-40" />
-          <div className="absolute right-0 top-8 w-3 h-2 bg-green-400 rounded-full opacity-40" />
-          <div className="absolute -left-3 top-12 w-2 h-2 bg-green-500 rounded-full opacity-50" />
+          <div className="absolute -left-2 top-4 w-3 h-2 bg-zinc-400 rounded-full opacity-40" />
+          <div className="absolute right-0 top-8 w-3 h-2 bg-zinc-400 rounded-full opacity-40" />
+          <div className="absolute -left-3 top-12 w-2 h-2 bg-zinc-500 rounded-full opacity-50" />
         </div>
       </div>
     );

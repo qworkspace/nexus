@@ -159,15 +159,15 @@ export default function CompanyPage() {
 
   // Agent colour mapping for visual distinction
   const agentColours: Record<string, { border: string; glow: string }> = {
-    q: { border: "border-l-amber-500", glow: "shadow-[0_0_20px_-5px_rgba(245,158,11,0.15)]" },
+    q: { border: "border-l-[#FFE135]", glow: "shadow-[0_0_20px_-5px_rgba(245,158,11,0.15)]" },
     aura: { border: "border-l-pink-400", glow: "shadow-[0_0_20px_-5px_rgba(244,114,182,0.15)]" },
     surge: { border: "border-l-green-500", glow: "shadow-[0_0_20px_-5px_rgba(34,197,94,0.15)]" },
-    spark: { border: "border-l-blue-500", glow: "shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)]" },
-    cipher: { border: "border-l-purple-500", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.15)]" },
+    spark: { border: "border-l-zinc-500", glow: "shadow-[0_0_20px_-5px_rgba(59,130,246,0.15)]" },
+    cipher: { border: "border-l-zinc-700", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.15)]" },
     volt: { border: "border-l-red-500", glow: "shadow-[0_0_20px_-5px_rgba(239,68,68,0.15)]" },
     echo: { border: "border-l-teal-500", glow: "shadow-[0_0_20px_-5px_rgba(20,184,166,0.15)]" },
     flux: { border: "border-l-orange-500", glow: "shadow-[0_0_20px_-5px_rgba(249,115,22,0.15)]" },
-    prism: { border: "border-l-transparent bg-gradient-to-b from-red-500 via-green-500 to-blue-500", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.2)]" },
+    prism: { border: "border-l-transparent bg-gradient-to-b from-red-500 via-zinc-500 to-zinc-800", glow: "shadow-[0_0_20px_-5px_rgba(168,85,247,0.2)]" },
     luna: { border: "border-l-slate-400", glow: "shadow-[0_0_20px_-5px_rgba(148,163,184,0.15)]" },
   };
 
@@ -364,7 +364,7 @@ export default function CompanyPage() {
               {newActivityCount > 0 && (
                 <button
                   onClick={resetActivityScroll}
-                  className="px-2 py-1 bg-blue-500 hover:bg-blue-600 text-white text-[10px] font-bold rounded-full transition-colors"
+                  className="px-2 py-1 bg-zinc-900 hover:bg-zinc-700 text-white text-[10px] font-bold rounded-full transition-colors"
                 >
                   {newActivityCount} new
                 </button>
@@ -680,7 +680,7 @@ function TooltipLoopMetricBar({
     emerald: "bg-zinc-900",
     amber: "bg-[#FFE135]",
     red: "bg-red-600",
-    blue: "bg-blue-500",
+    blue: "bg-zinc-600",
     purple: "bg-zinc-700",
   };
   const textColors: Record<string, string> = {

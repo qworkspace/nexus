@@ -155,7 +155,7 @@ export default function OrgChartPage() {
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Organisational Chart</h1>
           <p className="text-zinc-500 text-sm mt-1">Villanueva Creative Pty Ltd — {agents.length} team members</p>
         </div>
-        <Link href="/company" className="text-sm text-blue-500 hover:underline">← The Core</Link>
+        <Link href="/company" className="text-sm text-zinc-500 hover:text-foreground hover:underline">← The Core</Link>
       </div>
 
       {agents.length > 0 && (

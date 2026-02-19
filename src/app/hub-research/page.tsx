@@ -391,8 +391,8 @@ export default function HubResearchPage() {
     switch (status) {
       case 'open': return 'bg-red-100 text-red-700';
       case 'fix_briefed': return 'bg-yellow-100 text-yellow-700';
-      case 'fix_shipped': return 'bg-blue-100 text-blue-700';
-      case 'verified': return 'bg-green-100 text-green-700';
+      case 'fix_shipped': return 'bg-zinc-100 text-zinc-700';
+      case 'verified': return 'bg-zinc-100 text-zinc-800';
       default: return 'bg-zinc-100 text-zinc-700';
     }
   };
@@ -400,13 +400,13 @@ export default function HubResearchPage() {
   const getCategoryBadge = (category: 'research' | 'think' | 'request' | 'review') => {
     switch (category) {
       case 'research':
-        return { icon: '🔬', className: 'bg-blue-900/30 text-blue-400 border border-blue-800' };
+        return { icon: '🔬', className: 'bg-zinc-800/40 text-zinc-300 border border-zinc-700' };
       case 'think':
-        return { icon: '💭', className: 'bg-purple-900/30 text-purple-400 border border-purple-800' };
+        return { icon: '💭', className: 'bg-zinc-800/40 text-zinc-300 border border-zinc-700' };
       case 'request':
-        return { icon: '📋', className: 'bg-amber-900/30 text-amber-400 border border-amber-800' };
+        return { icon: '📋', className: 'bg-[#FFE135]/10 text-[#8a7000] border border-[#FFE135]/30' };
       case 'review':
-        return { icon: '🔍', className: 'bg-cyan-900/30 text-cyan-400 border border-cyan-800' };
+        return { icon: '🔍', className: 'bg-zinc-800/40 text-zinc-300 border border-zinc-700' };
     }
   };
 
@@ -415,19 +415,19 @@ export default function HubResearchPage() {
       case "new":
         return "bg-zinc-100 text-zinc-700";
       case "approved":
-        return "bg-emerald-100 text-emerald-700";
+        return "bg-zinc-100 text-zinc-800";
       case "parked":
-        return "bg-amber-100 text-amber-700";
+        return "bg-[#FFE135]/30 text-[#7a6200]";
       case "rejected":
         return "bg-red-100 text-red-700";
       case "specced":
-        return "bg-blue-100 text-blue-700";
+        return "bg-zinc-100 text-zinc-700";
       case "building":
         return "bg-violet-100 text-violet-700";
       case "shipped":
-        return "bg-green-100 text-green-700";
+        return "bg-zinc-100 text-zinc-800";
       case "review":
-        return "bg-purple-100 text-purple-700";
+        return "bg-zinc-100 text-zinc-700";
       default:
         return "bg-zinc-100 text-zinc-700";
     }
@@ -438,9 +438,9 @@ export default function HubResearchPage() {
       case "HIGH":
         return "bg-red-100 text-red-700";
       case "MED":
-        return "bg-amber-100 text-amber-700";
+        return "bg-[#FFE135]/30 text-[#7a6200]";
       case "LOW":
-        return "bg-green-100 text-green-700";
+        return "bg-zinc-100 text-zinc-800";
     }
   };
 
@@ -465,8 +465,8 @@ export default function HubResearchPage() {
   // Rating badge component
   const RatingBadge = ({ rating }: { rating: string }) => {
     const config = {
-      great: { emoji: '⭐', label: 'Great', color: 'text-green-600 bg-green-50' },
-      good: { emoji: '👍', label: 'Good', color: 'text-green-600 bg-green-50' },
+      great: { emoji: '⭐', label: 'Great', color: 'text-zinc-800 bg-zinc-100' },
+      good: { emoji: '👍', label: 'Good', color: 'text-zinc-800 bg-zinc-100' },
       meh: { emoji: '😐', label: 'Meh', color: 'text-yellow-600 bg-yellow-50' },
       bad: { emoji: '👎', label: 'Bad', color: 'text-red-600 bg-red-50' },
       useless: { emoji: '🗑', label: 'Useless', color: 'text-red-600 bg-red-50' },
@@ -488,9 +488,9 @@ export default function HubResearchPage() {
     const config = {
       open: { color: 'bg-red-100 text-red-700', icon: '🔴' },
       fix_briefed: { color: 'bg-yellow-100 text-yellow-700', icon: '📝' },
-      fix_building: { color: 'bg-blue-100 text-blue-700', icon: '🔨' },
-      fix_shipped: { color: 'bg-purple-100 text-purple-700', icon: '🚀' },
-      verified: { color: 'bg-green-100 text-green-700', icon: '✅' },
+      fix_building: { color: 'bg-zinc-100 text-zinc-700', icon: '🔨' },
+      fix_shipped: { color: 'bg-zinc-100 text-zinc-700', icon: '🚀' },
+      verified: { color: 'bg-zinc-100 text-zinc-800', icon: '✅' },
     };
 
     const c = config[status as keyof typeof config] || config.open;
@@ -529,7 +529,7 @@ export default function HubResearchPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0 text-blue-500 hover:text-blue-700 shrink-0"
+                  className="h-6 w-6 p-0 text-zinc-500 hover:text-zinc-700 shrink-0"
                   onClick={() => onViewSource(brief)}
                   title="View source research"
                 >
@@ -604,12 +604,12 @@ export default function HubResearchPage() {
                 </div>
               )}
               {brief.impact && brief.impact.length > 0 && (
-                <div className="bg-emerald-900/20 px-3 py-2 rounded border border-emerald-800/50">
-                  <span className="font-semibold text-emerald-400">Impact</span>
+                <div className="bg-zinc-800/20 px-3 py-2 rounded border border-zinc-700/50">
+                  <span className="font-semibold text-zinc-400">Impact</span>
                   <ul className="mt-1 space-y-1">
                     {brief.impact.map((item, i) => (
-                      <li key={i} className="flex gap-2 text-emerald-300/80">
-                        <span className="text-emerald-600 shrink-0">•</span>
+                      <li key={i} className="flex gap-2 text-zinc-400">
+                        <span className="text-zinc-700 shrink-0">•</span>
                         <span>{item}</span>
                       </li>
                     ))}
@@ -625,7 +625,7 @@ export default function HubResearchPage() {
               )}
               {brief.buildOutcome && (
                 <div className="bg-blue-900/30 p-2 rounded border border-blue-800">
-                  <p className="text-blue-300 text-xs font-medium">🔨 Could build: {brief.buildOutcome}</p>
+                  <p className="text-zinc-400 text-xs font-medium">🔨 Could build: {brief.buildOutcome}</p>
                 </div>
               )}
             </div>
@@ -673,8 +673,8 @@ export default function HubResearchPage() {
 
           {/* Notes for Cipher */}
           {brief.notes && !isEditing && (
-            <div className="bg-amber-50 p-2 rounded-md border border-amber-200">
-              <p className="text-xs text-amber-700">
+            <div className="bg-zinc-50 p-2 rounded-md border border-zinc-200">
+              <p className="text-xs text-[#7a6200]">
                 <strong>Cipher Notes:</strong> {brief.notes}
               </p>
             </div>
@@ -775,19 +775,19 @@ export default function HubResearchPage() {
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-zinc-500">Approved</span>
-              <span className="font-medium text-emerald-600">{stats.approved}</span>
+              <span className="font-medium text-zinc-700">{stats.approved}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-zinc-500">Parked</span>
-              <span className="font-medium text-amber-600">{stats.parked}</span>
+              <span className="font-medium text-[#7a6200]">{stats.parked}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-zinc-500">Building</span>
-              <span className="font-medium text-violet-600">{stats.building}</span>
+              <span className="font-medium text-zinc-600">{stats.building}</span>
             </div>
             <div className="flex justify-between text-sm">
               <span className="text-zinc-500">Shipped</span>
-              <span className="font-medium text-green-600">{stats.shipped}</span>
+              <span className="font-medium text-zinc-700">{stats.shipped}</span>
             </div>
           </CardContent>
         </Card>
@@ -972,8 +972,8 @@ export default function HubResearchPage() {
                             </p>
                             <p className="text-xs text-zinc-500 mt-1">Total Builds</p>
                           </div>
-                          <div className="text-center p-4 bg-green-50 dark:bg-green-950/30 rounded-lg">
-                            <p className="text-3xl font-bold text-green-600">
+                          <div className="text-center p-4 bg-zinc-100 dark:bg-zinc-800/30 rounded-lg">
+                            <p className="text-3xl font-bold text-zinc-700">
                               {buildSummary.successCount}
                             </p>
                             <p className="text-xs text-zinc-500 mt-1">Successful</p>
@@ -1154,7 +1154,7 @@ export default function HubResearchPage() {
 
                             const icon = isSuccess ? '✅' : isFailed ? '❌' : '⚠️';
                             const statusText = isSuccess ? 'SUCCESS' : isFailed ? 'FAILED' : 'STALLED';
-                            const statusColor = isSuccess ? 'text-green-400' : isFailed ? 'text-red-400' : 'text-yellow-400';
+                            const statusColor = isSuccess ? 'text-zinc-500' : isFailed ? 'text-red-500' : 'text-[#8a7000]';
 
                             return (
                               <div key={build.id} className="flex items-start gap-3 p-4 bg-zinc-800 rounded-lg border border-zinc-700">
@@ -1266,8 +1266,8 @@ export default function HubResearchPage() {
                               
                               {/* Context */}
                               {fix.context && (
-                                <div className="bg-amber-50 p-2 rounded border border-amber-200">
-                                  <p className="text-xs text-amber-700">
+                                <div className="bg-zinc-50 p-2 rounded border border-zinc-200">
+                                  <p className="text-xs text-[#7a6200]">
                                     <strong>Context:</strong> {fix.context}
                                   </p>
                                 </div>
@@ -1276,7 +1276,7 @@ export default function HubResearchPage() {
                               {/* What Fixed (if any) */}
                               {fix.whatFixed && (
                                 <div>
-                                  <p className="text-xs font-medium text-emerald-600 mb-1">What was fixed</p>
+                                  <p className="text-xs font-medium text-zinc-600 mb-1">What was fixed</p>
                                   <p className="text-sm text-zinc-700">{fix.whatFixed}</p>
                                 </div>
                               )}
