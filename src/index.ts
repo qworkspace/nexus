@@ -29,7 +29,8 @@ app.get('/', (req: Request, res: Response) => {
 app.use(routerRoutes);
 
 // Error handler
-app.use((err: any, req: Request, res: Response, next: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
+app.use((err: any, req: Request, res: Response, _next: unknown) => {
   console.error('Error:', err);
   res.status(500).json({
     error: err.message || 'Internal server error'

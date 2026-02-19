@@ -2,50 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
 :root {
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
+  /* Weavy icy cool blue-gray palette */
+  --background: 213 28% 92%;
+  --foreground: 222 30% 9%;
   --card: 0 0% 100%;
-  --card-foreground: 240 10% 3.9%;
+  --card-foreground: 222 30% 9%;
   --popover: 0 0% 100%;
-  --popover-foreground: 240 10% 3.9%;
-  --primary: 240 5.9% 10%;
-  --primary-foreground: 0 0% 98%;
-  --secondary: 240 4.8% 95.9%;
-  --secondary-foreground: 240 5.9% 10%;
-  --muted: 240 4.8% 95.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --accent: 240 4.8% 95.9%;
-  --accent-foreground: 240 5.9% 10%;
-  --destructive: 0 84.2% 60.2%;
+  --popover-foreground: 222 30% 9%;
+  --primary: 222 30% 9%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 213 20% 88%;
+  --secondary-foreground: 222 25% 18%;
+  --muted: 213 18% 90%;
+  --muted-foreground: 215 12% 44%;
+  --accent: 52 100% 60%;
+  --accent-foreground: 222 30% 9%;
+  --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
-  --border: 240 5.9% 90%;
-  --input: 240 5.9% 90%;
-  --ring: 240 5.9% 10%;
-  --radius: 0.5rem;
+  --border: 213 18% 84%;
+  --input: 213 18% 84%;
+  --ring: 222 30% 9%;
+  --radius: 0.75rem;
 }
 
-.dark {
-  --background: 240 10% 3.9%;
-  --foreground: 0 0% 98%;
-  --card: 240 10% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --popover: 240 10% 3.9%;
-  --popover-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 240 5.9% 10%;
-  --secondary: 240 3.7% 15.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 240 3.7% 15.9%;
-  --muted-foreground: 240 5% 64.9%;
-  --accent: 240 3.7% 15.9%;
-  --accent-foreground: 0 0% 98%;
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 0 0% 98%;
-  --border: 240 3.7% 15.9%;
-  --input: 240 3.7% 15.9%;
-  --ring: 240 4.9% 83.9%;
-}
+/* Dark theme removed — Weavy is light-only */
 
 @layer base {
   * {
@@ -53,68 +36,79 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  h1 { @apply text-3xl; }
+  h2 { @apply text-2xl; }
+  h3 { @apply text-xl; }
 }
 
-/* Dark mode Apple aesthetic */
+/* Weavy grid background — icy blue-gray with radial highlight at top */
+.weavy-grid {
+  background-color: hsl(213, 28%, 92%);
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% 0%, hsl(210, 55%, 97%) 0%, transparent 70%),
+    linear-gradient(rgba(80, 120, 180, 0.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(80, 120, 180, 0.055) 1px, transparent 1px);
+  background-size: 100% 100%, 32px 32px, 32px 32px;
+}
+
+/* Glass panels */
 .glass-panel {
-  @apply bg-zinc-900/80 backdrop-blur-xl border border-zinc-800/50 rounded-2xl;
+  @apply bg-card/80 backdrop-blur-xl border border-border/50 rounded-2xl;
 }
-
 .glass-panel-light {
-  @apply bg-white/80 backdrop-blur-xl border border-zinc-200/50 rounded-2xl;
+  @apply bg-white/80 backdrop-blur-xl border border-border/50 rounded-2xl;
 }
 
-/* Glow effects for status indicators */
-.status-glow-green {
-  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+/* Weavy card elevation — subtle shadow to pop off the icy bg */
+.weavy-card {
+  box-shadow: 0 1px 3px rgba(30, 60, 120, 0.08), 0 0 0 1px rgba(30, 60, 120, 0.05);
 }
 
-.status-glow-yellow {
-  box-shadow: 0 0 12px rgba(234, 179, 8, 0.4);
-}
+/* Status glow effects */
+.status-glow-green { box-shadow: 0 0 12px rgba(34, 197, 94, 0.4); }
+.status-glow-yellow { box-shadow: 0 0 12px rgba(234, 179, 8, 0.4); }
+.status-glow-red { box-shadow: 0 0 12px rgba(239, 68, 68, 0.4); }
+.status-glow-blue { box-shadow: 0 0 12px rgba(59, 130, 246, 0.4); }
 
-.status-glow-red {
-  box-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
-}
-
-.status-glow-blue {
-  box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
-}
-
-/* Animated gradient background */
+/* Weavy gradient bg — icy blue-gray gradient */
 .gradient-bg {
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(160deg, hsl(210, 50%, 96%) 0%, hsl(213, 28%, 91%) 50%, hsl(215, 32%, 88%) 100%);
 }
 
-/* Pulse animation for live indicators */
+/* Pulse */
 @keyframes pulse-soft {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.6; }
 }
+.animate-pulse-soft { animation: pulse-soft 2s ease-in-out infinite; }
 
-.animate-pulse-soft {
-  animation: pulse-soft 2s ease-in-out infinite;
-}
-
-/* Shimmer effect for loading states */
+/* Shimmer */
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
 }
-
 .shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.05), transparent);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
-/* Slow spin for refresh indicator */
+/* Slow spin */
 @keyframes spin-slow {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+.animate-spin-slow { animation: spin-slow 8s linear infinite; }
 
-.animate-spin-slow {
-  animation: spin-slow 8s linear infinite;
-}
+/* Weavy yellow accent */
+.bg-weavy-yellow { background-color: #FFE135; color: #0A0B0F; }
+.text-weavy-yellow { color: #FFE135; }
+.border-weavy-yellow { border-color: #FFE135; }

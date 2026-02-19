@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useCommandStore } from "@/stores/commandStore";
-import { Check, Play } from 'lucide-react';
+import { Check, Play, Timer } from 'lucide-react';
 
 
 interface Cron {
@@ -49,7 +49,7 @@ export function CronRunDialog() {
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            ⏰ RUN CRON JOB
+            <Timer size={14} /> RUN CRON JOB
             <span className="ml-auto text-xs text-zinc-400 font-normal">ESC</span>
           </DialogTitle>
         </DialogHeader>
@@ -83,7 +83,7 @@ export function CronRunDialog() {
                     type="button"
                   >
                     <div>
-                      <div className="font-medium text-zinc-900">⏰ {cron.name}</div>
+                      <div className="font-medium text-zinc-900 flex items-center gap-1.5"><Timer size={12} className="text-muted-foreground shrink-0" />{cron.name}</div>
                       <div className="text-xs text-zinc-500">Next: {cron.nextRun}</div>
                     </div>
                     {selectedCron?.id === cron.id && (

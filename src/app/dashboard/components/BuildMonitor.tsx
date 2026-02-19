@@ -148,11 +148,11 @@ export function BuildMonitor() {
     switch (status) {
       case 'building':
       case 'processing':
-        return <Badge variant="outline" className="text-xs text-blue-600 border-blue-200">BUILDING</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-600 border-zinc-300">BUILDING</Badge>;
       case 'ready':
-        return <Badge variant="outline" className="text-xs text-green-600 border-green-200">READY</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-600 border-zinc-300">READY</Badge>;
       case 'success':
-        return <Badge variant="outline" className="text-xs text-green-600 border-green-200">SUCCESS</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-600 border-zinc-300">SUCCESS</Badge>;
       case 'error':
         return <Badge variant="outline" className="text-xs text-red-600 border-red-200">ERROR</Badge>;
       case 'cancelled':
@@ -216,7 +216,7 @@ export function BuildMonitor() {
       <CardHeader className="flex flex-row items-center justify-between pb-4">
         <div>
           <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <Activity className="h-5 w-5 text-blue-500" />
+            <Activity className="h-5 w-5 text-zinc-600" />
             BUILD MONITOR
           </CardTitle>
           <p className="text-xs text-zinc-500 mt-1">

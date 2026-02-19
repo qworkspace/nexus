@@ -40,7 +40,7 @@ export default function CIPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900">🔄 CI Pipeline Dashboard</h1>
+            <h1 className="text-2xl font-semibold text-zinc-900">CI Pipeline Dashboard</h1>
             <p className="text-zinc-500 text-sm mt-1">Live CI pipeline visibility</p>
           </div>
           <div className="flex items-center gap-3">
@@ -50,7 +50,7 @@ export default function CIPage() {
             </div>
             <button
               onClick={fetchCI}
-              className="px-3 py-1.5 text-sm bg-zinc-900 text-white rounded-md hover:bg-zinc-800 transition-colors"
+              className="px-3 py-1.5 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
             >
               Refresh
             </button>
@@ -145,7 +145,7 @@ export default function CIPage() {
                     {/* Success/Fail Counts */}
                     <div className="flex items-center gap-4 text-sm">
                       <div className="flex items-center gap-2">
-                        <span className="text-green-600">✓</span>
+                        <span className="text-zinc-600">✓</span>
                         <span className="text-zinc-600">{data.health.successCount} success</span>
                       </div>
                       <div className="flex items-center gap-2">
@@ -192,11 +192,11 @@ function QueueItem({ item }: { item: CIQueueItem }) {
   const priorityColors = {
     HIGH: 'bg-red-100 text-red-700 border-red-200',
     MED: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    LOW: 'bg-green-100 text-green-700 border-green-200',
+    LOW: 'bg-zinc-100 text-zinc-700 border-zinc-300',
   };
 
   const riskColors = {
-    LOW: 'text-green-600',
+    LOW: 'text-zinc-600',
     MEDIUM: 'text-yellow-600',
     HIGH: 'text-red-600',
   };
@@ -235,13 +235,13 @@ function ActiveBuildSection({ build }: { build: CIBuild | null }) {
   return (
     <Card>
       <CardContent className="p-4">
-        <div className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-900">
+        <div className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-blue-950/30 rounded-lg border border-zinc-300 dark:border-zinc-300">
           <div className="flex-shrink-0 mt-0.5">
-            <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
+            <div className="h-2 w-2 rounded-full bg-zinc-900 animate-pulse" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2 py-0.5 text-xs font-medium bg-blue-100 text-blue-700 rounded">
+              <span className="px-2 py-0.5 text-xs font-medium bg-zinc-100 text-zinc-700 rounded">
                 RUNNING
               </span>
               <span className="text-xs text-zinc-500">
@@ -270,7 +270,7 @@ function BuildRow({ build }: { build: CIBuild }) {
     <div className="flex items-start gap-3 p-3 bg-zinc-50 dark:bg-zinc-900 rounded-lg">
       <div className="flex-shrink-0 mt-0.5">
         {isSuccess ? (
-          <span className="text-green-500">✓</span>
+          <span className="text-zinc-600">✓</span>
         ) : isFailed ? (
           <span className="text-red-500">✗</span>
         ) : (
@@ -286,7 +286,7 @@ function BuildRow({ build }: { build: CIBuild }) {
           {build.testStatus && (
             <>
               <span>•</span>
-              <span className={build.testStatus === 'pass' ? 'text-green-600' : 'text-red-600'}>
+              <span className={build.testStatus === 'pass' ? 'text-zinc-600' : 'text-red-600'}>
                 TEST: {build.testStatus.toUpperCase()}
               </span>
             </>

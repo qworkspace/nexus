@@ -125,7 +125,7 @@ export function CostTracker() {
                   </p>
                   {summary.trend !== 0 && (
                     <div className={`flex items-center text-sm font-medium ${
-                      summary.trend > 0 ? "text-red-600" : "text-green-600"
+                      summary.trend > 0 ? "text-red-600" : "text-zinc-600"
                     }`}>
                       {summary.trend > 0 ? (
                         <TrendingUp className="h-4 w-4 mr-1" />
@@ -222,7 +222,7 @@ function BudgetProgressBar({ label, current, budget, alert }: BudgetProgressBarP
       case "warning":
         return "bg-yellow-500";
       default:
-        return "bg-green-500";
+        return "bg-zinc-800";
     }
   };
 
@@ -233,7 +233,7 @@ function BudgetProgressBar({ label, current, budget, alert }: BudgetProgressBarP
       case "warning":
         return "bg-yellow-50 dark:bg-yellow-950 border-yellow-200 dark:border-yellow-800";
       default:
-        return "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800";
+        return "bg-zinc-50 dark:bg-green-950 border-zinc-300 dark:border-zinc-300";
     }
   };
 
@@ -244,7 +244,7 @@ function BudgetProgressBar({ label, current, budget, alert }: BudgetProgressBarP
       case "warning":
         return <AlertTriangle className="h-3 w-3 text-yellow-500" />;
       default:
-        return <CheckCircle className="h-3 w-3 text-green-500" />;
+        return <CheckCircle className="h-3 w-3 text-zinc-600" />;
     }
   };
 
@@ -270,7 +270,7 @@ function BudgetProgressBar({ label, current, budget, alert }: BudgetProgressBarP
       <p className={`text-[10px] mt-1 ${
         alert.level === "critical" ? "text-red-600 dark:text-red-400" :
         alert.level === "warning" ? "text-yellow-600 dark:text-yellow-400" :
-        "text-green-600 dark:text-green-400"
+        "text-zinc-600 dark:text-zinc-500"
       }`}>
         {alert.message} ({alert.percentage.toFixed(0)}%)
       </p>

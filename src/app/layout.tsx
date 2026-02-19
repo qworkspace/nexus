@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Sidebar } from "@/components/sidebar";
 import { CommandPalette } from "@/components/command-palette";
@@ -7,7 +7,10 @@ import { GlobalDialogs } from "@/components/command/GlobalDialogs";
 import { KeyboardShortcuts } from "@/components/KeyboardShortcuts";
 import { KeyboardShortcutsProvider } from "@/components/KeyboardShortcutsProvider";
 
-const inter = Inter({ subsets: ["latin"] });
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
 
 export const metadata: Metadata = {
   title: "Nexus",
@@ -20,10 +23,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${inter.className} antialiased`}>
+    <html lang="en">
+      <body className={`${spaceGrotesk.className} antialiased`}>
         <KeyboardShortcutsProvider>
-          <div className="flex h-screen bg-white dark:bg-zinc-950">
+          <div className="flex h-screen bg-background weavy-grid">
             <Sidebar />
             <main className="flex-1 overflow-auto md:ml-0">
               {children}

@@ -9,6 +9,11 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			sans: ["var(--font-dm-sans)", "var(--font-inter)", "sans-serif"],
+  			display: ["var(--font-dm-sans)", "sans-serif"],
+  			body: ["var(--font-inter)", "sans-serif"],
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -50,6 +55,12 @@ const config: Config = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
+  		},
+  		'weavy': {
+  			yellow: '#FFE135',
+  			black: '#0A0B0F',
+  			gray: '#F5F6F8',
+  			border: '#E0E3EC',
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

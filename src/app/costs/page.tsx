@@ -183,12 +183,12 @@ export default async function CostsPage() {
       <div className="grid grid-cols-2 gap-4 mb-8">
         <CostBreakdown
           title="By Model"
-          icon="🤖"
+          icon=""
           items={data.byModel}
         />
         <CostBreakdown
           title="By Activity Type"
-          icon="📁"
+          icon=""
           items={data.byType}
         />
       </div>

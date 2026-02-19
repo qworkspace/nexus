@@ -259,11 +259,12 @@ export default function RelationshipsPage() {
       ctx.lineWidth = isHovered ? 3 : 2;
       ctx.stroke();
 
-      // Emoji
-      ctx.font = `${isHovered ? 18 : 14}px serif`;
+      // Agent initial
+      ctx.font = `bold ${isHovered ? 16 : 12}px sans-serif`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText(node.emoji, node.x, node.y);
+      ctx.fillStyle = color;
+      ctx.fillText(node.name.charAt(0).toUpperCase(), node.x, node.y);
 
       // Name
       ctx.fillStyle = color;
@@ -313,16 +314,16 @@ export default function RelationshipsPage() {
           <p className="text-zinc-500 text-sm">Trust scores and interaction patterns</p>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={() => setView("graph")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "graph" ? "bg-blue-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
+          <button onClick={() => setView("graph")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "graph" ? "bg-zinc-900 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
             Graph
           </button>
-          <button onClick={() => setView("matrix")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "matrix" ? "bg-blue-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
+          <button onClick={() => setView("matrix")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "matrix" ? "bg-zinc-900 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
             Matrix
           </button>
-          <button onClick={() => setView("timeline")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "timeline" ? "bg-blue-500 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
+          <button onClick={() => setView("timeline")} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition ${view === "timeline" ? "bg-zinc-900 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400"}`}>
             Timeline
           </button>
-          <Link href="/company" className="text-xs text-blue-500 hover:underline ml-4">← HQ</Link>
+          <Link href="/company" className="text-xs text-zinc-500 hover:text-foreground hover:underline ml-4">← HQ</Link>
         </div>
       </div>
 
@@ -344,8 +345,8 @@ export default function RelationshipsPage() {
             <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-4">
               <h3 className="text-sm font-semibold text-zinc-900 dark:text-zinc-100 mb-3">Legend</h3>
               <div className="space-y-2 text-xs text-zinc-500">
-                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-emerald-500" /> High trust (60+)</div>
-                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-amber-500" /> Neutral (40-59)</div>
+                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-zinc-800" /> High trust (60+)</div>
+                <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-[#FFE135]" /> Neutral (40-59)</div>
                 <div className="flex items-center gap-2"><div className="w-8 h-0.5 bg-red-500" /> Low trust (&lt;40)</div>
                 <div className="flex items-center gap-2"><span className="text-zinc-400">Line thickness</span> = trust level</div>
               </div>
@@ -567,7 +568,7 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
                   <span
                     className={`text-xs font-bold ${
                       evt.delta > 0
-                        ? 'text-emerald-600'
+                        ? 'text-zinc-600'
                         : evt.delta < 0
                         ? 'text-red-600'
                         : 'text-zinc-500'
@@ -590,8 +591,8 @@ function TimelineView({ relData }: { relData: AgentRels[] }) {
 }
 
 function TrustBadge({ trust }: { trust: number }) {
-  const color = trust >= 60 ? "text-emerald-600 bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400"
-    : trust >= 40 ? "text-amber-600 bg-amber-100 dark:bg-amber-900/30 dark:text-amber-400"
+  const color = trust >= 60 ? "text-zinc-600 bg-zinc-100 dark:bg-zinc-900/30 dark:text-zinc-500"
+    : trust >= 40 ? "text-[#FFE135] bg-zinc-100 dark:bg-[#FFE135]/30 dark:text-[#FFE135]"
     : "text-red-600 bg-red-100 dark:bg-red-900/30 dark:text-red-400";
   return <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${color}`}>{trust}</span>;
 }

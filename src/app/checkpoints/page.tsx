@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import type { CheckpointData, CheckpointFile } from '@/types/checkpoints';
-import { RefreshCw, Clock, AlertTriangle, FileText, Trash2, Eye, Filter } from 'lucide-react';
+import { ClipboardList, RefreshCw, Clock, AlertTriangle, FileText, Trash2, Eye, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
@@ -99,7 +99,7 @@ export default function CheckpointsPage() {
       case 'failed':
         return 'text-red-600 bg-red-50 border-red-200';
       case 'success':
-        return 'text-green-600 bg-green-50 border-green-200';
+        return 'text-zinc-600 bg-zinc-50 border-zinc-300';
       default:
         return 'text-zinc-600 bg-zinc-50 border-zinc-200';
     }
@@ -111,7 +111,7 @@ export default function CheckpointsPage() {
       <div className="mb-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-semibold text-zinc-900">📋 Agent Checkpoints</h1>
+            <h1 className="text-2xl font-semibold text-zinc-900"><ClipboardList className="h-6 w-6 inline mr-2" />Agent Checkpoints</h1>
             <p className="text-zinc-500 text-sm mt-1">
               Session checkpoints for debugging failed builds
             </p>
@@ -123,7 +123,7 @@ export default function CheckpointsPage() {
             </div>
             <button
               onClick={fetchCheckpoints}
-              className="px-3 py-1.5 text-sm bg-zinc-900 text-white rounded-md hover:bg-zinc-800 transition-colors"
+              className="px-3 py-1.5 text-sm bg-primary text-primary-foreground rounded-md hover:bg-primary/90 transition-colors"
             >
               Refresh
             </button>

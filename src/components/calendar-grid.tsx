@@ -45,11 +45,11 @@ function isSameDay(date1: Date, date2: Date): boolean {
 }
 
 const jobColors: Record<string, string> = {
-  "morning-brief": "bg-amber-100 border-amber-300 text-amber-800",
-  "morning-mode": "bg-blue-100 border-blue-300 text-blue-800",
-  "discord-digest-morning": "bg-purple-100 border-purple-300 text-purple-800",
-  "discord-digest-evening": "bg-purple-100 border-purple-300 text-purple-800",
-  "night-mode": "bg-indigo-100 border-indigo-300 text-indigo-800",
+  "morning-brief": "bg-zinc-100 border-zinc-300 text-[#FFE135]",
+  "morning-mode": "bg-zinc-100 border-zinc-300 text-zinc-800",
+  "discord-digest-morning": "bg-zinc-100 border-zinc-300 text-zinc-700",
+  "discord-digest-evening": "bg-zinc-100 border-zinc-300 text-zinc-700",
+  "night-mode": "bg-zinc-100 border-zinc-300 text-zinc-700",
   "dj-discovery": "bg-pink-100 border-pink-300 text-pink-800",
 };
 

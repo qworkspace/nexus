@@ -65,7 +65,7 @@ export function OverviewCards({ data }: OverviewCardsProps) {
               {card.change !== null && (
                 <div
                   className={`text-sm font-medium ${
-                    card.change >= 0 ? "text-emerald-600" : "text-rose-600"
+                    card.change >= 0 ? "text-zinc-600" : "text-rose-600"
                   }`}
                 >
                   {card.change >= 0 ? <TrendingUp size={12} className="inline" /> : <TrendingDown size={12} className="inline" />} {Math.abs(card.change)}%

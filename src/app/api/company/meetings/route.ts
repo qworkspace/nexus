@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { readdirSync, statSync } from 'fs';
 import { join } from 'path';
 
-const MEETINGS_DIR = join(process.env.HOME || '', 'shared/meetings');
+const MEETINGS_DIR = join(process.env.HOME || '', '.openclaw/shared/meetings');
 
 export async function GET() {
   try {

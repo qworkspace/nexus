@@ -17,8 +17,8 @@ export function CacheEfficiencyCard({
   period,
 }: CacheEfficiencyCardProps) {
   const getColor = () => {
-    if (hitRate >= 85) return "text-emerald-600";
-    if (hitRate >= 70) return "text-blue-600";
+    if (hitRate >= 85) return "text-zinc-600";
+    if (hitRate >= 70) return "text-zinc-600";
     if (hitRate >= 50) return "text-yellow-600";
     return "text-red-600";
   };

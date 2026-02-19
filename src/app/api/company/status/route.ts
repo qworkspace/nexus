@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { readFileSync, readdirSync } from "fs";
 import { join } from "path";
 
-const SHARED = process.env.HOME ? join(process.env.HOME, "shared") : "/Users/paulvillanueva/shared";
+const SHARED = process.env.HOME ? join(process.env.HOME, "shared") : "/Users/paulvillanueva/.openclaw/shared";
 const MEETINGS_DIR = join(SHARED, "meetings");
 const ACTIONS_FILE = join(SHARED, "action-items/index.json");
 const RELATIONSHIPS_DIR = join(SHARED, "relationships");

@@ -25,13 +25,13 @@ interface AgentCardProps {
 }
 
 const statusColors = {
-  online: "bg-green-100 text-green-800",
+  online: "bg-zinc-100 text-zinc-800",
   offline: "bg-zinc-100 text-zinc-800",
   busy: "bg-yellow-100 text-yellow-800",
 };
 
 const statusDotColors = {
-  online: "fill-green-500 text-green-500",
+  online: "fill-green-500 text-zinc-600",
   offline: "fill-zinc-300 text-zinc-300",
   busy: "fill-yellow-500 text-yellow-500",
 };

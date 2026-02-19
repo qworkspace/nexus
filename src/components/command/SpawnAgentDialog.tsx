@@ -110,7 +110,7 @@ export function SpawnAgentDialog() {
                     className={cn(
                       "p-3 rounded-lg border text-left transition-all",
                       model === m.id
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20"
+                        ? "border-zinc-300 bg-zinc-50 dark:bg-zinc-900/20"
                         : "border-zinc-200 dark:border-zinc-700 hover:border-zinc-300 dark:hover:border-zinc-600"
                     )}
                   >

@@ -23,7 +23,7 @@ export function AgentStatsCard({ agent, onSelect, isSelected }: AgentStatsCardPr
       onClick={onSelect}
       className={`
         bg-white dark:bg-zinc-900 rounded-xl border p-4 cursor-pointer transition-all hover:shadow-md
-        ${isSelected ? "ring-2 ring-blue-500 border-blue-500" : "border-zinc-200 dark:border-zinc-800"}
+        ${isSelected ? "ring-2 ring-zinc-300 border-zinc-300" : "border-zinc-200 dark:border-zinc-800"}
       `}
     >
       <div className="flex items-center justify-between mb-3">
@@ -48,7 +48,7 @@ export function AgentStatsCard({ agent, onSelect, isSelected }: AgentStatsCardPr
             Success
           </div>
           <span className={`font-medium ${
-            agent.successRate >= 0.8 ? "text-green-600" :
+            agent.successRate >= 0.8 ? "text-zinc-600" :
             agent.successRate >= 0.5 ? "text-yellow-600" : "text-red-600"
           }`}>
             {(agent.successRate * 100).toFixed(1)}%

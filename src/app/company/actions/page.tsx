@@ -33,9 +33,9 @@ const COLUMNS = [
 ];
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "bg-red-500",
-  medium: "bg-amber-500",
-  low: "bg-emerald-500",
+  high: "bg-red-600",
+  medium: "bg-[#FFE135]",
+  low: "bg-zinc-900",
 };
 
 export default function ActionsPage() {
@@ -69,7 +69,7 @@ export default function ActionsPage() {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <Link href="/company" className="text-sm text-blue-500 hover:underline mb-2 inline-block">← The Core</Link>
+      <Link href="/company" className="text-sm text-zinc-500 hover:text-foreground hover:underline mb-2 inline-block">← The Core</Link>
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
@@ -131,7 +131,7 @@ export default function ActionsPage() {
                         {col.key === "new" && (
                           <button
                             onClick={() => updateStatus(item.id, "in-progress")}
-                            className="text-xs text-blue-500 hover:underline"
+                            className="text-xs text-zinc-500 hover:text-foreground hover:underline"
                           >
                             Start →
                           </button>
@@ -139,7 +139,7 @@ export default function ActionsPage() {
                         {col.key === "in-progress" && (
                           <button
                             onClick={() => updateStatus(item.id, "done")}
-                            className="text-xs text-emerald-500 hover:underline flex items-center gap-1"
+                            className="text-xs text-zinc-500 hover:text-foreground hover:underline flex items-center gap-1"
                           >
                             Done
                             <Check size={12} />
@@ -148,14 +148,14 @@ export default function ActionsPage() {
                         {col.key === "blocked" && (
                           <button
                             onClick={() => updateStatus(item.id, "new")}
-                            className="text-xs text-amber-500 hover:underline"
+                            className="text-xs text-zinc-600 hover:underline"
                           >
                             Unblock
                           </button>
                         )}
                       </div>
                       {item.outcome && (
-                        <p className="text-xs text-emerald-500 mt-1 flex items-center gap-1">
+                        <p className="text-xs text-zinc-600 mt-1 flex items-center gap-1">
                           <CheckCircle size={12} />
                           {item.outcome}
                         </p>

@@ -6,17 +6,17 @@ import type { PipelineStage, PipelineItem } from '@/types/builds';
 import { GitBranch, Zap, Shield } from 'lucide-react';
 
 const AGENT_COLORS = {
-  cipher: { bg: 'bg-purple-100', text: 'text-purple-700', border: 'border-purple-200' },
-  spark: { bg: 'bg-blue-100', text: 'text-blue-700', border: 'border-blue-200' },
-  flux: { bg: 'bg-orange-100', text: 'text-orange-700', border: 'border-orange-200' },
+  cipher: { bg: 'bg-zinc-100', text: 'text-zinc-700', border: 'border-zinc-300' },
+  spark: { bg: 'bg-zinc-100', text: 'text-zinc-700', border: 'border-zinc-300' },
+  flux: { bg: 'bg-zinc-100', text: 'text-[#FFE135]', border: 'border-zinc-300' },
 };
 
 const STATUS_COLORS = {
   queued: 'bg-zinc-100 text-zinc-600',
-  speccing: 'bg-purple-100 text-purple-700',
-  building: 'bg-blue-100 text-blue-700',
-  qa: 'bg-orange-100 text-orange-700',
-  shipped: 'bg-green-100 text-green-700',
+  speccing: 'bg-zinc-100 text-zinc-700',
+  building: 'bg-zinc-100 text-zinc-700',
+  qa: 'bg-zinc-100 text-[#FFE135]',
+  shipped: 'bg-zinc-100 text-zinc-700',
   failed: 'bg-red-100 text-red-700',
 };
 

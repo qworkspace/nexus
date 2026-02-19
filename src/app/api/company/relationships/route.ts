@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 
-const REL_DIR = join(process.env.HOME || '', 'shared/relationships');
+const REL_DIR = join(process.env.HOME || '', '.openclaw/shared/relationships');
 
 export async function GET() {
   try {

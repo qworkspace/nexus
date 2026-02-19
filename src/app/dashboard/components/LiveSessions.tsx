@@ -33,7 +33,7 @@ export function LiveSessions() {
   const getStatusDot = (status: string): string => {
     switch (status) {
       case "active":
-        return "bg-green-500";
+        return "bg-zinc-800";
       case "building":
         return "bg-yellow-500";
       case "complete":

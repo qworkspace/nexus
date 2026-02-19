@@ -68,13 +68,13 @@ export function NotificationCenter() {
   const getIconColor = (type: string) => {
     switch (type) {
       case 'info':
-        return "text-blue-500";
+        return "text-zinc-600";
       case 'warning':
         return "text-yellow-500";
       case 'error':
         return "text-red-500";
       case 'success':
-        return "text-green-500";
+        return "text-zinc-600";
       default:
         return "text-zinc-500";
     }
@@ -83,13 +83,13 @@ export function NotificationCenter() {
   const getBgColor = (type: string) => {
     switch (type) {
       case 'info':
-        return "bg-blue-50 dark:bg-blue-950";
+        return "bg-zinc-50 dark:bg-blue-950";
       case 'warning':
         return "bg-yellow-50 dark:bg-yellow-950";
       case 'error':
         return "bg-red-50 dark:bg-red-950";
       case 'success':
-        return "bg-green-50 dark:bg-green-950";
+        return "bg-zinc-50 dark:bg-green-950";
       default:
         return "bg-zinc-50 dark:bg-zinc-900";
     }

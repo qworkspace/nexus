@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 
-const GRAPH_PATH = join(process.env.HOME || '', 'shared/relationships/graph.json');
-const REL_DIR = join(process.env.HOME || '', 'shared/relationships');
-const ROSTER_PATH = join(process.env.HOME || '', 'shared/agent-roster.json');
+const GRAPH_PATH = join(process.env.HOME || '', '.openclaw/shared/relationships/graph.json');
+const REL_DIR = join(process.env.HOME || '', '.openclaw/shared/relationships');
+const ROSTER_PATH = join(process.env.HOME || '', '.openclaw/shared/agent-roster.json');
 
 function computeGraph() {
   const roster = JSON.parse(readFileSync(ROSTER_PATH, 'utf-8'));

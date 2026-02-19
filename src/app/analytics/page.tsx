@@ -61,7 +61,7 @@ export default function AnalyticsPage() {
         <div className="flex items-center gap-2">
           <TimePeriodSelector value={period} onChange={setPeriod} />
           {dataSource === 'error' && (
-            <span className="text-xs text-amber-600 bg-amber-50 px-2 py-1 rounded">
+            <span className="text-xs text-[#FFE135] bg-zinc-50 px-2 py-1 rounded">
               Using cached data
             </span>
           )}

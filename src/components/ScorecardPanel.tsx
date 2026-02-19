@@ -118,7 +118,7 @@ export default function ScorecardPanel() {
       <CardContent className="space-y-3">
         {/* Overall Score */}
         <div className="text-center pb-3 border-b border-zinc-100 dark:border-zinc-800">
-          <div className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+          <div className="text-3xl font-bold text-zinc-600 dark:text-zinc-500">
             {current.overall.toFixed(1)}
           </div>
           <div className="text-[10px] text-zinc-500 uppercase tracking-wide">Overall</div>
@@ -164,11 +164,11 @@ export default function ScorecardPanel() {
 
 function ProgressBar({ value, max }: { value: number; max: number }) {
   const percentage = (value / max) * 100;
-  let colorClass = "bg-blue-500";
+  let colorClass = "bg-zinc-900";
   
-  if (value >= 8) colorClass = "bg-emerald-500";
-  else if (value >= 6) colorClass = "bg-blue-500";
-  else if (value >= 4) colorClass = "bg-amber-500";
+  if (value >= 8) colorClass = "bg-zinc-800";
+  else if (value >= 6) colorClass = "bg-zinc-900";
+  else if (value >= 4) colorClass = "bg-[#FFE135]";
   else colorClass = "bg-red-500";
 
   return (
@@ -184,7 +184,7 @@ function ProgressBar({ value, max }: { value: number; max: number }) {
 function DeltaIndicator({ delta }: { delta: number }) {
   if (delta > 0) {
     return (
-      <TrendingUp size={12} className="text-emerald-500" aria-label={`+${delta} from previous`} />
+      <TrendingUp size={12} className="text-zinc-600" aria-label={`+${delta} from previous`} />
     );
   } else if (delta < 0) {
     return (

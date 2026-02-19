@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, existsSync } from "fs";
 
 export const dynamic = "force-dynamic";
 
-const FIXES_FILE = "/Users/paulvillanueva/shared/pipeline/fixes.json";
+const FIXES_FILE = "/Users/paulvillanueva/.openclaw/shared/pipeline/fixes.json";
 
 interface FixEntry {
   id: string;

@@ -62,7 +62,7 @@ export default function AgentProfilePage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <Link href="/company" className="text-sm text-blue-500 hover:underline mb-4 inline-block">← Back to The Core</Link>
+      <Link href="/company" className="text-sm text-zinc-500 hover:text-foreground hover:underline mb-4 inline-block">← Back to The Core</Link>
 
       {/* Header */}
       <div className="bg-white dark:bg-zinc-900 rounded-xl border border-zinc-200 dark:border-zinc-800 p-6 mb-6">
@@ -82,7 +82,7 @@ export default function AgentProfilePage() {
               <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
                 {agent.department}
               </span>
-              <span className="px-2 py-0.5 text-xs rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
+              <span className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-zinc-900/30 text-zinc-600 dark:text-zinc-500">
                 {agent.model.primary.split('/').pop()}
               </span>
             </div>
@@ -118,7 +118,7 @@ export default function AgentProfilePage() {
               <p className="text-xs font-medium text-zinc-500 uppercase mb-1">KPIs</p>
               <div className="flex flex-wrap gap-1">
                 {agent.kpis.map(k => (
-                  <span key={k} className="px-2 py-0.5 text-xs rounded-full bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400">
+                  <span key={k} className="px-2 py-0.5 text-xs rounded-full bg-zinc-100 dark:bg-zinc-900/30 text-zinc-600 dark:text-zinc-500">
                     {k}
                   </span>
                 ))}
@@ -143,8 +143,8 @@ export default function AgentProfilePage() {
                   {agent.directReports.map(rid => {
                     const r = agentMap[rid];
                     return r ? (
-                      <Link key={rid} href={`/company/agents/${rid}`} className="flex items-center gap-1.5 text-sm text-blue-500 hover:underline">
-                        <AgentIcon emoji={r.emoji} size={16} className="text-blue-500" />
+                      <Link key={rid} href={`/company/agents/${rid}`} className="flex items-center gap-1.5 text-sm text-zinc-500 hover:text-foreground hover:underline">
+                        <AgentIcon emoji={r.emoji} size={16} className="text-zinc-600" />
                         {r.name}
                       </Link>
                     ) : null;
@@ -166,7 +166,7 @@ export default function AgentProfilePage() {
                 const other = agentMap[otherId];
                 if (!other) return null;
 
-                const trustColor = rel.trust >= 60 ? "bg-emerald-500" : rel.trust >= 40 ? "bg-zinc-400" : rel.trust >= 20 ? "bg-amber-500" : "bg-red-500";
+                const trustColor = rel.trust >= 60 ? "bg-zinc-800" : rel.trust >= 40 ? "bg-zinc-400" : rel.trust >= 20 ? "bg-[#FFE135]" : "bg-red-500";
 
                 return (
                   <div key={otherId} className="space-y-1">

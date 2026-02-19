@@ -39,9 +39,9 @@ interface Agent {
 }
 
 const PRIORITY_COLORS: Record<string, string> = {
-  high: "bg-red-500",
-  medium: "bg-amber-500",
-  low: "bg-emerald-500",
+  high: "bg-red-600",
+  medium: "bg-[#FFE135]",
+  low: "bg-zinc-900",
 };
 
 export default function MeetingsPage() {
@@ -122,7 +122,7 @@ export default function MeetingsPage() {
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <Link href="/company" className="text-xs text-blue-500 hover:underline mb-2 inline-block">← The Core</Link>
+          <Link href="/company" className="text-xs text-zinc-500 hover:text-foreground hover:underline mb-2 inline-block">← The Core</Link>
           <h1 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
             <Calendar size={20} />
             Meetings
@@ -206,12 +206,12 @@ export default function MeetingsPage() {
                   </div>
                 )}
                 {summary && (
-                  <div className="mb-3 p-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg">
-                    <h3 className="text-xs font-bold text-amber-900 dark:text-amber-400 mb-1.5 flex items-center gap-1">
+                  <div className="mb-3 p-3 bg-zinc-50 dark:bg-[#FFE135]/20 border border-zinc-300 dark:border-zinc-300 rounded-lg">
+                    <h3 className="text-xs font-bold text-[#FFE135] dark:text-[#FFE135] mb-1.5 flex items-center gap-1">
                       <FileText size={12} />
                       TL;DR
                     </h3>
-                    <div className="text-xs text-amber-800 dark:text-amber-200 whitespace-pre-line leading-relaxed">
+                    <div className="text-xs text-[#FFE135] dark:text-zinc-400 whitespace-pre-line leading-relaxed">
                       {summary}
                     </div>
                   </div>
@@ -222,7 +222,7 @@ export default function MeetingsPage() {
                   <div className="mb-3">
                     <div className="flex gap-1 flex-wrap">
                       {meetingTopics[selectedId!].map(t => (
-                        <span key={t} className="px-1.5 py-0.5 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-[10px]">
+                        <span key={t} className="px-1.5 py-0.5 bg-zinc-100 dark:bg-zinc-900/30 text-zinc-700 dark:text-zinc-500 rounded-full text-[10px]">
                           {t}
                         </span>
                       ))}
@@ -292,8 +292,8 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
   const agent = agentMap[item.assignee] || agentMap[item.assignee?.toLowerCase()];
   const statusColors: Record<string, string> = {
     "new": "border-l-zinc-400",
-    "in-progress": "border-l-blue-500",
-    "done": "border-l-emerald-500",
+    "in-progress": "border-l-zinc-500",
+    "done": "border-l-zinc-700",
     "blocked": "border-l-red-500",
   };
 
@@ -313,17 +313,17 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
         </div>
         <div className="flex items-center gap-2">
           {item.status === "new" && (
-            <button onClick={() => onUpdateStatus(item.id, "in-progress")} className="text-[10px] text-blue-500 hover:underline">
+            <button onClick={() => onUpdateStatus(item.id, "in-progress")} className="text-[10px] text-zinc-500 hover:text-foreground hover:underline">
               Start →
             </button>
           )}
           {item.status === "in-progress" && (
-            <button onClick={() => onUpdateStatus(item.id, "done")} className="text-[10px] text-emerald-500 hover:underline flex items-center gap-0.5">
+            <button onClick={() => onUpdateStatus(item.id, "done")} className="text-[10px] text-zinc-500 hover:text-foreground hover:underline flex items-center gap-0.5">
               Done <Check size={10} />
             </button>
           )}
           {item.status === "blocked" && (
-            <button onClick={() => onUpdateStatus(item.id, "new")} className="text-[10px] text-amber-500 hover:underline">
+            <button onClick={() => onUpdateStatus(item.id, "new")} className="text-[10px] text-zinc-500 hover:text-foreground hover:underline">
               Unblock
             </button>
           )}
@@ -331,7 +331,7 @@ function ActionCard({ item, agentMap, onUpdateStatus }: {
       </div>
       <p className="text-[11px] text-zinc-700 dark:text-zinc-300 mt-1">{item.task}</p>
       {item.outcome && (
-        <p className="text-[10px] text-emerald-500 mt-1 flex items-center gap-0.5">
+        <p className="text-[10px] text-zinc-600 mt-1 flex items-center gap-0.5">
           <CheckCircle size={10} /> {item.outcome}
         </p>
       )}
@@ -363,7 +363,7 @@ function MeetingContent({ content }: { content: string }) {
           );
         }
         if (line.startsWith("- [ ] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><Square size={11} className="text-zinc-400" /><span className="text-zinc-700 dark:text-zinc-300">{line.slice(6)}</span></div>;
-        if (line.startsWith("- [x] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><CheckSquare size={11} className="text-green-600" /><span className="text-zinc-500 line-through">{line.slice(6)}</span></div>;
+        if (line.startsWith("- [x] ")) return <div key={i} className="flex items-center gap-1.5 text-xs"><CheckSquare size={11} className="text-zinc-600" /><span className="text-zinc-500 line-through">{line.slice(6)}</span></div>;
         if (line.startsWith("- ")) return <div key={i} className="text-xs text-zinc-700 dark:text-zinc-300 pl-3">• {line.slice(2)}</div>;
         if (line.startsWith("---")) return <hr key={i} className="border-zinc-200 dark:border-zinc-800 my-3" />;
         if (line.trim() === "") return <div key={i} className="h-1" />;

@@ -13,9 +13,9 @@ interface DecisionCardProps {
 function ConfidenceBar({ confidence }: { confidence: number }) {
   const percentage = confidence * 100;
   let barColor = "bg-red-500";
-  if (percentage >= 80) barColor = "bg-green-500";
+  if (percentage >= 80) barColor = "bg-zinc-800";
   else if (percentage >= 60) barColor = "bg-yellow-500";
-  else if (percentage >= 40) barColor = "bg-orange-500";
+  else if (percentage >= 40) barColor = "bg-[#FFE135]";
 
   return (
     <div className="flex items-center gap-2 min-w-[120px]">
@@ -33,7 +33,7 @@ function ConfidenceBar({ confidence }: { confidence: number }) {
 function OutcomeBadge({ outcome }: { outcome?: Decision["outcome"] }) {
   if (!outcome) {
     return (
-      <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-100 border-amber-200">
+      <Badge className="bg-zinc-100 text-[#FFE135] hover:bg-zinc-100 border-zinc-300">
         <Clock className="h-3 w-3 mr-1" />
         Pending
       </Badge>
@@ -42,7 +42,7 @@ function OutcomeBadge({ outcome }: { outcome?: Decision["outcome"] }) {
 
   if (outcome.matched) {
     return (
-      <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-green-200">
+      <Badge className="bg-zinc-100 text-zinc-700 hover:bg-zinc-100 border-zinc-300">
         <CheckCircle className="h-3 w-3 mr-1" />
         Success
       </Badge>

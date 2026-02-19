@@ -32,7 +32,7 @@ export function Sidebar() {
     <>
       {/* Mobile toggle */}
       <button
-        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-zinc-900 text-white rounded-lg"
+        className="md:hidden fixed top-4 left-4 z-50 p-2 bg-white border border-border text-foreground rounded-lg shadow-sm"
         onClick={() => setCollapsed(!collapsed)}
       >
         {collapsed ? <Menu size={20} /> : <X size={20} />}
@@ -41,21 +41,27 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed md:relative z-40 h-screen border-r border-zinc-200 bg-zinc-50 flex flex-col transition-all duration-200",
+          "fixed md:relative z-40 h-screen border-r border-border bg-white flex flex-col transition-all duration-200",
           collapsed ? "-translate-x-full md:translate-x-0" : "translate-x-0",
           "w-56"
         )}
       >
-        <div className="p-4 border-b border-zinc-200">
-          <h1 className="text-lg font-semibold text-zinc-900">
-            Nexus
-          </h1>
+        {/* Header with logo mark */}
+        <div className="p-4 border-b border-border">
+          <div className="flex items-center gap-2.5">
+            <div className="w-5 h-5 bg-foreground rounded-sm flex items-center justify-center shrink-0">
+              <span className="text-white text-[10px] font-bold leading-none">N</span>
+            </div>
+            <h1 className="text-sm font-semibold text-foreground tracking-tight">
+              Nexus
+            </h1>
+          </div>
         </div>
 
         <nav className="flex-1 p-2 overflow-y-auto">
           {navigation.map((item) => {
             if (item.name.startsWith("divider")) {
-              return <div key={item.name} className="my-2 border-t border-zinc-200" />;
+              return <div key={item.name} className="my-2 border-t border-border" />;
             }
             const isActive = pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href));
             return (
@@ -66,11 +72,11 @@ export function Sidebar() {
                 className={cn(
                   "group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                   isActive
-                    ? "bg-zinc-900 text-white"
-                    : "text-zinc-600 hover:bg-zinc-100 hover:text-zinc-900"
+                    ? "bg-foreground text-white"
+                    : "text-muted-foreground hover:bg-secondary hover:text-foreground"
                 )}
               >
-                {item.icon && <item.icon size={18} className="shrink-0" />}
+                {item.icon && <item.icon size={16} className="shrink-0" />}
                 <span className="flex-1">{item.name}</span>
                 {item.shortcut && (
                   <KeyHint keys={item.shortcut} showOnHover className="opacity-0 group-hover:opacity-100" />
@@ -80,28 +86,28 @@ export function Sidebar() {
           })}
         </nav>
 
-        {/* Keyboard shortcut hint */}
-        <div className="p-4 border-t border-zinc-200 space-y-2">
-          <div className="flex items-center justify-between text-xs text-zinc-400">
+        {/* Keyboard shortcut hints */}
+        <div className="p-4 border-t border-border space-y-2">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>Quick actions</span>
-            <kbd className="px-1.5 py-0.5 bg-zinc-200 rounded text-zinc-600">
+            <kbd className="px-1.5 py-0.5 bg-secondary rounded text-foreground border border-border text-[10px]">
               ⌘K
             </kbd>
           </div>
-          <div className="flex items-center justify-between text-xs text-zinc-400">
+          <div className="flex items-center justify-between text-xs text-muted-foreground">
             <span>Shortcuts help</span>
-            <kbd className="px-1.5 py-0.5 bg-zinc-200 rounded text-zinc-600">
+            <kbd className="px-1.5 py-0.5 bg-secondary rounded text-foreground border border-border text-[10px]">
               ⌘/
             </kbd>
           </div>
-          <p className="text-xs text-zinc-400 mt-2">Built for PJ by Q</p>
+          <p className="text-[11px] text-muted-foreground mt-2">Built for PJ by Q</p>
         </div>
       </aside>
 
       {/* Mobile overlay */}
       {!collapsed && (
         <div
-          className="md:hidden fixed inset-0 bg-black/20 z-30"
+          className="md:hidden fixed inset-0 bg-black/10 z-30"
           onClick={() => setCollapsed(true)}
         />
       )}

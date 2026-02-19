@@ -20,10 +20,10 @@ interface SearchResultsProps {
 }
 
 const categoryColors: Record<string, string> = {
-  memory: "bg-purple-100 text-purple-800",
-  docs: "bg-blue-100 text-blue-800",
-  project: "bg-green-100 text-green-800",
-  activity: "bg-orange-100 text-orange-800",
+  memory: "bg-zinc-100 text-zinc-700",
+  docs: "bg-zinc-100 text-zinc-800",
+  project: "bg-zinc-100 text-zinc-800",
+  activity: "bg-zinc-100 text-[#FFE135]",
 };
 
 const categoryIcons: Record<string, string> = {

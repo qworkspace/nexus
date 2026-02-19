@@ -98,7 +98,7 @@ export function CronJobMonitor() {
   const getStatusIcon = (status?: string) => {
     switch (status) {
       case 'ok':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-zinc-600" />;
       case 'error':
         return <XCircle className="h-4 w-4 text-red-500" />;
       case 'timeout':
@@ -112,7 +112,7 @@ export function CronJobMonitor() {
   const getStatusBadge = (status?: string) => {
     switch (status) {
       case 'ok':
-        return <Badge variant="outline" className="text-xs text-green-600 border-green-200">SUCCESS</Badge>;
+        return <Badge variant="outline" className="text-xs text-zinc-600 border-zinc-300">SUCCESS</Badge>;
       case 'error':
         return <Badge variant="outline" className="text-xs text-red-600 border-red-200">ERROR</Badge>;
       case 'timeout':
@@ -248,7 +248,7 @@ export function CronJobMonitor() {
                       className={`h-7 px-2 text-xs ${
                         job.enabled
                           ? "text-zinc-500 hover:text-red-600"
-                          : "text-zinc-500 hover:text-green-600"
+                          : "text-zinc-500 hover:text-zinc-600"
                       }`}
                       onClick={() => handleDisable(job.id, job.enabled)}
                       title={job.enabled ? "Disable" : "Enable"}
@@ -273,7 +273,7 @@ export function CronJobMonitor() {
           <div className="flex items-center justify-between text-xs text-zinc-600 dark:text-zinc-400">
             <div className="flex items-center gap-3">
               <span className="flex items-center gap-1">
-                <CheckCircle className="h-3 w-3 text-green-500" />
+                <CheckCircle className="h-3 w-3 text-zinc-600" />
                 {totalRuns - failedJobs.length} successful
               </span>
               {failedJobs.length > 0 && (

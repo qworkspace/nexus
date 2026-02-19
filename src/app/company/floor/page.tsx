@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from "react";
 import Link from "next/link";
-import { Calendar, MessageSquare, X as XIcon } from "lucide-react";
+import { Calendar, MessageSquare, X as XIcon, CheckCircle, Send, Clapperboard } from "lucide-react";
 
 interface Agent {
   id: string;
@@ -1379,11 +1379,11 @@ export default function FloorPage() {
       }
     } catch {
       setMeetingLines([
-        { speaker: "Q", emoji: "🦾", text: "Right, morning everyone. Quick round — what's happening?" },
-        { speaker: "Spark", emoji: "🔥", text: "Shipped the latest feature. All tests passing." },
-        { speaker: "Aura", emoji: "🎨", text: "Content calendar locked for this week." },
-        { speaker: "Surge", emoji: "⚡", text: "Engagement up 12% — BTS content performing." },
-        { speaker: "Q", emoji: "🦾", text: "Sick. Let's keep that momentum going." },
+        { speaker: "Q", emoji: "", text: "Right, morning everyone. Quick round — what's happening?" },
+        { speaker: "Spark", emoji: "", text: "Shipped the latest feature. All tests passing." },
+        { speaker: "Aura", emoji: "", text: "Content calendar locked for this week." },
+        { speaker: "Surge", emoji: "", text: "Engagement up 12% — BTS content performing." },
+        { speaker: "Q", emoji: "", text: "Sick. Let's keep that momentum going." },
       ]);
     }
   };
@@ -1529,7 +1529,7 @@ export default function FloorPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={meetingMode ? endMeeting : startMeeting}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${meetingMode ? "bg-red-500 text-white hover:bg-red-600" : "bg-blue-500 text-white hover:bg-blue-600"}`}
+              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${meetingMode ? "bg-red-500 text-white hover:bg-red-600" : "bg-zinc-900 text-white hover:bg-zinc-700"}`}
             >
               {meetingMode ? (
                 <>
@@ -1549,17 +1549,17 @@ export default function FloorPage() {
               onClick={() => setDemoMode(!demoMode)}
               className={`px-4 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-2 ${
                 demoMode
-                  ? "bg-purple-500 text-white hover:bg-purple-600"
+                  ? "bg-zinc-800 text-white hover:bg-zinc-700"
                   : "bg-zinc-700 text-zinc-300 hover:bg-zinc-600"
               }`}
             >
               {demoMode ? (
                 <>
-                  <span className="animate-pulse">🎬</span>
+                  <Clapperboard className="h-4 w-4 animate-pulse" />
                   Demo On
                 </>
               ) : (
-                <>🎬 Demo</>
+                <><Clapperboard className="h-4 w-4" /> Demo</>
               )}
             </button>
 
@@ -1586,7 +1586,7 @@ export default function FloorPage() {
               </div>
             )}
 
-            <Link href="/company" className="text-xs text-blue-400 hover:underline">HQ →</Link>
+            <Link href="/company" className="text-xs text-zinc-500 hover:underline">HQ →</Link>
           </div>
         </div>
 
@@ -1617,7 +1617,7 @@ export default function FloorPage() {
 
             {/* Meeting table - subtle ring of light */}
             <div className="absolute" style={{ left: 340, top: 445 }}>
-              <div className={`w-[160px] h-[90px] rounded-[50%] border transition-all duration-500 ${meetingMode ? "border-amber-400/60 shadow-[0_0_30px_rgba(251,191,36,0.3)] bg-amber-500/5" : "border-zinc-600/30 bg-zinc-700/10"}`}>
+              <div className={`w-[160px] h-[90px] rounded-[50%] border transition-all duration-500 ${meetingMode ? "border-[#FFE135]/60 shadow-[0_0_30px_rgba(255,225,53,0.3)] bg-[#FFE135]/5" : "border-zinc-600/30 bg-zinc-700/10"}`}>
                 {/* Inner glow ring */}
                 {meetingMode && (
                   <div className="absolute inset-0 rounded-[50%]" style={{
@@ -1753,8 +1753,8 @@ export default function FloorPage() {
                   {agentState?.buildCelebration && (
                     <>
                       <div className="absolute -top-12 left-1/2 -translate-x-1/2 z-50">
-                        <div className="bg-green-500 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap animate-bounce">
-                          ✅ {agentState.buildCelebration.buildName}
+                        <div className="bg-zinc-900 text-white text-[10px] font-bold px-2 py-1 rounded shadow-lg whitespace-nowrap animate-bounce">
+                          <CheckCircle className="h-3 w-3 inline mr-0.5" />{agentState.buildCelebration.buildName}
                         </div>
                       </div>
                       {/* Supernova particles */}
@@ -1781,8 +1781,8 @@ export default function FloorPage() {
                   {/* Handoff badge */}
                   {agentState?.handoff && (
                     <div className="absolute -top-20 left-1/2 -translate-x-1/2 z-40">
-                      <div className="bg-blue-500 text-white text-[9px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1 whitespace-nowrap">
-                        📤 Handoff: {agentState.handoff.task.substring(0, 30)}...
+                      <div className="bg-zinc-900 text-white text-[9px] font-bold px-2 py-1 rounded shadow-lg flex items-center gap-1 whitespace-nowrap">
+                        <Send className="h-3 w-3 inline mr-0.5" />Handoff: {agentState.handoff.task.substring(0, 30)}...
                       </div>
                     </div>
                   )}
@@ -1877,9 +1877,9 @@ export default function FloorPage() {
             {!timelineMode && !meetingMode && (
               <button
                 onClick={loadTimeline}
-                className="absolute bottom-4 right-4 px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded z-50"
+                className="absolute bottom-4 right-4 px-3 py-1 bg-zinc-900 hover:bg-zinc-700 text-white text-xs font-bold rounded z-50"
               >
-                📊 Timeline
+                <BarChart3 className="h-3 w-3 inline mr-1" />Timeline
               </button>
             )}
             */}
@@ -1887,16 +1887,16 @@ export default function FloorPage() {
             {/* Room label */}
             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10">
               <span className="text-[10px] text-zinc-600 uppercase tracking-widest flex items-center gap-1">
-                {meetingMode ? <><Calendar size={10} /> Standup In Progress</> : timelineMode ? "⏮️ Replay Mode" : "Villanueva Creative HQ"}
+                {meetingMode ? <><Calendar size={10} /> Standup In Progress</> : timelineMode ? "Replay Mode" : "Villanueva Creative HQ"}
               </span>
             </div>
 
             {/* Demo mode indicator */}
             {demoMode && (
               <div className="absolute top-2 left-2 z-40">
-                <div className="bg-purple-500/20 border border-purple-500/40 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-2">
-                  <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse" />
-                  <span className="text-[10px] text-purple-300 font-bold uppercase tracking-wide">
+                <div className="bg-[#FFE135]/20 border border-[#FFE135]/40 rounded-lg px-3 py-1.5 backdrop-blur-sm flex items-center gap-2">
+                  <span className="w-2 h-2 bg-zinc-700 rounded-full animate-pulse" />
+                  <span className="text-[10px] text-zinc-800 font-bold uppercase tracking-wide">
                     Demo Mode • {demoIntensity} • {demoSpeed}x
                   </span>
                 </div>
@@ -1921,7 +1921,7 @@ export default function FloorPage() {
                 {selectedAgents.length === 2 && !meetingMode && (
                   <button
                     onClick={startAgentChat}
-                    className="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold rounded transition-colors flex items-center gap-1"
+                    className="px-3 py-1 bg-zinc-900 hover:bg-zinc-700 text-white text-xs font-bold rounded transition-colors flex items-center gap-1"
                   >
                     <MessageSquare size={12} />
                     Start Chat
@@ -2043,11 +2043,11 @@ export default function FloorPage() {
                     <p className="text-[10px] text-zinc-600">Model: {agent.model.primary.split("/").pop()}</p>
                     {/* Token counter */}
                     {agentState && agentState.tokens && agentState.tokens > 0 && (
-                      <div className="text-[10px] text-green-400">
+                      <div className="text-[10px] text-zinc-600">
                         {agentState.tokens.toLocaleString()} tokens
                       </div>
                     )}
-                    <Link href={`/company/agents/${agent.id}`} className="text-[10px] text-blue-400 hover:underline block">Full profile →</Link>
+                    <Link href={`/company/agents/${agent.id}`} className="text-[10px] text-zinc-500 hover:underline block">Full profile →</Link>
                   </div>
                 );
               })() : (
@@ -2060,15 +2060,15 @@ export default function FloorPage() {
               <h4 className="text-xs font-bold text-zinc-300 mb-2">Ecosystem Status</h4>
               <div className="space-y-1">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-700 animate-pulse" />
                   <span className="text-[10px] text-zinc-400">The Forge (Building)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-700 animate-pulse" />
                   <span className="text-[10px] text-zinc-400">The Stream (Research)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-700 animate-pulse" />
                   <span className="text-[10px] text-zinc-400">The Pulse (Comms)</span>
                 </div>
                 <div className="flex items-center gap-2">
@@ -2277,7 +2277,7 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
           />
           {/* Subtle orbiting speck */}
           <div
-            className="absolute w-1 h-1 bg-green-300 rounded-full opacity-60"
+            className="absolute w-1 h-1 bg-zinc-300 rounded-full opacity-60"
             style={{
               left: '50%',
               top: '50%',
@@ -2302,9 +2302,9 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
           }}
         >
           {/* Leaves */}
-          <div className="absolute -left-2 top-4 w-3 h-2 bg-green-400 rounded-full opacity-40" />
-          <div className="absolute right-0 top-8 w-3 h-2 bg-green-400 rounded-full opacity-40" />
-          <div className="absolute -left-3 top-12 w-2 h-2 bg-green-500 rounded-full opacity-50" />
+          <div className="absolute -left-2 top-4 w-3 h-2 bg-zinc-400 rounded-full opacity-40" />
+          <div className="absolute right-0 top-8 w-3 h-2 bg-zinc-400 rounded-full opacity-40" />
+          <div className="absolute -left-3 top-12 w-2 h-2 bg-zinc-500 rounded-full opacity-50" />
         </div>
       </div>
     );
@@ -2344,9 +2344,9 @@ function OrganicPlant({ x, y, type }: { x: number; y: number; type: 'vine' | 'or
 function parseMeetingDialogue(content: string): MeetingLine[] {
   const lines: MeetingLine[] = [];
   const agentEmojis: Record<string, string> = {
-    Q: "🦾", Aura: "🎨", Surge: "⚡", Spark: "🔥", Cipher: "🔮",
-    Volt: "🏹", Echo: "💬", Flux: "🌊", Prism: "💎", Luna: "🌙",
-    Ella: "👩‍🎨", Arty: "🏹",
+    Q: "", Aura: "", Surge: "", Spark: "", Cipher: "",
+    Volt: "", Echo: "", Flux: "", Prism: "", Luna: "",
+    Ella: "", Arty: "",
   };
 
   for (const line of content.split("\n")) {
@@ -2358,7 +2358,7 @@ function parseMeetingDialogue(content: string): MeetingLine[] {
       if (text && speaker) {
         lines.push({
           speaker,
-          emoji: agentEmojis[speaker] || "💬",
+          emoji: agentEmojis[speaker] || "",
           text,
         });
       }

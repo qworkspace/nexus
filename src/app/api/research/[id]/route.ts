@@ -5,10 +5,10 @@ import { join } from "path";
 export const dynamic = "force-dynamic";
 
 const RESEARCH_DIRS = [
-  "/Users/paulvillanueva/shared/research/ai-intel/deep-focus",
-  "/Users/paulvillanueva/shared/research/ai-intel/whats-new",
-  "/Users/paulvillanueva/shared/research/ai-intel/spec-briefs",
-  "/Users/paulvillanueva/shared/research/ai-intel/specs",
+  "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/deep-focus",
+  "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/whats-new",
+  "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/spec-briefs",
+  "/Users/paulvillanueva/.openclaw/shared/research/ai-intel/specs",
 ];
 
 interface ResearchDetailResponse {

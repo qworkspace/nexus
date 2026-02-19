@@ -109,7 +109,7 @@ export function BuildSpeedMetrics() {
               <RefreshCw className="h-3 w-3" />
               <span>Rework Rate</span>
             </div>
-            <div className={`text-lg font-semibold ${metrics.reworkRate > 20 ? 'text-orange-600' : 'text-zinc-900 dark:text-zinc-100'}`}>
+            <div className={`text-lg font-semibold ${metrics.reworkRate > 20 ? 'text-[#FFE135]' : 'text-zinc-900 dark:text-zinc-100'}`}>
               {metrics.reworkRate}%
             </div>
           </div>
@@ -131,7 +131,7 @@ export function BuildSpeedMetrics() {
                 labelFormatter={formatTooltipLabel}
                 contentStyle={{ fontSize: 12 }}
               />
-              <Bar dataKey="count" fill="currentColor" className="text-blue-500">
+              <Bar dataKey="count" fill="currentColor" className="text-zinc-600">
                 {metrics.buildsPerDay.map((entry, index) => (
                   <Cell key={index} fill={index === metrics.buildsPerDay.length - 1 ? '#3b82f6' : '#e2e8f0'} />
                 ))}
