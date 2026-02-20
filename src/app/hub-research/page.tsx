@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   RefreshCw, Clock, CheckCircle, XCircle, PauseCircle,
   Plus, Rocket, Download,
-  BarChart3, Zap, Pencil, RotateCcw
+  BarChart3, Zap, Pencil, RotateCcw, Search, Loader2
 } from "lucide-react";
 
 // ── Types ──
@@ -32,6 +32,7 @@ interface PipelineItem {
   description: string;
   source: 'research' | 'deep-focus' | 'innovation-think' | 'retro' | 'pj-request' | 'manual' | 'needs-work-rating';
   sourceRef: string | null;
+  researchRef?: string;
   status: 'pending-review' | 'queued' | 'speccing' | 'building' | 'qa' | 'shipped' | 'rejected' | 'parked';
   priority: 'HIGH' | 'MED' | 'LOW';
   complexity: 'HIGH' | 'MED' | 'LOW';
@@ -451,6 +452,63 @@ export default function HubResearchPage() {
     );
   }
 
+  function ResearchTrailPanel({ briefId }: { briefId: string }) {
+    const [open, setOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [content, setContent] = useState<string | null>(null);
+    const [error, setError] = useState(false);
+
+    const toggle = async () => {
+      if (open) { setOpen(false); return; }
+      setOpen(true);
+      if (content !== null) return; // already fetched
+      setLoading(true);
+      setError(false);
+      try {
+        const res = await fetch(`/api/pipeline-queue/research-trail?briefId=${encodeURIComponent(briefId)}`);
+        const data = await res.json();
+        if (data.exists && data.content) {
+          setContent(data.content);
+        } else {
+          setError(true);
+        }
+      } catch {
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return (
+      <div>
+        <button
+          onClick={toggle}
+          className="flex items-center gap-1.5 text-xs text-[#8E99A4] hover:text-zinc-700 transition-colors font-medium"
+        >
+          <Search className="h-3.5 w-3.5" />
+          {open ? 'Hide Research' : 'View Research'}
+        </button>
+        {open && (
+          <div className="mt-2 bg-zinc-50 border border-zinc-200 rounded px-3 py-2 max-h-96 overflow-y-auto">
+            {loading && (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground py-4 justify-center">
+                <Loader2 className="h-3.5 w-3.5 animate-spin" /> Loading research trail…
+              </div>
+            )}
+            {error && !loading && (
+              <p className="text-xs text-muted-foreground italic py-2">Research trail unavailable</p>
+            )}
+            {content && !loading && (
+              <div className="prose prose-sm max-w-none text-xs leading-relaxed whitespace-pre-wrap">
+                {content}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
+
   function BriefCard({ item }: { item: PipelineItem }) {
     const acting = actioningIds.has(item.id);
     const [expandedProblem, setExpandedProblem] = useState(false);
@@ -600,6 +658,8 @@ export default function HubResearchPage() {
               <p className="text-xs text-muted-foreground italic">Q Review pending</p>
             )}
           </div>
+          {/* Research Trail */}
+          {item.researchRef && <ResearchTrailPanel briefId={item.researchRef} />}
           <div className="flex gap-2 pt-2 border-t border-zinc-200 justify-between items-center">
             <Button size="sm" variant="outline" className="text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50" disabled={acting} onClick={() => openEditDialog(item)}>
               <Pencil className="h-3.5 w-3.5 mr-1.5" />Edit
