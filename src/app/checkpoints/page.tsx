@@ -53,7 +53,7 @@ export default function CheckpointsPage() {
   const deleteCheckpoint = async (checkpoint: CheckpointFile) => {
     setDeleting(true);
     try {
-      const res = await fetch(`/api/checkpoints/delete?id=${checkpoint.filename}&date=${checkpoint.dateDir}`, {
+      const res = await fetch(`/api/checkpoints?id=${checkpoint.filename}&date=${checkpoint.dateDir}`, {
         method: 'DELETE',
       });
       if (res.ok) {
