@@ -30,7 +30,7 @@ interface PipelineItem {
   solution: string;
   impact: string;
   description: string;
-  source: 'research' | 'deep-focus' | 'innovation-think' | 'retro' | 'pj-request' | 'manual';
+  source: 'research' | 'deep-focus' | 'innovation-think' | 'retro' | 'pj-request' | 'manual' | 'needs-work-rating';
   sourceRef: string | null;
   status: 'pending-review' | 'queued' | 'speccing' | 'building' | 'qa' | 'shipped' | 'rejected' | 'parked';
   priority: 'HIGH' | 'MED' | 'LOW';
@@ -41,10 +41,12 @@ interface PipelineItem {
   assignee: string;
   specPath?: string;
   buildCommit?: string;
+  parentBuildId?: string;
   feedback?: {
     rating: 'nailed-it' | 'acceptable' | 'needs-work' | 'good' | 'bad' | 'comment'; // include legacy for compat
     tags?: string[];
     comment?: string;
+    screenshotPath?: string;
     rolledBack?: boolean;
     ratedAt: string;
   };
@@ -83,6 +85,7 @@ const SOURCE_BADGES: Record<string, { label: string; className: string }> = {
   'retro':           { label: 'Retro',            className: 'bg-zinc-100 text-zinc-700 border border-zinc-200' },
   'pj-request':      { label: 'PJ Request',       className: 'bg-zinc-100 text-zinc-700 border border-zinc-200' },
   'manual':          { label: 'Manual',           className: 'bg-zinc-100 text-zinc-700 border border-zinc-200' },
+  'needs-work-rating': { label: 'Fix Required', className: 'bg-red-50 text-red-700 border border-red-200' },
 };
 
 const PRIORITY_COLORS: Record<string, string> = {
@@ -151,6 +154,10 @@ export default function HubResearchPage() {
   const [rollbackDialogId, setRollbackDialogId] = useState<string | null>(null);
   const [rollbackComment, setRollbackComment] = useState('');
   const [rollingBack, setRollingBack] = useState(false);
+
+  // Screenshot + needs-work success state
+  const [screenshotFiles, setScreenshotFiles] = useState<Record<string, File>>({});
+  const [needsWorkSuccess, setNeedsWorkSuccess] = useState<Record<string, string>>({});
 
   // Reject with reason
   const [rejectDialogId, setRejectDialogId] = useState<string | null>(null);
@@ -246,19 +253,54 @@ export default function HubResearchPage() {
     refresh();
   };
 
-  const submitFeedback = (
+  const submitFeedback = async (
     id: string,
     rating: 'nailed-it' | 'acceptable' | 'needs-work',
     tags?: string[],
     comment?: string
-  ) =>
-    doAction(id, () =>
-      fetch('/api/pipeline-queue/feedback', {
+  ) => {
+    setActioningIds(prev => new Set(prev).add(id));
+    try {
+      let screenshotPath: string | undefined;
+
+      // Upload screenshot first if provided and rating is needs-work
+      if (rating === 'needs-work' && screenshotFiles[id]) {
+        const fd = new FormData();
+        fd.append('file', screenshotFiles[id]);
+        fd.append('briefId', id);
+        const uploadRes = await fetch('/api/pipeline-queue/feedback/screenshot', { method: 'POST', body: fd });
+        if (uploadRes.ok) {
+          const uploadData = await uploadRes.json();
+          screenshotPath = uploadData.path;
+        }
+      }
+
+      const res = await fetch('/api/pipeline-queue/feedback', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ briefId: id, rating, tags, comment }),
-      })
-    );
+        body: JSON.stringify({ briefId: id, rating, tags, comment, screenshotPath }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        alert(`Failed: ${err.error || 'Unknown'}`);
+      } else if (rating === 'needs-work') {
+        const data = await res.json();
+        setNeedsWorkSuccess(prev => ({
+          ...prev,
+          [id]: data.fixBriefId || 'fix brief created',
+        }));
+      }
+
+      // Clear screenshot file state
+      setScreenshotFiles(prev => { const s = { ...prev }; delete s[id]; return s; });
+      refresh();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setActioningIds(prev => { const s = new Set(prev); s.delete(id); return s; });
+    }
+  };
 
   const confirmRollback = async () => {
     if (!rollbackDialogId || !rollbackComment.trim()) return;
@@ -423,6 +465,19 @@ export default function HubResearchPage() {
                 </Badge>
               );
             })()}
+            {/* Fix Required badge */}
+            {item.source === 'needs-work-rating' && (
+              <>
+                <Badge variant="outline" className="text-xs bg-red-50 text-red-700 border-red-200">
+                  🔴 Fix Required
+                </Badge>
+                {item.parentBuildId && (
+                  <span className="text-xs text-zinc-500">
+                    Fixing: <span className="font-mono text-zinc-600">{item.parentBuildId}</span>
+                  </span>
+                )}
+              </>
+            )}
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -1111,6 +1166,28 @@ export default function HubResearchPage() {
                                     </div>
                                   )}
 
+                                  {/* Screenshot upload (shown only for needs-work) */}
+                                  {selectedRating[item.id] === 'needs-work' && (
+                                    <div className="mb-3">
+                                      <label className="block text-xs font-medium text-zinc-600 mb-1">
+                                        Attach screenshot <span className="text-zinc-400">(optional — jpg/png/webp, max 5MB)</span>
+                                      </label>
+                                      <input
+                                        type="file"
+                                        accept="image/jpeg,image/png,image/webp"
+                                        className="text-xs text-zinc-600 file:mr-2 file:py-1 file:px-2 file:rounded file:border file:border-zinc-200 file:text-xs file:bg-zinc-50 file:text-zinc-700 hover:file:bg-zinc-100"
+                                        onChange={e => {
+                                          const file = e.target.files?.[0];
+                                          if (file) setScreenshotFiles(prev => ({ ...prev, [item.id]: file }));
+                                          else setScreenshotFiles(prev => { const s = { ...prev }; delete s[item.id]; return s; });
+                                        }}
+                                      />
+                                      {screenshotFiles[item.id] && (
+                                        <p className="text-xs text-zinc-500 mt-1">✓ {screenshotFiles[item.id].name}</p>
+                                      )}
+                                    </div>
+                                  )}
+
                                   {/* Step 3: Comment field (shown when a rating is selected) */}
                                   {selectedRating[item.id] && (
                                     <div className="mb-3">
@@ -1124,42 +1201,49 @@ export default function HubResearchPage() {
                                     </div>
                                   )}
 
-                                  {/* Step 4: Submit + Rollback row */}
-                                  <div className="flex items-center justify-between">
-                                    <Button
-                                      size="sm"
-                                      disabled={
-                                        actioningIds.has(item.id) ||
-                                        !selectedRating[item.id] ||
-                                        (selectedRating[item.id] === 'needs-work' && !(selectedTags[item.id]?.length))
-                                      }
-                                      onClick={() => submitFeedback(
-                                        item.id,
-                                        selectedRating[item.id]!,
-                                        selectedTags[item.id],
-                                        feedbackComment[item.id]
-                                      )}
-                                      className="bg-zinc-900 hover:bg-zinc-700 text-white"
-                                    >
-                                      Submit Rating
-                                    </Button>
-
-                                    {/* Rollback — only show if build has a commit hash */}
-                                    {item.buildCommit && (
+                                  {/* Step 4: Submit + Rollback row (or success banner) */}
+                                  {needsWorkSuccess[item.id] ? (
+                                    <div className="w-full p-3 bg-amber-50 border border-amber-200 rounded text-sm text-amber-800">
+                                      ✅ Fix brief created — Q will review it in the next cycle.
+                                      <span className="block text-xs text-amber-600 mt-0.5">ID: {needsWorkSuccess[item.id]}</span>
+                                    </div>
+                                  ) : (
+                                    <div className="flex items-center justify-between">
                                       <Button
                                         size="sm"
-                                        variant="outline"
-                                        className="text-zinc-500 border-zinc-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200"
-                                        disabled={actioningIds.has(item.id)}
-                                        onClick={() => {
-                                          setRollbackDialogId(item.id);
-                                          setRollbackComment('');
-                                        }}
+                                        disabled={
+                                          actioningIds.has(item.id) ||
+                                          !selectedRating[item.id] ||
+                                          (selectedRating[item.id] === 'needs-work' && !(selectedTags[item.id]?.length))
+                                        }
+                                        onClick={() => submitFeedback(
+                                          item.id,
+                                          selectedRating[item.id]!,
+                                          selectedTags[item.id],
+                                          feedbackComment[item.id]
+                                        )}
+                                        className="bg-zinc-900 hover:bg-zinc-700 text-white"
                                       >
-                                        <RotateCcw className="h-3.5 w-3.5 mr-1" />Rollback Build
+                                        Submit Rating
                                       </Button>
-                                    )}
-                                  </div>
+
+                                      {/* Rollback — only show if build has a commit hash */}
+                                      {item.buildCommit && (
+                                        <Button
+                                          size="sm"
+                                          variant="outline"
+                                          className="text-zinc-500 border-zinc-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200"
+                                          disabled={actioningIds.has(item.id)}
+                                          onClick={() => {
+                                            setRollbackDialogId(item.id);
+                                            setRollbackComment('');
+                                          }}
+                                        >
+                                          <RotateCcw className="h-3.5 w-3.5 mr-1" />Rollback Build
+                                        </Button>
+                                      )}
+                                    </div>
+                                  )}
                                 </CardContent>
                               </Card>
                             ))}
@@ -1200,6 +1284,22 @@ export default function HubResearchPage() {
                                       </div>
                                       {item.feedback.comment && (
                                         <p className="text-xs text-muted-foreground">{item.feedback.comment}</p>
+                                      )}
+                                      {item.feedback.screenshotPath && (
+                                        <div className="mt-2">
+                                          <a
+                                            href={`/api/pipeline-queue/feedback/screenshot?path=${encodeURIComponent(item.feedback.screenshotPath)}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                          >
+                                            <img
+                                              src={`/api/pipeline-queue/feedback/screenshot?path=${encodeURIComponent(item.feedback.screenshotPath)}`}
+                                              alt="Build screenshot"
+                                              className="rounded border border-zinc-200 max-h-32 object-contain cursor-pointer hover:opacity-80 transition-opacity"
+                                            />
+                                          </a>
+                                          <p className="text-xs text-zinc-400 mt-0.5">Click to expand</p>
+                                        </div>
                                       )}
                                     </div>
                                   )}
