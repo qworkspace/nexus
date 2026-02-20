@@ -56,6 +56,8 @@ interface ParsedBrief {
   priority: string;
   complexity: string;
   createdAt: string;
+  researchRef?: string;
+  front?: string;
 }
 
 function parseMdBrief(content: string, filename: string): ParsedBrief {
@@ -69,6 +71,9 @@ function parseMdBrief(content: string, filename: string): ParsedBrief {
   const sourceRaw = extractField(content, 'Source');
   const createdAt = extractField(content, 'Created') || filename.slice(0, 10);
 
+  const researchRef = extractField(content, 'ResearchRef') || extractField(content, 'Research Ref') || undefined;
+  const front = extractField(content, 'Front') || undefined;
+
   return {
     title, problem, solution, impact,
     description: `${problem}\n\n${solution}`.trim(),
@@ -77,6 +82,8 @@ function parseMdBrief(content: string, filename: string): ParsedBrief {
     priority: ['HIGH', 'MED', 'LOW'].includes(priority) ? priority : 'MED',
     complexity: ['HIGH', 'MED', 'LOW'].includes(complexity) ? complexity : 'MED',
     createdAt: createdAt.includes('T') ? createdAt : `${createdAt}T00:00:00Z`,
+    researchRef,
+    front,
   };
 }
 
@@ -171,6 +178,8 @@ export async function POST() {
             priority: parsed.priority,
             complexity: parsed.complexity,
             createdAt: safeDate(parsed.createdAt),
+            ...(parsed.researchRef ? { researchRef: parsed.researchRef } : {}),
+            ...(parsed.front ? { front: parsed.front } : {}),
           },
         });
 
