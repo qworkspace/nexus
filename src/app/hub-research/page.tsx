@@ -1487,10 +1487,11 @@ export default function HubResearchPage() {
           <DialogHeader>
             <DialogTitle>Reject Brief</DialogTitle>
             <DialogDescription>
-              {rejectReason === 'bad-fit' && 'Your reason helps us stop generating similar ideas.'}
-              {(rejectReason === 'duplicate' || rejectReason === 'already-built') && 'Got it — this idea stays positive in the learning loop.'}
-              {rejectReason === 'out-of-scope' && "We'll treat this as a timing call, not a quality signal."}
-              {!rejectReason && "Why doesn't this fit? Select a reason above."}
+              {rejectReason === 'bad-idea' && 'Negative signal — pipeline will learn to stop generating these.'}
+              {rejectReason === 'duplicate' && 'Neutral — idea was fine, just redundant. No penalty.'}
+              {rejectReason === 'not-now' && 'Timing call — may revisit later. Stays positive in the loop.'}
+              {rejectReason === 'dont-care' && 'Low value signal — deprioritise this type of idea.'}
+              {!rejectReason && 'Each reason teaches the pipeline something different.'}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-4">
@@ -1498,10 +1499,10 @@ export default function HubResearchPage() {
               <Label className="text-sm font-medium">Why are you rejecting this?</Label>
               <div className="space-y-1">
                 {([
-                  { value: 'bad-fit', label: '🚫 Bad fit — wrong direction, don\'t repeat' },
-                  { value: 'duplicate', label: '📦 Already shipped — idea was sound, already exists' },
-                  { value: 'out-of-scope', label: '⏸ Out of scope — good idea, not now' },
-                  { value: 'already-built', label: '✅ Already built — exact match already shipped' },
+                  { value: 'bad-idea', label: '🚫 Bad idea — wrong direction, stop generating these' },
+                  { value: 'duplicate', label: '🔁 Duplicate — we already have this (built or in pipeline)' },
+                  { value: 'not-now', label: '⏸ Not now — good idea, wrong timing' },
+                  { value: 'dont-care', label: '🤷 Don\'t care — not worth the effort' },
                 ] as const).map(opt => (
                   <label key={opt.value} className="flex items-center gap-2 cursor-pointer text-sm py-1">
                     <input
