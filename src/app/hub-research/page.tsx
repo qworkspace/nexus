@@ -48,6 +48,14 @@ interface PipelineItem {
     rolledBack?: boolean;
     ratedAt: string;
   };
+  qReview?: {
+    complexityAssessed: 'HIGH' | 'MED' | 'LOW';
+    complexityChanged?: boolean;
+    missingInfo?: string[];
+    riskSummary?: string;
+    recommendation: 'approve' | 'park' | 'reject' | 'needs-info';
+    recommendationReason?: string;
+  };
 }
 
 // ── Helpers ──
@@ -350,6 +358,59 @@ export default function HubResearchPage() {
               <p className="text-sm text-zinc-700">{item.impact}</p>
             </div>
           )}
+          {/* Q Review Section */}
+          <div className="bg-zinc-50 rounded border border-zinc-200 px-3 py-2.5">
+            <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2 flex items-center gap-1">
+              🤖 Q Review
+            </p>
+            {item.qReview ? (
+              <div className="space-y-1.5">
+                {/* Recommendation pill + Complexity badge row */}
+                <div className="flex items-center gap-2 flex-wrap">
+                  {/* Recommendation pill */}
+                  {(() => {
+                    const rec = item.qReview.recommendation;
+                    const pillMap: Record<string, { label: string; className: string }> = {
+                      'approve':    { label: '✅ Approve',    className: 'bg-green-50 text-green-700 border-green-200' },
+                      'park':       { label: '🅿️ Park',       className: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
+                      'reject':     { label: '❌ Reject',     className: 'bg-red-50 text-red-700 border-red-200' },
+                      'needs-info': { label: '❓ Needs Info', className: 'bg-zinc-100 text-zinc-600 border-zinc-300' },
+                    };
+                    const pill = pillMap[rec] || { label: rec, className: 'bg-zinc-100 text-zinc-600 border-zinc-300' };
+                    return (
+                      <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${pill.className}`}>
+                        {pill.label}
+                      </span>
+                    );
+                  })()}
+                  {/* Complexity badge */}
+                  <span className={`text-xs px-2 py-0.5 rounded border font-medium ${
+                    item.qReview.complexityChanged
+                      ? 'bg-amber-50 text-amber-700 border-amber-200'
+                      : 'bg-zinc-100 text-zinc-600 border-zinc-200'
+                  }`}>
+                    {item.qReview.complexityChanged
+                      ? `${item.complexity} → ${item.qReview.complexityAssessed} ⚠️`
+                      : item.qReview.complexityAssessed}
+                  </span>
+                </div>
+                {/* Risk summary */}
+                {item.qReview.riskSummary && (
+                  <p className="text-xs text-zinc-600">
+                    <span className="font-medium text-zinc-700">Risk:</span> {item.qReview.riskSummary}
+                  </p>
+                )}
+                {/* Missing info */}
+                {item.qReview.missingInfo && item.qReview.missingInfo.length > 0 && (
+                  <p className="text-xs text-zinc-600">
+                    <span className="font-medium text-zinc-700">Missing:</span> {item.qReview.missingInfo.join(', ')}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground italic">Q Review pending</p>
+            )}
+          </div>
           <div className="flex gap-2 pt-2 border-t border-zinc-200 justify-between items-center">
             <Button size="sm" variant="outline" className="text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50" disabled={acting} onClick={() => openEditDialog(item)}>
               <Pencil className="h-3.5 w-3.5 mr-1.5" />Edit
