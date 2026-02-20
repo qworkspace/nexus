@@ -22,7 +22,7 @@ const BRIEF_LOG_PATH = join(homedir(), '.openclaw', 'shared', 'research', 'ai-in
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { briefId, reason } = body;
+    const { briefId, rejectReason, rejectComment } = body;
 
     if (!briefId) {
       return NextResponse.json({ error: 'briefId is required' }, { status: 400 });
@@ -45,7 +45,9 @@ export async function POST(request: Request) {
     const item: PipelineQueueItem = queueData.briefs[idx];
     queueData.briefs[idx].status = 'rejected';
     queueData.briefs[idx].rejectedAt = new Date().toISOString();
-    if (reason) queueData.briefs[idx].rejectedReason = reason;
+    queueData.briefs[idx].rejectReason = rejectReason || undefined; // NEW: reason type
+    queueData.briefs[idx].rejectComment = rejectComment || undefined; // NEW: optional comment
+    if (rejectComment) queueData.briefs[idx].rejectedReason = rejectComment; // OLD: backward compatibility
     queueData.updated = new Date().toISOString();
     writeFileSync(QUEUE_PATH, JSON.stringify(queueData, null, 2), 'utf-8');
 
@@ -84,17 +86,18 @@ export async function POST(request: Request) {
       agent: 'nexus',
       agentName: 'Nexus',
       emoji: '❌',
-      message: `PJ rejected brief: "${item.title}"${reason ? ` — Reason: ${reason}` : ''}${movedFile ? ` — moved to archive` : ''}.`,
+      message: `PJ rejected brief: "${item.title}"${rejectComment ? ` — ${rejectComment}` : ''}${rejectReason ? ` — Type: ${rejectReason}` : ''}${movedFile ? ` — moved to archive` : ''}.`,
       briefId: item.id,
-      rejectedReason: reason || null,
+      rejectedReason: rejectComment || null,
+      rejectReasonType: rejectReason || null,
     });
     writeFileSync(ACTIVITY_FEED_PATH, JSON.stringify(feedData, null, 2), 'utf-8');
 
     // 4. Append rejection reason to brief-log.md for learning
-    if (reason) {
+    if (rejectComment || rejectReason) {
       const today = new Date().toISOString().slice(0, 10);
       const itemAny = item as unknown as Record<string, unknown>;
-      const logEntry = `\n## Rejected: ${item.title}\n- **Date:** ${today}\n- **Reason:** ${reason}\n- **Source:** ${String(itemAny.source || 'unknown')}\n`;
+      const logEntry = `\n## Rejected: ${item.title}\n- **Date:** ${today}\n- **Reason:** ${rejectComment || 'No comment'}\n- **Reason Type:** ${rejectReason || 'none'}\n- **Source:** ${String(itemAny.source || 'unknown')}\n`;
       try {
         const existing = existsSync(BRIEF_LOG_PATH) ? readFileSync(BRIEF_LOG_PATH, 'utf-8') : '# Brief Log\n';
         writeFileSync(BRIEF_LOG_PATH, existing + logEntry, 'utf-8');

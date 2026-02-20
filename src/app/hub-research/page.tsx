@@ -236,7 +236,7 @@ export default function HubResearchPage() {
     setRejectDialogId(null);
     setRejectReason('');
     doAction(id, () =>
-      fetch('/api/pipeline-queue/reject', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ briefId: id, reason: reason || undefined }) })
+      fetch('/api/pipeline-queue/reject', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ briefId: id, rejectReason: rejectReason || undefined, rejectComment: reason || undefined }) })
     );
   };
 
@@ -1422,9 +1422,51 @@ export default function HubResearchPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Reject Brief</DialogTitle>
-            <DialogDescription>Why doesn&apos;t this fit? Your reason helps us stop generating similar ideas.</DialogDescription>
+            <DialogDescription>
+              {(() => {
+                const reason = rejectReason.trim();
+                if (!reason) return 'Why doesn&apos;t this fit? Your reason helps us stop generating similar ideas.';
+                if (reason === 'bad-fit') return 'Your reason helps us stop generating similar ideas.';
+                if (reason === 'duplicate' || reason === 'already-built') return 'Got it — this idea stays positive in the learning loop.';
+                if (reason === 'out-of-scope') return 'We\'ll treat this as a timing call, not a quality signal.';
+                return 'Why doesn\'t this fit? Your reason helps us stop generating similar ideas.';
+              })()}
+            </DialogDescription>
           </DialogHeader>
-          <div className="py-4">
+          <div className="py-4 space-y-4">
+            <div className="space-y-2">
+              <Label className="text-sm font-medium">Why are you rejecting this?</Label>
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="bad-fit" id="bad-fit" checked={rejectReason === 'bad-fit'} onChange={(e) => {
+                    if (e.target.checked) setRejectReason('bad-fit');
+                    else setRejectReason('');
+                  }} />
+                  <Label htmlFor="bad-fit" className="cursor-pointer text-sm">🚫 Bad fit — wrong direction, don't repeat</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="duplicate" id="duplicate" checked={rejectReason === 'duplicate'} onChange={(e) => {
+                    if (e.target.checked) setRejectReason('duplicate');
+                    else setRejectReason('');
+                  }} />
+                  <Label htmlFor="duplicate" className="cursor-pointer text-sm">📦 Already shipped — idea was sound, already exists</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="out-of-scope" id="out-of-scope" checked={rejectReason === 'out-of-scope'} onChange={(e) => {
+                    if (e.target.checked) setRejectReason('out-of-scope');
+                    else setRejectReason('');
+                  }} />
+                  <Label htmlFor="out-of-scope" className="cursor-pointer text-sm">⏸ Out of scope — good idea, not now</Label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <RadioGroupItem value="already-built" id="already-built" checked={rejectReason === 'already-built'} onChange={(e) => {
+                    if (e.target.checked) setRejectReason('already-built');
+                    else setRejectReason('');
+                  }} />
+                  <Label htmlFor="already-built" className="cursor-pointer text-sm">✅ Already built — exact match already shipped</Label>
+                </div>
+              </div>
+            </div>
             <Textarea
               placeholder="e.g. Too early — we don't have the data pipeline it needs yet. Or: Not relevant to our current priorities."
               value={rejectReason}
@@ -1436,7 +1478,7 @@ export default function HubResearchPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectDialogId(null)}>Cancel</Button>
-            <Button variant="outline" className="border-zinc-300 text-zinc-700 hover:bg-zinc-100" onClick={confirmReject}>Reject Brief</Button>
+            <Button variant="outline" className="border-zinc-300 text-zinc-700 hover:bg-zinc-100" onClick={confirmReject} disabled={!rejectReason.trim()}>Reject Brief</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
