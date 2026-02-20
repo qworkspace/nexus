@@ -55,7 +55,11 @@ interface PipelineItem {
     riskSummary?: string;
     recommendation: 'approve' | 'park' | 'reject' | 'needs-info';
     recommendationReason?: string;
+    summary?: string;
   };
+  tldr?: string;
+  skipCost?: string;
+  front?: string;
 }
 
 interface ActionItem {
@@ -86,6 +90,15 @@ const PRIORITY_COLORS: Record<string, string> = {
   MED:  'bg-[#8E99A4]/20 text-[#555D66] border-[#8E99A4]/30',
   LOW:  'bg-zinc-100 text-zinc-500 border-zinc-200',
 };
+
+const FLYWHEEL_BADGES: Record<string, { emoji: string; label: string }> = {
+  'paul-villanueva':  { emoji: '🎵', label: 'Paul Villanueva' },
+  'in-house-volumes': { emoji: '🎪', label: 'In House Volumes' },
+  'cohera':           { emoji: '🛠', label: 'Cohera' },
+  'ellabelart':       { emoji: '🎨', label: 'Ellabelart' },
+  'infrastructure':   { emoji: '⚙️', label: 'Infrastructure' },
+};
+const FLYWHEEL_DEFAULT = FLYWHEEL_BADGES['infrastructure'];
 
 const PIPELINE_STAGES = ['queued', 'speccing', 'building', 'qa'] as const;
 const STAGE_LABELS: Record<string, string> = { queued: 'Queued', speccing: 'Spec', building: 'Build', qa: 'QA' };
@@ -359,8 +372,35 @@ export default function HubResearchPage() {
 
   // ── Brief Card (Briefs tab) ──
 
+  function TldrBlock({ item }: { item: PipelineItem }) {
+    const [showFull, setShowFull] = useState(false);
+    const tldrText = item.tldr || null;
+    const fallbackText = item.problem
+      ? item.problem.slice(0, 120) + (item.problem.length > 120 ? '…' : '')
+      : null;
+    if (!tldrText && !fallbackText) return null;
+    return (
+      <div className="bg-[#F5F3EC] border border-[#E8E0CC] rounded px-3 py-2">
+        <p className="text-xs font-semibold uppercase tracking-wider text-[#8B7D5A] mb-1">TL;DR</p>
+        <p className="text-sm text-zinc-800">
+          {tldrText ? tldrText : showFull ? item.problem : fallbackText}
+        </p>
+        {!tldrText && item.problem && item.problem.length > 120 && (
+          <button
+            onClick={() => setShowFull(p => !p)}
+            className="text-xs text-zinc-500 underline mt-1 hover:text-zinc-700"
+          >
+            {showFull ? 'Show less' : 'Read more'}
+          </button>
+        )}
+      </div>
+    );
+  }
+
   function BriefCard({ item }: { item: PipelineItem }) {
     const acting = actioningIds.has(item.id);
+    const [expandedProblem, setExpandedProblem] = useState(false);
+    const [expandedSolution, setExpandedSolution] = useState(false);
     const src = SOURCE_BADGES[item.source] || SOURCE_BADGES.manual;
 
     return (
@@ -374,22 +414,59 @@ export default function HubResearchPage() {
             <span className="text-muted-foreground">{formatDate(item.createdAt)}</span>
             <Badge variant="outline" className={`text-xs ${src.className}`}>{src.label}</Badge>
             <Badge variant="outline" className="text-xs text-muted-foreground border-border">Complexity: {item.complexity}</Badge>
+            {/* Flywheel badge */}
+            {(() => {
+              const fw = (item.front && FLYWHEEL_BADGES[item.front]) || FLYWHEEL_DEFAULT;
+              return (
+                <Badge variant="outline" className="text-xs text-muted-foreground border-border">
+                  {fw.emoji} {fw.label}
+                </Badge>
+              );
+            })()}
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
+          {/* TL;DR */}
+          <TldrBlock item={item} />
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Problem</p>
-            <p className="text-sm">{item.problem || item.description || '—'}</p>
+            <p className={`text-sm ${expandedProblem ? '' : 'line-clamp-3'}`}>
+              {item.problem || item.description || '—'}
+            </p>
+            {(item.problem || item.description || '').length > 0 && (
+              <button
+                onClick={() => setExpandedProblem(p => !p)}
+                className="text-xs text-zinc-400 underline mt-0.5 hover:text-zinc-600"
+              >
+                {expandedProblem ? 'Show less' : 'Show more'}
+              </button>
+            )}
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Solution</p>
-            <p className="text-sm">{item.solution || '—'}</p>
+            <p className={`text-sm ${expandedSolution ? '' : 'line-clamp-2'}`}>
+              {item.solution || '—'}
+            </p>
+            {(item.solution || '').length > 0 && (
+              <button
+                onClick={() => setExpandedSolution(p => !p)}
+                className="text-xs text-zinc-400 underline mt-0.5 hover:text-zinc-600"
+              >
+                {expandedSolution ? 'Show less' : 'Show more'}
+              </button>
+            )}
           </div>
           {item.impact && (
             <div className="bg-zinc-100 px-3 py-2 rounded border border-zinc-200">
               <p className="text-xs font-semibold uppercase tracking-wider text-zinc-900 mb-1">Impact</p>
               <p className="text-sm text-zinc-700">{item.impact}</p>
             </div>
+          )}
+          {/* Skip Cost */}
+          {item.skipCost && (
+            <p className="text-xs text-zinc-500">
+              <span className="font-medium text-zinc-600">Skip cost:</span> {item.skipCost}
+            </p>
           )}
           {/* Q Review Section */}
           <div className="bg-zinc-50 rounded border border-zinc-200 px-3 py-2.5">
@@ -427,6 +504,18 @@ export default function HubResearchPage() {
                       : item.qReview.complexityAssessed}
                   </span>
                 </div>
+                {/* Plain English summary */}
+                {(() => {
+                  const summary = item.qReview?.summary;
+                  const fallback = item.qReview?.riskSummary
+                    ? `Q recommends ${item.qReview.recommendation}. ${item.qReview.riskSummary}`
+                    : null;
+                  const text = summary || fallback;
+                  if (!text) return null;
+                  return (
+                    <p className="text-xs text-zinc-700 mt-2 leading-relaxed">{text}</p>
+                  );
+                })()}
                 {/* Risk summary */}
                 {item.qReview.riskSummary && (
                   <p className="text-xs text-zinc-600">
