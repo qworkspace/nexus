@@ -124,13 +124,21 @@ export async function GET() {
     const healthData = JSON.parse(stdout);
     const agents = healthData.agents || [];
 
-    // Load activity feed for additional context
+    // Load activity feed from DB
     let activityFeed: ActivityEntry[] = [];
     try {
-      const sharedPath = process.env.HOME ? join(process.env.HOME, "shared") : "/Users/paulvillanueva/shared";
-      const activityPath = join(sharedPath, "activity-feed.json");
-      const activityData = JSON.parse(readFileSync(activityPath, "utf-8"));
-      activityFeed = activityData.entries || [];
+      const { db } = await import('@/lib/db');
+      const entries = await db.pipelineActivity.findMany({ orderBy: { timestamp: 'desc' }, take: 50 });
+      activityFeed = entries.map(e => ({
+        id: e.id,
+        timestamp: e.timestamp.toISOString(),
+        type: e.type,
+        agent: e.agent || '',
+        agentName: e.agentName || '',
+        emoji: e.emoji || '',
+        message: e.message,
+        metadata: e.metadata ? JSON.parse(e.metadata) : {},
+      }));
     } catch {
       // Activity feed load fails, continue without it
     }

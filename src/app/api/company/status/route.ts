@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { readFileSync, readdirSync } from "fs";
 import { join } from "path";
+import { db } from "@/lib/db";
 
 export const dynamic = 'force-dynamic';
 
@@ -8,14 +9,12 @@ const SHARED = process.env.HOME ? join(process.env.HOME, ".openclaw", "shared") 
 const RETROS_DIR = join(SHARED, "retros");
 const ACTIONS_FILE = join(SHARED, "action-items/index.json");
 const RELATIONSHIPS_DIR = join(SHARED, "relationships");
-const ACTIVITY_FILE = join(SHARED, "activity-feed.json");
 
 function safeRead(path: string, fallback: string = "[]") {
   try { return readFileSync(path, "utf-8"); } catch { return fallback; }
 }
 
 export async function GET() {
-  // Aggregate company health metrics
   const actionsData = JSON.parse(safeRead(ACTIONS_FILE, '{"items":[]}'));
   const actions = actionsData.items || [];
 
@@ -27,7 +26,6 @@ export async function GET() {
     return new Date(a.deadline) < new Date();
   });
 
-  // Meetings
   let meetingCount = 0;
   let lastMeeting: string | null = null;
   try {
@@ -36,7 +34,6 @@ export async function GET() {
     if (files[0]) lastMeeting = files[0].replace(".md", "");
   } catch { /* no meetings */ }
 
-  // Relationships — avg trust
   let avgTrust = 50;
   try {
     const files = readdirSync(RELATIONSHIPS_DIR).filter(f => f.endsWith(".json"));
@@ -52,46 +49,39 @@ export async function GET() {
     if (count > 0) avgTrust = Math.round(total / count);
   } catch { /* */ }
 
-  // Activity feed — recent
-  const activityFeed = JSON.parse(safeRead(ACTIVITY_FILE, '{"entries":[]}'));
-  const activity = activityFeed.entries || [];
-  const recentActivity = activity.slice(0, 10);
+  // Activity feed from DB
+  const activity = await db.pipelineActivity.findMany({
+    orderBy: { timestamp: 'desc' },
+    take: 50,
+  });
+  const recentActivity = activity.slice(0, 10).map(a => ({
+    id: a.id,
+    timestamp: a.timestamp.toISOString(),
+    type: a.type,
+    agent: a.agent,
+    agentName: a.agentName,
+    emoji: a.emoji,
+    message: a.message,
+    briefId: a.briefId,
+  }));
 
-  // Agent last activity (from activity feed)
   const agentLastSeen: Record<string, string> = {};
-  activity.forEach((a: { agent?: string; timestamp?: string }) => {
-    if (a.agent && a.timestamp && !agentLastSeen[a.agent]) {
-      agentLastSeen[a.agent] = a.timestamp;
+  activity.forEach(a => {
+    if (a.agent && !agentLastSeen[a.agent]) {
+      agentLastSeen[a.agent] = a.timestamp.toISOString();
     }
   });
 
-  // Compute health score (0-100)
   const actionScore = openActions.length === 0 ? 100 : Math.max(0, 100 - overdueActions.length * 20);
   const meetingScore = meetingCount > 0 ? Math.min(100, meetingCount * 15) : 0;
   const trustScore = avgTrust;
   const healthScore = Math.round((actionScore * 0.3) + (meetingScore * 0.3) + (trustScore * 0.4));
 
   return NextResponse.json({
-    health: {
-      score: healthScore,
-      breakdown: {
-        actions: actionScore,
-        meetings: meetingScore,
-        trust: trustScore,
-      }
-    },
-    actions: {
-      open: openActions.length,
-      done: doneActions.length,
-      overdue: overdueActions.length,
-    },
-    meetings: {
-      total: meetingCount,
-      last: lastMeeting,
-    },
-    trust: {
-      average: avgTrust,
-    },
+    health: { score: healthScore, breakdown: { actions: actionScore, meetings: meetingScore, trust: trustScore } },
+    actions: { open: openActions.length, done: doneActions.length, overdue: overdueActions.length },
+    meetings: { total: meetingCount, last: lastMeeting },
+    trust: { average: avgTrust },
     agentLastSeen,
     recentActivity,
   });

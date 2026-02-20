@@ -1,18 +1,29 @@
 import { NextResponse } from 'next/server';
-import { readFileSync } from 'fs';
-import { join } from 'path';
-
-const FEED_PATH = join(process.env.HOME || '', '.openclaw/shared/activity-feed.json');
+import { db } from '@/lib/db';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get('limit') || '50');
 
-    const data = JSON.parse(readFileSync(FEED_PATH, 'utf-8'));
-    const entries = (data.entries || []).slice(0, limit);
+    const entries = await db.pipelineActivity.findMany({
+      orderBy: { timestamp: 'desc' },
+      take: limit,
+    });
 
-    return NextResponse.json({ entries });
+    return NextResponse.json({
+      entries: entries.map(e => ({
+        id: e.id,
+        timestamp: e.timestamp.toISOString(),
+        type: e.type,
+        agent: e.agent,
+        agentName: e.agentName,
+        emoji: e.emoji,
+        message: e.message,
+        briefId: e.briefId,
+        ...(e.metadata ? JSON.parse(e.metadata) : {}),
+      })),
+    });
   } catch (error) {
     return NextResponse.json({ entries: [], error: String(error) });
   }
