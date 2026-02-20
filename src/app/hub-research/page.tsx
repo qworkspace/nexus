@@ -58,6 +58,16 @@ interface PipelineItem {
   };
 }
 
+interface ActionItem {
+  id: string;
+  task: string;
+  source: string;
+  priority: string;
+  created: string;
+  status: string;
+  assignee: string;
+}
+
 // ── Helpers ──
 
 const fetcher = (url: string) => fetch(url, { cache: 'no-store' }).then(r => r.json());
@@ -116,6 +126,7 @@ export default function HubResearchPage() {
   const briefs: PipelineItem[] = queueData?.briefs || [];
 
   const [actioningIds, setActioningIds] = useState<Set<string>>(new Set());
+  const [actioningActionIds, setActioningActionIds] = useState<Set<string>>(new Set());
   const [newBriefOpen, setNewBriefOpen] = useState(false);
   const [ingesting, setIngesting] = useState(false);
   const [feedbackComment, setFeedbackComment] = useState<Record<string, string>>({});
@@ -156,6 +167,8 @@ export default function HubResearchPage() {
   const inProgress = briefs.filter(b => ['queued', 'speccing', 'building', 'qa'].includes(b.status));
   const shipped = briefs.filter(b => b.status === 'shipped');
   const parked = briefs.filter(b => b.status === 'parked');
+  const rejected = briefs.filter(b => b.status === 'rejected'); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const actionItems: ActionItem[] = queueData?.actionItems || []; // eslint-disable-line @typescript-eslint/no-unused-vars
 
   // ── Actions ──
 
@@ -297,6 +310,26 @@ export default function HubResearchPage() {
     refresh();
   };
 
+  const doActionItemAction = async (id: string, action: 'approve' | 'reject' | 'defer') => { // eslint-disable-line @typescript-eslint/no-unused-vars
+    setActioningActionIds(prev => new Set(prev).add(id));
+    try {
+      const res = await fetch('/api/pipeline-queue/action-item', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, action }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        alert(`Failed: ${err.error || 'Unknown'}`);
+      }
+      refresh();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setActioningActionIds(prev => { const s = new Set(prev); s.delete(id); return s; });
+    }
+  };
+
   // ── Pipeline Stage Dots ──
 
   function StageDots({ current }: { current: string }) {
@@ -428,6 +461,107 @@ export default function HubResearchPage() {
             </div>
           </div>
         </CardContent>
+      </Card>
+    );
+  }
+
+  // ── Action Item Card ──
+
+  function ActionItemCard({ item }: { item: ActionItem }) {
+    const acting = actioningActionIds.has(item.id);
+    return (
+      <Card className="border-l-4 border-l-zinc-300 hover:border-l-[#D4C5A9] transition-colors">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm">{item.task}</CardTitle>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>Source: {item.source}</span>
+            <span>·</span>
+            <span>{item.created ? formatDate(item.created) : '—'}</span>
+            <Badge variant="outline" className={`text-xs ${PRIORITY_COLORS[item.priority?.toUpperCase() as 'HIGH' | 'MED' | 'LOW'] || ''}`}>
+              {item.priority?.toUpperCase() || 'MED'}
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2 pt-1 justify-end">
+            <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting}
+              onClick={() => doActionItemAction(item.id, 'approve')}>
+              <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
+            </Button>
+            <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700" disabled={acting}
+              onClick={() => doActionItemAction(item.id, 'defer')}>
+              <PauseCircle className="h-3.5 w-3.5 mr-1" />Defer
+            </Button>
+            <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700" disabled={acting}
+              onClick={() => doActionItemAction(item.id, 'reject')}>
+              <XCircle className="h-3.5 w-3.5 mr-1" />Reject
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // ── Parked Card ──
+
+  function ParkedCard({ item }: { item: PipelineItem }) {
+    const acting = actioningIds.has(item.id);
+    return (
+      <Card className="bg-zinc-50 border border-zinc-200 hover:border-[#D4C5A9] transition-colors">
+        <CardHeader className="pb-2">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-zinc-500">🅿️</span>
+              <CardTitle className="text-base text-zinc-600">{item.title}</CardTitle>
+            </div>
+            <Badge className={`border ${PRIORITY_COLORS[item.priority]}`}>{item.priority}</Badge>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <span>Parked {formatDate(item.createdAt)}</span>
+            <Badge variant="outline" className="text-xs text-zinc-500">Complexity: {item.complexity}</Badge>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <p className="text-sm text-zinc-500">{item.problem || item.description || '—'}</p>
+          <div className="flex gap-2 pt-2 border-t border-zinc-200 justify-end">
+            <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting}
+              onClick={() => approve(item.id)}>
+              <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
+            </Button>
+            <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700" disabled={acting}
+              onClick={() => openRejectDialog(item.id)}>
+              <XCircle className="h-3.5 w-3.5 mr-1" />Reject
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  // ── Rejected Card (read-only) ──
+
+  function RejectedCard({ item }: { item: PipelineItem }) {
+    const itemWithExtra = item as PipelineItem & { rejectedAt?: string; rejectedReason?: string };
+    return (
+      <Card className="bg-zinc-50 border border-zinc-200 opacity-70">
+        <CardHeader className="pb-2">
+          <div className="flex items-start justify-between gap-2">
+            <CardTitle className="text-base text-zinc-500 line-through">{item.title}</CardTitle>
+            <Badge className="bg-red-50 text-red-600 border border-red-200 text-xs">Rejected</Badge>
+          </div>
+          <div className="text-xs text-muted-foreground">
+            {itemWithExtra.rejectedAt
+              ? `Rejected ${formatDate(itemWithExtra.rejectedAt)}`
+              : `Created ${formatDate(item.createdAt)}`}
+          </div>
+        </CardHeader>
+        {itemWithExtra.rejectedReason && (
+          <CardContent>
+            <p className="text-xs text-zinc-400 italic">
+              Reason: {itemWithExtra.rejectedReason}
+            </p>
+          </CardContent>
+        )}
       </Card>
     );
   }
@@ -603,32 +737,94 @@ export default function HubResearchPage() {
             <TabsContent value="briefs" className="h-[calc(100%-60px)] mt-4 overflow-hidden">
               <div className="flex h-full gap-4">
                 <div className="flex-1 overflow-hidden flex flex-col">
-                  <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-lg font-semibold">Pending Review</h2>
-                    <div className="flex gap-2">
-                      <Button variant="outline" size="sm" onClick={ingest} disabled={ingesting} className="">
-                        <Download className="h-4 w-4 mr-1" />{ingesting ? 'Scanning…' : 'Ingest New'}
-                      </Button>
-                      <Button size="sm" onClick={() => setNewBriefOpen(true)}>
-                        <Plus className="h-4 w-4 mr-1" />New Brief
-                      </Button>
+                  <Tabs defaultValue="pending" className="flex-1 flex flex-col overflow-hidden">
+                    <div className="flex items-center justify-between mb-3">
+                      <TabsList className="grid grid-cols-3 w-72">
+                        <TabsTrigger value="pending">
+                          Pending {pendingReview.length > 0 && <Badge className="ml-1 h-4 px-1 text-xs bg-zinc-700 text-white">{pendingReview.length}</Badge>}
+                        </TabsTrigger>
+                        <TabsTrigger value="parked">
+                          Parked {parked.length > 0 && <Badge className="ml-1 h-4 px-1 text-xs bg-zinc-200 text-zinc-700">{parked.length}</Badge>}
+                        </TabsTrigger>
+                        <TabsTrigger value="rejected">
+                          Rejected {rejected.length > 0 && <Badge className="ml-1 h-4 px-1 text-xs bg-red-100 text-red-600">{rejected.length}</Badge>}
+                        </TabsTrigger>
+                      </TabsList>
+                      <div className="flex gap-2">
+                        <Button variant="outline" size="sm" onClick={ingest} disabled={ingesting}>
+                          <Download className="h-4 w-4 mr-1" />{ingesting ? 'Scanning…' : 'Ingest New'}
+                        </Button>
+                        <Button size="sm" onClick={() => setNewBriefOpen(true)}>
+                          <Plus className="h-4 w-4 mr-1" />New Brief
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                  <ScrollArea className="flex-1">
-                    <div className="space-y-3 pr-4">
-                      {isLoading ? (
-                        <div className="space-y-3">{[1,2,3].map(i => <Card key={i} className="h-40 animate-pulse" />)}</div>
-                      ) : pendingReview.length === 0 ? (
-                        <div className="text-center py-16 text-muted-foreground">
-                          <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                          <p className="text-lg mb-2">No briefs pending review</p>
-                          <p className="text-sm">Click &quot;Ingest New&quot; to scan for research briefs</p>
+
+                    {/* Pending sub-tab */}
+                    <TabsContent value="pending" className="flex-1 overflow-hidden mt-0">
+                      <ScrollArea className="h-full">
+                        <div className="space-y-3 pr-4">
+                          {/* Action Items panel */}
+                          {actionItems.length > 0 && (
+                            <div className="mb-4">
+                              <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide mb-2">
+                                Pending Your Approval — Action Items
+                              </h3>
+                              <div className="space-y-2">
+                                {actionItems.map(ai => <ActionItemCard key={ai.id} item={ai} />)}
+                              </div>
+                              <div className="border-t border-zinc-200 my-4" />
+                            </div>
+                          )}
+                          {/* Regular briefs */}
+                          {isLoading ? (
+                            <div className="space-y-3">{[1,2,3].map(i => <Card key={i} className="h-40 animate-pulse" />)}</div>
+                          ) : pendingReview.length === 0 && actionItems.length === 0 ? (
+                            <div className="text-center py-16 text-muted-foreground">
+                              <CheckCircle className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                              <p className="text-lg mb-2">No briefs pending review</p>
+                              <p className="text-sm">Click &quot;Ingest New&quot; to scan for research briefs</p>
+                            </div>
+                          ) : (
+                            pendingReview.map(item => <BriefCard key={item.id} item={item} />)
+                          )}
                         </div>
-                      ) : (
-                        pendingReview.map(item => <BriefCard key={item.id} item={item} />)
-                      )}
-                    </div>
-                  </ScrollArea>
+                      </ScrollArea>
+                    </TabsContent>
+
+                    {/* Parked sub-tab */}
+                    <TabsContent value="parked" className="flex-1 overflow-hidden mt-0">
+                      <ScrollArea className="h-full">
+                        <div className="space-y-3 pr-4">
+                          {parked.length === 0 ? (
+                            <div className="text-center py-16 text-muted-foreground">
+                              <PauseCircle className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                              <p className="text-lg mb-2">No parked briefs</p>
+                              <p className="text-sm">Parked briefs can be approved or rejected later</p>
+                            </div>
+                          ) : (
+                            parked.map(item => <ParkedCard key={item.id} item={item} />)
+                          )}
+                        </div>
+                      </ScrollArea>
+                    </TabsContent>
+
+                    {/* Rejected sub-tab */}
+                    <TabsContent value="rejected" className="flex-1 overflow-hidden mt-0">
+                      <ScrollArea className="h-full">
+                        <div className="space-y-3 pr-4">
+                          {rejected.length === 0 ? (
+                            <div className="text-center py-16 text-muted-foreground">
+                              <XCircle className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                              <p className="text-lg mb-2">No rejected briefs</p>
+                            </div>
+                          ) : (
+                            rejected.map(item => <RejectedCard key={item.id} item={item} />)
+                          )}
+                        </div>
+                      </ScrollArea>
+                    </TabsContent>
+                  </Tabs>
                 </div>
                 <div className="w-72 border-l border-zinc-200 pl-4 overflow-hidden">
                   <ScrollArea className="h-full"><BriefsSidebar /></ScrollArea>

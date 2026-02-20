@@ -4,6 +4,7 @@ import { join } from 'path';
 import { homedir } from 'os';
 
 const QUEUE_PATH = join(homedir(), '.openclaw', 'shared', 'pipeline-queue.json');
+const ACTION_ITEMS_PATH = join(homedir(), '.openclaw', 'shared', 'action-items', 'index.json');
 
 export interface PipelineQueueItem {
   id: string;
@@ -24,20 +25,34 @@ export interface PipelineQueueItem {
 export async function GET() {
   try {
     if (!existsSync(QUEUE_PATH)) {
-      return NextResponse.json({ briefs: [], updated: null });
+      return NextResponse.json({ briefs: [], updated: null, actionItems: [] });
     }
 
     const raw = readFileSync(QUEUE_PATH, 'utf-8');
     const data = JSON.parse(raw);
 
+    // Load action items filtered to PJ-assignee + todo status
+    let actionItems: object[] = [];
+    try {
+      if (existsSync(ACTION_ITEMS_PATH)) {
+        const aiRaw = readFileSync(ACTION_ITEMS_PATH, 'utf-8');
+        const aiData = JSON.parse(aiRaw);
+        actionItems = (aiData.items || []).filter(
+          (item: { status: string; assignee: string }) =>
+            item.status === 'todo' && item.assignee === 'PJ'
+        );
+      }
+    } catch { /* non-fatal — actionItems stays empty */ }
+
     return NextResponse.json({
       briefs: (data.briefs || []) as PipelineQueueItem[],
       updated: data.updated || null,
+      actionItems,
     });
   } catch (error) {
     console.error('Failed to read pipeline-queue.json:', error);
     return NextResponse.json(
-      { briefs: [], updated: null, error: String(error) },
+      { briefs: [], updated: null, actionItems: [], error: String(error) },
       { status: 500 }
     );
   }
