@@ -17,8 +17,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   RefreshCw, Clock, CheckCircle, XCircle, PauseCircle,
-  Plus, Rocket, Download, ThumbsUp, ThumbsDown, MessageSquare,
-  BarChart3, Zap, Pencil
+  Plus, Rocket, Download,
+  BarChart3, Zap, Pencil, RotateCcw
 } from "lucide-react";
 
 // ── Types ──
@@ -42,8 +42,10 @@ interface PipelineItem {
   specPath?: string;
   buildCommit?: string;
   feedback?: {
-    rating: 'good' | 'bad' | 'comment';
+    rating: 'nailed-it' | 'acceptable' | 'needs-work' | 'good' | 'bad' | 'comment'; // include legacy for compat
+    tags?: string[];
     comment?: string;
+    rolledBack?: boolean;
     ratedAt: string;
   };
 }
@@ -89,6 +91,16 @@ function formatDuration(days: number): string {
   return `${days} days`;
 }
 
+function getRatingDisplay(rating: string): { emoji: string; label: string } {
+  switch (rating) {
+    case 'nailed-it': case 'good': return { emoji: '🟢', label: 'Nailed it' };
+    case 'acceptable': return { emoji: '🟡', label: 'Acceptable' };
+    case 'needs-work': case 'bad': return { emoji: '🔴', label: 'Needs work' };
+    case 'comment': return { emoji: '💬', label: 'Comment' };
+    default: return { emoji: '⭐', label: rating };
+  }
+}
+
 // ── Main Page ──
 
 export default function HubResearchPage() {
@@ -100,6 +112,13 @@ export default function HubResearchPage() {
   const [ingesting, setIngesting] = useState(false);
   const [feedbackComment, setFeedbackComment] = useState<Record<string, string>>({});
   const [commentDialogId, setCommentDialogId] = useState<string | null>(null);
+
+  // Feedback state for the new system
+  const [selectedRating, setSelectedRating] = useState<Record<string, 'nailed-it' | 'acceptable' | 'needs-work'>>({});
+  const [selectedTags, setSelectedTags] = useState<Record<string, string[]>>({});
+  const [rollbackDialogId, setRollbackDialogId] = useState<string | null>(null);
+  const [rollbackComment, setRollbackComment] = useState('');
+  const [rollingBack, setRollingBack] = useState(false);
 
   // Reject with reason
   const [rejectDialogId, setRejectDialogId] = useState<string | null>(null);
@@ -193,10 +212,44 @@ export default function HubResearchPage() {
     refresh();
   };
 
-  const submitFeedback = (id: string, rating: 'good' | 'bad' | 'comment', comment?: string) =>
+  const submitFeedback = (
+    id: string,
+    rating: 'nailed-it' | 'acceptable' | 'needs-work',
+    tags?: string[],
+    comment?: string
+  ) =>
     doAction(id, () =>
-      fetch('/api/pipeline-queue/feedback', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ briefId: id, rating, comment }) })
+      fetch('/api/pipeline-queue/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ briefId: id, rating, tags, comment }),
+      })
     );
+
+  const confirmRollback = async () => {
+    if (!rollbackDialogId || !rollbackComment.trim()) return;
+    const id = rollbackDialogId;
+    setRollingBack(true);
+    try {
+      const res = await fetch('/api/pipeline-queue/rollback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ briefId: id, comment: rollbackComment.trim() }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        alert(`Rollback failed: ${err.error || 'Unknown error'}`);
+      } else {
+        refresh();
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setRollingBack(false);
+      setRollbackDialogId(null);
+      setRollbackComment('');
+    }
+  };
 
   const ingest = async () => {
     setIngesting(true);
@@ -417,35 +470,41 @@ export default function HubResearchPage() {
 
   function PerformanceSidebar() {
     const rated = shipped.filter(b => b.feedback);
-    const good = rated.filter(b => b.feedback?.rating === 'good').length;
-    const bad = rated.filter(b => b.feedback?.rating === 'bad').length;
+    const nailedIt = rated.filter(b =>
+      b.feedback?.rating === 'nailed-it' || b.feedback?.rating === 'good' // legacy compat
+    ).length;
+    const acceptable = rated.filter(b => b.feedback?.rating === 'acceptable').length;
+    const needsWork = rated.filter(b =>
+      b.feedback?.rating === 'needs-work' || b.feedback?.rating === 'bad' // legacy compat
+    ).length;
+    const rolledBack = rated.filter(b => b.feedback?.rolledBack).length;
     const pending = shipped.filter(b => !b.feedback).length;
-    const shippedWithTimes = shipped.filter(b => b.approvedAt && b.shippedAt);
-    const avgDays = shippedWithTimes.length > 0
-      ? Math.round(shippedWithTimes.reduce((sum, b) => sum + daysBetween(b.approvedAt, b.shippedAt!), 0) / shippedWithTimes.length)
-      : null;
 
     return (
       <div className="space-y-4">
-        <Card className="">
+        <Card>
           <CardHeader className="pb-2"><CardTitle className="text-sm">Total Shipped</CardTitle></CardHeader>
           <CardContent><p className="text-3xl font-bold">{shipped.length}</p></CardContent>
         </Card>
-        <Card className="">
-          <CardHeader className="pb-2"><CardTitle className="text-sm">👍 Rate</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold text-zinc-900">{rated.length > 0 ? Math.round((good / rated.length) * 100) : 0}%</p></CardContent>
+        <Card>
+          <CardHeader className="pb-2"><CardTitle className="text-sm">🟢 Nailed It</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold">{rated.length > 0 ? Math.round((nailedIt / rated.length) * 100) : 0}%</p></CardContent>
         </Card>
-        <Card className="">
-          <CardHeader className="pb-2"><CardTitle className="text-sm">👎 Rate</CardTitle></CardHeader>
-          <CardContent><p className="text-2xl font-bold text-zinc-900">{rated.length > 0 ? Math.round((bad / rated.length) * 100) : 0}%</p></CardContent>
+        <Card>
+          <CardHeader className="pb-2"><CardTitle className="text-sm">🟡 Acceptable</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold">{acceptable}</p></CardContent>
         </Card>
-        {avgDays !== null && (
-          <Card className="">
-            <CardHeader className="pb-2"><CardTitle className="text-sm">Avg Brief → Ship</CardTitle></CardHeader>
-            <CardContent><p className="text-2xl font-bold">{formatDuration(avgDays)}</p></CardContent>
+        <Card>
+          <CardHeader className="pb-2"><CardTitle className="text-sm">🔴 Needs Work</CardTitle></CardHeader>
+          <CardContent><p className="text-2xl font-bold">{needsWork}</p></CardContent>
+        </Card>
+        {rolledBack > 0 && (
+          <Card>
+            <CardHeader className="pb-2"><CardTitle className="text-sm">⏪ Rolled Back</CardTitle></CardHeader>
+            <CardContent><p className="text-2xl font-bold text-zinc-500">{rolledBack}</p></CardContent>
           </Card>
         )}
-        <Card className="">
+        <Card>
           <CardHeader className="pb-2"><CardTitle className="text-sm">Feedback Pending</CardTitle></CardHeader>
           <CardContent><p className="text-2xl font-bold text-[#F5D547]">{pending}</p></CardContent>
         </Card>
@@ -596,10 +655,18 @@ export default function HubResearchPage() {
                         <CardContent>
                           <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
                           {item.feedback && (
-                            <div className="mt-2">
-                              <Badge className="bg-zinc-100 text-zinc-700 border border-zinc-200">
-                                {item.feedback.rating === 'good' ? '👍' : item.feedback.rating === 'bad' ? '👎' : '💬'} {item.feedback.rating}
-                              </Badge>
+                            <div className="mt-2 space-y-1">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <Badge className="bg-zinc-100 text-zinc-700 border border-zinc-200">
+                                  {getRatingDisplay(item.feedback.rating).emoji} {getRatingDisplay(item.feedback.rating).label}
+                                </Badge>
+                                {item.feedback.rolledBack && (
+                                  <Badge className="bg-red-50 text-red-600 border border-red-200">⏪ Rolled back</Badge>
+                                )}
+                                {item.feedback.tags?.map(tag => (
+                                  <Badge key={tag} className="bg-zinc-50 text-zinc-600 border border-zinc-200 text-xs">{tag}</Badge>
+                                ))}
+                              </div>
                               {item.feedback.comment && <p className="text-xs text-muted-foreground mt-1">{item.feedback.comment}</p>}
                             </div>
                           )}
@@ -631,24 +698,121 @@ export default function HubResearchPage() {
                                 <CardHeader className="pb-2">
                                   <div className="flex items-start justify-between">
                                     <CardTitle className="text-base">{item.title}</CardTitle>
-                                    <span className="text-xs text-muted-foreground">Shipped {item.shippedAt ? formatDate(item.shippedAt) : '—'}</span>
+                                    <span className="text-xs text-muted-foreground">
+                                      Shipped {item.shippedAt ? formatDate(item.shippedAt) : '—'}
+                                    </span>
                                   </div>
                                 </CardHeader>
                                 <CardContent>
                                   <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{item.description}</p>
-                                  <div className="flex gap-2">
-                                    <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200"
-                                      disabled={actioningIds.has(item.id)} onClick={() => submitFeedback(item.id, 'good')}>
-                                      <ThumbsUp className="h-3.5 w-3.5 mr-1" />Nailed it
+
+                                  {/* Step 1: Rating buttons */}
+                                  <div className="flex gap-2 mb-3">
+                                    {(['nailed-it', 'acceptable', 'needs-work'] as const).map(r => {
+                                      const labels = { 'nailed-it': '🟢 Nailed it', 'acceptable': '🟡 Acceptable', 'needs-work': '🔴 Needs work' };
+                                      const isSelected = selectedRating[item.id] === r;
+                                      return (
+                                        <Button
+                                          key={r}
+                                          size="sm"
+                                          variant="outline"
+                                          className={`text-xs transition-all ${isSelected
+                                            ? 'bg-zinc-900 text-white border-zinc-900'
+                                            : 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200'
+                                          }`}
+                                          disabled={actioningIds.has(item.id)}
+                                          onClick={() => setSelectedRating(prev => ({
+                                            ...prev,
+                                            [item.id]: prev[item.id] === r ? undefined as unknown as 'nailed-it' | 'acceptable' | 'needs-work' : r,
+                                          }))}
+                                        >
+                                          {labels[r]}
+                                        </Button>
+                                      );
+                                    })}
+                                  </div>
+
+                                  {/* Step 2: Tags (shown only on 'acceptable' or 'needs-work') */}
+                                  {(selectedRating[item.id] === 'acceptable' || selectedRating[item.id] === 'needs-work') && (
+                                    <div className="mb-3 p-3 bg-zinc-50 rounded border border-zinc-200">
+                                      <p className="text-xs font-semibold text-zinc-500 mb-2 uppercase tracking-wide">
+                                        Tags {selectedRating[item.id] === 'needs-work' && <span className="text-zinc-400">(1 required)</span>}
+                                      </p>
+                                      <div className="flex flex-wrap gap-1.5">
+                                        {(['missed-spec', 'broke-existing', 'wrong-approach', 'incomplete', 'over-engineered', 'poor-quality', 'needed-context'] as const).map(tag => {
+                                          const isTagSelected = (selectedTags[item.id] || []).includes(tag);
+                                          return (
+                                            <button
+                                              key={tag}
+                                              onClick={() => setSelectedTags(prev => {
+                                                const cur = prev[item.id] || [];
+                                                return {
+                                                  ...prev,
+                                                  [item.id]: isTagSelected ? cur.filter(t => t !== tag) : [...cur, tag],
+                                                };
+                                              })}
+                                              className={`px-2 py-0.5 text-xs rounded-full border transition-all ${
+                                                isTagSelected
+                                                  ? 'bg-zinc-900 text-white border-zinc-900'
+                                                  : 'bg-white text-zinc-600 border-zinc-200 hover:border-zinc-400'
+                                              }`}
+                                            >
+                                              {tag}
+                                            </button>
+                                          );
+                                        })}
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  {/* Step 3: Comment field (shown when a rating is selected) */}
+                                  {selectedRating[item.id] && (
+                                    <div className="mb-3">
+                                      <Textarea
+                                        placeholder="Optional comment..."
+                                        value={feedbackComment[item.id] || ''}
+                                        onChange={e => setFeedbackComment(prev => ({ ...prev, [item.id]: e.target.value }))}
+                                        rows={2}
+                                        className="text-sm"
+                                      />
+                                    </div>
+                                  )}
+
+                                  {/* Step 4: Submit + Rollback row */}
+                                  <div className="flex items-center justify-between">
+                                    <Button
+                                      size="sm"
+                                      disabled={
+                                        actioningIds.has(item.id) ||
+                                        !selectedRating[item.id] ||
+                                        (selectedRating[item.id] === 'needs-work' && !(selectedTags[item.id]?.length))
+                                      }
+                                      onClick={() => submitFeedback(
+                                        item.id,
+                                        selectedRating[item.id]!,
+                                        selectedTags[item.id],
+                                        feedbackComment[item.id]
+                                      )}
+                                      className="bg-zinc-900 hover:bg-zinc-700 text-white"
+                                    >
+                                      Submit Rating
                                     </Button>
-                                    <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200"
-                                      disabled={actioningIds.has(item.id)} onClick={() => submitFeedback(item.id, 'bad')}>
-                                      <ThumbsDown className="h-3.5 w-3.5 mr-1" />Needs work
-                                    </Button>
-                                    <Button size="sm" variant="outline" className=""
-                                      disabled={actioningIds.has(item.id)} onClick={() => setCommentDialogId(item.id)}>
-                                      <MessageSquare className="h-3.5 w-3.5 mr-1" />Comment
-                                    </Button>
+
+                                    {/* Rollback — only show if build has a commit hash */}
+                                    {item.buildCommit && (
+                                      <Button
+                                        size="sm"
+                                        variant="outline"
+                                        className="text-zinc-500 border-zinc-200 hover:bg-red-50 hover:text-red-600 hover:border-red-200"
+                                        disabled={actioningIds.has(item.id)}
+                                        onClick={() => {
+                                          setRollbackDialogId(item.id);
+                                          setRollbackComment('');
+                                        }}
+                                      >
+                                        <RotateCcw className="h-3.5 w-3.5 mr-1" />Rollback Build
+                                      </Button>
+                                    )}
                                   </div>
                                 </CardContent>
                               </Card>
@@ -675,9 +839,26 @@ export default function HubResearchPage() {
                                   </div>
                                 </CardHeader>
                                 <CardContent>
-                                  {item.feedback?.comment && <p className="text-sm text-muted-foreground mb-1">{item.feedback.comment}</p>}
+                                  {item.feedback && (
+                                    <div className="mt-2 space-y-1">
+                                      <div className="flex items-center gap-2 flex-wrap">
+                                        <Badge className="bg-zinc-100 text-zinc-700 border border-zinc-200">
+                                          {getRatingDisplay(item.feedback.rating).emoji} {getRatingDisplay(item.feedback.rating).label}
+                                        </Badge>
+                                        {item.feedback.rolledBack && (
+                                          <Badge className="bg-red-50 text-red-600 border border-red-200">⏪ Rolled back</Badge>
+                                        )}
+                                        {item.feedback.tags?.map(tag => (
+                                          <Badge key={tag} className="bg-zinc-50 text-zinc-600 border border-zinc-200 text-xs">{tag}</Badge>
+                                        ))}
+                                      </div>
+                                      {item.feedback.comment && (
+                                        <p className="text-xs text-muted-foreground">{item.feedback.comment}</p>
+                                      )}
+                                    </div>
+                                  )}
                                   {item.approvedAt && item.shippedAt && (
-                                    <p className="text-xs text-muted-foreground">Brief → Ship: {formatDuration(daysBetween(item.approvedAt, item.shippedAt))}</p>
+                                    <p className="text-xs text-muted-foreground mt-1">Brief → Ship: {formatDuration(daysBetween(item.approvedAt, item.shippedAt))}</p>
                                   )}
                                 </CardContent>
                               </Card>
@@ -851,10 +1032,44 @@ export default function HubResearchPage() {
             <Button variant="outline" onClick={() => setCommentDialogId(null)}>Cancel</Button>
             <Button onClick={() => {
               if (commentDialogId) {
-                submitFeedback(commentDialogId, 'comment', feedbackComment[commentDialogId]);
+                submitFeedback(commentDialogId, 'nailed-it', undefined, feedbackComment[commentDialogId]);
                 setCommentDialogId(null);
               }
             }}>Submit</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Rollback Confirmation Dialog */}
+      <Dialog open={!!rollbackDialogId} onOpenChange={() => setRollbackDialogId(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>⏪ Rollback Build</DialogTitle>
+            <DialogDescription>
+              This will run <code>git revert</code> on the build commit. This action cannot be undone from the UI.
+              The rating will be auto-set to 🔴 Needs Work with tag <code>broke-existing</code>.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Label className="text-sm font-medium">What broke? (required)</Label>
+            <Textarea
+              placeholder="Describe what broke and why rollback is needed..."
+              value={rollbackComment}
+              onChange={e => setRollbackComment(e.target.value)}
+              rows={3}
+              className="mt-2"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setRollbackDialogId(null)}>Cancel</Button>
+            <Button
+              variant="outline"
+              className="border-red-200 text-red-600 hover:bg-red-50"
+              disabled={!rollbackComment.trim() || rollingBack}
+              onClick={confirmRollback}
+            >
+              {rollingBack ? 'Rolling back…' : '⏪ Confirm Rollback'}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
