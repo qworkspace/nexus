@@ -18,7 +18,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import {
   RefreshCw, Clock, CheckCircle, XCircle, PauseCircle,
   Plus, Rocket, Download,
-  BarChart3, Zap, Pencil, RotateCcw, Search, Loader2
+  BarChart3, Zap, Pencil, RotateCcw, Search, Loader2, ChevronDown, ChevronRight
 } from "lucide-react";
 
 // ── Types ──
@@ -162,6 +162,7 @@ export default function HubResearchPage() {
   const [selectedTags, setSelectedTags] = useState<Record<string, string[]>>({});
   const [rollbackDialogId, setRollbackDialogId] = useState<string | null>(null);
   const [rollbackComment, setRollbackComment] = useState('');
+  const [actionItemsOpen, setActionItemsOpen] = useState(false);
   const [rollingBack, setRollingBack] = useState(false);
 
   // Screenshot + needs-work success state
@@ -980,16 +981,29 @@ export default function HubResearchPage() {
                     <TabsContent value="pending" className="flex-1 overflow-hidden mt-0">
                       <ScrollArea className="h-full">
                         <div className="space-y-3 pr-4">
-                          {/* Action Items panel */}
+                          {/* Action Items — collapsible */}
                           {actionItems.length > 0 && (
-                            <div className="mb-4">
-                              <h3 className="text-sm font-semibold text-zinc-500 uppercase tracking-wide mb-2">
-                                Pending Your Approval — Action Items
-                              </h3>
-                              <div className="space-y-2">
-                                {actionItems.map(ai => <ActionItemCard key={ai.id} item={ai} />)}
-                              </div>
-                              <div className="border-t border-zinc-200 my-4" />
+                            <div className="mb-4 bg-zinc-50 border border-zinc-200 rounded-lg overflow-hidden">
+                              <button
+                                onClick={() => setActionItemsOpen(!actionItemsOpen)}
+                                className="w-full flex items-center justify-between px-4 py-2.5 hover:bg-zinc-100 transition-colors"
+                              >
+                                <div className="flex items-center gap-2">
+                                  {actionItemsOpen ? <ChevronDown className="h-4 w-4 text-zinc-400" /> : <ChevronRight className="h-4 w-4 text-zinc-400" />}
+                                  <span className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                                    Action Items
+                                  </span>
+                                  <Badge variant="outline" className="text-xs bg-zinc-200 text-zinc-600 border-0">
+                                    {actionItems.length}
+                                  </Badge>
+                                </div>
+                                <span className="text-xs text-zinc-400">From retros &amp; fix briefs</span>
+                              </button>
+                              {actionItemsOpen && (
+                                <div className="space-y-2 px-4 pb-3">
+                                  {actionItems.map(ai => <ActionItemCard key={ai.id} item={ai} />)}
+                                </div>
+                              )}
                             </div>
                           )}
                           {/* Regular briefs */}
