@@ -194,11 +194,14 @@ export default function HubResearchPage() {
   const refresh = useCallback(() => mutate('/api/pipeline-queue'), []);
 
   // Derived lists
-  const pendingReview = briefs.filter(b => b.status === 'pending-review');
-  const inProgress = briefs.filter(b => ['queued', 'speccing', 'building', 'qa'].includes(b.status));
-  const shipped = briefs.filter(b => b.status === 'shipped');
-  const parked = briefs.filter(b => b.status === 'parked');
-  const rejected = briefs.filter(b => b.status === 'rejected'); // eslint-disable-line @typescript-eslint/no-unused-vars
+  const sortByNewest = (a: PipelineItem, b: PipelineItem) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+
+  const pendingReview = briefs.filter(b => b.status === 'pending-review').sort(sortByNewest);
+  const inProgress = briefs.filter(b => ['queued', 'speccing', 'building', 'qa'].includes(b.status)).sort(sortByNewest);
+  const shipped = briefs.filter(b => b.status === 'shipped').sort(sortByNewest);
+  const parked = briefs.filter(b => b.status === 'parked').sort(sortByNewest);
+  const rejected = briefs.filter(b => b.status === 'rejected').sort(sortByNewest); // eslint-disable-line @typescript-eslint/no-unused-vars
   const actionItems: ActionItem[] = queueData?.actionItems || []; // eslint-disable-line @typescript-eslint/no-unused-vars
 
   // ── Actions ──
