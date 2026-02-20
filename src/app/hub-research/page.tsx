@@ -169,7 +169,8 @@ export default function HubResearchPage() {
 
   // Reject with reason
   const [rejectDialogId, setRejectDialogId] = useState<string | null>(null);
-  const [rejectReason, setRejectReason] = useState('');
+  const [rejectReason, setRejectReason] = useState('');    // radio selection type
+  const [rejectComment, setRejectComment] = useState('');  // optional textarea comment
 
   // Edit brief
   const [editItem, setEditItem] = useState<PipelineItem | null>(null);
@@ -227,16 +228,19 @@ export default function HubResearchPage() {
   const openRejectDialog = (id: string) => {
     setRejectDialogId(id);
     setRejectReason('');
+    setRejectComment('');
   };
 
   const confirmReject = () => {
     if (!rejectDialogId) return;
     const id = rejectDialogId;
-    const reason = rejectReason.trim();
+    const type = rejectReason.trim();
+    const comment = rejectComment.trim();
     setRejectDialogId(null);
     setRejectReason('');
+    setRejectComment('');
     doAction(id, () =>
-      fetch('/api/pipeline-queue/reject', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ briefId: id, rejectReason: rejectReason || undefined, rejectComment: reason || undefined }) })
+      fetch('/api/pipeline-queue/reject', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ briefId: id, rejectReason: type || undefined, rejectComment: comment || undefined }) })
     );
   };
 
@@ -1423,58 +1427,44 @@ export default function HubResearchPage() {
           <DialogHeader>
             <DialogTitle>Reject Brief</DialogTitle>
             <DialogDescription>
-              {(() => {
-                const reason = rejectReason.trim();
-                if (!reason) return 'Why doesn&apos;t this fit? Your reason helps us stop generating similar ideas.';
-                if (reason === 'bad-fit') return 'Your reason helps us stop generating similar ideas.';
-                if (reason === 'duplicate' || reason === 'already-built') return 'Got it — this idea stays positive in the learning loop.';
-                if (reason === 'out-of-scope') return 'We\'ll treat this as a timing call, not a quality signal.';
-                return 'Why doesn\'t this fit? Your reason helps us stop generating similar ideas.';
-              })()}
+              {rejectReason === 'bad-fit' && 'Your reason helps us stop generating similar ideas.'}
+              {(rejectReason === 'duplicate' || rejectReason === 'already-built') && 'Got it — this idea stays positive in the learning loop.'}
+              {rejectReason === 'out-of-scope' && "We'll treat this as a timing call, not a quality signal."}
+              {!rejectReason && "Why doesn't this fit? Select a reason above."}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-4">
             <div className="space-y-2">
               <Label className="text-sm font-medium">Why are you rejecting this?</Label>
               <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem value="bad-fit" id="bad-fit" checked={rejectReason === 'bad-fit'} onChange={(e) => {
-                    if (e.target.checked) setRejectReason('bad-fit');
-                    else setRejectReason('');
-                  }} />
-                  <Label htmlFor="bad-fit" className="cursor-pointer text-sm">🚫 Bad fit — wrong direction, don't repeat</Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem value="duplicate" id="duplicate" checked={rejectReason === 'duplicate'} onChange={(e) => {
-                    if (e.target.checked) setRejectReason('duplicate');
-                    else setRejectReason('');
-                  }} />
-                  <Label htmlFor="duplicate" className="cursor-pointer text-sm">📦 Already shipped — idea was sound, already exists</Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem value="out-of-scope" id="out-of-scope" checked={rejectReason === 'out-of-scope'} onChange={(e) => {
-                    if (e.target.checked) setRejectReason('out-of-scope');
-                    else setRejectReason('');
-                  }} />
-                  <Label htmlFor="out-of-scope" className="cursor-pointer text-sm">⏸ Out of scope — good idea, not now</Label>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RadioGroupItem value="already-built" id="already-built" checked={rejectReason === 'already-built'} onChange={(e) => {
-                    if (e.target.checked) setRejectReason('already-built');
-                    else setRejectReason('');
-                  }} />
-                  <Label htmlFor="already-built" className="cursor-pointer text-sm">✅ Already built — exact match already shipped</Label>
-                </div>
+                {([
+                  { value: 'bad-fit', label: '🚫 Bad fit — wrong direction, don\'t repeat' },
+                  { value: 'duplicate', label: '📦 Already shipped — idea was sound, already exists' },
+                  { value: 'out-of-scope', label: '⏸ Out of scope — good idea, not now' },
+                  { value: 'already-built', label: '✅ Already built — exact match already shipped' },
+                ] as const).map(opt => (
+                  <label key={opt.value} className="flex items-center gap-2 cursor-pointer text-sm py-1">
+                    <input
+                      type="radio"
+                      name="rejectReason"
+                      value={opt.value}
+                      checked={rejectReason === opt.value}
+                      onChange={() => setRejectReason(opt.value)}
+                      className="accent-zinc-700"
+                    />
+                    {opt.label}
+                  </label>
+                ))}
               </div>
             </div>
             <Textarea
-              placeholder="e.g. Too early — we don't have the data pipeline it needs yet. Or: Not relevant to our current priorities."
-              value={rejectReason}
-              onChange={e => setRejectReason(e.target.value)}
+              placeholder="e.g. Too early — we don't have the data pipeline it needs yet. Optional but helps the learning loop."
+              value={rejectComment}
+              onChange={e => setRejectComment(e.target.value)}
               rows={3}
               className=""
             />
-            <p className="text-xs text-muted-foreground mt-2">Optional but recommended — logged to brief-log.md for pattern tracking.</p>
+            <p className="text-xs text-muted-foreground mt-2">Comment is optional — logged to brief-log.md for pattern tracking.</p>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setRejectDialogId(null)}>Cancel</Button>

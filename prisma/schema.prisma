@@ -66,3 +66,88 @@ model SearchIndex {
   
   @@index([category])
 }
+
+model Brief {
+  id          String    @id
+  title       String
+  description String?
+  problem     String?
+  solution    String?
+  impact      String?
+  source      String?
+  sourceRef   String?
+  status      String    @default("pending-review")
+  priority    String    @default("MED")
+  complexity  String?
+  front       String?
+  tldr        String?
+  skipCost    String?
+  briefPath   String?
+  researchRef String?
+  assignee    String?
+  buildCommit String?
+  createdAt   DateTime  @default(now())
+  approvedAt  DateTime?
+  shippedAt   DateTime?
+  rejectedAt  DateTime?
+  rejectReason    String?
+  rejectComment   String?
+  rejectedReason  String?  // legacy compat
+
+  // qReview (flattened)
+  qReviewedAt             DateTime?
+  qComplexity             String?
+  qComplexityChanged      Boolean?
+  qMissingInfo            String?  // JSON array string
+  qPrerequisites          String?  // JSON array string
+  qRisk                   String?
+  qRecommendation         String?
+  qRecommendationReason   String?
+  qSummary                String?
+
+  // extra fields not covered above
+  metadata    String?  // JSON blob
+
+  updatedAt   DateTime  @updatedAt
+
+  feedbackEntries BuildFeedback[]
+  activityEntries PipelineActivity[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([front])
+  @@index([createdAt])
+}
+
+model BuildFeedback {
+  id            String    @id @default(cuid())
+  briefId       String
+  brief         Brief     @relation(fields: [briefId], references: [id])
+  rating        String?   // nailed-it | acceptable | needs-work
+  ratingInt     Int?      // legacy numeric
+  tags          String?   // JSON array string
+  comment       String?
+  screenshot    String?
+  ratedAt       DateTime  @default(now())
+  ratedBy       String?
+  commitMessage String?
+
+  @@index([briefId])
+  @@index([rating])
+}
+
+model PipelineActivity {
+  id        String    @id @default(cuid())
+  timestamp DateTime  @default(now())
+  type      String
+  agent     String?
+  agentName String?
+  emoji     String?
+  message   String
+  briefId   String?
+  brief     Brief?    @relation(fields: [briefId], references: [id])
+  metadata  String?   // JSON blob
+
+  @@index([timestamp])
+  @@index([briefId])
+}

@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const fs = await import('fs/promises');
     const content = await fs.readFile(filePath, 'utf-8');
     return NextResponse.json({ content, exists: true }, { status: 200 });
-  } catch (error) {
+  } catch {
     // File doesn't exist or can't be read
     return NextResponse.json({ content: null, exists: false }, { status: 200 });
   }

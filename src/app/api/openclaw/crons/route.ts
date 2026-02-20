@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { execSync } from 'child_process';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     // Try to get real data from OpenClaw CLI

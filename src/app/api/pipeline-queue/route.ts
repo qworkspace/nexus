@@ -1,60 +1,97 @@
 import { NextResponse } from 'next/server';
-import { readFileSync, existsSync, writeFileSync } from 'fs';
+import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
+import { db } from '@/lib/db';
+import type { Brief } from '@prisma/client';
 
-const QUEUE_PATH = join(homedir(), '.openclaw', 'shared', 'pipeline-queue.json');
+export const dynamic = 'force-dynamic';
+
 const ACTION_ITEMS_PATH = join(homedir(), '.openclaw', 'shared', 'action-items', 'index.json');
 
-export interface PipelineQueueItem {
-  id: string;
-  title: string;
-  description: string;
-  source: 'retro' | 'manual';
-  sourceRef: string | null;
-  status: 'queued' | 'speccing' | 'building' | 'qa' | 'shipped' | 'rejected' | 'deferred';
-  priority: 'HIGH' | 'MED' | 'LOW';
-  complexity: 'HIGH' | 'MED' | 'LOW';
-  createdAt: string;
-  approvedAt: string;
-  assignee: string;
-  actionItemId?: string;
-  specPath?: string;
+// Convert Prisma Brief row back to the shape the frontend expects
+function briefToJson(b: Brief) {
+  const extra = b.metadata ? JSON.parse(b.metadata) : {};
+  const qReview = (b.qReviewedAt || b.qRecommendation) ? {
+    qReviewedAt: b.qReviewedAt?.toISOString() ?? undefined,
+    complexityAssessed: b.qComplexity ?? undefined,
+    complexityChanged: b.qComplexityChanged ?? undefined,
+    missingInfo: b.qMissingInfo ? JSON.parse(b.qMissingInfo) : undefined,
+    prerequisites: b.qPrerequisites ? JSON.parse(b.qPrerequisites) : undefined,
+    riskSummary: b.qRisk ?? undefined,
+    recommendation: b.qRecommendation ?? undefined,
+    recommendationReason: b.qRecommendationReason ?? undefined,
+    summary: b.qSummary ?? undefined,
+  } : undefined;
+
+  return {
+    id: b.id,
+    title: b.title,
+    description: b.description,
+    problem: b.problem,
+    solution: b.solution,
+    impact: b.impact,
+    source: b.source,
+    sourceRef: b.sourceRef,
+    status: b.status,
+    priority: b.priority,
+    complexity: b.complexity,
+    front: b.front,
+    tldr: b.tldr,
+    skipCost: b.skipCost,
+    briefPath: b.briefPath,
+    researchRef: b.researchRef,
+    assignee: b.assignee,
+    buildCommit: b.buildCommit,
+    createdAt: b.createdAt.toISOString(),
+    approvedAt: b.approvedAt?.toISOString() ?? null,
+    shippedAt: b.shippedAt?.toISOString() ?? null,
+    rejectedAt: b.rejectedAt?.toISOString() ?? null,
+    rejectReason: b.rejectReason,
+    rejectComment: b.rejectComment,
+    rejectedReason: b.rejectedReason,
+    qReview,
+    ...extra,
+  };
 }
 
 export async function GET() {
   try {
-    if (!existsSync(QUEUE_PATH)) {
-      return NextResponse.json({ briefs: [], updated: null, actionItems: [] });
-    }
+    const briefs = await db.brief.findMany({
+      orderBy: [
+        { priority: 'asc' }, // HIGH sorts before LOW alphabetically — invert if needed
+        { createdAt: 'desc' },
+      ],
+    });
 
-    const raw = readFileSync(QUEUE_PATH, 'utf-8');
-    const data = JSON.parse(raw);
+    // Sort: HIGH > MED > LOW, then by date desc
+    const order = { HIGH: 0, MED: 1, LOW: 2 };
+    briefs.sort((a, b) => {
+      const pa = order[a.priority as keyof typeof order] ?? 3;
+      const pb = order[b.priority as keyof typeof order] ?? 3;
+      if (pa !== pb) return pa - pb;
+      return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+    });
 
-    // Load action items filtered to PJ-assignee + todo status
     let actionItems: object[] = [];
     try {
       if (existsSync(ACTION_ITEMS_PATH)) {
-        const aiRaw = readFileSync(ACTION_ITEMS_PATH, 'utf-8');
-        const aiData = JSON.parse(aiRaw);
+        const aiData = JSON.parse(readFileSync(ACTION_ITEMS_PATH, 'utf-8'));
         actionItems = (aiData.items || []).filter(
           (item: { status: string; assignee: string }) =>
             item.status === 'todo' && item.assignee === 'PJ'
         );
       }
-    } catch { /* non-fatal — actionItems stays empty */ }
+    } catch { /* non-fatal */ }
 
     return NextResponse.json({
-      briefs: (data.briefs || []) as PipelineQueueItem[],
-      updated: data.updated || null,
+      briefs: briefs.map(briefToJson),
+      updated: new Date().toISOString(),
       actionItems,
     });
   } catch (error) {
-    console.error('Failed to read pipeline-queue.json:', error);
-    return NextResponse.json(
-      { briefs: [], updated: null, actionItems: [], error: String(error) },
-      { status: 500 }
-    );
+    console.error('pipeline-queue GET error:', error);
+    return NextResponse.json({ briefs: [], updated: null, actionItems: [], error: String(error) }, { status: 500 });
   }
 }
 
@@ -67,36 +104,54 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'id and status are required' }, { status: 400 });
     }
 
-    const validStatuses = ['pending-review', 'queued', 'speccing', 'building', 'qa', 'shipped', 'rejected', 'deferred', 'parked'];
+    const validStatuses = ['pending-review', 'queued', 'speccing', 'building', 'qa', 'shipped', 'rejected', 'deferred', 'parked', 'archived'];
     if (!validStatuses.includes(status)) {
-      return NextResponse.json(
-        { error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: `Invalid status. Must be one of: ${validStatuses.join(', ')}` }, { status: 400 });
     }
 
-    const raw = existsSync(QUEUE_PATH) ? readFileSync(QUEUE_PATH, 'utf-8') : '{"briefs":[]}';
-    const data = JSON.parse(raw);
+    const existing = await db.brief.findUnique({ where: { id } });
 
-    if (!data.briefs) data.briefs = [];
-    const idx = data.briefs.findIndex((b: PipelineQueueItem) => b.id === id);
-    if (idx === -1) {
-      // If title is present, treat as a new brief creation
+    if (!existing) {
+      // New brief creation — body contains full brief data
       if (body.title) {
-        data.briefs.push(body);
-        data.updated = new Date().toISOString();
-        writeFileSync(QUEUE_PATH, JSON.stringify(data, null, 2), 'utf-8');
-        return NextResponse.json({ ok: true, created: true, brief: body });
+        const { id: bid, title, description, problem, solution, impact, source, sourceRef,
+          priority, complexity, front, tldr, skipCost, briefPath, assignee, buildCommit,
+          createdAt, approvedAt, ...rest } = body;
+        const created = await db.brief.create({
+          data: {
+            id: bid,
+            title,
+            description: description || null,
+            problem: problem || null,
+            solution: solution || null,
+            impact: impact || null,
+            source: source || null,
+            sourceRef: sourceRef || null,
+            status,
+            priority: priority || 'MED',
+            complexity: complexity || null,
+            front: front || null,
+            tldr: tldr || null,
+            skipCost: skipCost || null,
+            briefPath: briefPath || null,
+            assignee: assignee || null,
+            buildCommit: buildCommit || null,
+            createdAt: createdAt ? new Date(createdAt) : new Date(),
+            approvedAt: approvedAt ? new Date(approvedAt) : null,
+            metadata: Object.keys(rest).length ? JSON.stringify(rest) : null,
+          },
+        });
+        return NextResponse.json({ ok: true, created: true, brief: briefToJson(created) });
       }
       return NextResponse.json({ error: `Brief ${id} not found` }, { status: 404 });
     }
 
-    data.briefs[idx].status = status;
-    data.updated = new Date().toISOString();
+    const updated = await db.brief.update({
+      where: { id },
+      data: { status },
+    });
 
-    writeFileSync(QUEUE_PATH, JSON.stringify(data, null, 2), 'utf-8');
-
-    return NextResponse.json({ ok: true, brief: data.briefs[idx] });
+    return NextResponse.json({ ok: true, brief: briefToJson(updated) });
   } catch (error) {
     return NextResponse.json({ error: String(error) }, { status: 500 });
   }

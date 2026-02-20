@@ -3,6 +3,8 @@ import { readdirSync, statSync, readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 
+export const dynamic = 'force-dynamic';
+
 const RETROS_DIR = join(homedir(), '.openclaw', 'shared', 'retros');
 const ACTION_ITEMS_PATH = join(homedir(), '.openclaw', 'shared', 'action-items', 'index.json');
 

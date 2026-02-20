@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { readFileSync, readdirSync } from "fs";
 import { join } from "path";
 
+export const dynamic = 'force-dynamic';
+
 const SHARED = process.env.HOME ? join(process.env.HOME, ".openclaw", "shared") : "/Users/paulvillanueva/.openclaw/shared";
 const RETROS_DIR = join(SHARED, "retros");
 const ACTIONS_FILE = join(SHARED, "action-items/index.json");
