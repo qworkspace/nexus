@@ -88,6 +88,14 @@ const SOURCE_BADGES: Record<string, { label: string; className: string }> = {
   'needs-work-rating': { label: 'Fix Required', className: 'bg-red-50 text-red-700 border border-red-200' },
 };
 
+const RATING_LABELS: Record<string, { emoji: string; label: string }> = {
+  'nailed-it':  { emoji: '🟢', label: 'Nailed it' },
+  'good':       { emoji: '🟢', label: 'Good' },
+  'acceptable': { emoji: '🟡', label: 'Acceptable' },
+  'bad':        { emoji: '🔴', label: 'Bad' },
+  'needs-work': { emoji: '🔴', label: 'Needs work' },
+};
+
 const PRIORITY_COLORS: Record<string, string> = {
   HIGH: 'bg-[#F5D547] text-zinc-900 border-[#F5D547]',
   MED:  'bg-[#8E99A4]/20 text-[#555D66] border-[#8E99A4]/30',
@@ -1207,9 +1215,37 @@ export default function HubResearchPage() {
                                       ✅ Fix brief created — Q will review it in the next cycle.
                                       <span className="block text-xs text-amber-600 mt-0.5">ID: {needsWorkSuccess[item.id]}</span>
                                     </div>
-                                  ) : (
-                                    <div className="flex items-center justify-between">
-                                      <Button
+                                    ) : (
+                                    <>
+                                      {/* Pre-submit summary */}
+                                      {selectedRating[item.id] && (
+                                        <div className="mb-2 flex flex-wrap items-center gap-2 text-sm bg-zinc-50 border border-zinc-200 rounded px-2 py-1.5">
+                                          <span className="font-medium">
+                                            {RATING_LABELS[selectedRating[item.id]!]?.emoji || '❓'} {RATING_LABELS[selectedRating[item.id]!]?.label || 'Rating'}
+                                          </span>
+                                          {selectedTags[item.id]?.length > 0 && (
+                                            <>
+                                              <span>•</span>
+                                              <div className="flex gap-1">
+                                                {selectedTags[item.id]!.map((tag, idx) => (
+                                                  <span key={idx} className="inline-flex items-center px-1.5 py-0.5 text-xs font-medium bg-zinc-100 text-zinc-700 rounded border border-zinc-200">
+                                                    {tag}
+                                                  </span>
+                                                ))}
+                                              </div>
+                                            </>
+                                          )}
+                                          {selectedTags[item.id]?.length === 0 && (
+                                            <span className="text-zinc-400">• (no tags)</span>
+                                          )}
+                                          <span>•</span>
+                                          <span className={feedbackComment[item.id] ? "text-zinc-600" : "text-zinc-400 italic"}>
+                                            &ldquo;{feedbackComment[item.id] || '(no comment)'}&rdquo;
+                                          </span>
+                                        </div>
+                                      )}
+                                      <div className="flex items-center justify-between">
+                                        <Button
                                         size="sm"
                                         disabled={
                                           actioningIds.has(item.id) ||
@@ -1242,7 +1278,8 @@ export default function HubResearchPage() {
                                           <RotateCcw className="h-3.5 w-3.5 mr-1" />Rollback Build
                                         </Button>
                                       )}
-                                    </div>
+                                      </div>
+                                    </>
                                   )}
                                 </CardContent>
                               </Card>
