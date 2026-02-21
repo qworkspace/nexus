@@ -680,13 +680,13 @@ export default function HubResearchPage() {
           {/* Research Trail */}
           {item.researchRef && <ResearchTrailPanel briefId={item.researchRef} />}
           <div className="flex gap-2 pt-2 border-t border-zinc-200 justify-between items-center">
-            <Button size="sm" variant="outline" className="text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50" disabled={acting} onClick={() => openEditDialog(item)}>
+            <Button size="sm" variant="outline" className="text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50" disabled={acting} onClick={() => openEditDialog(item)} title="Edit brief details — title, description, priority, complexity">
               <Pencil className="h-3.5 w-3.5 mr-1.5" />Edit
             </Button>
             <div className="flex gap-2 items-center">
               {/* Approve button with dropdown */}
               <div className="relative">
-                <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting} onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: !prev[item.id] }))}>
+                <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting} onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: !prev[item.id] }))} title="Approve this brief — moves it to the build queue">
                   <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
                 </Button>
                 {showApproveDropdown[item.id] && (
@@ -696,12 +696,14 @@ export default function HubResearchPage() {
                       <button
                         onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
                         className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-t"
+                        title="Approve as PJ"
                       >
                         Approve as PJ
                       </button>
                       <button
                         onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
                         className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-b"
+                        title="Approve as Ella"
                       >
                         Approve as Ella
                       </button>
@@ -709,10 +711,10 @@ export default function HubResearchPage() {
                   </>
                 )}
               </div>
-              <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200" disabled={acting} onClick={() => park(item.id)}>
+              <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200" disabled={acting} onClick={() => park(item.id)} title="Park this brief — save for later without rejecting it">
                 <PauseCircle className="h-3.5 w-3.5 mr-1" />Park
               </Button>
-              <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200" disabled={acting} onClick={() => openRejectDialog(item.id)}>
+              <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200" disabled={acting} onClick={() => openRejectDialog(item.id)} title="Reject this brief — remove from the pipeline with a reason">
                 <XCircle className="h-3.5 w-3.5 mr-1" />Reject
               </Button>
             </div>
@@ -789,7 +791,7 @@ export default function HubResearchPage() {
             {/* Approve button with dropdown */}
             <div className="relative">
               <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting}
-                onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: !prev[item.id] }))}>
+                onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: !prev[item.id] }))} title="Approve this brief — moves it to the build queue">
                 <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
               </Button>
               {showApproveDropdown[item.id] && (
@@ -799,12 +801,14 @@ export default function HubResearchPage() {
                     <button
                       onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
                       className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-t"
+                      title="Approve as PJ"
                     >
                       Approve as PJ
                     </button>
                     <button
                       onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
                       className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-b"
+                      title="Approve as Ella"
                     >
                       Approve as Ella
                     </button>
@@ -813,7 +817,7 @@ export default function HubResearchPage() {
               )}
             </div>
             <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700" disabled={acting}
-              onClick={() => openRejectDialog(item.id)}>
+              onClick={() => openRejectDialog(item.id)} title="Reject this brief — remove from the pipeline with a reason">
               <XCircle className="h-3.5 w-3.5 mr-1" />Reject
             </Button>
           </div>
@@ -1035,10 +1039,10 @@ export default function HubResearchPage() {
                         </TabsTrigger>
                       </TabsList>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" onClick={ingest} disabled={ingesting}>
+                        <Button variant="outline" size="sm" onClick={ingest} disabled={ingesting} title="Scan for new research briefs from AI agents and import them">
                           <Download className="h-4 w-4 mr-1" />{ingesting ? 'Scanning…' : 'Ingest New'}
                         </Button>
-                        <Button size="sm" onClick={() => setNewBriefOpen(true)}>
+                        <Button size="sm" onClick={() => setNewBriefOpen(true)} title="Manually create a new brief for the pipeline">
                           <Plus className="h-4 w-4 mr-1" />New Brief
                         </Button>
                       </div>
