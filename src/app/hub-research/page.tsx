@@ -690,20 +690,23 @@ export default function HubResearchPage() {
                   <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
                 </Button>
                 {showApproveDropdown[item.id] && (
-                  <div className="absolute right-0 top-full mt-1 bg-white border border-zinc-200 rounded shadow-lg z-10 min-w-[120px]">
-                    <button
-                      onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
-                      className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
-                    >
-                      Approve as PJ
-                    </button>
-                    <button
-                      onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
-                      className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
-                    >
-                      Approve as Ella
-                    </button>
-                  </div>
+                  <>
+                    <div className="fixed inset-0 z-[9]" onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: false }))} />
+                    <div className="absolute right-0 top-full mt-1 bg-white border border-zinc-200 rounded shadow-lg z-10 min-w-[120px]">
+                      <button
+                        onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                        className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-t"
+                      >
+                        Approve as PJ
+                      </button>
+                      <button
+                        onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                        className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-b"
+                      >
+                        Approve as Ella
+                      </button>
+                    </div>
+                  </>
                 )}
               </div>
               <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200" disabled={acting} onClick={() => park(item.id)}>
@@ -790,20 +793,23 @@ export default function HubResearchPage() {
                 <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
               </Button>
               {showApproveDropdown[item.id] && (
-                <div className="absolute right-0 top-full mt-1 bg-white border border-zinc-200 rounded shadow-lg z-10 min-w-[120px]">
-                  <button
-                    onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
-                    className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
-                  >
-                    Approve as PJ
-                  </button>
-                  <button
-                    onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
-                    className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
-                  >
-                    Approve as Ella
-                  </button>
-                </div>
+                <>
+                  <div className="fixed inset-0 z-[9]" onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: false }))} />
+                  <div className="absolute right-0 top-full mt-1 bg-white border border-zinc-200 rounded shadow-lg z-10 min-w-[120px]">
+                    <button
+                      onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                      className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-t"
+                    >
+                      Approve as PJ
+                    </button>
+                    <button
+                      onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                      className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-b"
+                    >
+                      Approve as Ella
+                    </button>
+                  </div>
+                </>
               )}
             </div>
             <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700" disabled={acting}
