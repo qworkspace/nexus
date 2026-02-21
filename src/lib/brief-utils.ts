@@ -15,6 +15,11 @@ export function briefToJson(b: Brief) {
     summary: b.qSummary ?? undefined,
   } : undefined;
 
+  // Strip known DB fields from extra to prevent metadata from overriding real values
+  const { status: _s, id: _i, title: _t, priority: _p, complexity: _c, front: _f,
+    createdAt: _ca, approvedAt: _aa, shippedAt: _sa, rejectedAt: _ra, ...safeExtra } = extra;
+  void _s; void _i; void _t; void _p; void _c; void _f; void _ca; void _aa; void _sa; void _ra;
+
   return {
     id: b.id,
     title: b.title,
@@ -44,6 +49,6 @@ export function briefToJson(b: Brief) {
     rejectComment: b.rejectComment,
     rejectedReason: b.rejectedReason,
     qReview,
-    ...extra,
+    ...safeExtra,
   };
 }
