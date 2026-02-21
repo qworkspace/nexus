@@ -114,6 +114,53 @@ function parseJsonBrief(data: Record<string, unknown>, filename: string): Parsed
   };
 }
 
+// GET = dry-run preview (no writes)
+export async function GET() {
+  try {
+    if (!existsSync(SPEC_BRIEFS_DIR)) {
+      return NextResponse.json({ ok: true, preview: [], total: 0 });
+    }
+
+    const existing = await db.brief.findMany({ select: { id: true } });
+    const existingIds = new Set(existing.map(b => b.id));
+    const existingSlugs = new Set(existing.map(b => {
+      const parts = b.id.split('-').slice(4);
+      return parts.join('-');
+    }));
+
+    const files = readdirSync(SPEC_BRIEFS_DIR);
+    const preview: { id: string; title: string; file: string; priority: string }[] = [];
+
+    for (const file of files) {
+      const filePath = join(SPEC_BRIEFS_DIR, file);
+      const isMd = file.endsWith('.md');
+      const isJson = file.endsWith('.summary.json');
+      if (!isMd && !isJson) continue;
+
+      const fileSlug = slugify(
+        file.replace(/\.summary\.json$/, '').replace(/\.md$/, '').replace(/^\d{4}-\d{2}-\d{2}-/, '')
+      );
+      const alreadyExists = [...existingSlugs].some(s => {
+        const norm = (str: string) => str.replace(/[^a-z0-9]/g, '');
+        return norm(s).includes(norm(fileSlug)) || norm(fileSlug).includes(norm(s));
+      });
+      if (alreadyExists) continue;
+
+      try {
+        const raw = readFileSync(filePath, 'utf-8');
+        const parsed = isMd ? parseMdBrief(raw, file) : parseJsonBrief(JSON.parse(raw), file);
+        const id = `brief-${file.slice(0, 10)}-${slugify(parsed.title || file)}`;
+        if (existingIds.has(id)) continue;
+        preview.push({ id, title: parsed.title, file, priority: parsed.priority });
+      } catch { continue; }
+    }
+
+    return NextResponse.json({ ok: true, preview, total: preview.length });
+  } catch (error) {
+    return NextResponse.json({ error: String(error) }, { status: 500 });
+  }
+}
+
 export async function POST() {
   try {
     if (!existsSync(SPEC_BRIEFS_DIR)) {

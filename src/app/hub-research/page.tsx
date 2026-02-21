@@ -156,6 +156,8 @@ export default function HubResearchPage() {
   const [actioningActionIds, setActioningActionIds] = useState<Set<string>>(new Set());
   const [newBriefOpen, setNewBriefOpen] = useState(false);
   const [ingesting, setIngesting] = useState(false);
+  const [ingestPreview, setIngestPreview] = useState<{ id: string; title: string; file: string; priority: string }[] | null>(null);
+  const [ingestConfirming, setIngestConfirming] = useState(false);
   const [feedbackComment, setFeedbackComment] = useState<Record<string, string>>({});
   const [commentDialogId, setCommentDialogId] = useState<string | null>(null);
 
@@ -353,21 +355,37 @@ export default function HubResearchPage() {
     }
   };
 
+  // Step 1: preview what would be ingested
   const ingest = async () => {
     setIngesting(true);
     try {
-      const res = await fetch('/api/pipeline-queue/ingest', { method: 'POST' });
+      const res = await fetch('/api/pipeline-queue/ingest', { method: 'GET' });
       const data = await res.json();
-      if (data.ingested > 0) {
-        alert(`Ingested ${data.ingested} new briefs`);
+      if (data.total === 0) {
+        alert('No new briefs found — everything is already in the pipeline.');
       } else {
-        alert('No new briefs found');
+        setIngestPreview(data.preview);
       }
-      refresh();
     } catch (e) {
       console.error(e);
     } finally {
       setIngesting(false);
+    }
+  };
+
+  // Step 2: confirm and actually ingest
+  const confirmIngest = async () => {
+    setIngestConfirming(true);
+    try {
+      const res = await fetch('/api/pipeline-queue/ingest', { method: 'POST' });
+      const data = await res.json();
+      setIngestPreview(null);
+      refresh();
+      if (data.ingested > 0) alert(`Ingested ${data.ingested} new brief${data.ingested !== 1 ? 's' : ''}.`);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIngestConfirming(false);
     }
   };
 
@@ -1519,6 +1537,32 @@ export default function HubResearchPage() {
           </Tabs>
         </div>
       </div>
+
+      {/* Ingest Preview Dialog */}
+      <Dialog open={!!ingestPreview} onOpenChange={() => setIngestPreview(null)}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Confirm Ingest</DialogTitle>
+            <DialogDescription>
+              {ingestPreview?.length} new brief{ingestPreview?.length !== 1 ? 's' : ''} found in spec-briefs. Review before importing.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="max-h-64 overflow-y-auto border border-zinc-200 rounded-md divide-y divide-zinc-100">
+            {ingestPreview?.map(item => (
+              <div key={item.id} className="flex items-center justify-between px-3 py-2 text-sm">
+                <span className="text-zinc-800 truncate flex-1 mr-2">{item.title}</span>
+                <span className={`text-xs font-medium px-1.5 py-0.5 rounded ${item.priority === 'HIGH' ? 'bg-red-50 text-red-600' : item.priority === 'LOW' ? 'bg-zinc-100 text-zinc-500' : 'bg-blue-50 text-blue-600'}`}>{item.priority}</span>
+              </div>
+            ))}
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIngestPreview(null)}>Cancel</Button>
+            <Button className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" onClick={confirmIngest} disabled={ingestConfirming}>
+              {ingestConfirming ? 'Importing…' : `Import ${ingestPreview?.length} Brief${ingestPreview?.length !== 1 ? 's' : ''}`}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* New Brief Dialog */}
       <Dialog open={newBriefOpen} onOpenChange={setNewBriefOpen}>
