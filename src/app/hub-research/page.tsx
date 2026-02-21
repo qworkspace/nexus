@@ -43,6 +43,8 @@ interface PipelineItem {
   specPath?: string;
   buildCommit?: string;
   parentBuildId?: string;
+  approvedBy?: string | null;
+  submittedBy?: string | null;
   feedback?: {
     rating: 'nailed-it' | 'acceptable' | 'needs-work' | 'good' | 'bad' | 'comment'; // include legacy for compat
     tags?: string[];
@@ -174,6 +176,9 @@ export default function HubResearchPage() {
   const [rejectReason, setRejectReason] = useState('');    // radio selection type
   const [rejectComment, setRejectComment] = useState('');  // optional textarea comment
 
+  // Approve dropdown
+  const [showApproveDropdown, setShowApproveDropdown] = useState<Record<string, boolean>>({});
+
   // Edit brief
   const [editItem, setEditItem] = useState<PipelineItem | null>(null);
   const [ebTitle, setEbTitle] = useState('');
@@ -224,6 +229,10 @@ export default function HubResearchPage() {
 
   const approve = (id: string) => doAction(id, () =>
     fetch('/api/pipeline-queue/approve', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ briefId: id }) })
+  );
+
+  const approveAsElla = (id: string) => doAction(id, () =>
+    fetch('/api/pipeline-queue/approve', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ briefId: id, approvedBy: "Ella" }) })
   );
 
   const park = (id: string) => doAction(id, () =>
@@ -530,6 +539,12 @@ export default function HubResearchPage() {
             <span className="text-muted-foreground">{formatDate(item.createdAt)}</span>
             <Badge variant="outline" className={`text-xs ${src.className}`}>{src.label}</Badge>
             <Badge variant="outline" className="text-xs text-muted-foreground border-border">Complexity: {item.complexity}</Badge>
+            {/* Submitted by badge */}
+            {item.submittedBy && (
+              <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">
+                Submitted by {item.submittedBy}
+              </Badge>
+            )}
             {/* Flywheel badge */}
             {(() => {
               const fw = (item.front && FLYWHEEL_BADGES[item.front]) || FLYWHEEL_DEFAULT;
@@ -668,10 +683,29 @@ export default function HubResearchPage() {
             <Button size="sm" variant="outline" className="text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50" disabled={acting} onClick={() => openEditDialog(item)}>
               <Pencil className="h-3.5 w-3.5 mr-1.5" />Edit
             </Button>
-            <div className="flex gap-2">
-              <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting} onClick={() => approve(item.id)}>
-                <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
-              </Button>
+            <div className="flex gap-2 items-center">
+              {/* Approve button with dropdown */}
+              <div className="relative">
+                <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting} onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: !prev[item.id] }))}>
+                  <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
+                </Button>
+                {showApproveDropdown[item.id] && (
+                  <div className="absolute right-0 top-full mt-1 bg-white border border-zinc-200 rounded shadow-lg z-10 min-w-[120px]">
+                    <button
+                      onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                      className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+                    >
+                      Approve as PJ
+                    </button>
+                    <button
+                      onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                      className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+                    >
+                      Approve as Ella
+                    </button>
+                  </div>
+                )}
+              </div>
               <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700 border border-zinc-200" disabled={acting} onClick={() => park(item.id)}>
                 <PauseCircle className="h-3.5 w-3.5 mr-1" />Park
               </Button>
@@ -743,11 +777,35 @@ export default function HubResearchPage() {
         </CardHeader>
         <CardContent className="space-y-2">
           <p className="text-sm text-zinc-500">{item.problem || item.description || '—'}</p>
+          {item.submittedBy && (
+            <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">
+              Submitted by {item.submittedBy}
+            </Badge>
+          )}
           <div className="flex gap-2 pt-2 border-t border-zinc-200 justify-end">
-            <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting}
-              onClick={() => approve(item.id)}>
-              <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
-            </Button>
+            {/* Approve button with dropdown */}
+            <div className="relative">
+              <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting}
+                onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: !prev[item.id] }))}>
+                <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
+              </Button>
+              {showApproveDropdown[item.id] && (
+                <div className="absolute right-0 top-full mt-1 bg-white border border-zinc-200 rounded shadow-lg z-10 min-w-[120px]">
+                  <button
+                    onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                    className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+                  >
+                    Approve as PJ
+                  </button>
+                  <button
+                    onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                    className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50"
+                  >
+                    Approve as Ella
+                  </button>
+                </div>
+              )}
+            </div>
             <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700" disabled={acting}
               onClick={() => openRejectDialog(item.id)}>
               <XCircle className="h-3.5 w-3.5 mr-1" />Reject
@@ -1097,6 +1155,11 @@ export default function HubResearchPage() {
                               <p className="text-xs text-muted-foreground mt-1 capitalize">
                                 Status: <span className="text-foreground font-medium">{item.status}</span>
                               </p>
+                              {item.approvedBy && (
+                                <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200 mt-2">
+                                  Approved by {item.approvedBy}
+                                </Badge>
+                              )}
                             </CardContent>
                           </Card>
                         ))
@@ -1144,6 +1207,11 @@ export default function HubResearchPage() {
                         </CardHeader>
                         <CardContent>
                           <p className="text-sm text-muted-foreground line-clamp-2">{item.description}</p>
+                          {item.approvedBy && (
+                            <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200 mt-2">
+                              Approved by {item.approvedBy}
+                            </Badge>
+                          )}
                           {item.feedback && (
                             <div className="mt-2 space-y-1">
                               <div className="flex items-center gap-2 flex-wrap">

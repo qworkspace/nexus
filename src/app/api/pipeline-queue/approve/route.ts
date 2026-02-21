@@ -12,7 +12,8 @@ function slugify(str: string): string {
 
 export async function POST(request: Request) {
   try {
-    const { briefId } = await request.json();
+    const { briefId, approvedBy } = await request.json();
+    const approver = approvedBy || "PJ";
     if (!briefId) return NextResponse.json({ error: 'briefId is required' }, { status: 400 });
 
     const brief = await db.brief.findUnique({ where: { id: briefId } });
@@ -22,14 +23,14 @@ export async function POST(request: Request) {
 
     // pending-review → queued
     if (brief.status === 'pending-review') {
-      await db.brief.update({ where: { id: briefId }, data: { status: 'queued', approvedAt: now } });
+      await db.brief.update({ where: { id: briefId }, data: { status: 'queued', approvedAt: now, approvedBy: approver } });
       await db.pipelineActivity.create({
         data: {
           type: 'brief_approved',
           agent: 'nexus',
           agentName: 'Nexus',
           emoji: '✅',
-          message: `PJ approved brief: "${brief.title}" — moved to queued.`,
+          message: `${approver} approved brief: "${brief.title}" — moved to queued.`,
           briefId,
         },
       });
@@ -55,7 +56,7 @@ export async function POST(request: Request) {
         agent: 'nexus',
         agentName: 'Nexus',
         emoji: '✅',
-        message: `PJ approved brief from Nexus: "${brief.title}". Cipher spawn needed.`,
+        message: `${brief.approvedBy || 'PJ'} approved brief from Nexus: "${brief.title}". Cipher spawn needed.`,
         briefId,
         metadata: JSON.stringify({ briefPath }),
       },

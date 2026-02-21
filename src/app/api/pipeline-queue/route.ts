@@ -3,57 +3,11 @@ import { readFileSync, existsSync } from 'fs';
 import { join } from 'path';
 import { homedir } from 'os';
 import { db } from '@/lib/db';
-import type { Brief } from '@prisma/client';
+import { briefToJson } from '@/lib/brief-utils';
 
 export const dynamic = 'force-dynamic';
 
 const ACTION_ITEMS_PATH = join(homedir(), '.openclaw', 'shared', 'action-items', 'index.json');
-
-// Convert Prisma Brief row back to the shape the frontend expects
-function briefToJson(b: Brief) {
-  const extra = b.metadata ? JSON.parse(b.metadata) : {};
-  const qReview = (b.qReviewedAt || b.qRecommendation) ? {
-    qReviewedAt: b.qReviewedAt?.toISOString() ?? undefined,
-    complexityAssessed: b.qComplexity ?? undefined,
-    complexityChanged: b.qComplexityChanged ?? undefined,
-    missingInfo: b.qMissingInfo ? JSON.parse(b.qMissingInfo) : undefined,
-    prerequisites: b.qPrerequisites ? JSON.parse(b.qPrerequisites) : undefined,
-    riskSummary: b.qRisk ?? undefined,
-    recommendation: b.qRecommendation ?? undefined,
-    recommendationReason: b.qRecommendationReason ?? undefined,
-    summary: b.qSummary ?? undefined,
-  } : undefined;
-
-  return {
-    id: b.id,
-    title: b.title,
-    description: b.description,
-    problem: b.problem,
-    solution: b.solution,
-    impact: b.impact,
-    source: b.source,
-    sourceRef: b.sourceRef,
-    status: b.status,
-    priority: b.priority,
-    complexity: b.complexity,
-    front: b.front,
-    tldr: b.tldr,
-    skipCost: b.skipCost,
-    briefPath: b.briefPath,
-    researchRef: b.researchRef,
-    assignee: b.assignee,
-    buildCommit: b.buildCommit,
-    createdAt: b.createdAt.toISOString(),
-    approvedAt: b.approvedAt?.toISOString() ?? null,
-    shippedAt: b.shippedAt?.toISOString() ?? null,
-    rejectedAt: b.rejectedAt?.toISOString() ?? null,
-    rejectReason: b.rejectReason,
-    rejectComment: b.rejectComment,
-    rejectedReason: b.rejectedReason,
-    qReview,
-    ...extra,
-  };
-}
 
 export async function GET() {
   try {
@@ -116,7 +70,9 @@ export async function POST(request: Request) {
       if (body.title) {
         const { id: bid, title, description, problem, solution, impact, source, sourceRef,
           priority, complexity, front, tldr, skipCost, briefPath, assignee, buildCommit,
-          createdAt, approvedAt, ...rest } = body;
+          createdAt, approvedAt, submittedBy, ...rest } = body;
+        // Explicitly exclude status from metadata to prevent override
+        delete rest.status;
         const created = await db.brief.create({
           data: {
             id: bid,
@@ -136,6 +92,7 @@ export async function POST(request: Request) {
             briefPath: briefPath || null,
             assignee: assignee || null,
             buildCommit: buildCommit || null,
+            submittedBy: submittedBy || "Q",
             createdAt: createdAt ? new Date(createdAt) : new Date(),
             approvedAt: approvedAt ? new Date(approvedAt) : null,
             metadata: Object.keys(rest).length ? JSON.stringify(rest) : null,

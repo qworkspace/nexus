@@ -85,6 +85,8 @@ model Brief {
   briefPath   String?
   researchRef String?
   assignee    String?
+  approvedBy  String?  @default("PJ")
+  submittedBy String?  @default("Q")
   buildCommit String?
   createdAt   DateTime  @default(now())
   approvedAt  DateTime?
