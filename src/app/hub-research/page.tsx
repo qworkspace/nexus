@@ -236,7 +236,7 @@ export default function HubResearchPage() {
   );
 
   const park = (id: string) => doAction(id, () =>
-    fetch('/api/pipeline-queue', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id, status: 'parked' }) })
+    fetch(`/api/pipeline-queue/${encodeURIComponent(id)}/status`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'parked' }) })
   );
 
   const openRejectDialog = (id: string) => {
