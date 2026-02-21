@@ -783,61 +783,131 @@ export default function HubResearchPage() {
 
   function ParkedCard({ item }: { item: PipelineItem }) {
     const acting = actioningIds.has(item.id);
+    const [expandedProblem, setExpandedProblem] = useState(false);
+    const [expandedSolution, setExpandedSolution] = useState(false);
+    const src = SOURCE_BADGES[item.source] || SOURCE_BADGES.manual;
+
     return (
       <Card className="bg-zinc-50 border border-zinc-200 hover:border-[#D4C5A9] transition-colors">
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-2">
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-zinc-500">🅿️</span>
-              <CardTitle className="text-base text-zinc-600">{item.title}</CardTitle>
+              <span className="text-sm">🅿️</span>
+              <CardTitle className="text-base text-zinc-700">{item.title}</CardTitle>
             </div>
             <Badge className={`border ${PRIORITY_COLORS[item.priority]}`}>{item.priority}</Badge>
           </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <span>Parked {formatDate(item.createdAt)}</span>
-            <Badge variant="outline" className="text-xs text-zinc-500">Complexity: {item.complexity}</Badge>
+          <div className="flex items-center gap-2 mt-1 text-xs flex-wrap">
+            <span className="text-muted-foreground">Parked {formatDate(item.createdAt)}</span>
+            <Badge variant="outline" className={`text-xs ${src.className}`}>{src.label}</Badge>
+            <Badge variant="outline" className="text-xs text-muted-foreground border-border">Complexity: {item.complexity}</Badge>
+            {item.submittedBy && (
+              <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">
+                Submitted by {item.submittedBy}
+              </Badge>
+            )}
+            {(() => {
+              const fw = (item.front && FLYWHEEL_BADGES[item.front]) || FLYWHEEL_DEFAULT;
+              return (
+                <Badge variant="outline" className="text-xs text-muted-foreground border-border">
+                  {fw.emoji} {fw.label}
+                </Badge>
+              );
+            })()}
           </div>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <p className="text-sm text-zinc-500">{item.problem || item.description || '—'}</p>
-          {item.submittedBy && (
-            <Badge variant="outline" className="text-xs text-zinc-500 border-zinc-200">
-              Submitted by {item.submittedBy}
-            </Badge>
-          )}
-          <div className="flex gap-2 pt-2 border-t border-zinc-200 justify-end">
-            {/* Approve button with dropdown */}
-            <div className="relative">
-              <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting}
-                onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: !prev[item.id] }))} title="Approve this brief — moves it to the build queue">
-                <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
-              </Button>
-              {showApproveDropdown[item.id] && (
-                <>
-                  <div className="fixed inset-0 z-[9]" onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: false }))} />
-                  <div className="absolute right-0 top-full mt-1 bg-white border border-zinc-200 rounded shadow-lg z-10 min-w-[120px]">
-                    <button
-                      onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
-                      className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-t"
-                      title="Approve as PJ"
-                    >
-                      Approve as PJ
-                    </button>
-                    <button
-                      onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
-                      className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-b"
-                      title="Approve as Ella"
-                    >
-                      Approve as Ella
-                    </button>
-                  </div>
-                </>
+        <CardContent className="space-y-3">
+          {/* TL;DR */}
+          <TldrBlock item={item} />
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Problem</p>
+            <p className={`text-sm text-zinc-600 ${expandedProblem ? '' : 'line-clamp-3'}`}>
+              {item.problem || item.description || '—'}
+            </p>
+            {(item.problem || item.description || '').length > 0 && (
+              <button onClick={() => setExpandedProblem(p => !p)} className="text-xs text-zinc-400 underline mt-0.5 hover:text-zinc-600">
+                {expandedProblem ? 'Show less' : 'Show more'}
+              </button>
+            )}
+          </div>
+          {item.solution && (
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-1">Solution</p>
+              <p className={`text-sm text-zinc-600 ${expandedSolution ? '' : 'line-clamp-2'}`}>{item.solution}</p>
+              {item.solution.length > 0 && (
+                <button onClick={() => setExpandedSolution(p => !p)} className="text-xs text-zinc-400 underline mt-0.5 hover:text-zinc-600">
+                  {expandedSolution ? 'Show less' : 'Show more'}
+                </button>
               )}
             </div>
-            <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700" disabled={acting}
-              onClick={() => openRejectDialog(item.id)} title="Reject this brief — remove from the pipeline with a reason">
-              <XCircle className="h-3.5 w-3.5 mr-1" />Reject
+          )}
+          {item.impact && (
+            <div className="bg-zinc-100 px-3 py-2 rounded border border-zinc-200">
+              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-900 mb-1">Impact</p>
+              <p className="text-sm text-zinc-700">{item.impact}</p>
+            </div>
+          )}
+          {item.skipCost && (
+            <p className="text-xs text-zinc-500"><span className="font-medium text-zinc-600">Skip cost:</span> {item.skipCost}</p>
+          )}
+          {/* Q Review */}
+          {item.qReview && (
+            <div className="bg-white rounded border border-zinc-200 px-3 py-2.5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-2">🤖 Q Review</p>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2 flex-wrap">
+                  {(() => {
+                    const rec = item.qReview.recommendation;
+                    const pillMap: Record<string, { label: string; className: string }> = {
+                      'approve':    { label: '✅ Approve',    className: 'bg-green-50 text-green-700 border-green-200' },
+                      'park':       { label: '🅿️ Park',       className: 'bg-yellow-50 text-yellow-700 border-yellow-200' },
+                      'reject':     { label: '❌ Reject',     className: 'bg-red-50 text-red-700 border-red-200' },
+                      'needs-info': { label: '❓ Needs Info', className: 'bg-zinc-100 text-zinc-600 border-zinc-300' },
+                    };
+                    const pill = pillMap[rec] || { label: rec, className: 'bg-zinc-100 text-zinc-600 border-zinc-300' };
+                    return <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${pill.className}`}>{pill.label}</span>;
+                  })()}
+                  <span className="text-xs px-2 py-0.5 rounded border font-medium bg-zinc-100 text-zinc-600 border-zinc-200">
+                    {item.qReview.complexityAssessed}
+                  </span>
+                </div>
+                {item.qReview.summary && <p className="text-xs text-zinc-700 leading-relaxed">{item.qReview.summary}</p>}
+                {item.qReview.riskSummary && <p className="text-xs text-zinc-500"><span className="font-medium text-zinc-600">Risk:</span> {item.qReview.riskSummary}</p>}
+                {item.qReview.missingInfo && item.qReview.missingInfo.length > 0 && (
+                  <p className="text-xs text-zinc-500"><span className="font-medium text-zinc-600">Missing:</span> {item.qReview.missingInfo.join(', ')}</p>
+                )}
+              </div>
+            </div>
+          )}
+          {/* Research trail */}
+          {item.researchRef && <ResearchTrailPanel briefId={item.researchRef} />}
+          <div className="flex gap-2 pt-2 border-t border-zinc-200 justify-between items-center">
+            <Button size="sm" variant="outline" className="text-zinc-500 hover:text-zinc-700 hover:bg-zinc-50" disabled={acting} onClick={() => openEditDialog(item)} title="Edit brief details">
+              <Pencil className="h-3.5 w-3.5 mr-1.5" />Edit
             </Button>
+            <div className="flex gap-2">
+              <div className="relative">
+                <Button size="sm" className="bg-[#F5D547] hover:bg-[#e8c93e] text-zinc-900 border-0" disabled={acting}
+                  onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: !prev[item.id] }))} title="Approve this brief — moves it to the build queue">
+                  <CheckCircle className="h-3.5 w-3.5 mr-1" />{acting ? 'Working…' : 'Approve'}
+                </Button>
+                {showApproveDropdown[item.id] && (
+                  <>
+                    <div className="fixed inset-0 z-[9]" onClick={() => setShowApproveDropdown(prev => ({ ...prev, [item.id]: false }))} />
+                    <div className="absolute right-0 top-full mt-1 bg-white border border-zinc-200 rounded shadow-lg z-10 min-w-[120px]">
+                      <button onClick={() => { approve(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                        className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-t">Approve as PJ</button>
+                      <button onClick={() => { approveAsElla(item.id); setShowApproveDropdown(prev => ({ ...prev, [item.id]: false })); }}
+                        className="block w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 rounded-b">Approve as Ella</button>
+                    </div>
+                  </>
+                )}
+              </div>
+              <Button size="sm" variant="outline" className="bg-zinc-100 hover:bg-zinc-200 text-zinc-700" disabled={acting}
+                onClick={() => openRejectDialog(item.id)} title="Reject this brief — remove from the pipeline with a reason">
+                <XCircle className="h-3.5 w-3.5 mr-1" />Reject
+              </Button>
+            </div>
           </div>
         </CardContent>
       </Card>
